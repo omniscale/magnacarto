@@ -3,42 +3,45 @@ package mss
 import (
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestLayerRules(t *testing.T) {
-	// r, err := os.Open("tests/090-test.mss")
-	// r, err := os.Open("tests/020-zoom.mss")
-	r, err := os.Open("tests/098-omni-live.mss")
-	if err != nil {
-		t.Fatal(err)
-	}
-	bytes, err := ioutil.ReadAll(r)
-	if err != nil {
-		t.Fatal(err)
-	}
-	d, err := decodeString(string(bytes))
+	files, err := filepath.Glob("tests/*.mss")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// pretty.Println(carto.Css.root.Blocks)
-
-	layers := map[string]struct{}{}
-	for _, b := range d.mss.root.blocks {
-		for _, s := range b.selectors {
-			layers[s.Layer] = struct{}{}
+	for _, f := range files {
+		r, err := os.Open(f)
+		if err != nil {
+			t.Fatal(err)
 		}
-	}
-	// layers = map[string]struct{}{"#labels_places_cities": struct{}{}}
-	for layer, _ := range layers {
-		d.MSS().LayerRules(layer)
-	}
-	r.Close()
-	if err != nil {
-		t.Fatal(err)
+		bytes, err := ioutil.ReadAll(r)
+		if err != nil {
+			t.Fatal(err)
+		}
+		d, err := decodeString(string(bytes))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		layers := map[string]struct{}{}
+		for _, b := range d.mss.root.blocks {
+			for _, s := range b.selectors {
+				layers[s.Layer] = struct{}{}
+			}
+		}
+		for layer, _ := range layers {
+			d.MSS().LayerRules(layer)
+		}
+		r.Close()
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 }
 
