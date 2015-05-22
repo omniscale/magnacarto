@@ -37,7 +37,7 @@ func main() {
 	imageDir := flag.String("image-dir", "", "image/marker directory")
 	fontDir := flag.String("font-dir", "", "fonts directory")
 	dumpRules := flag.Bool("dumprules", false, "print calculated rules to stderr")
-	mapfile := flag.Bool("mapfile", false, "output as MapServer mapfile")
+	builderType := flag.String("builder", "mapnik", "builder type {mapnik,mapserver}")
 	outFile := flag.String("out", "", "out file")
 	deferEval := flag.Bool("deferred-eval", false, "defer variable/expression evaluation to the end")
 	version := flag.Bool("version", false, "print version and exit")
@@ -90,10 +90,13 @@ func main() {
 
 	var m builder.MapWriter
 
-	if *mapfile {
+	switch *builderType {
+	case "mapserver":
 		m = mapserver.New(locator)
-	} else {
+	case "mapnik":
 		m = mapnik.New(locator)
+	default:
+		log.Fatal("unknown -builder ", *builderType)
 	}
 
 	b := builder.New(m)
