@@ -1,0 +1,303 @@
+
+//-- starting rendering timer...
+0.17ms (cpu 0.16ms)         | shape_datasource::features
+5.29ms (cpu 5.28ms)         | rendering style for layer: 'world' and style 'world'
+percent rendered: 100% - 1 rendered for 1 queried for  layer 'world' and style 'world'
+5.73ms (cpu 5.71ms)         | rendering total for layer: 'world'
+0.03ms (cpu 0.02ms)         | rendering total for layer: 'world_6_7_8_9'
+0.01ms (cpu 0.01ms)         | rendering total for layer: 'world_0_1_2_3_4_5'
+1.86ms (cpu 0.22ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"type" FROM (select osm_id, geometry, type, area, building
+from osm_landusages
+WHERE type NOT IN ('nature_reserve', 'wetland', 'theatre', 'place_of_worship', 'footway') AND building = 0
+order by area desc
+) as landusages WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+2.25ms (cpu 0.60ms)         | postgis_datasource::features
+11.93ms (cpu 11.86ms)       | rendering style for layer: 'landusages_areas' and style 'landusages_areas'
+percent rendered: 100% - 192 rendered for 192 queried for  layer 'landusages_areas' and style 'landusages_areas'
+14.56ms (cpu 12.85ms)       | rendering total for layer: 'landusages_areas'
+0.05ms (cpu 0.03ms)         | rendering total for layer: 'landusages_areas_union_sqlite_13'
+0.03ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_generalized_13'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_union_sqlite_12'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_generalized_12'
+0.04ms (cpu 0.03ms)         | rendering total for layer: 'landusages_areas_union_sqlite_11'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_generalized_11'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_union_sqlite_10'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_union_sqlite_9'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_union_sqlite_8'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_union_sqlite_7'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_areas_union_sqlite_4_5_6'
+1.32ms (cpu 0.09ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"type" FROM (select osm_id, geometry, type
+from osm_landusages_overlay
+) as landusages WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+1.72ms (cpu 0.49ms)         | postgis_datasource::features
+0.00ms (cpu 0.00ms)         | rendering style for layer: 'landusages_overlays' and style 'landusages_overlays'
+- no features returned from query for layer 'landusages_overlays' and style 'landusages_overlays'
+2.08ms (cpu 0.85ms)         | rendering total for layer: 'landusages_overlays'
+0.59ms (cpu 0.04ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"type" FROM (SELECT osm_id, geometry, type
+ FROM osm_waterways
+) as waterways WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+1.02ms (cpu 0.40ms)         | postgis_datasource::features
+0.92ms (cpu 0.92ms)         | rendering style for layer: 'landusages_waterways' and style 'landusages_waterways'
+percent rendered: 100% - 34 rendered for 34 queried for  layer 'landusages_waterways' and style 'landusages_waterways'
+2.26ms (cpu 1.64ms)         | rendering total for layer: 'landusages_waterways'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_waterways_13_14'
+0.01ms (cpu 0.01ms)         | rendering total for layer: 'landusages_waterways_11_12'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'landusages_waterways_9_10'
+3.03ms (cpu 0.05ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"service","type" FROM ( SELECT osm_id, geometry, type, tunnel, access, service,
+CASE
+        WHEN access IN ('private', 'permissive', 'no', 'agricultural', 'forestry', 'restricted', 'official', 'delivery', 'hov', 'emergency', 'psv', 'military', 'foot', 'residents', 'university', 'license', 'bus') THEN 'no'
+        ELSE 'yes'
+    END AS public_access
+    FROM osm_roads
+    WHERE tunnel=1
+    ORDER BY z_order
+) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+3.68ms (cpu 0.68ms)         | postgis_datasource::features
+0.11ms (cpu 0.11ms)         | rendering style for layer: 'roads_tunnels' and style 'roads_tunnels-outline'
+percent rendered: 100% - 3 rendered for 3 queried for  layer 'roads_tunnels' and style 'roads_tunnels-outline'
+1.62ms (cpu 0.04ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"service","type" FROM ( SELECT osm_id, geometry, type, tunnel, access, service,
+CASE
+        WHEN access IN ('private', 'permissive', 'no', 'agricultural', 'forestry', 'restricted', 'official', 'delivery', 'hov', 'emergency', 'psv', 'military', 'foot', 'residents', 'university', 'license', 'bus') THEN 'no'
+        ELSE 'yes'
+    END AS public_access
+    FROM osm_roads
+    WHERE tunnel=1
+    ORDER BY z_order
+) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+2.19ms (cpu 0.60ms)         | postgis_datasource::features
+0.10ms (cpu 0.09ms)         | rendering style for layer: 'roads_tunnels' and style 'roads_tunnels-inline'
+percent rendered: 100% - 3 rendered for 3 queried for  layer 'roads_tunnels' and style 'roads_tunnels-inline'
+6.78ms (cpu 2.15ms)         | rendering total for layer: 'roads_tunnels'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_tunnels_13_14'
+5.09ms (cpu 0.75ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom FROM (SELECT osm_id, geometry, type
+FROM osm_buildings
+WHERE geometry && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+) AS buildings
+5.32ms (cpu 0.98ms)         | postgis_datasource::features
+28.49ms (cpu 28.30ms)       | rendering style for layer: 'buildings' and style 'buildings'
+percent rendered: 100% - 2343 rendered for 2343 queried for  layer 'buildings' and style 'buildings'
+34.41ms (cpu 29.87ms)       | rendering total for layer: 'buildings'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'buildings_15'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'buildings_14'
+0.01ms (cpu 0.01ms)         | rendering total for layer: 'buildings_13'
+0.05ms (cpu 0.03ms)         | rendering total for layer: 'roads_turning_circles_case'
+4.77ms (cpu 0.31ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"public_access","service","type" FROM ( SELECT osm_id, geometry, type, tunnel, bridge, access, service,
+CASE
+        WHEN access IN ('private', 'permissive', 'no', 'agricultural', 'forestry', 'restricted', 'official', 'delivery', 'hov', 'emergency', 'psv', 'military', 'foot', 'residents', 'university', 'license', 'bus') THEN 'no'
+        ELSE 'yes'
+    END AS public_access
+    FROM osm_roads
+    WHERE tunnel=0 AND bridge=0
+    ORDER BY z_order
+) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+5.34ms (cpu 0.88ms)         | postgis_datasource::features
+11.67ms (cpu 11.63ms)       | rendering style for layer: 'roads' and style 'roads-outline'
+percent rendered: 77.9586% - 527 rendered for 676 queried for  layer 'roads' and style 'roads-outline'
+5.29ms (cpu 0.35ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"public_access","service","type" FROM ( SELECT osm_id, geometry, type, tunnel, bridge, access, service,
+CASE
+        WHEN access IN ('private', 'permissive', 'no', 'agricultural', 'forestry', 'restricted', 'official', 'delivery', 'hov', 'emergency', 'psv', 'military', 'foot', 'residents', 'university', 'license', 'bus') THEN 'no'
+        ELSE 'yes'
+    END AS public_access
+    FROM osm_roads
+    WHERE tunnel=0 AND bridge=0
+    ORDER BY z_order
+) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+5.89ms (cpu 0.94ms)         | postgis_datasource::features
+14.47ms (cpu 14.40ms)       | rendering style for layer: 'roads' and style 'roads-inline'
+percent rendered: 100% - 676 rendered for 676 queried for  layer 'roads' and style 'roads-inline'
+38.00ms (cpu 28.47ms)       | rendering total for layer: 'roads'
+0.02ms (cpu 0.03ms)         | rendering total for layer: 'roads_13_14'
+0.03ms (cpu 0.02ms)         | rendering total for layer: 'roads_12'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_11'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_10'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_9'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_8'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_7'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_6'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_5'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_turning_circles_fill'
+1.81ms (cpu 0.04ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"public_access","service","type" FROM ( SELECT osm_id, geometry, type, bridge, access, service,
+CASE
+        WHEN access IN ('private', 'permissive', 'no', 'agricultural', 'forestry', 'restricted', 'official', 'delivery', 'hov', 'emergency', 'psv', 'military', 'foot', 'residents', 'university', 'license', 'bus') THEN 'no'
+        ELSE 'yes'
+    END AS public_access
+    FROM osm_roads
+    WHERE bridge=1
+    ORDER BY z_order
+) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+2.41ms (cpu 0.62ms)         | postgis_datasource::features
+0.64ms (cpu 0.64ms)         | rendering style for layer: 'roads_bridges' and style 'roads_bridges-outline'
+percent rendered: 100% - 38 rendered for 38 queried for  layer 'roads_bridges' and style 'roads_bridges-outline'
+1.64ms (cpu 0.03ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"public_access","service","type" FROM ( SELECT osm_id, geometry, type, bridge, access, service,
+CASE
+        WHEN access IN ('private', 'permissive', 'no', 'agricultural', 'forestry', 'restricted', 'official', 'delivery', 'hov', 'emergency', 'psv', 'military', 'foot', 'residents', 'university', 'license', 'bus') THEN 'no'
+        ELSE 'yes'
+    END AS public_access
+    FROM osm_roads
+    WHERE bridge=1
+    ORDER BY z_order
+) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+2.22ms (cpu 0.61ms)         | postgis_datasource::features
+0.77ms (cpu 0.76ms)         | rendering style for layer: 'roads_bridges' and style 'roads_bridges-inline'
+percent rendered: 100% - 38 rendered for 38 queried for  layer 'roads_bridges' and style 'roads_bridges-inline'
+6.69ms (cpu 3.20ms)         | rendering total for layer: 'roads_bridges'
+0.03ms (cpu 0.03ms)         | rendering total for layer: 'roads_bridges_13_14'
+0.45ms (cpu 0.03ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"admin_level" FROM (SELECT osm_id, geometry, admin_level FROM osm_admin WHERE admin_level IN (2, 4, 5, 6)) as data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+0.83ms (cpu 0.40ms)         | postgis_datasource::features
+0.00ms (cpu 0.00ms)         | rendering style for layer: 'admin_lines' and style 'admin_lines-outline'
+- no features returned from query for layer 'admin_lines' and style 'admin_lines-outline'
+0.45ms (cpu 0.03ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"admin_level" FROM (SELECT osm_id, geometry, admin_level FROM osm_admin WHERE admin_level IN (2, 4, 5, 6)) as data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+0.86ms (cpu 0.43ms)         | postgis_datasource::features
+0.00ms (cpu 0.00ms)         | rendering style for layer: 'admin_lines' and style 'admin_lines-inline'
+- no features returned from query for layer 'admin_lines' and style 'admin_lines-inline'
+2.27ms (cpu 1.42ms)         | rendering total for layer: 'admin_lines'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'admin_lines_9'
+notice: reprojecting layer: 'admin_0' from/to:
+    '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
+    '+init=epsg:3857'
+0.14ms (cpu 0.14ms)         | rendering total for layer: 'admin_0'
+2.23ms (cpu 0.04ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"ref","reflen","type" FROM ( SELECT
+ osm_id, geometry, type, ref, CHAR_LENGTH(ref) AS reflen
+  FROM
+    osm_roads_gen9 WHERE type in('motorway', 'primary') AND bridge=0 AND ref != '' AND CHAR_LENGTH(ref) <= 6
+ORDER BY CHAR_LENGTH(ref)) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+2.66ms (cpu 0.47ms)         | postgis_datasource::features
+0.73ms (cpu 0.71ms)         | rendering style for layer: 'labels_roads_refs' and style 'labels_roads_refs'
+percent rendered: 100% - 16 rendered for 16 queried for  layer 'labels_roads_refs' and style 'labels_roads_refs'
+3.79ms (cpu 1.57ms)         | rendering total for layer: 'labels_roads_refs'
+0.03ms (cpu 0.03ms)         | rendering total for layer: 'labels_roads_refs_14'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_roads_refs_12_13'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_roads_refs_11'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_roads_refs_10'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_places_countries'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_places_cities'
+0.73ms (cpu 0.03ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"name","type" FROM ( SELECT osm_id, geometry, type, z_order, population, name
+  FROM osm_places
+  ORDER BY z_order DESC, coalesce(population, 0) DESC
+) AS data WHERE "geometry" && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+1.16ms (cpu 0.46ms)         | postgis_datasource::features
+2.26ms (cpu 2.19ms)         | rendering style for layer: 'labels_places' and style 'labels_places'
+percent rendered: 100% - 2 rendered for 2 queried for  layer 'labels_places' and style 'labels_places'
+3.72ms (cpu 2.95ms)         | rendering total for layer: 'labels_places'
+1.47ms (cpu 0.05ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"name","type" FROM (SELECT osm_id, geometry, name, type,
+    CASE
+        WHEN type = 'tram' THEN 1
+        WHEN type = 'subway' THEN 2
+        WHEN type = 'light_rail' THEN 3
+        ELSE 4
+    END AS z_order
+    FROM (
+            SELECT osm_id, geometry, name,
+            CASE
+                WHEN station = 'light_rail' THEN 'light_rail'
+                WHEN station = 'subway' THEN 'subway'
+                WHEN train = 1 OR rail = 1 THEN 'rail'
+                WHEN light_rail = 1 THEN 'light_rail'
+                WHEN subway = 1 THEN 'subway'
+                WHEN tram = 1 THEN 'tram'
+                WHEN type = 'tram_stop' THEN 'tram'
+                WHEN type = 'halt' THEN 'tram'
+                ELSE 'rail'
+            END AS type
+            FROM osm_transport_points
+            WHERE geometry && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857) AND type in ('station', 'halt', 'tram_stop') AND name != ''
+        UNION ALL
+            SELECT osm_id, ST_PointOnSurface(geometry) as geometry, name,
+            CASE
+                WHEN station = 'light_rail' THEN 'light_rail'
+                WHEN station = 'subway' THEN 'subway'
+                WHEN train = 1 OR rail = 1 THEN 'rail'
+                WHEN light_rail = 1 THEN 'light_rail'
+                WHEN subway = 1 THEN 'subway'
+                WHEN tram = 1 THEN 'tram'
+                WHEN type = 'tram_stop' THEN 'tram'
+                WHEN type = 'halt' THEN 'tram'
+                ELSE 'rail'
+            END AS type
+            FROM osm_transport_areas
+            WHERE geometry && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857) AND name != ''
+    ) as inner_select ORDER BY z_order DESC
+) as stations
+17.47ms (cpu 1.71ms)        | postgis_datasource::features
+0.00ms (cpu 0.00ms)         | rendering style for layer: 'stations' and style 'stations-label'
+- no features returned from query for layer 'stations' and style 'stations-label'
+1.55ms (cpu 0.04ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"name","type" FROM (SELECT osm_id, geometry, name, type,
+    CASE
+        WHEN type = 'tram' THEN 1
+        WHEN type = 'subway' THEN 2
+        WHEN type = 'light_rail' THEN 3
+        ELSE 4
+    END AS z_order
+    FROM (
+            SELECT osm_id, geometry, name,
+            CASE
+                WHEN station = 'light_rail' THEN 'light_rail'
+                WHEN station = 'subway' THEN 'subway'
+                WHEN train = 1 OR rail = 1 THEN 'rail'
+                WHEN light_rail = 1 THEN 'light_rail'
+                WHEN subway = 1 THEN 'subway'
+                WHEN tram = 1 THEN 'tram'
+                WHEN type = 'tram_stop' THEN 'tram'
+                WHEN type = 'halt' THEN 'tram'
+                ELSE 'rail'
+            END AS type
+            FROM osm_transport_points
+            WHERE geometry && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857) AND type in ('station', 'halt', 'tram_stop') AND name != ''
+        UNION ALL
+            SELECT osm_id, ST_PointOnSurface(geometry) as geometry, name,
+            CASE
+                WHEN station = 'light_rail' THEN 'light_rail'
+                WHEN station = 'subway' THEN 'subway'
+                WHEN train = 1 OR rail = 1 THEN 'rail'
+                WHEN light_rail = 1 THEN 'light_rail'
+                WHEN subway = 1 THEN 'subway'
+                WHEN tram = 1 THEN 'tram'
+                WHEN type = 'tram_stop' THEN 'tram'
+                WHEN type = 'halt' THEN 'tram'
+                ELSE 'rail'
+            END AS type
+            FROM osm_transport_areas
+            WHERE geometry && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857) AND name != ''
+    ) as inner_select ORDER BY z_order DESC
+) as stations
+3.27ms (cpu 1.76ms)         | postgis_datasource::features
+0.00ms (cpu 0.00ms)         | rendering style for layer: 'stations' and style 'stations-symbol'
+- no features returned from query for layer 'stations' and style 'stations-symbol'
+21.17ms (cpu 3.91ms)        | rendering total for layer: 'stations'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'roads_barrier_points'
+0.01ms (cpu 0.01ms)         | rendering total for layer: 'labels_roads_names'
+13.40ms (cpu 0.07ms)        | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"name","type" FROM (
+SELECT min(osm_id) as osm_id, (st_dump(ST_Linemerge(ST_Collect(geometry)))).geom as geometry, type, name
+ FROM osm_roads_gen9
+WHERE geometry && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+AND ST_IsValid(geometry)
+AND name != ''
+AND type IN ('primary', 'secondary', 'tertiary', 'road', 'unclassified', 'track', 'pedestrian', 'living_street', 'residential')
+GROUP BY "name:de", "name:en", name, type ) as data
+14.05ms (cpu 0.63ms)        | postgis_datasource::features
+80.17ms (cpu 79.28ms)       | rendering style for layer: 'labels_roads_names_15_16' and style 'labels_roads_names_15_16'
+percent rendered: 100% - 148 rendered for 148 queried for  layer 'labels_roads_names_15_16' and style 'labels_roads_names_15_16'
+94.58ms (cpu 80.26ms)       | rendering total for layer: 'labels_roads_names_15_16'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_roads_names_14'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'housenumbers_interpolated'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'housenumbers'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'housenumbers_building'
+0.02ms (cpu 0.01ms)         | rendering total for layer: 'labels_areas'
+0.02ms (cpu 0.01ms)         | rendering total for layer: 'labels_areas_17'
+7.66ms (cpu 0.04ms)         | postgis_connection::execute_query SELECT ST_AsBinary("geometry") AS geom,"area","name" FROM (SELECT osm_id, ST_PointOnSurface(geometry) AS geometry, type, area, name
+FROM osm_landusages_gen38
+WHERE geometry && ST_SetSRID('BOX3D(911410.1867530986 7006960.25616119,914429.449370363 7009289.196866754)'::box3d, 3857)
+AND (name <> '' OR "name:de" <> '' OR "name:en" <> '')
+AND ST_IsValid(geometry)
+AND area > 20000
+AND type IN ('cemetery', 'college', 'common', 'garden', 'golf_course', 'hospital', 'library', 'park', 'forest', 'wood', 'pedestrian', 'place_of_worship', 'playground', 'school', 'sports_center', 'stadium', 'theatre', 'university') ORDER BY area DESC
+) AS area_label
+8.37ms (cpu 0.73ms)         | postgis_datasource::features
+9.21ms (cpu 9.20ms)         | rendering style for layer: 'labels_areas_16' and style 'labels_areas_16'
+percent rendered: 100% - 9 rendered for 9 queried for  layer 'labels_areas_16' and style 'labels_areas_16'
+17.89ms (cpu 10.23ms)       | rendering total for layer: 'labels_areas_16'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_areas_15'
+0.02ms (cpu 0.02ms)         | rendering total for layer: 'labels_areas_14'
+261.03ms (cpu 192.04ms)     | total map rendering
+//-- rendering timer stopped...
+

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+init=epsg:4326" maximum-extent="-180,-90,180,90" background-color="steelblue">
+
+    <Style name="styleA">
+        <Rule>
+            <PolygonSymbolizer fill="rgba(255, 0, 0, 0.5)" />
+        </Rule>
+    </Style>
+
+    <Style name="styleB">
+        <Rule>
+            <PolygonSymbolizer fill="rgba(0, 255, 0, 0.5)" />
+        </Rule>
+    </Style>
+
+    <Style name="styleC">
+        <Rule>
+            <PolygonSymbolizer fill="rgba(0, 0, 255, 0.5)" />
+        </Rule>
+    </Style>
+
+    <Style name="styleD">
+        <Rule>
+            <PolygonSymbolizer fill="rgba(0, 255, 255, 0.5)" />
+        </Rule>
+    </Style>
+
+    <Layer name="layerA" srs="+init=epsg:4326">
+        <StyleName>styleA</StyleName>
+        <Datasource>
+            <Parameter name="file">map.geojson</Parameter>
+            <Parameter name="type">geojson</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer name="layerB" srs="+init=epsg:4326">
+        <StyleName>styleB</StyleName>
+        <Datasource>
+            <Parameter name="file">map.geojson</Parameter>
+            <Parameter name="type">geojson</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer name="layerC" srs="+init=epsg:4326" status="on">
+        <StyleName>styleC</StyleName>
+        <Datasource>
+            <Parameter name="file">map.geojson</Parameter>
+            <Parameter name="type">geojson</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer name="layerD" srs="+init=epsg:4326" status="off">
+        <StyleName>styleD</StyleName>
+        <Datasource>
+            <Parameter name="file">map.geojson</Parameter>
+            <Parameter name="type">geojson</Parameter>
+        </Datasource>
+    </Layer>
+
+</Map>

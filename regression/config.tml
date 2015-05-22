@@ -1,0 +1,11 @@
+Zoom = 16
+Long = 8.21594
+Lat = 53.15108
+Width = 800
+Height = 600
+CartoCompare = true
+MapServerCompare = true
+CartoFuzz = 0.0
+CartoPxDiff = 0
+MapServerFuzz = 2.0
+MapServerPxDiff = 250

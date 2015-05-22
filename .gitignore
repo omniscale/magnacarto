@@ -1,0 +1,8 @@
+*.swp
+*.pyc
+.DS_Store
+/dist/
+/.vagrant
+/magna*.tml
+# cmds
+/magnacarto
