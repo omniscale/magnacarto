@@ -53,8 +53,6 @@ func (p *Properties) getKey(property key) Value {
 }
 
 // pos returns position of the property in the .mss file.
-// Returns position of the first occurence of the property
-// to keep priority for minPos.
 func (p *Properties) pos(property key) position {
 	return p.values[property].pos
 }
@@ -184,7 +182,21 @@ type Prefix struct {
 	Instance string
 }
 
+// SortedPrefixes returns a slice of all propertry prefixes, sorted by their first occurence.
 func SortedPrefixes(p *Properties, prefixes []string) []Prefix {
+	/*
+	   With properties for:
+	   {
+	   	line-width: 2;
+	   	top/line-width: 1;
+	   	polygon-fill: red;
+	   }
+
+	   SortedPrefixes(p, []string{"line-", "polygon-"})
+	   will return
+	   []Prefix{{"line-", ""}, {"line-", "top"}, {"polygon-", ""}}
+
+	*/
 	pp := make([]prefixPos, 0, len(prefixes))
 	for _, prefix := range prefixes {
 		pos := p.minPrefixPos(prefix)
@@ -199,6 +211,7 @@ func SortedPrefixes(p *Properties, prefixes []string) []Prefix {
 	return result
 }
 
+// SetDefaultInstance sets the instance name used for all following GetXXX calls.
 func (p *Properties) SetDefaultInstance(instance string) {
 	p.defaultInstance = instance
 }

@@ -101,6 +101,7 @@ func (d *Decoder) backup() {
 }
 
 // ParseFile parses the given .mss file.
+// Can be called multiple times to parse a style split into multiple files.
 func (d *Decoder) ParseFile(filename string) error {
 	d.filename = filename
 	defer func() { d.filename = "" }()
@@ -147,6 +148,8 @@ func (d *Decoder) ParseString(content string) (err error) {
 	return err
 }
 
+// Evaluate evaluates all expressions and resolves all references to variables.
+// Must be called after last ParseFile/ParseString call.
 func (d *Decoder) Evaluate() (err error) {
 	if !d.deferEval {
 		return nil // already evaluated during parse

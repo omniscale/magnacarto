@@ -11,7 +11,7 @@ type MSS struct {
 	base  block
 }
 
-// Map returns properties of the single Map{} block.
+// Map returns properties of the root Map{} block.
 func (m *MSS) Map() *Properties {
 	if m.base.properties != nil {
 		return m.base.properties
