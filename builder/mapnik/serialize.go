@@ -64,7 +64,7 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	if l.GroupBy != "" {
 		layer.GroupBy = l.GroupBy
 	}
-	z := builder.ZoomRange(rules)
+	z := mss.RulesZoom(rules)
 	if z != mss.AllZoom {
 		if l := z.First(); l > 0 {
 			layer.MaxScaleDenom = zoomRanges[l]

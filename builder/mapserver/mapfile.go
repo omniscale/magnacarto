@@ -190,7 +190,7 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 		l := NewBlock("LAYER")
 		l.Add("name", style.name)
 
-		z := builder.ZoomRange(rules)
+		z := mss.RulesZoom(rules)
 		if z := z.First(); z > 0 {
 			l.Add("MaxScaleDenom", zoomRanges[z])
 		}

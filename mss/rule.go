@@ -692,3 +692,12 @@ func mergeFilter(a, b Filter) (Filter, bool) {
 
 	return Filter{}, false
 }
+
+func RulesZoom(rs []Rule) ZoomRange {
+	z := InvalidZoom
+	for _, r := range rs {
+		z = ZoomRange(r.Zoom | z)
+	}
+	return z
+
+}
