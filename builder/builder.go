@@ -15,13 +15,12 @@ import (
 
 // Builder builds map styles from MML and MSS files.
 type Builder struct {
-	dstMap      Map
-	mss         []string
-	mml         string
-	locator     config.Locator
-	destination string
-	dumpRules   io.Writer
-	deferEval   bool
+	dstMap    Map
+	mss       []string
+	mml       string
+	locator   config.Locator
+	dumpRules io.Writer
+	deferEval bool
 }
 
 // New returns a Builder
@@ -37,11 +36,6 @@ func (b *Builder) AddMSS(mss string) {
 // SetMML sets/overwirtes the mml file of this builder.
 func (b *Builder) SetMML(mml string) {
 	b.mml = mml
-}
-
-// SetDestination sets the output filename for the builders result.
-func (b *Builder) SetDestination(dest string) {
-	b.destination = dest
 }
 
 // EnableDeferredEval activates the evaluation of variables and expressions _after_ parsing all MMS files.
