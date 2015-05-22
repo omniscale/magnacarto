@@ -1,3 +1,4 @@
+// Package sql modifies SQL queries.
 package sql
 
 import (

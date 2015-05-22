@@ -1,3 +1,4 @@
+// Package config implements configuration file parser for magnacarto.
 package config
 
 import (
@@ -6,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/omniscale/magnacarto/mml"
 	"github.com/BurntSushi/toml"
+	"github.com/omniscale/magnacarto/mml"
 )
 
 type Magnacarto struct {

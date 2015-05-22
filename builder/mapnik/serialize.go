@@ -1,3 +1,4 @@
+// Package mapserver builds Mapnik .xml files.
 package mapnik
 
 import (

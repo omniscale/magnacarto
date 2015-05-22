@@ -1,3 +1,4 @@
+// The magnacarto command converts CartoCSS to Mapnik/MapServer styles.
 package main
 
 import (

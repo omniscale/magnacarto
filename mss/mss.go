@@ -1,3 +1,4 @@
+// Package mss implements a CartoCSS parser and rule generator.
 package mss
 
 import "math"

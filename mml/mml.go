@@ -1,3 +1,4 @@
+// Package mml parses mml-JSON files.
 package mml
 
 import (

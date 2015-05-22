@@ -1,3 +1,4 @@
+// Package color implements color functions.
 package color
 
 import (

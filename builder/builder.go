@@ -1,3 +1,4 @@
+// Package builder implements converter from CartoCSS to Mapnik/MapServer styles.
 package builder
 
 import (

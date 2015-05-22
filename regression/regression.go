@@ -1,4 +1,4 @@
-// Package regression contains regression tests for magnacarto.
+// Package regression only contains regression tests for magnacarto.
+package regression
 
 //  There is no code except tests here.
-package regression

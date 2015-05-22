@@ -1,3 +1,4 @@
+// Package mapserver builds MapServer .map files.
 package mapserver
 
 import (
