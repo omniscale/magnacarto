@@ -23,17 +23,25 @@ type Map struct {
 	XML            *XMLMap
 	locator        config.Locator
 	autoTypeFilter bool
+	mapnik2        bool
 }
 
-type maker struct{}
+type maker struct {
+	mapnik2 bool
+}
 
 func (m maker) Type() string       { return "mapnik" }
 func (m maker) FileSuffix() string { return ".xml" }
 func (m maker) New(locator config.Locator) builder.MapWriter {
-	return New(locator)
+	mm := New(locator)
+	if m.mapnik2 {
+		mm.SetMapnik2(true)
+	}
+	return mm
 }
 
-var Maker = maker{}
+var Maker2 = maker{mapnik2: true}
+var Maker3 = maker{}
 
 func New(locator config.Locator) *Map {
 	return &Map{
@@ -49,6 +57,10 @@ func (m *Map) SetAutoTypeFilter(enable bool) {
 
 func (m *Map) SetBackgroundColor(c color.RGBA) {
 	m.XML.BgColor = fmtColor(c, true)
+}
+
+func (m *Map) SetMapnik2(enable bool) {
+	m.mapnik2 = enable
 }
 
 func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
@@ -67,10 +79,18 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	z := mss.RulesZoom(rules)
 	if z != mss.AllZoom {
 		if l := z.First(); l > 0 {
-			layer.MaxScaleDenom = zoomRanges[l]
+			if m.mapnik2 {
+				layer.MaxZoom = zoomRanges[l]
+			} else {
+				layer.MaxScaleDenom = zoomRanges[l]
+			}
 		}
 		if l := z.Last(); l < 22 {
-			layer.MinScaleDenom = zoomRanges[l+1]
+			if m.mapnik2 {
+				layer.MinZoom = zoomRanges[l+1]
+			} else {
+				layer.MinScaleDenom = zoomRanges[l+1]
+			}
 		}
 	}
 	params := m.newDatasource(l.Datasource, rules)

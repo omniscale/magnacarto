@@ -58,8 +58,10 @@ type Layer struct {
 	Name          string       `xml:"name,attr"`
 	SRS           *string      `xml:"srs,attr"`
 	Status        string       `xml:"status,attr,omitempty"`
-	MaxScaleDenom int64        `xml:"maxzoom,attr,omitempty"`
-	MinScaleDenom int64        `xml:"minzoom,attr,omitempty"`
+	MaxZoom       int64        `xml:"maxzoom,attr,omitempty"`
+	MinZoom       int64        `xml:"minzoom,attr,omitempty"`
+	MaxScaleDenom int64        `xml:"maximum-scale-denominator,attr,omitempty"`
+	MinScaleDenom int64        `xml:"minimum-scale-denominator,attr,omitempty"`
 	GroupBy       string       `xml:"group-by,attr,omitempty"`
 	StyleNames    []string     `xml:"StyleName"`
 	Datasource    *[]Parameter `xml:"Datasource>Parameter"` // as pointer to prevent empty Datasource tag for layers without datasource
