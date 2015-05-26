@@ -100,10 +100,11 @@ func (m *Map) WriteFiles(basename string) error {
 }
 
 func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
+	var params []Parameter
 	switch ds := ds.(type) {
 	case mml.PostGIS:
 		ds = m.locator.PostGIS(ds)
-		return []Parameter{
+		params = []Parameter{
 			{Name: "host", Value: ds.Host},
 			{Name: "port", Value: ds.Port},
 			{Name: "geometry_field", Value: ds.GeometryField},
@@ -118,14 +119,14 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 	case mml.Shapefile:
 		fname := m.locator.Shape(ds.Filename)
 		// TODO missing file
-		return []Parameter{
+		params = []Parameter{
 			{Name: "file", Value: fname},
 			{Name: "type", Value: "shape"},
 		}
 	case mml.SQLite:
 		fname := m.locator.SQLite(ds.Filename)
 		// TODO missing file
-		return []Parameter{
+		params = []Parameter{
 			{Name: "file", Value: fname},
 			{Name: "srid", Value: ds.SRID},
 			{Name: "extent", Value: ds.Extent},
@@ -135,7 +136,7 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 		}
 	case mml.OGR:
 		// TODO missing file
-		return []Parameter{
+		params = []Parameter{
 			{Name: "file", Value: ds.Filename},
 			{Name: "srid", Value: ds.SRID},
 			{Name: "extent", Value: ds.Extent},
@@ -147,7 +148,15 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 	default:
 		panic(fmt.Sprintf("datasource not supported by Mapnik: %v", ds))
 	}
-	return nil
+
+	// drop empty parameters
+	var result []Parameter
+	for _, p := range params {
+		if p.Value != "" {
+			result = append(result, p)
+		}
+	}
+	return result
 }
 
 func pqSelectString(query string, rules []mss.Rule, autoTypeFilter bool) string {
