@@ -422,15 +422,3 @@ func (s *scanner) emitSimple(t tokenType, v string) *token {
 	s.pos += len(v)
 	return token
 }
-
-// emitPrefixOrChar returns a token for type t if the current position
-// matches the given prefix. Otherwise it returns a Char token using the
-// first character from the prefix.
-//
-// The prefix is known to have only ASCII characters and to not have a newline.
-func (s *scanner) emitPrefixOrChar(t tokenType, prefix string) *token {
-	if strings.HasPrefix(s.input[s.pos:], prefix) {
-		return s.emitSimple(t, prefix)
-	}
-	return s.emitSimple(tokenChar, string(prefix[0]))
-}
