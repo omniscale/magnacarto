@@ -124,7 +124,7 @@ func evaluate(codes []code) ([]code, int, error) {
 			codes[top-1] = a
 			continue
 		case typeFunction:
-			v, parsed, err := evaluate(codes[top+1:])
+			v, parsed, err := evaluate(codes[i+1:])
 			i += parsed + 1
 			if err != nil {
 				return v, 0, err
