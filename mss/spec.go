@@ -71,6 +71,79 @@ func isKeyword(keywords ...string) func(interface{}) bool {
 	}
 }
 
+func isStops(val interface{}) bool {
+	vals, ok := val.([]Value)
+	if !ok {
+		return false
+	}
+	for _, v := range vals {
+		if _, ok := v.(Stop); !ok {
+			return false
+		}
+	}
+	return true
+}
+
+func isCompOp(val interface{}) bool {
+	return isKeyword(
+		"src",
+		"dst",
+		"src-over",
+		"dst-over",
+		"src-in",
+		"dst-in",
+		"src-out",
+		"dst-out",
+		"src-atop",
+		"dst-atop",
+		"xor",
+		"plus",
+		"minus",
+		"multiply",
+		"screen",
+		"overlay",
+		"darken",
+		"lighten",
+		"color-dodge",
+		"color-burn",
+		"hard-light",
+		"soft-light",
+		"difference",
+		"exclusion",
+		"contrast",
+		"invert",
+		"invert-rgb",
+		"grain-merge",
+		"grain-extract",
+		"hue",
+		"saturation",
+		"color",
+		"value",
+	)(val)
+}
+
+func isScaling(val interface{}) bool {
+	return isKeyword(
+		"near",
+		"fast",
+		"bilinear",
+		"bicubic",
+		"spline16",
+		"spline36",
+		"hanning",
+		"hamming",
+		"hermite",
+		"kaiser",
+		"quadric",
+		"catrom",
+		"gaussian",
+		"bessel",
+		"mitchell",
+		"sinc",
+		"lanczos",
+		"blackman",
+	)(val)
+}
 func init() {
 	attributeTypes = map[string]isValid{
 		"background-color": isColor,
@@ -165,6 +238,16 @@ func init() {
 		"text-wrap-before":       isBool,
 		"text-wrap-character":    isString,
 		"text-wrap-width":        isNumber,
+
+		"raster-opacity":                 isNumber,
+		"raster-scaling":                 isScaling,
+		"raster-colorizer-default-mode":  isKeyword("discrete", "linear", "exact"),
+		"raster-colorizer-default-color": isColor,
+		"raster-colorizer-stops":         isStops,
+		"raster-comp-op":                 isCompOp,
+		"raster-filter-factor":           isNumber,
+		"raster-mesh-size":               isNumber,
+		"raster-epsilon":                 isNumber,
 	}
 }
 
