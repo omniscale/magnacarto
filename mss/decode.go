@@ -462,12 +462,15 @@ func (d *Decoder) expressionList() {
 		tok := d.next()
 		if tok.t == tokenComma {
 			d.expression()
+		} else if tok.t == tokenFunction && d.expr.code[len(d.expr.code)-1].T == typeFunctionEnd {
+			// non-comma separated list, only between functions, e.g. raster-colorizer-stops: stop(0, #47443e) stop(50, #77654a);
+			d.backup()
+			d.expression()
 		} else {
 			d.backup()
 			break
 		}
 	}
-
 	if d.deferEval {
 		d.expr.pos = position{line: startTok.line, column: startTok.column, filename: d.filename, filenum: d.filesParsed, index: d.propertyIndex}
 		d.propertyIndex += 1

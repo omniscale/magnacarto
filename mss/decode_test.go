@@ -262,6 +262,12 @@ func TestParseList(t *testing.T) {
 	assert.Equal(t, []Value{1, 2, 3}, d.vars.getKey(key{name: "foo"}))
 }
 
+func TestParseStopList(t *testing.T) {
+	d, err := decodeString(`@foo: stop(50, #fff) stop(100, #000);`)
+	assert.NoError(t, err)
+	assert.Equal(t, []Value{Stop{50, color.RGBA{1, 1, 1, 1}}, Stop{100, color.RGBA{0, 0, 0, 1}}}, d.vars.getKey(key{name: "foo"}))
+}
+
 func TestParseNull(t *testing.T) {
 	d, err := decodeString(`@foo: null;
     #foo[type!=null]{line-width: 1}

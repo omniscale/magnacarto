@@ -23,6 +23,7 @@ const (
 	typeFieldExpr
 	typeString
 	typeList
+	typeStop
 
 	typeNegation
 	typeAdd
@@ -67,6 +68,8 @@ func (t codeType) String() string {
 		return "L"
 	case typeString:
 		return "\""
+	case typeStop:
+		return "S"
 	case typeUnknown:
 		return "?"
 	default:
@@ -188,6 +191,22 @@ func evaluate(codes []code) ([]code, int, error) {
 						c[3],
 					},
 					T: typeColor}}
+			} else if c.Value.(string) == "stop" {
+				if len(v) != 2 {
+					return nil, 0, fmt.Errorf("stop takes exactly two arguments, got %d", len(v))
+				}
+				if v[0].T != typeNum {
+					return nil, 0, fmt.Errorf("stop takes int as first argument only, got %v", v[i])
+				}
+				if v[1].T != typeColor {
+					return nil, 0, fmt.Errorf("stop takes color as second argument only, got %v", v[i])
+				}
+				val := int(v[0].Value.(float64))
+				c := v[1].Value.(color.RGBA)
+				v = []code{{
+					Value: Stop{Value: val, Color: c},
+					T:     typeStop},
+				}
 			} else if c.Value.(string) == "__echo__" {
 				// pass
 			} else {
@@ -238,6 +257,11 @@ func evaluate(codes []code) ([]code, int, error) {
 		}
 	}
 	return codes[:top], 0, nil
+}
+
+type Stop struct {
+	Value int
+	Color color.RGBA
 }
 
 type functype func(args []code) ([]code, error)
