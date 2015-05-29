@@ -229,9 +229,6 @@ func evaluate(codes []code) ([]code, int, error) {
 			} else if c.T == typeMultiply && a.T == typeColor && b.T == typeNum {
 				c := a.Value.(color.RGBA)
 				f := b.Value.(float64)
-				c.R *= f
-				c.G *= f
-				c.B *= f
 				c = color.Multiply(c, f)
 				codes[top] = code{T: typeColor, Value: c}
 			} else {
