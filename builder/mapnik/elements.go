@@ -52,6 +52,7 @@ type Symbolizer struct {
 	TextSymbolizer           *TextSymbolizer
 	MarkersSymbolizer        *MarkersSymbolizer
 	ShieldSymbolizer         *ShieldSymbolizer
+	RasterSymbolizer         *RasterSymbolizer
 }
 
 type Layer struct {
@@ -190,4 +191,23 @@ type ShieldSymbolizer struct {
 	WrapBefore       *string  `xml:"wrap-before,attr"`
 	WrapCharacter    *string  `xml:"wrap-character,attr"`
 	WrapWidth        *string  `xml:"wrap-width,attr"`
+}
+
+type RasterSymbolizer struct {
+	XMLName      xml.Name `xml:"RasterSymbolizer"`
+	CompOp       *string  `xml:"comp-op,attr"`
+	DefaultColor *string  `xml:"default-color,attr"`
+	DefaultMode  *string  `xml:"default-mode,attr"`
+	Epsilon      *string  `xml:"epsilon,attr"`
+	FilterFactor *string  `xml:"filter-factor,attr"`
+	MeshSize     *string  `xml:"mesh-size,attr"`
+	Opacity      *string  `xml:"opacity,attr"`
+	Scaling      *string  `xml:"scaling,attr"`
+	Stops        []Stop
+}
+
+type Stop struct {
+	XMLName xml.Name `xml:"stop"`
+	Value   string   `xml:"value,attr"`
+	Color   string   `xml:"color,attr"`
 }

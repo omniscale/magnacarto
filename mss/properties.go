@@ -307,6 +307,23 @@ func (p *Properties) GetFieldList(property string) ([]interface{}, bool) {
 	return vals, true
 }
 
+// GetStopList returns property as a list of Stops.
+func (p *Properties) GetStopList(property string) ([]Stop, bool) {
+	v, ok := p.get(property)
+	if !ok {
+		return nil, false
+	}
+	l, ok := v.([]Value)
+	if !ok {
+		return nil, false
+	}
+	stops := make([]Stop, len(l))
+	for i := range l {
+		stops[i] = l[i].(Stop)
+	}
+	return stops, true
+}
+
 // combineProperties returns new properties all values from a and b. uses more specific value
 // for duplicate keys.
 func combineProperties(a, b *Properties) *Properties {

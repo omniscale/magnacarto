@@ -239,7 +239,7 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 	}
 
 	result.Filter = fmtFilters(r.Filters)
-	prefixes := mss.SortedPrefixes(r.Properties, []string{"line-", "polygon-", "polygon-pattern-", "text-", "shield-", "marker-", "point-", "building-"})
+	prefixes := mss.SortedPrefixes(r.Properties, []string{"line-", "polygon-", "polygon-pattern-", "text-", "shield-", "marker-", "point-", "building-", "raster-"})
 
 	for _, p := range prefixes {
 		r.Properties.SetDefaultInstance(p.Instance)
@@ -260,6 +260,8 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 			m.addPointSymbolizer(result, r)
 		case "building-":
 			m.addBuildingSymbolizer(result, r)
+		case "raster-":
+			m.addRasterSymbolizer(result, r)
 		default:
 			log.Println("invalid prefix", p)
 		}
@@ -466,6 +468,29 @@ func (m *Map) addBuildingSymbolizer(result *Rule, r mss.Rule) {
 		symb.Height = fmtFloat(r.Properties.GetFloat("building-height"))
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
+}
+
+func (m *Map) addRasterSymbolizer(result *Rule, r mss.Rule) {
+	symb := RasterSymbolizer{}
+	if stops, ok := r.Properties.GetStopList("raster-colorizer-stops"); ok {
+		for _, stop := range stops {
+			symb.Stops = append(symb.Stops,
+				Stop{
+					Value: strconv.FormatInt(int64(stop.Value), 10),
+					Color: *fmtColor(stop.Color, true),
+				},
+			)
+		}
+	}
+	symb.Opacity = fmtFloat(r.Properties.GetFloat("raster-opacity"))
+	symb.Epsilon = fmtFloat(r.Properties.GetFloat("raster-epsilon"))
+	symb.MeshSize = fmtFloat(r.Properties.GetFloat("raster-mesh-size"))
+	symb.FilterFactor = fmtFloat(r.Properties.GetFloat("raster-filter-factor"))
+	symb.CompOp = fmtString(r.Properties.GetString("raster-comp-op"))
+	symb.Scaling = fmtString(r.Properties.GetString("raster-scaling"))
+	symb.DefaultMode = fmtString(r.Properties.GetString("raster-colorizer-default-mode"))
+	symb.DefaultColor = fmtColor(r.Properties.GetColor("raster-colorizer-default-color"))
+	result.Symbolizers = append(result.Symbolizers, &symb)
 }
 
 func (m *Map) fontSetName(fontFaces []string) *string {
