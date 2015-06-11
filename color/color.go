@@ -82,7 +82,7 @@ func (rgba RGBA) String() string {
 	if rgba.A == 1.0 {
 		return rgba.Hex()
 	}
-	return fmt.Sprintf("rgba(%d, %d, %d, %.4f)", int(rgba.R*255), int(rgba.G*255), int(rgba.B*255), rgba.A)
+	return fmt.Sprintf("rgba(%d, %d, %d, %.5f)", int(rgba.R*255), int(rgba.G*255), int(rgba.B*255), rgba.A)
 }
 
 func (rgba RGBA) Hex() string {
