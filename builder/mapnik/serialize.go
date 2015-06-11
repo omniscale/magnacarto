@@ -471,6 +471,10 @@ func (m *Map) addBuildingSymbolizer(result *Rule, r mss.Rule) {
 }
 
 func (m *Map) addRasterSymbolizer(result *Rule, r mss.Rule) {
+	opacity, ok := r.Properties.GetFloat("raster-opacity")
+	if ok && opacity == 0.0 {
+		return
+	}
 	symb := RasterSymbolizer{}
 	if stops, ok := r.Properties.GetStopList("raster-colorizer-stops"); ok {
 		for _, stop := range stops {
