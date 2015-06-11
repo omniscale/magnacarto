@@ -163,6 +163,15 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "layer", Value: ds.Layer},
 			{Name: "type", Value: "ogr"},
 		}
+	case mml.GDAL:
+		// TODO missing file
+		params = []Parameter{
+			{Name: "file", Value: ds.Filename},
+			{Name: "srid", Value: ds.SRID},
+			{Name: "extent", Value: ds.Extent},
+			{Name: "band", Value: ds.Band},
+			{Name: "type", Value: "gdal"},
+		}
 	case nil:
 		// datasource might be nil for exports withour mml
 	default:
