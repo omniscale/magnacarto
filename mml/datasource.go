@@ -35,4 +35,12 @@ type OGR struct {
 	Extent   string
 }
 
+type GDAL struct {
+	Id       string
+	Filename string
+	SRID     string
+	Extent   string
+	Band     string
+}
+
 type Datasource interface{}

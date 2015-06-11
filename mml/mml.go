@@ -97,6 +97,13 @@ func newDatasource(d map[string]string) (Datasource, error) {
 			Layer:    d["layer"],
 			Extent:   d["extent"],
 		}, nil
+	} else if d["type"] == "gdal" {
+		return GDAL{
+			Filename: d["file"],
+			SRID:     d["srid"],
+			Extent:   d["extent"],
+			Band:     d["band"],
+		}, nil
 	} else if d["type"] == "" {
 		return nil, nil
 	} else {
