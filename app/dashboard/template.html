@@ -1,0 +1,21 @@
+<div>
+  <button class="btn btn-default btn-sm" ng-click="addMap()">Add Map</button>
+  <button class="btn btn-default btn-sm" ng-click="clearMaps()">Reset</button>
+</div>
+<div class="gridster-element" gridster="gridsterOptions">
+  <div gridster-item="map" ng-repeat="map in dashboard.maps" ng-controller="DashboardMapCtrl" class="grid-map">
+    <div ol3-map settings="map" layers="dashboard.layers" class="map-box">
+      <div class="map-control-btns pull-right">
+        <a title="Pin Map" class="pin-map" ng-click="openSaveModal(map)">
+          <i class="glyphicon glyphicon-pushpin"></i>
+        </a>
+        <a title="Move Map" class="move-map" stop-event>
+          <i class="glyphicon glyphicon-move"></i>
+        </a>
+        <a title="Remove Map" ng-click="remove(map)">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="gridster-element" gridster="gridsterStorageOptions">
+  <div gridster-item="map" ng-repeat="map in maps" class="grid-map">
+     <ol3-map settings="map" layers="dashboard.layers" controls="'false'">
+        <div class="map-title">
+          <h4>{{ map.title }}</h4>
+        </div>
+        <div class="map-control-btns pull-right">
+          <a title="Load Map to dashboard" ng-click="restore(map)">
+            <i class="glyphicon glyphicon-upload"></i>
+          </a>
+          <a title="Remove Map from storage" ng-click="remove(map)">
+            <i class="glyphicon glyphicon-trash"></i>
+          </a>
+        </div>
+      </ol3-map>
+  </div>
+</div>
