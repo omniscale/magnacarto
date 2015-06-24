@@ -5,93 +5,89 @@ angular.module('magna-app')
     return {
       restrict: 'A',
       scope: {
-          controls: '=controls',
-          // TODO verify need of layers
-          styles: '=styles',
-          settings: '=settings'
+          staticMap: '@',
+          styles: '=',
+          settings: '=ol3Map'
       },
-      link: function(scope, element) {
-        // intialize with default values
-        var coords = scope.settings.coords;
-        var zoom = scope.settings.zoom;
-        var zoomControl = true;
-        var controls = ol.control.defaults();
-        var interactions = ol.interaction.defaults();
-        var olMap;
-        var olSource;
+      link: {
+        pre: function(scope) {
+          scope.staticMap = scope.staticMap === 'true' ? true : false;
+          // intialize with default values
+          scope.zoomControl = !scope.staticMap;
+          scope.olControls = scope.staticMap ? [] : ol.control.defaults();
+          scope.olInteractions = scope.staticMap ? [] : ol.interaction.defaults();
 
-        var updateSource = function() {
-          params.mss = scope.styles.join(',');
-          params.t = Date.now();
-          olSource.updateParams(params);
-        };
+          scope.olMap = undefined;
 
-        var params = {
-          LAYERS: magnaConfig.mapnikLayers,
-          TRANSPARENT: false,
-          VERSION: '1.1.1',
-          mml: magnaConfig.mml,
-          mss: scope.styles.join(','),
-          t: Date.now()
-        };
+          scope.params = {
+            LAYERS: magnaConfig.mapnikLayers,
+            TRANSPARENT: false,
+            VERSION: '1.1.1',
+            mml: magnaConfig.mml,
+            mss: scope.styles.join(','),
+            t: Date.now()
+          };
 
-        if (scope.controls === 'false') {
-          zoomControl = false;
-          interactions = [];
-          controls = [];
-        }
-
-        // init ol3 source
-        olSource = new ol.source.ImageWMS({
-          url: magnaConfig.mapnikUrl,
-          ratio: 1,
-          params: params
-        });
-
-        // update source params when style list changes
-        scope.$watch('styles', function() {
-            updateSource();
-        }, true);
-
-        scope.$on('socketUpdateImage', function () {
-          updateSource();
-        });
-
-        // init map
-        olMap = new ol.Map({
-          target: element[0],
-          layers: [new ol.layer.Image({
-            source: olSource
-          })],
-          interactions: interactions,
-          controls: controls,
-          logo: false,
-          view: new ol.View({
-            center: ol.proj.transform(coords, 'EPSG:4326', 'EPSG:3857'),
-            zoom: zoom
-          })
-        });
-
-        // update zoom and coords after map move ends
-        olMap.on('moveend', function() {
-          var center = olMap.getView().getCenter();
-          center = ol.proj.transform(center, 'EPSG:3857', 'EPSG:4326');
-          scope.$apply(function() {
-            scope.settings.coords = center;
-            scope.settings.zoom = olMap.getView().getZoom();
+          // init ol3 source
+          scope.olSource = new ol.source.ImageWMS({
+            url: magnaConfig.mapnikUrl,
+            ratio: 1,
+            params: scope.params
           });
-        });
 
-        // remove openlayers map
-        scope.$on('$destroy', function () {
-          olMap.setTarget(null);
-          olMap = null;
-        });
+          scope.updateSource = function() {
+            scope.params.mss = scope.styles.join(',');
+            scope.params.t = Date.now();
+            scope.olSource.updateParams(scope.params);
+          };
+        },
+        post: function(scope, element) {
+          // init map
+          scope.olMap = new ol.Map({
+            target: element[0],
+            layers: [new ol.layer.Image({
+              source: scope.olSource
+            })],
+            interactions: scope.olInteractions,
+            controls: scope.olControls,
+            logo: false,
+            view: new ol.View({
+              center: ol.proj.transform(scope.settings.coords, 'EPSG:4326', 'EPSG:3857'),
+              zoom: scope.settings.zoom
+            })
+          });
 
-        // TODO: Find a solition to update map after loading dashboard
-        scope.$on('gridUpdate', function () {
-          olMap.updateSize();
-        });
+          // update zoom and coords after map move ends
+          scope.olMap.on('moveend', function() {
+            var center = scope.olMap.getView().getCenter();
+            center = ol.proj.transform(center, 'EPSG:3857', 'EPSG:4326');
+            scope.$apply(function() {
+              scope.settings.coords = center;
+              scope.settings.zoom = scope.olMap.getView().getZoom();
+            });
+          });
+
+          // remove openlayers map
+          scope.$on('$destroy', function () {
+            scope.olMap.setTarget(null);
+            scope.olMap = null;
+          });
+
+          // TODO: Find a solition to update map after loading dashboard
+          scope.$on('gridUpdate', function () {
+            scope.olMap.updateSize();
+          });
+
+          // update source on style list changes
+          scope.$watch('styles', function() {
+            scope.updateSource();
+          }, true);
+
+          // update source on style content changes
+          scope.$on('socketUpdateImage', function () {
+            scope.updateSource();
+          });
+        }
       }
     };
 }]);

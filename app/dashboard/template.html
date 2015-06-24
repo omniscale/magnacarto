@@ -1,6 +1,6 @@
 <div class="gridster-element" gridster="gridsterOptions">
   <div gridster-item="map" ng-repeat="map in maps" ng-controller="DashboardMapCtrl" class="grid-map">
-    <div ol3-map settings="map" styles="styles" class="map-box">
+    <div ol3-map="map" styles="styles" class="map-box">
       <div class="map-control-btns pull-right">
         <a title="Pin Map" class="pin-map" ng-click="openSaveModal(map)">
           <i class="glyphicon glyphicon-pushpin"></i>
