@@ -1,6 +1,6 @@
 angular.module('magna-app')
 
-.controller('LayerListCtrl', ['$scope', 'StyleService',
+.controller('StyleListCtrl', ['$scope', 'StyleService',
   function($scope, StyleService) {
     $scope.styles = StyleService.styles;
     $scope.activeStyles = StyleService.activeStyles;

@@ -38,8 +38,8 @@
               </a>
             </li>
           </ul>
-          <ul ng-controller="LayerListCtrl" class="sidebar-nav mss-nav">
-            <li>Layer</li>
+          <ul ng-controller="StyleListCtrl" class="sidebar-nav mss-nav">
+            <li>Style Files</li>
             <div class="checkbox" ng-repeat="style in styles">
               <label>
                 <input type="checkbox" value={{style}}
@@ -74,11 +74,11 @@
     <script src="app/app.js"></script>
 
     <script src="app/shared/focusme-directive.js"></script>
-    <script src="app/shared/layer-list-controller.js"></script>
     <script src="app/shared/mml-service.js"></script>
     <script src="app/shared/notification-controller.js"></script>
     <script src="app/shared/ol3-directive.js"></script>
     <script src="app/shared/side-nav-controller.js"></script>
+    <script src="app/shared/style-list-controller.js"></script>
     <script src="app/shared/style-service.js"></script>
     <script src="app/shared/stopevent-directive.js"></script>
     <script src="app/shared/websocket-controller.js"></script>
