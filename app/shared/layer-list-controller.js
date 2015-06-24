@@ -1,23 +1,23 @@
 angular.module('magna-app')
 
-.controller('LayerListCtrl', ['$scope', 'DashboardService',
-  function($scope, DashboardService) {
-    $scope.styles = DashboardService.styles;
-    $scope.activeStyles = DashboardService.activeStyles;
+.controller('LayerListCtrl', ['$scope', 'StyleService',
+  function($scope, StyleService) {
+    $scope.styles = StyleService.styles;
+    $scope.activeStyles = StyleService.activeStyles;
 
     $scope.$watch(function() {
-      return DashboardService.styles;
+      return StyleService.styles;
     }, function(newStyles) {
       $scope.styles = newStyles;
     }, true);
 
     $scope.$watch(function() {
-      return DashboardService.activeStyles;
+      return StyleService.activeStyles;
     }, function(newStyles) {
       $scope.activeStyles = newStyles;
     }, true);
 
     $scope.toggleSelection = function(style) {
-      DashboardService.toggleStyle(style);
+      StyleService.toggleStyle(style);
     };
 }]);

@@ -24,23 +24,23 @@ angular.module('magna-app').constant('magnaConfig', {
   });
 })
 
-.run(function($websocket, $rootScope, magnaConfig, MMLService, DashboardService) {
+.run(function($websocket, $rootScope, magnaConfig, MMLService, DashboardService, StyleService) {
   // Load project file (mml)
   var promise = MMLService.load(magnaConfig.mml);
   promise.success(function() {
     // add all style files to dashboard object
-    DashboardService.setStyles(MMLService.styles);
+    StyleService.setStyles(MMLService.styles);
 
     DashboardService.layers = [{
       url: magnaConfig.mapnikUrl,
       format: 'image/png',
       layers: 'osm',
-      styles: DashboardService.activeStyles,
+      styles: StyleService.activeStyles,
       mml: magnaConfig.mml
     }];
 
     // create websocket
-    var webSocketURL = magnaConfig.socketUrl + 'mml=' + magnaConfig.mml + '&mss=' + DashboardService.activeStyles;
+    var webSocketURL = magnaConfig.socketUrl + 'mml=' + magnaConfig.mml + '&mss=' + StyleService.activeStyles;
     var ws = $websocket.$new({
       url: webSocketURL,
       reconnect: true,
