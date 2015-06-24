@@ -65,16 +65,16 @@ html, body {
 }
 
 #wrapper.active {
-  padding-left: 150px;
+  padding-left: 175px;
 }
 #wrapper.active #sidebar-wrapper {
-  left: 150px;
+  left: 175px;
 }
 
 #sidebar-wrapper {
-  margin-left: -150px;
+  margin-left: -175px;
   left: 50px;
-  width: 150px;
+  width: 175px;
   background: #222;
   position: fixed;
   height: 100%;
@@ -85,7 +85,7 @@ html, body {
 .sidebar-nav {
   display: block;
   float: left;
-  width: 150px;
+  width: 175px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -141,6 +141,10 @@ outline:none
 .mss-nav {
   color: #999999;
   margin-top: 30px;
+  margin-left: 0;
+}
+
+.mss-nav div {
   margin-left: 5px;
 }
 
