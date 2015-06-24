@@ -2142,7 +2142,7 @@
 
                     $el.on(whichTransitionEvent(), debouncedTransitionEndPublisher);
 
-                    scope.$broadcast('gridster-item-initialized', item);
+                    scope.$root.$broadcast('gridster-item-initialized', item);
 
                     return scope.$on('$destroy', function() {
                         try {
