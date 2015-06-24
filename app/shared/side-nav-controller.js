@@ -3,8 +3,8 @@ angular.module('magna-app')
 .controller('SideNavCtrl',['$scope', '$route', 'DashboardService', function($scope, $route, DashboardService) {
   $scope.active = true;
   $scope.selectedNavItem = undefined;
-  $scope.mss = DashboardService.mss;
-  $scope.activeMss = DashboardService.activeMss;
+  $scope.styles = DashboardService.styles;
+  $scope.activeStyles = DashboardService.activeStyles;
 
   $scope.addMap = function() {
     DashboardService.addMap();

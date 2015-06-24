@@ -29,18 +29,18 @@ angular.module('magna-app').constant('magnaConfig', {
   var promise = MMLService.load(magnaConfig.mml);
   promise.success(function() {
     // add all style files to dashboard object
-    DashboardService.setMss(MMLService.mss);
+    DashboardService.setStyles(MMLService.styles);
 
     DashboardService.layers = [{
       url: magnaConfig.mapnikUrl,
       format: 'image/png',
       layers: 'osm',
-      mss: DashboardService.activeMss,
+      styles: DashboardService.activeStyles,
       mml: magnaConfig.mml
     }];
 
     // create websocket
-    var webSocketURL = magnaConfig.socketUrl + 'mml=' + magnaConfig.mml + '&mss=' + DashboardService.mss;
+    var webSocketURL = magnaConfig.socketUrl + 'mml=' + magnaConfig.mml + '&mss=' + DashboardService.activeStyles;
     var ws = $websocket.$new({
       url: webSocketURL,
       reconnect: true,

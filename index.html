@@ -40,10 +40,10 @@
           </ul>
           <ul ng-controller="LayerListCtrl" class="sidebar-nav mss-nav">
             <li>Layer</li>
-            <div class="checkbox" ng-repeat="style in mss">
+            <div class="checkbox" ng-repeat="style in styles">
               <label>
                 <input type="checkbox" value={{style}}
-                  ng-checked="activeMss.indexOf(style) > -1"
+                  ng-checked="activeStyles.indexOf(style) > -1"
                   ng-click="toggleSelection(style)">
                 {{ style }}
               </label>

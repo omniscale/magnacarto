@@ -22,7 +22,7 @@ angular.module('magna-app')
 
         var updateSource = function(layer, olSource) {
           var params = olSource.getParams();
-          params.mss = layer.mss.join(',');
+          params.mss = layer.styles.join(',');
           params.t = Date.now();
           olSource.updateParams(params);
         };
@@ -43,7 +43,7 @@ angular.module('magna-app')
               TRANSPARENT: false,
               VERSION: '1.1.1',
               mml: layer.mml,
-              mss: layer.mss.join(','),
+              mss: layer.styles.join(','),
               t: Date.now()
             }
           });
@@ -51,9 +51,9 @@ angular.module('magna-app')
             source: olSource
           }));
 
-          // update source params when mss list changes
+          // update source params when style list changes
           scope.$watch(function() {
-            return layer.mss;
+            return layer.styles;
           }, function() {
               updateSource(layer, olSource);
           }, true);

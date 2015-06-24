@@ -5,8 +5,8 @@ angular.module('magna-app')
     function($rootScope, $timeout, $cookieStore, magnaConfig) {
       var DashboardServiceInstance = function() {
         var self = this;
-        self.mss = [];
-        self.activeMss = [];
+        self.styles = [];
+        self.activeStyles = [];
         // TODO check if we can gat rid of layers, see ol3-direcitve
         self.layers = [];
         self.maps = [];
@@ -23,21 +23,21 @@ angular.module('magna-app')
         }, true);
       };
 
-      DashboardServiceInstance.prototype.setMss = function(mss) {
+      DashboardServiceInstance.prototype.setStyles = function(styles) {
         var self = this;
-        self.mss = mss;
-        // need to copy otherwise mss and activeMss are the same
+        self.styles = styles;
+        // need to copy otherwise styles and activeStyles are the same
         // list object
-        self.activeMss = angular.copy(mss);
+        self.activeStyles = angular.copy(styles);
       };
 
-      DashboardServiceInstance.prototype.toggleMss = function(mss) {
+      DashboardServiceInstance.prototype.toggleStyle = function(style) {
         var self = this;
-        var idx = self.activeMss.indexOf(mss);
+        var idx = self.activeStyles.indexOf(style);
         if (idx > -1) {
-          self.activeMss.splice(idx, 1);
+          self.activeStyles.splice(idx, 1);
         } else {
-          self.activeMss.push(mss);
+          self.activeStyles.push(style);
         }
       };
 

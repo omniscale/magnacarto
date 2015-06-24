@@ -6,7 +6,7 @@ angular.module('magna-app')
     function($http) {
       var MMLServiceInstance = function() {
         this.mml = undefined;
-        this.mss = undefined;
+        this.styles = undefined;
       };
 
       MMLServiceInstance.prototype.load = function(mml) {
@@ -14,7 +14,7 @@ angular.module('magna-app')
         var loadPromise = $http.get(mml);
         // TODO add on error
         loadPromise.success(function(data) {
-          self.mss = data.Stylesheet;
+          self.styles = data.Stylesheet;
         });
         return loadPromise;
       };
