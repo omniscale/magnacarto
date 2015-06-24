@@ -1,6 +1,6 @@
 <div class="gridster-element" gridster="gridsterStorageOptions">
   <div gridster-item="map" ng-repeat="map in maps" class="grid-map">
-     <ol3-map settings="map" layers="dashboard.layers" controls="'false'">
+     <div ol3-map settings="map" layers="layers" controls="'false'">
         <div class="map-title">
           <h4>{{ map.title }}</h4>
         </div>
@@ -12,6 +12,6 @@
             <i class="glyphicon glyphicon-trash"></i>
           </a>
         </div>
-      </ol3-map>
+      </div>
   </div>
 </div>

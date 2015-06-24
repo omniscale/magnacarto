@@ -1,114 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Magnacasta App - Design maps</title>
-  <meta name="description" content="" />
-  <meta name="viewport" content="width=device-width" />
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Magnacarto App - Design maps</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width" />
 
-  <link rel="stylesheet" href="http://openlayers.org/en/v3.4.0/css/ol.css" type="text/css">
-  <link rel="stylesheet" href="static/css/bootstrap.css" />
-  <link rel="stylesheet" href="static/css/angular-gridster.min.css" />
-  <link rel="stylesheet" href="static/css/style.css" />
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.4.0/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="static/css/bootstrap.css" />
+    <link rel="stylesheet" href="static/css/angular-gridster.min.css" />
+    <link rel="stylesheet" href="static/css/style.css" />
+  </head>
+  <body ng-app="magna-app">
+    <div ng-controller="SideNavCtrl">
+      <div id="wrapper" class="active" ng-class="{active: active}" >
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+          <ul class="sidebar-nav" id="sidebar">
+            <li class="sidebar-brand">
+              <a ng-click="active=!active">Menu
+                <span class="menu-icon glyphicon glyphicon-align-justify"></span>
+              </a>
+            </li>
 
-</head>
-<body ng-app="magna-app">
-  <div ng-controller="SideNavCtrl">
-    <div id="wrapper" class="active" ng-class="{active: active}" >
-      <!-- Sidebar -->
-      <div id="sidebar-wrapper">
-        <ul class="sidebar-nav" id="sidebar">
-          <li class="sidebar-brand">
-            <a ng-click="active=!active">Menu
-              <span class="menu-icon glyphicon glyphicon-align-justify"></span>
-            </a>
-          </li>
-          <div ng-controller="CollapseDemoCtrl">
-          <li>
-            <a is-active-nav href="#/dashboard" ng-click="isCollapsed = !isCollapsed">Dashboard
-              <span class="menu-icon glyphicon glyphicon-globe"></span>
-            </a>
-            <div collapse="isCollapsed">
-              <button class="btn btn-default btn-sm" ng-click="addMap()">Add Map</button>
-              <button class="btn btn-default btn-sm" ng-click="clearMaps()">Reset</button>
+            <!-- TODO rename controller -->
+            <li>
+              <a is-active-nav href="#/dashboard">Dashboard
+                <span class="menu-icon glyphicon glyphicon-globe"></span>
+              </a>
+              <div collapse="selectedNavItem !== 'dashboard'">
+                <button class="btn btn-default btn-sm" ng-click="addMap()">Add Map</button>
+                <button class="btn btn-default btn-sm" ng-click="clearMaps()">Reset</button>
+              </div>
+            </li>
+            <li>
+              <a is-active-nav href="#/storage">Storage
+                <span class="menu-icon glyphicon glyphicon-floppy-disk"></span>
+              </a>
+            </li>
+          </ul>
+          <ul ng-controller="LayerListCtrl" class="sidebar-nav mss-nav">
+            <li>Layer</li>
+            <div class="checkbox" ng-repeat="style in mss">
+              <label>
+                <input type="checkbox" value={{style}}
+                  ng-checked="activeMss.indexOf(style) > -1"
+                  ng-click="toggleSelection(style)">
+                {{ style }}
+              </label>
             </div>
-          </li>
-          <li>
-            <a is-active-nav href="#/storage">Storage
-              <span class="menu-icon glyphicon glyphicon-floppy-disk"></span>
-            </a>
-          </li>
-          </div>
-        </ul>
-
-        <ul class="sidebar-nav mss-nav">
-           <li>Layer</li>
-          <mss ng-repeat="style in dashboard.mss"></mss>
-        </ul>
-      </div>
-      <div ng-view></div>
-    </div>
-  </div>
-  <div class="alert-box" ng-controller="WebSocketCtrl">
-    <div class="row">
-      <div class="col-md-12">
-        <notification ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"></notification>
+          </ul>
+        </div>
+        <div ng-view></div>
       </div>
     </div>
-  </div>
 
-  <script src="http://openlayers.org/en/v3.4.0/build/ol.js" type="text/javascript"></script>
-  <script src="static/libs/angular.js"></script>
-  <script src="static/libs/angular-route.js"></script>
-  <script src="static/libs/angular-messages.js"></script>
-  <script src="static/libs/angular-cookies.js"></script>
-  <script src="static/libs/ng-websocket.js"></script>
-  <script src="static/libs/angular-gridster.js"></script>
-  <script src="static/libs/ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <div class="alert-box" ng-controller="WebSocketCtrl">
+      <div class="row">
+        <div class="col-md-12">
+          <notification ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"></notification>
+        </div>
+      </div>
+    </div>
 
-  <script type="text/javascript">
-    var mss = ['palette.mss','base.mss','roads.mss','labels.mss'];
-    var mml = 'omni-live.mml';
-    // TODO JSON load from json via magnaserver
-    var dashboard = {
-      'mss': mss,
-      'layers': [
-          {
-            url: 'http://localhost:7070/mapnik?',
-            format: 'image/png',
-            layers: 'osm',
-            mss: mss,
-            mml: mml
-         }
-      ],
-      'maps': [
-        {
-          col: 0,
-          row: 0,
-          sizeY: 1,
-          sizeX: 1
-        }, {
-          col: 2,
-          row: 1,
-          sizeY: 1,
-          sizeX: 1,
-          zoom: 15,
-          coords: [8,52]
-        }
-      ]
-    };
+    <script src="http://openlayers.org/en/v3.4.0/build/ol.js" type="text/javascript"></script>
+    <script src="static/libs/angular.js"></script>
+    <script src="static/libs/angular-route.js"></script>
+    <script src="static/libs/angular-messages.js"></script>
+    <script src="static/libs/angular-cookies.js"></script>
+    <script src="static/libs/ng-websocket.js"></script>
+    <script src="static/libs/angular-gridster.js"></script>
+    <script src="static/libs/ui-bootstrap-tpls-0.12.1.min.js"></script>
 
-  </script>
-  <script src="app/app.js"></script>
-  <script src="app/shared/notification-controller.js"></script>
-  <script src="app/shared/focusme-directive.js"></script>
-  <script src="app/shared/stopevent-directive.js"></script>
-  <script src="app/shared/websocket-controller.js"></script>
-  <script src="app/shared/ol3-directive.js"></script>
-  <script src="app/dashboard/mss.js"></script>
-  <script src="app/dashboard/controller.js"></script>
-  <script src="app/storage/controller.js"></script>
+    <script src="app/app.js"></script>
 
-</body>
+    <script src="app/shared/dashboard-service.js"></script>
+    <script src="app/shared/focusme-directive.js"></script>
+    <script src="app/shared/layer-list-controller.js"></script>
+    <script src="app/shared/mml-service.js"></script>
+    <script src="app/shared/notification-controller.js"></script>
+    <script src="app/shared/ol3-directive.js"></script>
+    <script src="app/shared/side-nav-controller.js"></script>
+    <script src="app/shared/stopevent-directive.js"></script>
+    <script src="app/shared/websocket-controller.js"></script>
+
+    <script src="app/dashboard/controller.js"></script>
+    <script src="app/dashboard/pinmap-controller.js"></script>
+
+    <script src="app/storage/controller.js"></script>
+  </body>
 </html>

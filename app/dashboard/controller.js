@@ -1,36 +1,42 @@
 angular.module('magna-app')
 
-.service('dashboard', function Dashboard($rootScope) {
-  var dashboard = this;
-  dashboard.mss = $rootScope.dashboard.mss;
-  dashboard.layers = $rootScope.dashboard.layers;
-  dashboard.maps = $rootScope.dashboard.maps;
-})
-
-.controller('DashboardCtrl', ['$scope', '$timeout', '$cookieStore', 'dashboard',
-  function($scope, $timeout, $cookieStore, dashboard) {
+.controller('DashboardCtrl', ['$scope', '$timeout', '$cookieStore', 'DashboardService',
+  function($scope, $timeout, $cookieStore, DashboardService) {
+    $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {
       margins: [5, 5],
       columns: 4,
       swapping: true,
       floating: true,
+      resizable: {
+        stop: function() {
+          $timeout(function() {
+            $scope.$broadcast('gridUpdate');
+          }, 0);
+        }
+      },
       draggable: {
-        handle: '.move-map'
+        handle: '.move-map',
+        stop: function() {
+          $timeout(function() {
+            $scope.$broadcast('gridUpdate');
+          }, 0);
+        }
       }
     };
-    $scope.dashboard = dashboard;
 
-    // TODO JSON
-    // LOAD
-    var magnatorDashboardCookie = $cookieStore.get('magnatorDashboard');
-    if (magnatorDashboardCookie !== undefined) {
-      $scope.dashboard.maps = magnatorDashboardCookie;
-    }
+    $scope.maps = DashboardService.maps;
+    // Need to watch otherwise $scope.maps and DashboardService.maps are
+    // different objects after clear maps and changes not recognized by
+    // andgular
+    $scope.$watchCollection(function() {
+      return DashboardService.maps;
+    }, function() {
+      $scope.maps = DashboardService.maps;
+    });
 
-    // SAVE
-    $scope.$watch('dashboard', function(items){
-      $cookieStore.put('magnatorDashboard', items.maps);
-    }, true);
+    $scope.layers = DashboardService.layers;
+
 
     $scope.$watch(function() {
       return angular.element(document.querySelector('.gridster-element')).attr('class');
@@ -39,47 +45,16 @@ angular.module('magna-app')
           $scope.$broadcast('gridUpdate');
         }
     });
-
-    $scope.$on('gridster-item-transition-end', function(){
-      $scope.$broadcast('gridUpdate');
-    });
-
-    $scope.$on('gridster-item-resized', function(){
-       $scope.$broadcast('gridUpdate');
-    });
-
-    $scope.$on(['gridster-item-initialized'], function(){
+    $scope.$on('gridster-item-initialized', function(){
       $timeout(function(){
         $scope.$broadcast('gridUpdate');
       });
     });
-
-
-    $scope.clearMaps = function() {
-      $scope.dashboard.maps = [];
-    };
-
-    $scope.addMap = function() {
-      var defaultCoords = [8,53];
-      var defaultZoom = 12;
-      var lastMap = dashboard.maps[dashboard.maps.length-1];
-      if (lastMap !== undefined) {
-        defaultCoords = lastMap.coords;
-        defaultZoom = lastMap.zoom;
-      }
-
-      $scope.dashboard.maps.push({
-        sizeX: 1,
-        sizeY: 1,
-        coords: defaultCoords,
-        zoom: defaultZoom
-      });
-    };
   }
 ])
 
-.controller('DashboardMapCtrl', ['$scope', '$cookieStore', '$modal',
-  function($scope, $cookieStore, $modal) {
+.controller('DashboardMapCtrl', ['$scope', '$cookieStore', '$modal', 'DashboardService',
+  function($scope, $cookieStore, $modal, DashboardService) {
 
     $scope.openSaveModal = function (map) {
       var modalInstance = $modal.open({
@@ -111,33 +86,7 @@ angular.module('magna-app')
     };
 
     $scope.remove = function(map) {
-      $scope.dashboard.maps.splice($scope.dashboard.maps.indexOf(map), 1);
+      DashboardService.removeMap(map);
     };
   }
-])
-
-
-.controller('PinMapCtrl', ['$scope', '$modalInstance', 'map',
-  function($scope, $modalInstance, map) {
-    $scope.form = {};
-    $scope.map = map;
-    $scope.title = '';
-
-    $scope.ok = function () {
-      if ($scope.pinmapForm.$invalid) {
-        return false;
-      }
-      var item = {
-        'coords': $scope.map.coords,
-        'zoom': $scope.map.zoom,
-        'title': $scope.title
-      };
-      $modalInstance.close(item);
-    };
-
-    $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
-    };
-    }
 ]);
-

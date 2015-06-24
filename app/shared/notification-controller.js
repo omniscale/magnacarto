@@ -17,4 +17,4 @@ angular.module('magna-app')
       }, 2000);
     }
   };
-}])
+}]);

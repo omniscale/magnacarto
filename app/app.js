@@ -1,7 +1,12 @@
 angular.module('magna-app', ['ngRoute', 'ngCookies', 'ngWebsocket', 'gridster', 'ui.bootstrap']);
 
-angular.module('magna-app').constant('socketConfig', {
-    'url': 'ws://localhost:7070/changes?'
+// TODO get config values from elsewhere?
+angular.module('magna-app').constant('magnaConfig', {
+    socketUrl: 'ws://localhost:7070/changes?',
+    mapnikUrl: 'http://localhost:7070/mapnik?',
+    defaultCenter: [8, 53],
+    defaultZoom: 12,
+    mml: 'omni-live.mml'
 })
 
 .config(function($routeProvider){
@@ -19,43 +24,43 @@ angular.module('magna-app').constant('socketConfig', {
   });
 })
 
-.run(function($websocket, $rootScope, socketConfig) {
-  $rootScope.dashboard = dashboard;
+.run(function($websocket, $rootScope, magnaConfig, MMLService, DashboardService) {
+  // Load project file (mml)
+  var promise = MMLService.load(magnaConfig.mml);
+  promise.success(function() {
+    // add all style files to dashboard object
+    DashboardService.setMss(MMLService.mss);
 
-  var mss;
-  var mml;
+    DashboardService.layers = [{
+      url: magnaConfig.mapnikUrl,
+      format: 'image/png',
+      layers: 'osm',
+      mss: DashboardService.activeMss,
+      mml: magnaConfig.mml
+    }];
 
-  // add websocket for each layer
-  angular.forEach($rootScope.dashboard.layers, function(layer) {
-    mss = layer.mss.join(',');
-    mml = layer.mml;
-
-    var webSocketURL =  socketConfig.url + 'mml=' + mml + '&mss=' + mss;
+    // create websocket
+    var webSocketURL = magnaConfig.socketUrl + 'mml=' + magnaConfig.mml + '&mss=' + DashboardService.mss;
     var ws = $websocket.$new({
       url: webSocketURL,
       reconnect: true,
       reconnectInterval: 100
     });
 
+    // TODO check if we need this realy
     ws.$on('$open', function () {
        $rootScope.$broadcast('socketOpen');
     })
 
     .$on('$message', function (resp) {
+      // TODO get rid of broadcast event
+      // show fancy modal with error msg
       if(resp.error !== undefined) {
         $rootScope.$broadcast('socketError', resp);
       } else {
+        // reload map
         $rootScope.$broadcast('socketUpdateImage', resp);
       }
     });
-
   });
-})
-
-.controller('SideNavCtrl',['$scope', function($scope){
-  $scope.active = true;
-}])
-
-.controller('CollapseDemoCtrl', ['$scope', function ($scope) {
-  $scope.isCollapsed = false;
-}]);
+});

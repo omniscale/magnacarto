@@ -1,9 +1,13 @@
 angular.module('magna-app')
 
 
-.controller('StorageCtrl', ['$scope', '$timeout', '$cookieStore',
-  function($scope, $timeout, $cookieStore) {
+.controller('StorageCtrl', ['$scope', '$timeout', '$cookieStore', 'DashboardService',
+  function($scope, $timeout, $cookieStore, DashboardService) {
+    $scope.navItemName = 'storage';
+    // TODO JSON
     var savedMaps = $cookieStore.get('savedMaps');
+
+    $scope.layers = DashboardService.layers;
 
     $scope.maps = savedMaps;
     // $scope.dashboard
@@ -17,40 +21,12 @@ angular.module('magna-app')
       }
     };
 
-    $scope.$watch(function() {
-      return angular.element(document.querySelector('.gridster-element')).attr('class');
-      }, function(classes){
-        if ((classes.indexOf('gridster-loaded')) > -1) {
-          $scope.$broadcast('gridUpdate');
-        }
-    });
-
-    $scope.$on('gridster-item-transition-end', function(){
-      $scope.$broadcast('gridUpdate');
-    });
-
-    $scope.$on('gridster-item-size-changed', function(){
-      $scope.$broadcast('gridUpdate');
-    });
-
     // TODO JSON
     $scope.restore = function(map) {
-      var dashboardItems = $cookieStore.get('magnatorDashboard');
-      if (dashboardItems === undefined) {
-        dashboardItems = [];
-      }
-
-      dashboardItems.push({
-        sizeX: 1,
-        sizeY: 1,
+      DashboardService.addMap({
         coords: map.coords,
         zoom: map.zoom
       });
-
-      // TODO JSON show popup that dashboard item was saved
-      $cookieStore.put('magnatorDashboard', dashboardItems);
-      // TODO: check if there is a nicer way then $scope.$apply();
-      $scope.$apply();
     };
 
     $scope.remove = function(map) {
@@ -63,6 +39,12 @@ angular.module('magna-app')
       // TODO JSON
       $cookieStore.put('savedMaps', $scope.maps);
     };
+
+    $scope.$on('gridster-item-initialized', function(){
+      $timeout(function(){
+        $scope.$broadcast('gridUpdate');
+      });
+    });
 
   }
 ]);
