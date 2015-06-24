@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.controller('DashboardCtrl', ['$scope', '$timeout', '$cookieStore', 'DashboardService',
-  function($scope, $timeout, $cookieStore, DashboardService) {
+.controller('DashboardCtrl', ['$scope', '$timeout', '$cookieStore', 'DashboardService', 'StyleService',
+  function($scope, $timeout, $cookieStore, DashboardService, StyleService) {
     $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {
       margins: [5, 5],
@@ -35,8 +35,7 @@ angular.module('magna-app')
       $scope.maps = DashboardService.maps;
     });
 
-    $scope.layers = DashboardService.layers;
-
+    $scope.styles = StyleService.activeStyles;
 
     $scope.$watch(function() {
       return angular.element(document.querySelector('.gridster-element')).attr('class');

@@ -1,13 +1,13 @@
 angular.module('magna-app')
 
 
-.controller('StorageCtrl', ['$scope', '$timeout', '$cookieStore', 'DashboardService',
-  function($scope, $timeout, $cookieStore, DashboardService) {
+.controller('StorageCtrl', ['$scope', '$timeout', '$cookieStore', 'DashboardService', 'StyleService',
+  function($scope, $timeout, $cookieStore, DashboardService, StyleService) {
     $scope.navItemName = 'storage';
     // TODO JSON
     var savedMaps = $cookieStore.get('savedMaps');
 
-    $scope.layers = DashboardService.layers;
+    $scope.styles = StyleService.activeStyles;
 
     $scope.maps = savedMaps;
     // $scope.dashboard

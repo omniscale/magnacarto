@@ -4,6 +4,8 @@ angular.module('magna-app', ['ngRoute', 'ngCookies', 'ngWebsocket', 'gridster', 
 angular.module('magna-app').constant('magnaConfig', {
     socketUrl: 'ws://localhost:7070/changes?',
     mapnikUrl: 'http://localhost:7070/mapnik?',
+    mapnikLayer: 'osm',
+    mapnikImageFormat: 'image/png',
     defaultCenter: [8, 53],
     defaultZoom: 12,
     mml: 'omni-live.mml'
@@ -32,9 +34,6 @@ angular.module('magna-app').constant('magnaConfig', {
     StyleService.setStyles(MMLService.styles);
 
     DashboardService.layers = [{
-      url: magnaConfig.mapnikUrl,
-      format: 'image/png',
-      layers: 'osm',
       styles: StyleService.activeStyles,
       mml: magnaConfig.mml
     }];
