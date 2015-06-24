@@ -9,6 +9,7 @@ angular.module('magna-app')
   $scope.addMap = function() {
     DashboardService.addMap();
   };
+
   $scope.clearMaps = function() {
     DashboardService.clearMaps();
   };

@@ -6,11 +6,12 @@ angular.module('magna-app')
       restrict: 'A',
       scope: {
           controls: '=controls',
+          // TODO verify need of layers
           layers: '=layers',
           settings: '=settings'
       },
       link: function(scope, element) {
-        // intialize map with coords from settings
+        // intialize with default values
         var coords = scope.settings.coords;
         var zoom = scope.settings.zoom;
         var zoomControl = true;
@@ -32,6 +33,7 @@ angular.module('magna-app')
           controls = [];
         }
 
+        // init layers
         angular.forEach(scope.layers, function(layer) {
           var olSource = new ol.source.ImageWMS({
             url: layer.url,
@@ -60,6 +62,8 @@ angular.module('magna-app')
             updateSource(layer, olSource);
           });
         });
+
+        // init map
         map = new ol.Map({
           target: element[0],
           layers: olLayers,
@@ -71,6 +75,8 @@ angular.module('magna-app')
             zoom: zoom
           })
         });
+
+        // update zoom and coords after map move ends
         map.on('moveend', function() {
           var center = map.getView().getCenter();
           center = ol.proj.transform(center, 'EPSG:3857', 'EPSG:4326');
@@ -79,6 +85,7 @@ angular.module('magna-app')
             scope.settings.zoom = map.getView().getZoom();
           });
         });
+
         // remove openlayers map
         scope.$on('$destroy', function () {
           map.setTarget(null);

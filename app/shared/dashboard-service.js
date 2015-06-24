@@ -7,7 +7,7 @@ angular.module('magna-app')
         var self = this;
         self.mss = [];
         self.activeMss = [];
-        // stores ol3 layers
+        // TODO check if we can gat rid of layers, see ol3-direcitve
         self.layers = [];
         self.maps = [];
 
@@ -41,13 +41,11 @@ angular.module('magna-app')
         }
       };
 
-
       DashboardServiceInstance.prototype.clearMaps = function() {
         var self = this;
         self.maps = [];
       };
 
-      // TODO add map param to add map from store
       DashboardServiceInstance.prototype.addMap = function(map) {
         var self = this;
         var coords = magnaConfig.defaultCenter;
