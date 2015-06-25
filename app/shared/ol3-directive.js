@@ -44,7 +44,6 @@ angular.module('magna-app')
         post: function(scope, element) {
           // init map
           scope.olMap = new ol.Map({
-            target: element[0],
             layers: [new ol.layer.Image({
               source: scope.olSource
             })],
@@ -74,6 +73,10 @@ angular.module('magna-app')
           });
 
           // TODO: Find a solition to update map after loading dashboard
+          scope.$on('gridInit', function () {
+            // add map to dom when container size is fix
+            scope.olMap.setTarget(element[0]);
+          });
           scope.$on('gridUpdate', function () {
             scope.olMap.updateSize();
           });
