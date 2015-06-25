@@ -51,8 +51,9 @@ angular.module('magna-app').constant('magnaConfig', {
        $rootScope.$broadcast('socketOpen');
     })
 
+    // right after connecting the first message arrive
+    // see ol3-directive for handling
     .$on('$message', function (resp) {
-      // TODO get rid of broadcast event
       // show fancy modal with error msg
       if(resp.error !== undefined) {
         $rootScope.$broadcast('socketError', resp);

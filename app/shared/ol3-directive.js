@@ -45,9 +45,7 @@ angular.module('magna-app')
         post: function(scope, element) {
           // init map
           scope.olMap = new ol.Map({
-            layers: [new ol.layer.Image({
-              source: scope.olSource
-            })],
+            layers: [],
             interactions: scope.olInteractions,
             controls: scope.olControls,
             logo: false,
@@ -78,21 +76,28 @@ angular.module('magna-app')
             // add map to dom when container size is fix
             scope.olMap.setTarget(element[0]);
           });
+
+          // update source on style content changes
+          scope.$on('socketUpdateImage', function () {
+            // Add layer after first event arrived
+            if(scope.olMap.getLayers().getLength() === 0) {
+              scope.olMap.addLayer(new ol.layer.Image({
+                source: scope.olSource
+              }));
+            } else {
+              scope.updateSource();
+            }
+          });
+
           scope.$on('gridUpdate', function(event, mapId) {
             if(mapId === scope.settings.mapId) {
               scope.olMap.updateSize();
             }
           });
 
-          // update source on style list changes
           scope.$watch('styles', function() {
             scope.updateSource();
           }, true);
-
-          // update source on style content changes
-          scope.$on('socketUpdateImage', function () {
-            scope.updateSource();
-          });
         }
       }
     };
