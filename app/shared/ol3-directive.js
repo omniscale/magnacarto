@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.directive('ol3Map', ['magnaConfig',
-  function(magnaConfig) {
+.directive('ol3Map', ['magnaConfig', 'uuid',
+  function(magnaConfig, uuid) {
     return {
       restrict: 'A',
       scope: {
@@ -11,6 +11,7 @@ angular.module('magna-app')
       },
       link: {
         pre: function(scope) {
+          scope.settings.mapId = scope.settings.mapId || uuid.v4();
           scope.staticMap = scope.staticMap === 'true' ? true : false;
           // intialize with default values
           scope.zoomControl = !scope.staticMap;
@@ -77,8 +78,10 @@ angular.module('magna-app')
             // add map to dom when container size is fix
             scope.olMap.setTarget(element[0]);
           });
-          scope.$on('gridUpdate', function () {
-            scope.olMap.updateSize();
+          scope.$on('gridUpdate', function(event, mapId) {
+            if(mapId === scope.settings.mapId) {
+              scope.olMap.updateSize();
+            }
           });
 
           // update source on style list changes

@@ -9,17 +9,17 @@ angular.module('magna-app')
       swapping: true,
       floating: true,
       resizable: {
-        stop: function() {
+        stop: function(event, uiWidget, $element) {
           $timeout(function() {
-            $scope.$broadcast('gridUpdate');
+            $scope.$broadcast('gridUpdate', $element.mapId);
           }, 0);
         }
       },
       draggable: {
         handle: '.move-map',
-        stop: function() {
+        stop: function(event, uiWidget, $element) {
           $timeout(function() {
-            $scope.$broadcast('gridUpdate');
+            $scope.$broadcast('gridUpdate', $element.mapId);
           }, 0);
         }
       }
