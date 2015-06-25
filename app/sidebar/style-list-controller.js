@@ -2,6 +2,7 @@ angular.module('magna-app')
 
 .controller('StyleListCtrl', ['$scope', 'StyleService',
   function($scope, StyleService) {
+    $scope.collapsed = false;
     $scope.styles = StyleService.styles;
     $scope.activeStyles = StyleService.activeStyles;
 

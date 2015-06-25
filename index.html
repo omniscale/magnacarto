@@ -13,10 +13,13 @@
     <link rel="stylesheet" href="static/css/style.css" />
   </head>
   <body ng-app="magna-app">
+
+    <!-- TODO move into template and include here -->
+    <!-- Sidenav -->
     <div ng-controller="SideNavCtrl">
       <div id="wrapper" class="active" ng-class="{active: active}" >
-        <!-- Sidebar -->
         <div id="sidebar-wrapper">
+          <!-- Nav items -->
           <ul class="sidebar-nav" id="sidebar">
             <li class="sidebar-brand">
               <a ng-click="active=!active">Menu
@@ -27,7 +30,7 @@
               <a is-active-nav href="#/dashboard">Dashboard
                 <span class="menu-icon glyphicon glyphicon-globe"></span>
               </a>
-              <div collapse="selectedNavItem !== 'dashboard'">
+              <div collapse="(selectedNavItem !== 'dashboard' || !active)">
                 <button class="btn btn-default btn-sm" ng-click="addMap()">Add Map</button>
                 <button class="btn btn-default btn-sm" ng-click="clearMaps()">Reset</button>
               </div>
@@ -38,9 +41,15 @@
               </a>
             </li>
           </ul>
+          <!--/Nav items -->
+
           <ul ng-controller="StyleListCtrl" class="sidebar-nav mss-nav">
-            <li>Style Files</li>
-            <div class="checkbox" ng-repeat="style in styles">
+            <li ng-click="collapsed=!collapsed">
+              <a is-active-nav>Styles
+                <span class="menu-icon glyphicon glyphicon-picture"></span>
+              </a>
+            </li>
+            <div class="checkbox" ng-repeat="style in styles" collapse="(collapsed || !active)">
               <label>
                 <input type="checkbox" value={{style}}
                   ng-checked="activeStyles.indexOf(style) > -1"
@@ -53,6 +62,7 @@
         <div ng-view></div>
       </div>
     </div>
+    <!--/Sidenav -->
 
     <div class="alert-box" ng-controller="WebSocketCtrl">
       <div class="row">
@@ -77,11 +87,12 @@
     <script src="app/shared/mml-service.js"></script>
     <script src="app/shared/notification-controller.js"></script>
     <script src="app/shared/ol3-directive.js"></script>
-    <script src="app/shared/side-nav-controller.js"></script>
-    <script src="app/shared/style-list-controller.js"></script>
     <script src="app/shared/style-service.js"></script>
     <script src="app/shared/stopevent-directive.js"></script>
     <script src="app/shared/websocket-controller.js"></script>
+
+    <script src="app/sidebar/side-nav-controller.js"></script>
+    <script src="app/sidebar/style-list-controller.js"></script>
 
     <script src="app/dashboard/dashboard-service.js"></script>
     <script src="app/dashboard/controller.js"></script>
