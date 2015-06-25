@@ -37,13 +37,6 @@ angular.module('magna-app')
 
     $scope.styles = StyleService.activeStyles;
 
-    $scope.$watch(function() {
-      return angular.element(document.querySelector('.gridster-element')).attr('class');
-      }, function(classes){
-        if ((classes.indexOf('gridster-loaded')) > -1) {
-          $scope.$broadcast('gridUpdate');
-        }
-    });
     $scope.$on('gridster-item-initialized', function(){
       $timeout(function(){
         $scope.$broadcast('gridUpdate');
