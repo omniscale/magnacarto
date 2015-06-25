@@ -44,14 +44,16 @@ angular.module('magna-app')
         // trigger updateSize in ol3-directive
         $scope.$broadcast('gridInit');
 
-        $scope.$on('gridster-item-initialized', function(event, gridsterItem){
+        $scope.$on('gridster-item-initialized', function(){
           $timeout(function(){
             $scope.$broadcast('gridUpdate');
-          });
+          }, 0);
         });
 
       }
     });
+
+
   }
 ])
 
