@@ -16,12 +16,7 @@ angular.module('magna-app')
         }
       },
       draggable: {
-        handle: '.move-map',
-        stop: function(event, uiWidget, $element) {
-          $timeout(function() {
-            $scope.$broadcast('gridUpdate', $element.mapId);
-          }, 0);
-        }
+        handle: '.move-map'
       }
     };
 
