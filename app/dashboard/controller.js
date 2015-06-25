@@ -37,10 +37,20 @@ angular.module('magna-app')
 
     $scope.styles = StyleService.activeStyles;
 
-    $scope.$on('gridster-item-initialized', function(){
-      $timeout(function(){
-        $scope.$broadcast('gridUpdate');
-      });
+    $scope.$watch(function() {
+      return angular.element(document.querySelector('.gridster-element')).attr('class');
+    }, function(classes){
+      if ((classes.indexOf('gridster-loaded')) > -1) {
+        // trigger updateSize in ol3-directive
+        $scope.$broadcast('gridInit');
+
+        $scope.$on('gridster-item-initialized', function(event, gridsterItem){
+          $timeout(function(){
+            $scope.$broadcast('gridUpdate');
+          });
+        });
+
+      }
     });
   }
 ])
