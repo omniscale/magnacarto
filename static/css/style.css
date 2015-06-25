@@ -94,7 +94,7 @@ html, body {
 .sidebar-nav li {
   line-height: 40px;
   text-indent: 20px;
-outline:none
+  outline:none
   border-top: 1px solid #373737;
   border-bottom: 1px solid #1A1A1A;
 }
