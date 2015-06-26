@@ -21,6 +21,8 @@ angular.module('magna-app')
     };
 
     $scope.maps = DashboardService.maps;
+    $scope.styles = StyleService.activeStyles;
+
     // Need to watch otherwise $scope.maps and DashboardService.maps are
     // different objects after clear maps and changes not recognized by
     // andgular
@@ -29,8 +31,6 @@ angular.module('magna-app')
     }, function() {
       $scope.maps = DashboardService.maps;
     });
-
-    $scope.styles = StyleService.activeStyles;
 
     $scope.$watch(function() {
       return angular.element(document.querySelector('.gridster-element')).attr('class');
@@ -44,7 +44,6 @@ angular.module('magna-app')
             $scope.$broadcast('gridUpdate');
           }, 0);
         });
-
       }
     });
 
