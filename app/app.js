@@ -39,28 +39,11 @@ angular.module('magna-app').constant('magnaConfig', {
     }];
 
     // create websocket
-    var webSocketURL = magnaConfig.socketUrl + 'mml=' + magnaConfig.mml + '&mss=' + StyleService.activeStyles;
-    var ws = $websocket.$new({
-      url: webSocketURL,
+    magnaConfig.socketUrl += 'mml=' + magnaConfig.mml + '&mss=' + StyleService.styles;
+    $websocket.$new({
+      url: magnaConfig.socketUrl,
       reconnect: true,
       reconnectInterval: 100
-    });
-
-    // TODO check if we need this realy
-    ws.$on('$open', function () {
-       $rootScope.$broadcast('socketOpen');
-    })
-
-    // right after connecting the first message arrive
-    // see ol3-directive for handling
-    .$on('$message', function (resp) {
-      // show fancy modal with error msg
-      if(resp.error !== undefined) {
-        $rootScope.$broadcast('socketError', resp);
-      } else {
-        // reload map
-        $rootScope.$broadcast('socketUpdateImage', resp);
-      }
     });
   });
 });
