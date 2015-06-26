@@ -11,12 +11,17 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.load = function(mml) {
         var self = this;
-        var loadPromise = $http.get(mml);
+        self.loadPromise = $http.get(mml);
         // TODO add on error
-        loadPromise.success(function(data) {
+        self.loadPromise.success(function(data) {
           self.styles = data.Stylesheet;
         });
-        return loadPromise;
+        return self.loadPromise;
+      };
+
+      MMLServiceInstance.prototype.loaded = function() {
+        var self = this;
+        return self.loadPromise;
       };
 
       return new MMLServiceInstance();
