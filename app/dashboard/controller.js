@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.controller('DashboardCtrl', ['$scope', '$timeout', '$cookieStore', 'DashboardService', 'StyleService',
-  function($scope, $timeout, $cookieStore, DashboardService, StyleService) {
+.controller('DashboardCtrl', ['$scope', '$cookieStore', 'DashboardService', 'StyleService',
+  function($scope, $cookieStore, DashboardService, StyleService) {
     $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {
       margins: [5, 5],
@@ -9,10 +9,8 @@ angular.module('magna-app')
       swapping: true,
       floating: true,
       resizable: {
-        stop: function(event, uiWidget, $element) {
-          $timeout(function() {
-            $scope.$broadcast('gridUpdate', $element.mapId);
-          }, 0);
+        stop: function(event, uiWidget) {
+          uiWidget.scope().resizeMap();
         }
       },
       draggable: {
@@ -31,23 +29,6 @@ angular.module('magna-app')
     }, function() {
       $scope.maps = DashboardService.maps;
     });
-
-    $scope.$watch(function() {
-      return angular.element(document.querySelector('.gridster-element')).attr('class');
-    }, function(classes){
-      if ((classes.indexOf('gridster-loaded')) > -1) {
-        // trigger updateSize in ol3-directive
-        $scope.$broadcast('gridInit');
-
-        $scope.$on('gridster-item-initialized', function(){
-          $timeout(function(){
-            $scope.$broadcast('gridUpdate');
-          }, 0);
-        });
-      }
-    });
-
-
   }
 ])
 

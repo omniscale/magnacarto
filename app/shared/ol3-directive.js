@@ -1,13 +1,14 @@
 angular.module('magna-app')
 
-.directive('ol3Map', ['$websocket', 'magnaConfig', 'uuid',
-  function($websocket, magnaConfig, uuid) {
+.directive('ol3Map', ['$timeout', '$websocket', 'magnaConfig',
+  function($timeout, $websocket, magnaConfig) {
     return {
       restrict: 'A',
       scope: {
           staticMap: '@',
           styles: '=',
-          settings: '=ol3Map'
+          settings: '=ol3Map',
+          gridsterItemElement: '='
       },
       link: {
         pre: function(scope) {
@@ -18,7 +19,6 @@ angular.module('magna-app')
           };
 
           scope.socket = $websocket.$get(magnaConfig.socketUrl);
-          scope.settings.mapId = scope.settings.mapId || uuid.v4();
           scope.staticMap = scope.staticMap === 'true' ? true : false;
 
           // intialize with default values
@@ -54,13 +54,10 @@ angular.module('magna-app')
           });
         },
         post: function(scope, element) {
-          // Add source to map if socket already open
-          if(scope.socket.$status() === scope.socket.$OPEN) {
-            scope.olMap.addLayer(new ol.layer.Image({
-              source: scope.olSource
-            }));
-            scope.lastUpdate = new Date();
-          }
+          scope.olMap.addLayer(new ol.layer.Image({
+            source: scope.olSource
+          }));
+          scope.lastUpdate = new Date();
 
           scope.socket.$on('$message', function (resp) {
             // without updated_at do nothing
@@ -72,14 +69,7 @@ angular.module('magna-app')
             if(scope.lastUpdate !== undefined && scope.lastUpdate >= updatedAt) {
               return;
             }
-
-            if(scope.lastUpdate === undefined) {
-              scope.olMap.addLayer(new ol.layer.Image({
-                source: scope.olSource
-              }));
-            } else {
-              scope.updateSource();
-            }
+            scope.updateSource();
             scope.lastUpdate = updatedAt;
           });
 
@@ -100,15 +90,19 @@ angular.module('magna-app')
             scope.updatedAt = undefined;
           });
 
-          // TODO: Find a solition to update map after loading dashboard
-          scope.$on('gridInit', function () {
-            // add map to dom when container size is fix
-            scope.olMap.setTarget(element[0]);
-          });
-
-          scope.$on('gridUpdate', function(event, mapId) {
-            if(mapId === scope.settings.mapId) {
-              scope.olMap.updateSize();
+          scope.$watch('gridsterItemElement.gridster.loaded', function(loaded) {
+            // gridstar loaded complete
+            if(loaded === true) {
+              // add map to dom
+              scope.olMap.setTarget(element[0]);
+              // add function to gridsterItem scope
+              // so it's callable in gridster resizeable stop callback
+              // see controller which defines gridster options
+              scope.gridsterItemElement.$element.scope().resizeMap = function() {
+                $timeout(function() {
+                  scope.olMap.updateSize();
+                });
+              };
             }
           });
 
