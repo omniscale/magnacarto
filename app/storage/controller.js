@@ -10,7 +10,7 @@ angular.module('magna-app')
     $scope.styles = StyleService.activeStyles;
 
     $scope.maps = savedMaps;
-    // $scope.dashboard
+
     $scope.gridsterStorageOptions = {
       margins: [5, 5],
       resizable: {

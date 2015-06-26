@@ -5,8 +5,6 @@ angular.module('magna-app')
     function($rootScope, $timeout, $cookieStore, magnaConfig) {
       var DashboardServiceInstance = function() {
         var self = this;
-        // TODO check if we can gat rid of layers, see ol3-direcitve
-        self.layers = [];
         self.maps = [];
 
         // dashboard cookie block. Replace by JSON
