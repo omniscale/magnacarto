@@ -1,15 +1,13 @@
 angular.module('magna-app')
 
 
-.controller('StorageCtrl', ['$scope', '$cookieStore', 'DashboardService', 'StyleService',
-  function($scope, $cookieStore, DashboardService, StyleService) {
+.controller('StorageCtrl', ['$scope', 'MMLService', 'DashboardService', 'StyleService',
+  function($scope, MMLService, DashboardService, StyleService) {
     $scope.navItemName = 'storage';
-    // TODO JSON
-    var savedMaps = $cookieStore.get('savedMaps');
 
     $scope.styles = StyleService.activeStyles;
 
-    $scope.maps = savedMaps;
+    $scope.maps = MMLService.storedMaps;
 
     $scope.gridsterStorageOptions = {
       margins: [5, 5],
@@ -21,7 +19,6 @@ angular.module('magna-app')
       }
     };
 
-    // TODO JSON
     $scope.restore = function(map) {
       DashboardService.addMap({
         coords: map.coords,
@@ -35,9 +32,6 @@ angular.module('magna-app')
           $scope.maps.splice(key, 1);
         }
       });
-
-      // TODO JSON
-      $cookieStore.put('savedMaps', $scope.maps);
     };
   }
 ]);

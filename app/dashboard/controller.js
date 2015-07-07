@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.controller('DashboardCtrl', ['$scope', '$cookieStore', 'DashboardService', 'StyleService',
-  function($scope, $cookieStore, DashboardService, StyleService) {
+.controller('DashboardCtrl', ['$scope', 'DashboardService', 'StyleService',
+  function($scope, DashboardService, StyleService) {
     $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {
       margins: [5, 5],
@@ -32,8 +32,8 @@ angular.module('magna-app')
   }
 ])
 
-.controller('DashboardMapCtrl', ['$scope', '$cookieStore', '$modal', 'DashboardService',
-  function($scope, $cookieStore, $modal, DashboardService) {
+.controller('DashboardMapCtrl', ['$scope', '$modal', 'DashboardService', 'MMLService',
+  function($scope, $modal, DashboardService, MMLService) {
 
     $scope.openSaveModal = function (map) {
       var modalInstance = $modal.open({
@@ -47,20 +47,12 @@ angular.module('magna-app')
       });
 
       modalInstance.result.then(function (item) {
-        var savedPlaces = [];
-        var cookie = $cookieStore.get('savedMaps');
-        if (cookie !== undefined && angular.isArray(cookie)) {
-          savedPlaces = cookie;
-        }
-
         // TODO: add antoher function to create an unique id
         var id = item.coords[0];
         id = id.toString();
         item.id = id.replace(/\./g,'');
 
-        savedPlaces.push(item);
-        // TODO: add Message that mat
-        $cookieStore.put('savedMaps', savedPlaces);
+        MMLService.storedMaps.push(item);
       });
     };
 

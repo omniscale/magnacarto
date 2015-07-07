@@ -1,22 +1,11 @@
 angular.module('magna-app')
 
 .provider('DashboardService', [function() {
-  this.$get = ['$rootScope', '$timeout', '$cookieStore', 'magnaConfig',
-    function($rootScope, $timeout, $cookieStore, magnaConfig) {
+  this.$get = ['magnaConfig',
+    function(magnaConfig) {
       var DashboardServiceInstance = function() {
         var self = this;
         self.maps = [];
-
-        // dashboard cookie block. Replace by JSON
-        var magnatorDashboardCookie = $cookieStore.get('magnatorDashboard');
-        if (magnatorDashboardCookie !== undefined) {
-          self.maps = magnatorDashboardCookie;
-        }
-        $rootScope.$watch(function() {
-          return self.maps;
-        }, function() {
-          $cookieStore.put('magnatorDashboard', self.maps);
-        }, true);
       };
 
       DashboardServiceInstance.prototype.clearMaps = function() {

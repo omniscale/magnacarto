@@ -1,4 +1,4 @@
-angular.module('magna-app', ['ngRoute', 'ngCookies', 'ngWebsocket', 'gridster', 'ui.bootstrap']);
+angular.module('magna-app', ['ngRoute', 'ngWebsocket', 'gridster', 'ui.bootstrap']);
 
 // TODO get config values from elsewhere?
 angular.module('magna-app').constant('magnaConfig', {
@@ -26,20 +26,25 @@ angular.module('magna-app').constant('magnaConfig', {
   });
 })
 
+.config(function(MMLServiceProvider) {
+  MMLServiceProvider.setSaveUrl('http://localhost:8000/save');
+  MMLServiceProvider.setLoadUrl('http://localhost:8000/');
+})
+
 .run(function($websocket, $rootScope, magnaConfig, MMLService, DashboardService, StyleService) {
   // Load project file (mml)
   var promise = MMLService.load(magnaConfig.mml);
   promise.success(function() {
     // add all style files to dashboard object
     StyleService.setStyles(MMLService.styles);
-
+    DashboardService.maps = MMLService.dashboardMaps;
     DashboardService.layers = [{
       styles: StyleService.activeStyles,
       mml: magnaConfig.mml
     }];
 
     // create websocket
-    magnaConfig.socketUrl += 'mml=' + magnaConfig.mml + '&mss=' + StyleService.styles;
+    magnaConfig.socketUrl += 'mml=' + MMLService.mml + '&mss=' + StyleService.styles;
     $websocket.$new({
       url: magnaConfig.socketUrl,
       reconnect: true,
