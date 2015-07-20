@@ -1,8 +1,8 @@
-MagnaCarto
+Magnacarto
 ==========
 
 
-MagnaCarto is a CartoCSS map style processor that generates Mapnik XML and MapServer map files.
+Magnacarto is a CartoCSS map style processor that generates Mapnik XML and MapServer map files.
 
 
 It is released as open source under the [Apache License 2.0][].
@@ -10,7 +10,7 @@ It is released as open source under the [Apache License 2.0][].
 [Apache License 2.0]: http://www.apache.org/licenses/LICENSE-2.0.html
 
 
-The development of MagnaCarto is sponsored by [Omniscale](http://omniscale.com/) and development will continue as resources permit.
+The development of Magnacarto is sponsored by [Omniscale](http://omniscale.com/) and development will continue as resources permit.
 Please get in touch if you need commercial support or if you need specific features.
 
 
@@ -64,7 +64,7 @@ You need [Go](http://golang.org).
 
 #### Go libraries
 
-MagnaCarto uses the following libraries.
+Magnacarto uses the following libraries.
 
 - <https://github.com/BurntSushi/toml>
 - <https://gopkg.in/fsnotify.v1>
@@ -81,7 +81,7 @@ The tests require:
 
 #### Other
 
-Fetching MagnaCarto requires [git][].
+Fetching Magnacarto requires [git][].
 
 [git]: http://git-scm.com/
 
@@ -94,19 +94,19 @@ Create a new [Go workspace](http://golang.org/doc/code.html):
     cd magnacarto
     export GOPATH=`pwd`
 
-Get MagnaCarto and all dependencies:
+Get Magnacarto and all dependencies:
 
     go get github.com/omniscale/magnacarto
     go install github.com/omniscale/magnacarto
 
 Done. You should now have a `magnacarto` binary in `$GOPATH/bin`.
 
-Go compiles to static binaries and so MagnaCarto has no runtime dependencies to Go.
+Go compiles to static binaries and so Magnacarto has no runtime dependencies to Go.
 Just copy the `magnacarto` binary to your server for deployment.
 
 ##### Godep
 
-MagnaCarto contains a fixed set of the dependencies that are known to work. You need to install MagnaCarto with [godep][] to compile with this set.
+Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set.
 
     git clone https://github.com/omniscale/magnacarto src/github.com/omniscale/magnacarto
     cd src/github.com/omniscale/magnacarto
@@ -139,7 +139,7 @@ Refer to the following CartoCSS projects for example .mml and .mss files.
 - https://github.com/mapbox/osm-bright
 - https://github.com/gravitystorm/openstreetmap-carto
 
-Please note that openstreetmap-carto relies on a few advanced Mapnik features that are not supported by Mapserver. Future versions of MagnaCarto might work around this.
+Please note that openstreetmap-carto relies on a few advanced Mapnik features that are not supported by Mapserver. Future versions of Magnacarto might work around this.
 
 
 Support
