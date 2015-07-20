@@ -51,7 +51,7 @@ Installation
 
 ### Binary
 
-There are no binary releases yet.
+There are binarie releases available for Windows, Linux and Mac OS X (Darwin): http://download.omniscale.de/magnacarto/rel/
 
 ### Source
 
@@ -139,7 +139,7 @@ Refer to the following CartoCSS projects for example .mml and .mss files.
 - https://github.com/mapbox/osm-bright
 - https://github.com/gravitystorm/openstreetmap-carto
 
-Please note that openstreetmap-carto relies on a few advanced Mapnik features that are not supported by Mapserver. Future versions of Magnacarto might work around this.
+Please note that openstreetmap-carto relies on a few advanced Mapnik features that are not supported by Mapserver. Future versions of Magnacarto might work around these limitations.
 
 
 Support
