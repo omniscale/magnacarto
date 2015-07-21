@@ -34,8 +34,8 @@ func TestParseColor(t *testing.T) {
 func TestColorString(t *testing.T) {
 	assert.Equal(t, "#ff6633", MustParse("#f63").String())
 	assert.Equal(t, "#fa623d", MustParse("#fA623D").String())
-	assert.Equal(t, "rgba(0, 0, 0, 0.0000)", RGBA{0, 0, 0, 0}.String())
-	assert.Equal(t, "rgba(204, 255, 153, 0.4000)", RGBA{0.8, 1.0, 0.6, 0.4}.String())
+	assert.Equal(t, "rgba(0, 0, 0, 0.00000)", RGBA{0, 0, 0, 0}.String())
+	assert.Equal(t, "rgba(204, 255, 153, 0.40000)", RGBA{0.8, 1.0, 0.6, 0.4}.String())
 	assert.Equal(t, "#ccff99", RGBA{0.8, 1.0, 0.6, 1}.String())
 }
 
