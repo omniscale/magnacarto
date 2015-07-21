@@ -32,6 +32,7 @@ var Maker = maker{}
 type Map struct {
 	Map            Block
 	Layers         Block
+	bgColor        *color.RGBA
 	fonts          map[string]string
 	svgSymbols     map[string]string
 	pointSymbols   map[string]struct{}
@@ -74,11 +75,18 @@ func New(locator config.Locator) *Map {
 	}
 }
 
+func (m *Map) SetBackgroundColor(c color.RGBA) {
+	m.bgColor = &c
+}
+
 func (m *Map) SetAutoTypeFilter(enable bool) {
 	m.autoTypeFilter = enable
 }
 
 func (m *Map) String() string {
+	if m.bgColor != nil {
+		m.Map.AddNonNil("ImageColor", fmtColor(*m.bgColor, true))
+	}
 	m.Map.Add("", m.Layers)
 	m.addSymbols()
 	return m.Map.String()
