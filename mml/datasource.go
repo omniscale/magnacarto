@@ -16,6 +16,7 @@ type PostGIS struct {
 type Shapefile struct {
 	Id       string
 	Filename string
+	SRID     string
 }
 
 type SQLite struct {

@@ -775,6 +775,7 @@ func (m *Map) addDatasource(block *Block, ds mml.Datasource, rules []mss.Rule) {
 			// TODO missing file
 			idx := strings.LastIndex(fname, ".") // without suffix
 			block.Add("data", quote(fname[:idx]))
+			block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
 		}
 	case mml.SQLite:
 		fname := m.locator.SQLite(ds.Filename)

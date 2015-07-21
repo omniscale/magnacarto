@@ -81,6 +81,7 @@ func newDatasource(d map[string]string) (Datasource, error) {
 	} else if d["file"] != "" && (d["type"] == "shape" || d["type"] == "") {
 		return Shapefile{
 			Filename: d["file"],
+			SRID:     d["srid"],
 		}, nil
 	} else if d["type"] == "sqlite" {
 		return SQLite{
