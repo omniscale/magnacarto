@@ -2,6 +2,8 @@
 # cross-compile magnacarto for various os/cpus and zip/tar.gz the output
 # requires Go 1.5, set GO15 environment var to use a different Go installation
 
+set -e
+
 if [ ! -z $GO15 ]; then
     export PATH=${GO15}/bin:$PATH
     export GOROOT=${GO15}
