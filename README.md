@@ -118,11 +118,11 @@ Usage
 
 `magnacarto` takes a single `-mml` file.
 
-  magnacarto -mml project.mml > /tmp/magnacarto.xml
+    magnacarto -mml project.mml > /tmp/magnacarto.xml
 
 To build a MapServer map file:
 
-  magnacarto -builder mapserver -mml project.mml > /tmp/magnacarto.map
+    magnacarto -builder mapserver -mml project.mml > /tmp/magnacarto.map
 
 See `magnacarto -help` for more options.
 
@@ -170,4 +170,4 @@ You can report any issues at: <https://github.com/omniscale/magnacarto/issues>
 There are regression tests that generate Mapnik and MapServer map files, renders images and compares them.
 These tests require Image Magick (`compare`) and MapServer >=7 (`shp2img`).
 
-  go test ./...
+    go test ./...
