@@ -37,7 +37,7 @@ angular.module('magna-app')
 
     $scope.openSaveModal = function (map) {
       var modalInstance = $modal.open({
-        templateUrl: 'app/dashboard/pinmap.template.html',
+        templateUrl: 'src/dashboard/pinmap.template.html',
         controller: 'PinMapCtrl',
         resolve: {
           map: function () {

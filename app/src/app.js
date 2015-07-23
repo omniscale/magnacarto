@@ -14,11 +14,11 @@ angular.module('magna-app').constant('magnaConfig', {
 .config(function($routeProvider){
   $routeProvider
   .when('/dashboard', {
-    templateUrl: 'app/dashboard/template.html',
+    templateUrl: 'src/dashboard/template.html',
     controller: 'DashboardCtrl'
   })
   .when('/storage', {
-    templateUrl: 'app/storage/template.html',
+    templateUrl: 'src/storage/template.html',
     controller: 'StorageCtrl'
   })
   .otherwise({
