@@ -55,7 +55,7 @@ func (s *magnaserv) styleParams(r *http.Request) (mml string, mss []string) {
 	return mml, mss
 }
 
-func (s *magnaserv) maphandler(w http.ResponseWriter, r *http.Request) {
+func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 	mapReq, err := maps.ParseMapRequest(r)
 	if err != nil {
 		log.Println(err)
@@ -107,13 +107,30 @@ func (s *magnaserv) maphandler(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, bytes.NewBuffer(b))
 }
 
+func (s *magnaserv) projects(w http.ResponseWriter, r *http.Request) {
+	projects, err := findProjects(s.config.StylesDir)
+	if err != nil {
+		s.internalError(w, r, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+
+	enc := json.NewEncoder(w)
+	err = enc.Encode(struct {
+		Projects []project `json:"projects"`
+	}{Projects: projects})
+	if err != nil {
+		s.internalError(w, r, err)
+		return
+	}
+}
+
 func (s *magnaserv) internalError(w http.ResponseWriter, r *http.Request, err error) {
 	log.Print(err)
 	w.WriteHeader(http.StatusInternalServerError)
 	w.Write([]byte("internal error"))
 }
-
-var passThroughParams = []string{"MML", "MSS", "RENDERER"}
 
 func renderReq(r *maps.Request) render.Request {
 	result := render.Request{}
@@ -267,7 +284,8 @@ func main() {
 		handler.mapnikMaker = mapnikBuilder.Maker3
 	}
 	v1 := r.PathPrefix("/api/v1").Subrouter()
-	v1.HandleFunc("/map", handler.maphandler)
+	v1.HandleFunc("/map", handler.render)
+	v1.HandleFunc("/projects", handler.projects)
 	v1.Handle("/changes", websocket.Handler(handler.changes))
 
 	r.Handle("/magnacarto/{path:.*}", http.StripPrefix("/magnacarto/", http.FileServer(http.Dir("app"))))
@@ -279,5 +297,7 @@ func main() {
 	for _, fontDir := range conf.Mapnik.FontDirs {
 		mapnik.RegisterFonts(fontDir)
 	}
+	log.Printf("listening on http://%s", *listenAddr)
+
 	log.Fatal(http.ListenAndServe(*listenAddr, handlers.LoggingHandler(os.Stdout, r)))
 }

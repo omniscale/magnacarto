@@ -9,17 +9,19 @@ import (
 )
 
 type MML struct {
+	Name        string
 	Layers      []Layer
 	Stylesheets []string
 }
 
 type auxMML struct {
+	Name        string
 	Stylesheets []string   `json:"Stylesheet"`
 	Layers      []auxLayer `json:"Layer"`
 }
 
 type auxLayer struct {
-	Datasource map[string]string
+	Datasource map[string]interface{}
 	Geometry   string
 	Id         string
 	Name       string
@@ -39,6 +41,7 @@ func newLayer(l auxLayer) (*Layer, error) {
 	if l.Status == "off" {
 		isActive = false
 	}
+
 	classes := strings.Split(l.Class, " ")
 	groupBy, _ := l.Properties["group-by"].(string)
 	return &Layer{
@@ -65,7 +68,17 @@ func parseGeometryType(t string) GeometryType {
 	}
 }
 
-func newDatasource(d map[string]string) (Datasource, error) {
+func newDatasource(params map[string]interface{}) (Datasource, error) {
+	d := make(map[string]string, len(params))
+	// convert all datasource params to strings (to support {srid: 1234} and {srid: "1234"}, etc.)
+	for k, v := range params {
+		if s, ok := v.(string); ok {
+			d[k] = s
+		} else {
+			d[k] = fmt.Sprintf("%v", v)
+		}
+	}
+
 	if d["type"] == "postgis" {
 		return PostGIS{
 			Username:      d["user"],
@@ -130,6 +143,7 @@ func Parse(r io.Reader) (*MML, error) {
 	}
 
 	m := MML{
+		Name:        aux.Name,
 		Layers:      layers,
 		Stylesheets: aux.Stylesheets,
 	}
