@@ -1,0 +1,5 @@
+*.map
+*.png
+hamburg_germany/
+ne_10m_admin_0_countries/
+*.xml

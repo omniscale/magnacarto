@@ -106,10 +106,12 @@ Just copy the `magnacarto` binary to your server for deployment.
 
 ##### Godep
 
-Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set.
+Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set. First create a `GOPATH` (see above), then call the following commands:
 
+    cd $GOPATH
     git clone https://github.com/omniscale/magnacarto src/github.com/omniscale/magnacarto
     cd src/github.com/omniscale/magnacarto
+    godep go generate github.com/omniscale/go-mapnik
     godep go install ./...
 
 
@@ -129,12 +131,14 @@ See `magnacarto -help` for more options.
 Documentation
 -------------
 
+See [docs/examples](https://github.com/omniscale/magnacarto/tree/master/docs/examples) for example files and usage instructions.
+
 Refer to the [Carto project](https://github.com/mapbox/carto) for documentation of the CartoCSS format.
 
 - https://github.com/mapbox/carto/blob/master/docs/latest.md
 - https://www.mapbox.com/tilemill/docs/crashcourse/styling/
 
-Refer to the following CartoCSS projects for example .mml and .mss files.
+Refer to the following CartoCSS projects for larger .mml and .mss examples.
 
 - https://github.com/mapbox/osm-bright
 - https://github.com/gravitystorm/openstreetmap-carto

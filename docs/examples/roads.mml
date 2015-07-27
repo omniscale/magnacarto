@@ -2,19 +2,19 @@
   "Layer": [
     {
       "Datasource": {
-        "file": "ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp",
+        "file": "hamburg_germany/hamburg_germany_osm_roads.shp",
         "srid": "4326",
         "type": "shape"
       },
       "extent": [-180, -90, 180, 90],
-      "geometry": "polygon",
-      "id": "world",
-      "name": "world",
+      "geometry": "linestring",
+      "id": "roads",
+      "name": "roads",
       "srs": "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
     }
   ],
   "Stylesheet": [
-    "world.mss"
+    "roads.mss"
   ],
   "format": "png",
   "name": "Magnacarto Test",

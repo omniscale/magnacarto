@@ -44,6 +44,8 @@ func main() {
 
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 
+	msNoMapBlock := flag.Bool("ms-no-map-block", false, "hide MAP block, only output layers/symbols for INCLUDE")
+
 	flag.Parse()
 
 	if *cpuprofile != "" {
@@ -91,10 +93,13 @@ func main() {
 
 	switch *builderType {
 	case "mapserver":
-		m = mapserver.New(locator)
+		mm := mapserver.New(locator)
+		mm.SetNoMapBlock(*msNoMapBlock)
+		m = mm
 	case "mapnik2":
-		m = mapnik.New(locator)
-		m.(*mapnik.Map).SetMapnik2(true)
+		mm := mapnik.New(locator)
+		mm.SetMapnik2(true)
+		m = mm
 	case "mapnik3":
 		m = mapnik.New(locator)
 	default:
