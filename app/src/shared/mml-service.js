@@ -96,7 +96,7 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.loaded = function() {
         var self = this;
-        return self.loadPromise;
+        return self.loadPromise !== undefined;
       };
 
       MMLServiceInstance.prototype.getSocket = function() {

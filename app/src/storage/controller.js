@@ -1,8 +1,11 @@
 angular.module('magna-app')
 
 
-.controller('StorageCtrl', ['$scope', 'MMLService', 'DashboardService', 'StyleService',
-  function($scope, MMLService, DashboardService, StyleService) {
+.controller('StorageCtrl', ['$scope', '$location', 'MMLService', 'DashboardService', 'StyleService',
+  function($scope, $location, MMLService, DashboardService, StyleService) {
+    if(!MMLService.loaded()) {
+      $location.path('/');
+    }
     $scope.navItemName = 'storage';
 
     $scope.styles = StyleService.activeStyles;

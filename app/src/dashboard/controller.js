@@ -1,7 +1,10 @@
 angular.module('magna-app')
 
-.controller('DashboardCtrl', ['$scope', 'DashboardService', 'StyleService',
-  function($scope, DashboardService, StyleService) {
+.controller('DashboardCtrl', ['$scope', '$location', 'DashboardService', 'StyleService', 'MMLService',
+  function($scope, $location, DashboardService, StyleService, MMLService) {
+    if(!MMLService.loaded()) {
+      $location.path('/');
+    }
     $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {
       margins: [5, 5],
