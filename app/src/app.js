@@ -2,13 +2,15 @@ angular.module('magna-app', ['ngRoute', 'ngWebsocket', 'gridster', 'ui.bootstrap
 
 // TODO get config values from elsewhere?
 angular.module('magna-app').constant('magnaConfig', {
-    socketUrl: 'ws://localhost:7070/api/v1/changes?',
-    mapnikUrl: 'http://localhost:7070/api/v1/map?',
-    mapnikLayers: 'osm',
-    mapnikImageFormat: 'image/png',
-    defaultCenter: [8, 53],
-    defaultZoom: 12,
-    mml: '/example/example.mml'
+  projectsUrl: 'http://localhost:8888/proxy/http://localhost:7070/api/v1/projects',
+  projectBaseUrl: 'http://localhost:8888/proxy/http://localhost:7070/api/v1/projects/',
+  socketUrl: 'ws://localhost:7070/api/v1/changes?',
+  mapnikUrl: 'http://localhost:7070/api/v1/map?',
+  mapnikLayers: 'osm',
+  mapnikImageFormat: 'image/png',
+  defaultCenter: [8, 53],
+  defaultZoom: 12,
+  mml: '/example/example.mml'
 })
 
 .config(function($routeProvider){
@@ -30,12 +32,6 @@ angular.module('magna-app').constant('magnaConfig', {
   });
 })
 
-.config(function(ProjectsServiceProvider, MMLServiceProvider) {
-  ProjectsServiceProvider.setProjectsUrl('http://localhost:8888/proxy/http://localhost:7070/api/v1/projects');
-  // MMLServiceProvider.setBaseUrl('http://localhost:8888/proxy/')
-  MMLServiceProvider.setBaseUrl('http://localhost:8888/proxy/http://localhost:7070/api/v1/projects/');
-})
-
-.run(function($websocket, $rootScope, magnaConfig, ProjectsService, MMLService, DashboardService, StyleService) {
-  var projectsPromise = ProjectsService.load();
+.run(function(ProjectsService) {
+  ProjectsService.load();
 });

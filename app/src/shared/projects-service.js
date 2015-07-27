@@ -1,24 +1,16 @@
 angular.module('magna-app')
 
-.provider('ProjectsService', [function() {
-
-  var projectsUrl;
-
-  this.setProjectsUrl = function(url) {
-    projectsUrl = url;
-  };
-
+.provider('ProjectsService', ['magnaConfig', function(magnaConfig) {
   this.$get = ['$http',
     function($http) {
-      var ProjectsServiceInstance = function(url) {
-        this.url = url;
+      var ProjectsServiceInstance = function() {
         this.projects = [];
       };
 
       ProjectsServiceInstance.prototype.load = function() {
         var self = this;
 
-        self.loadPromise = $http.get(self.url);
+        self.loadPromise = $http.get(magnaConfig.projectsUrl);
         // TODO add on error
         self.loadPromise.success(function(data) {
           self.projects = data.projects;
@@ -31,6 +23,6 @@ angular.module('magna-app')
         return self.loadPromise;
       };
 
-      return new ProjectsServiceInstance(projectsUrl);
+      return new ProjectsServiceInstance();
   }];
 }]);

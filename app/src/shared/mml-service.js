@@ -1,24 +1,12 @@
 angular.module('magna-app')
 
 .provider('MMLService', [function() {
-
-  var baseUrl;
-
-  var fakePost = function(url, data) {
-    console.log(url, data);
-  };
-
-  this.setBaseUrl = function(url) {
-    baseUrl = url;
-  };
-
   this.$get = ['$http', '$rootScope', '$websocket', 'magnaConfig', 'StyleService', 'DashboardService',
     function($http, $rootScope, $websocket, magnaConfig, StyleService, DashboardService) {
-      var MMLServiceInstance = function(baseUrl) {
+      var MMLServiceInstance = function() {
         this.mml = undefined;
         this.mmlData = undefined;
         this.styles = [];
-        this.baseUrl = baseUrl;
         this.dashboardMaps = [];
         this.storedMaps = [];
         this.socketUrl = undefined;
@@ -42,7 +30,7 @@ angular.module('magna-app')
         self.mml = project.mml;
         self.availableMss = project.available_mss;
 
-        self.loadPromise = $http.get(self.baseUrl + self.basePath + '/' + self.mml);
+        self.loadPromise = $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml);
         // TODO add load project error handling
         self.loadPromise = self.loadPromise.then(function(response) {
           self.mmlData = response.data;
@@ -75,7 +63,7 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.saveProject = function() {
         var self = this;
-        $http.post(self.baseUrl + self.basePath + '/' + self.mml, self.mmlData);
+        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, self.mmlData);
       };
 
       MMLServiceInstance.prototype.bindSocket_ = function() {
@@ -148,6 +136,6 @@ angular.module('magna-app')
         }
       };
 
-      return new MMLServiceInstance(baseUrl);
+      return new MMLServiceInstance();
   }];
 }]);
