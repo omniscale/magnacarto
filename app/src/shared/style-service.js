@@ -10,11 +10,11 @@ angular.module('magna-app')
       };
 
       StyleServiceInstance.prototype.setStyles = function(styles) {
-        var self = this;
-        self.styles = styles;
-        // need to copy otherwise styles and activeStyles are the same
-        // list object
-        self.activeStyles = angular.copy(styles);
+        this.styles = styles;
+      };
+
+      StyleServiceInstance.prototype.setProjectStyles = function(styles) {
+        this.activeStyles = styles;
       };
 
       StyleServiceInstance.prototype.toggleStyle = function(style) {

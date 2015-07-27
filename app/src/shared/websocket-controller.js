@@ -4,12 +4,12 @@ angular.module('magna-app')
   function($scope, $websocket, magnaConfig, MMLService) {
     $scope.alerts = [];
 
-    // cause socket is set up after MMLService finished loading,
-    // we have to bind our listeners after its loading promise
-    // was successfull resolved
-    MMLService.loaded().success(function() {
-      var socket = $websocket.$get(magnaConfig.socketUrl);
-
+    // Add messages handler when socket changes
+    $scope.$watch(function() {
+      return MMLService.getSocket();
+    }, function(n, o) {
+      if(n === o) return;
+      var socket = n;
       socket.$on('$open', function() {
         $scope.alerts.push({
            type: 'info',

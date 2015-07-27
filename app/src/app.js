@@ -2,8 +2,8 @@ angular.module('magna-app', ['ngRoute', 'ngWebsocket', 'gridster', 'ui.bootstrap
 
 // TODO get config values from elsewhere?
 angular.module('magna-app').constant('magnaConfig', {
-    socketUrl: 'ws://localhost:7070/changes?',
-    mapnikUrl: 'http://localhost:7070/mapnik?',
+    socketUrl: 'ws://localhost:7070/api/v1/changes?',
+    mapnikUrl: 'http://localhost:7070/api/v1/map?',
     mapnikLayers: 'osm',
     mapnikImageFormat: 'image/png',
     defaultCenter: [8, 53],
@@ -13,6 +13,10 @@ angular.module('magna-app').constant('magnaConfig', {
 
 .config(function($routeProvider){
   $routeProvider
+  .when('/projects', {
+    templateUrl: 'src/projects/template.html',
+    controller: 'ProjectsCtrl'
+  })
   .when('/dashboard', {
     templateUrl: 'src/dashboard/template.html',
     controller: 'DashboardCtrl'
@@ -22,33 +26,18 @@ angular.module('magna-app').constant('magnaConfig', {
     controller: 'StorageCtrl'
   })
   .otherwise({
-    redirectTo: '/dashboard'
+    redirectTo: '/projects'
   });
 })
 
-.config(function(MMLServiceProvider) {
+.config(function(ProjectsServiceProvider, MMLServiceProvider) {
+  ProjectsServiceProvider.setProjectsUrl('http://localhost:8888/proxy/http://localhost:7070/api/v1/projects');
+  // MMLServiceProvider.setBaseUrl('http://localhost:8888/proxy/')
+  MMLServiceProvider.setBaseUrl('http://localhost:8888/proxy/http://localhost:7070/api/v1/projects/');
   MMLServiceProvider.setSaveUrl('http://localhost:8000/save');
   MMLServiceProvider.setLoadUrl('http://localhost:8000/');
 })
 
-.run(function($websocket, $rootScope, magnaConfig, MMLService, DashboardService, StyleService) {
-  // Load project file (mml)
-  var promise = MMLService.load(magnaConfig.mml);
-  promise.success(function() {
-    // add all style files to dashboard object
-    StyleService.setStyles(MMLService.styles);
-    DashboardService.maps = MMLService.dashboardMaps;
-    DashboardService.layers = [{
-      styles: StyleService.activeStyles,
-      mml: magnaConfig.mml
-    }];
-
-    // create websocket
-    magnaConfig.socketUrl += 'mml=' + MMLService.mml + '&mss=' + StyleService.styles;
-    $websocket.$new({
-      url: magnaConfig.socketUrl,
-      reconnect: true,
-      reconnectInterval: 100
-    });
-  });
+.run(function($websocket, $rootScope, magnaConfig, ProjectsService, MMLService, DashboardService, StyleService) {
+  var projectsPromise = ProjectsService.load();
 });

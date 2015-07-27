@@ -4,9 +4,14 @@ angular.module('magna-app')
 
   var loadUrl;
   var saveUrl;
+  var baseUrl;
 
   var fakePost = function(url, data) {
     console.log(url, data);
+  };
+
+  this.setBaseUrl = function(url) {
+    baseUrl = url;
   };
 
   this.setLoadUrl = function(url) {
@@ -17,48 +22,93 @@ angular.module('magna-app')
     saveUrl = url;
   };
 
-  this.$get = ['$http', '$rootScope',
-    function($http, $rootScope) {
-      var MMLServiceInstance = function(loadUrl, saveUrl) {
+  this.$get = ['$http', '$rootScope', '$websocket', 'magnaConfig', 'StyleService', 'DashboardService',
+    function($http, $rootScope, $websocket, magnaConfig, StyleService, DashboardService) {
+      var MMLServiceInstance = function(baseUrl, loadUrl, saveUrl) {
         this.mml = undefined;
-        this.styles = undefined;
+        this.styles = [];
+        this.baseUrl = baseUrl;
         this.loadUrl = loadUrl;
         this.saveUrl = saveUrl;
+        this.dashboardMaps = [];
+        this.storedMaps = [];
+        this.socketUrl = undefined;
+        this.socket = undefined;
       };
 
-      MMLServiceInstance.prototype.load = function(mml) {
+      MMLServiceInstance.prototype.loadProject = function(project) {
         var self = this;
-        self.mml = mml;
-        self.loadPromise = $http.get(self.loadUrl + self.mml);
-        // TODO add on error
-        self.loadPromise.success(function(data) {
+
+        self.disableWatchers();
+        // unbind socket
+        if(self.socket !== undefined) {
+          self.socket.$close();
+        }
+        // clear project data
+        self.styles = [];
+        self.dashboardMaps = [];
+        self.storedMaps = [];
+
+        self.basePath = project.base;
+        self.mml = project.mml;
+        self.availableMss = project.available_mss;
+
+        self.loadPromise = $http.get(self.baseUrl + self.basePath + '/' + self.mml);
+        // TODO add load project error handling
+        self.loadPromise = self.loadPromise.then(function(response) {
+          var data = response.data;
+          self.bindSocket_();
           self.styles = data.Stylesheet;
-          self.dashboardMaps = data.magnacarto.dashboardMaps;
-          self.storedMaps = data.magnacarto.storedMaps;
+          StyleService.setStyles(self.availableMss);
+          StyleService.setProjectStyles(self.styles);
 
-          // listen on changes in dashboardMaps
-          // save if change occurs
-          $rootScope.$watch(function() {
-            return self.dashboardMaps;
-          }, function() {
-            self.saveDashboardMaps();
-          }, true);
+          if(data.magnacarto !== undefined) {
+            self.dashboardMaps = data.magnacarto.dashboardMaps;
+            self.storedMaps = data.magnacarto.storedMaps;
+          }
 
-          // listen on changes in storedMaps
-          // save if change occurs
-          $rootScope.$watch(function() {
-            return self.storedMaps;
-          }, function() {
-            self.saveStoredMaps();
-          }, true);
+          DashboardService.maps = self.dashboardMaps;
+          DashboardService.layers = [{
+            styles: StyleService.activeStyles,
+            mml: self.mml
+          }];
+
+          self.enableWatchers();
 
         });
+
         return self.loadPromise;
+      };
+
+      MMLServiceInstance.prototype.bindSocket_ = function() {
+        var self = this;
+        self.socketUrl = magnaConfig.socketUrl;
+        self.socketUrl += 'mml=' + self.mml;
+        self.socketUrl += '&mss=' + self.availableMss;
+        self.socketUrl += '&base=' + self.basePath;
+
+        self.socket = $websocket.$new({
+          url: self.socketUrl,
+          reconnect: true,
+          reconnectInterval: 100
+        });
       };
 
       MMLServiceInstance.prototype.loaded = function() {
         var self = this;
         return self.loadPromise;
+      };
+
+      MMLServiceInstance.prototype.getSocket = function() {
+        return this.socket;
+      };
+
+      MMLServiceInstance.prototype.saveActiveStyles = function() {
+        var self = this;
+        fakePost(self.saveUrl, {
+          'type': 'styles',
+          'styles': self.styles
+        });
       };
 
       MMLServiceInstance.prototype.saveDashboardMaps = function() {
@@ -83,6 +133,53 @@ angular.module('magna-app')
         // return self.saveStoredMapsPromise;
       };
 
-      return new MMLServiceInstance(loadUrl, saveUrl);
+      MMLServiceInstance.prototype.enableWatchers = function() {
+        var self = this;
+
+        // listen on changes in dashboardMaps
+        // save if change occurs
+        self.dashboardMapsWatcher = $rootScope.$watch(function() {
+          return self.dashboardMaps;
+        }, function(o, n) {
+          if(n === o) return;
+          self.saveDashboardMaps();
+        }, true);
+
+        // listen on changes in storedMaps
+        // save if change occurs
+        self.storedMapsWatcher = $rootScope.$watch(function() {
+          return self.storedMaps;
+        }, function(o, n) {
+          if(n === o) return;
+          self.saveStoredMaps();
+        }, true);
+
+        self.stylesWatcher = $rootScope.$watch(function() {
+          return self.styles;
+        }, function(o, n) {
+          if(n === o) return;
+          self.saveActiveStyles();
+        }, true);
+      };
+
+      MMLServiceInstance.prototype.disableWatchers = function() {
+        var self = this;
+        if(self.dashboardMapsWatcher !== undefined) {
+          self.dashboardMapsWatcher();
+          self.dashboardMapsWatcher = undefined;
+        }
+
+        if(self.storedMapsWatcher !== undefined) {
+          self.storedMapsWatcher();
+          self.storedMapsWatcher = undefined;
+        }
+
+        if(self.stylesWatcher !== undefined) {
+          self.stylesWatcher();
+          self.stylesWatcher = undefined;
+        }
+      };
+
+      return new MMLServiceInstance(baseUrl, loadUrl, saveUrl);
   }];
 }]);
