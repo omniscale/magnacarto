@@ -257,7 +257,7 @@ func main() {
 
 	locator := conf.Locator()
 
-	builderCache := builder.NewCache(locator, conf.DeferEval)
+	builderCache := builder.NewCache(locator)
 	if conf.OutDir != "" {
 		if err := os.MkdirAll(conf.OutDir, 0755); err != nil && !os.IsExist(err) {
 			log.Fatal("unable to create outdir: ", err)
