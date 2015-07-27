@@ -131,12 +131,14 @@ See `magnacarto -help` for more options.
 Documentation
 -------------
 
+See [docs/examples](https://github.com/omniscale/magnacarto/tree/master/docs/examples) for example files and usage instructions.
+
 Refer to the [Carto project](https://github.com/mapbox/carto) for documentation of the CartoCSS format.
 
 - https://github.com/mapbox/carto/blob/master/docs/latest.md
 - https://www.mapbox.com/tilemill/docs/crashcourse/styling/
 
-Refer to the following CartoCSS projects for example .mml and .mss files.
+Refer to the following CartoCSS projects for larger .mml and .mss examples.
 
 - https://github.com/mapbox/osm-bright
 - https://github.com/gravitystorm/openstreetmap-carto
