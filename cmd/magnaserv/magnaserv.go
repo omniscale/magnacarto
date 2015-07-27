@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,6 +16,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/omniscale/magnacarto/mml"
 
 	"code.google.com/p/go.net/websocket"
 
@@ -141,7 +144,46 @@ func (s *magnaserv) mml(w http.ResponseWriter, r *http.Request) {
 		s.internalError(w, r, err)
 		return
 	}
+
+	if r.Method == "POST" {
+		if err := writeCheckedMML(r.Body, fileName); err != nil {
+			s.internalError(w, r, err)
+			return
+		}
+		return
+	}
 	http.ServeFile(w, r, fileName)
+}
+
+// writeCheckedMML writes MML from io.ReadCloser to fileName.
+// Checks if r is a valid MML before (over)writing file.
+func writeCheckedMML(r io.ReadCloser, fileName string) error {
+	tmpFile := fileName + ".tmp-" + strconv.FormatInt(int64(rand.Int31()), 16)
+	f, err := os.Create(tmpFile)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+	defer os.Remove(tmpFile) // make sure temp file always gets removed
+
+	_, err = io.Copy(f, r)
+	f.Close()
+	if err != nil {
+		return err
+	}
+
+	f, err = os.Open(tmpFile)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	if _, err := mml.Parse(f); err != nil {
+		return err
+	}
+	if err := os.Rename(tmpFile, fileName); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *magnaserv) internalError(w http.ResponseWriter, r *http.Request, err error) {
