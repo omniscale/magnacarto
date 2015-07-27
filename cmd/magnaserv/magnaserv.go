@@ -43,7 +43,7 @@ func (s *magnaserv) styleParams(r *http.Request) (mml string, mss []string) {
 	baseDir := s.config.StylesDir
 	base := r.FormValue("base")
 	if base != "" {
-		filepath.Join(baseDir, base)
+		baseDir = filepath.Join(baseDir, base)
 	}
 
 	mml = r.FormValue("mml")
