@@ -96,8 +96,8 @@ Create a new [Go workspace](http://golang.org/doc/code.html):
 
 Get Magnacarto and all dependencies:
 
-    go get github.com/omniscale/magnacarto
-    go install github.com/omniscale/magnacarto
+    go get github.com/omniscale/magnacarto/cmd/magnacarto
+    go install github.com/omniscale/magnacarto/cmd/magnacarto
 
 Done. You should now have a `magnacarto` binary in `$GOPATH/bin`.
 
