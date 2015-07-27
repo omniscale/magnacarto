@@ -151,9 +151,10 @@ html, body {
 /* Notification Styling */
 
 .alert-box {
-  position: absolute;
+  position: fixed;
   right: 0px;
-  top: 10px
+  top: 10px;
+  max-width: 80%;
 }
 
 .alert {

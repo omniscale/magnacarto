@@ -4,6 +4,15 @@ angular.module('magna-app')
   function($scope, $websocket, magnaConfig, MMLService) {
     $scope.alerts = [];
 
+    var appendMessage = function(type, msg) {
+      $scope.$apply(function() {
+        $scope.alerts.push({
+          type: type,
+          msg: msg
+        });
+      });
+    };
+
     // Add messages handler when socket changes
     $scope.$watch(function() {
       return MMLService.getSocket();
@@ -11,11 +20,7 @@ angular.module('magna-app')
       if(n === o) return;
       var socket = n;
       socket.$on('$open', function() {
-        $scope.alerts.push({
-           type: 'info',
-            msg: 'Connect to the websocket Server'
-          }
-        );
+        appendMessage('info', 'Connect to the websocket Server');
       });
 
       socket.$on('$message', function (resp) {
@@ -23,10 +28,7 @@ angular.module('magna-app')
         if(resp.error !== undefined) {
           type = 'error';
         }
-        $scope.alerts.push({
-          type: 'success',
-          msg: resp
-        });
+        appendMessage(type, resp);
       });
     });
 }]);
