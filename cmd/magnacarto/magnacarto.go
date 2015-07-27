@@ -39,7 +39,6 @@ func main() {
 	dumpRules := flag.Bool("dumprules", false, "print calculated rules to stderr")
 	builderType := flag.String("builder", "mapnik2", "builder type {mapnik2,mapnik3,mapserver}")
 	outFile := flag.String("out", "", "out file")
-	deferEval := flag.Bool("deferred-eval", false, "defer variable/expression evaluation to the end")
 	version := flag.Bool("version", false, "print version and exit")
 	noCheckFiles := flag.Bool("no-check-files", false, "do not check if images/shps/etc exists")
 
@@ -103,9 +102,6 @@ func main() {
 	}
 
 	b := builder.New(m)
-	if *deferEval || conf.DeferEval {
-		b.EnableDeferredEval()
-	}
 	b.SetMML(*mmlFilename)
 	for _, mss := range mssFilenames {
 		b.AddMSS(mss)

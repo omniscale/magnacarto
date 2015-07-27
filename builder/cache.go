@@ -78,18 +78,16 @@ const stylePrefix = "magnacarto-style-"
 // It automatically detects changes to the MSS and MML files and rebuilds
 // styles if requested again.
 type Cache struct {
-	mu        sync.Mutex
-	locator   config.Locator
-	styles    map[uint32]*style
-	deferEval bool
-	destDir   string
+	mu      sync.Mutex
+	locator config.Locator
+	styles  map[uint32]*style
+	destDir string
 }
 
-func NewCache(locator config.Locator, deferEval bool) *Cache {
+func NewCache(locator config.Locator) *Cache {
 	return &Cache{
-		locator:   locator,
-		deferEval: deferEval,
-		styles:    make(map[uint32]*style),
+		locator: locator,
+		styles:  make(map[uint32]*style),
 	}
 }
 
@@ -267,9 +265,6 @@ func (c *Cache) build(style *style) error {
 	m := style.mapMaker.New(c.locator)
 	builder := New(m)
 
-	if c.deferEval {
-		builder.EnableDeferredEval()
-	}
 	builder.SetMML(style.mml)
 	for _, mss := range style.mss {
 		builder.AddMSS(mss)

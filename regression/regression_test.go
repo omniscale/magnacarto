@@ -265,7 +265,6 @@ func buildMagnacarto(t *testing.T, c testCase, mapfile bool) {
 	}
 
 	b := builder.New(m)
-	b.EnableDeferredEval()
 	b.SetMML(filepath.Join(caseBuildDir, "test.mml"))
 
 	if err := b.Build(); err != nil {

@@ -15,7 +15,6 @@ type Magnacarto struct {
 	Mapnik      Mapnik
 	MapServer   MapServer
 	StylesDir   string `toml:"styles_dir"`
-	DeferEval   bool   `toml:"deferred_eval"`
 	OutDir      string `toml:"out_dir"`
 	Datasources Datasource
 	PostGIS     PostGIS
