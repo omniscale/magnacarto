@@ -38,6 +38,7 @@ type Map struct {
 	pointSymbols   map[string]struct{}
 	locator        config.Locator
 	autoTypeFilter bool
+	noMapBlock     bool
 }
 
 func New(locator config.Locator) *Map {
@@ -83,7 +84,17 @@ func (m *Map) SetAutoTypeFilter(enable bool) {
 	m.autoTypeFilter = enable
 }
 
+func (m *Map) SetNoMapBlock(enable bool) {
+	m.noMapBlock = enable
+}
+
 func (m *Map) String() string {
+	if m.noMapBlock {
+		m.Map = NewBlock("")
+		m.Map.Add("", m.Layers)
+		m.addSymbols()
+		return m.Map.String()
+	}
 	if m.bgColor != nil {
 		m.Map.AddNonNil("ImageColor", fmtColor(*m.bgColor, true))
 	}

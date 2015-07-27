@@ -39,3 +39,9 @@ Create MapServer map file:
 Render map with shp2img:
 
     shp2img -m world.map -o mapserver.png -s 1000 1000
+
+
+Use the -ms-no-map-block option to create a mapfile without a MAP block.
+The output will only contain LAYERS and SYMBOLS, useful for `INCLUDE`ing into map files with custom metadata, image formats, etc.:
+
+    magnacarto -mml world.mml -builder mapserver -ms-no-map-block > layers.map
