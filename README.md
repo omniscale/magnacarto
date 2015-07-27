@@ -106,10 +106,12 @@ Just copy the `magnacarto` binary to your server for deployment.
 
 ##### Godep
 
-Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set.
+Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set. First create a `GOPATH` (see above), then call the following commands:
 
+    cd $GOPATH
     git clone https://github.com/omniscale/magnacarto src/github.com/omniscale/magnacarto
     cd src/github.com/omniscale/magnacarto
+    godep go generate github.com/omniscale/go-mapnik
     godep go install ./...
 
 
