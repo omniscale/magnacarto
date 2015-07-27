@@ -303,7 +303,7 @@ func main() {
 	}
 	v1 := r.PathPrefix("/api/v1").Subrouter()
 	v1.HandleFunc("/map", handler.render)
-	v1.HandleFunc("/projects/{project}/{mml}.mml", handler.mml)
+	v1.HandleFunc("/projects/{base}/{mml}.mml", handler.mml)
 	v1.HandleFunc("/projects", handler.projects)
 	v1.Handle("/changes", websocket.Handler(handler.changes))
 
