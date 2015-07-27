@@ -10,7 +10,7 @@ angular.module('magna-app')
 
       DashboardServiceInstance.prototype.clearMaps = function() {
         var self = this;
-        self.maps = [];
+        self.maps.length = 0;
       };
 
       DashboardServiceInstance.prototype.addMap = function(map) {
