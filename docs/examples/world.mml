@@ -10,7 +10,7 @@
       "geometry": "polygon",
       "id": "world",
       "name": "world",
-      "srs": "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
+      "srs": "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
     }
   ],
   "Stylesheet": [
