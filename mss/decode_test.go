@@ -16,36 +16,22 @@ import (
 
 func TestDecodeFiles(t *testing.T) {
 	t.Parallel()
-	decodeFiles(t, false)
-}
-
-func TestDecodeFilesDeferEval(t *testing.T) {
-	t.Parallel()
-	decodeFiles(t, true)
-}
-
-func BenchmarkTestDecodeDeferred(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		decodeFiles(b, true)
-	}
+	decodeFiles(t)
 }
 
 func BenchmarkTestDecode(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		decodeFiles(b, false)
+		decodeFiles(b)
 	}
 }
 
-func decodeFiles(t testing.TB, deferEval bool) {
+func decodeFiles(t testing.TB) {
 	testFiles, err := filepath.Glob("./tests/*.mss")
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, f := range testFiles {
 		d := New()
-		if deferEval {
-			d.EnableDeferredEval()
-		}
 		if err := d.ParseFile(f); err != nil {
 			t.Fatal(err)
 		}
@@ -64,6 +50,9 @@ func decodeFiles(t testing.TB, deferEval bool) {
 func decodeString(content string) (*Decoder, error) {
 	d := New()
 	err := d.ParseString(content)
+	if err := d.Evaluate(); err != nil {
+		return nil, err
+	}
 	return d, err
 }
 
@@ -195,15 +184,6 @@ func TestDeferEval(t *testing.T) {
 	d := New()
 	err := d.ParseString(`@foo: red; @bar1: @foo; @foo: blue; @bar2: @foo;`)
 	assert.NoError(t, err)
-
-	// without deferred evaluation bar1 references first value
-	assert.Equal(t, color.MustParse("red"), d.vars.getKey(key{name: "bar1"}))
-	assert.Equal(t, color.MustParse("blue"), d.vars.getKey(key{name: "bar2"}))
-
-	d = New()
-	d.EnableDeferredEval()
-	err = d.ParseString(`@foo: red; @bar1: @foo; @foo: blue; @bar2: @foo;`)
-	assert.NoError(t, err)
 	err = d.Evaluate()
 	assert.NoError(t, err)
 	// with deferred evaluation bar1 and bar2 reference latest @foo value
@@ -211,7 +191,6 @@ func TestDeferEval(t *testing.T) {
 	assert.Equal(t, color.MustParse("blue"), d.vars.getKey(key{name: "bar2"}))
 
 	d = New()
-	d.EnableDeferredEval()
 	err = d.ParseString(`
 		@foo: red;
 		#foo {
@@ -230,7 +209,6 @@ func TestDeferEval(t *testing.T) {
 
 func TestRecursiveDeferEval(t *testing.T) {
 	d := New()
-	d.EnableDeferredEval()
 	err := d.ParseString(`
 		@foo: red;
 		@bar: @foo;
@@ -315,9 +293,12 @@ func loadRules(t *testing.T, f string, layer string, classes ...string) []Rule {
 	}
 
 	d := New()
-	err = d.ParseString(string(content))
-	if err != nil {
+	if err = d.ParseString(string(content)); err != nil {
 		t.Fatal(err)
+	}
+	if err = d.Evaluate(); err != nil {
+		t.Fatal(err)
+
 	}
 	if layer == "ALL" {
 		return allRules(d.MSS())

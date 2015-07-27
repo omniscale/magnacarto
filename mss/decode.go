@@ -24,7 +24,6 @@ type Decoder struct {
 	expr          *expression
 	lastValue     Value
 	warnings      []warning
-	deferEval     bool
 	filename      string // for warnings/errors only
 	filesParsed   int
 	propertyIndex int
@@ -63,10 +62,6 @@ func (w *warning) String() string {
 func New() *Decoder {
 	mss := newMSS()
 	return &Decoder{mss: mss, vars: &Properties{}, expr: &expression{}}
-}
-
-func (d *Decoder) EnableDeferredEval() {
-	d.deferEval = true
 }
 
 // MSS returns the current decoded style.
@@ -151,9 +146,6 @@ func (d *Decoder) ParseString(content string) (err error) {
 // Evaluate evaluates all expressions and resolves all references to variables.
 // Must be called after last ParseFile/ParseString call.
 func (d *Decoder) Evaluate() (err error) {
-	if !d.deferEval {
-		return nil // already evaluated during parse
-	}
 	defer func() {
 		if r := recover(); r != nil {
 			switch x := r.(type) {
@@ -288,9 +280,6 @@ func (d *Decoder) block() {
 			}
 			d.expect(tokenColon)
 			d.expressionList()
-			if !d.deferEval && !validProperty(keyword, d.lastValue) {
-				d.warn(d.pos(tok), "invalid property %v %v", keyword, d.lastValue)
-			}
 			d.mss.setProperty(keyword, d.lastValue,
 				position{line: tok.line, column: tok.column, filename: d.filename, filenum: d.filesParsed, index: d.propertyIndex},
 			)
@@ -471,20 +460,11 @@ func (d *Decoder) expressionList() {
 			break
 		}
 	}
-	if d.deferEval {
-		d.expr.pos = position{line: startTok.line, column: startTok.column, filename: d.filename, filenum: d.filesParsed, index: d.propertyIndex}
-		d.propertyIndex += 1
-		d.lastValue = d.expr
-		d.expr = &expression{}
-	} else {
-		v, err := d.expr.evaluate()
-		d.lastValue = v
-		d.expr.clear()
-		if err != nil {
-			d.error(d.pos(d.lastTok), "expression error near %v: %v", d.next(), err)
-		}
-	}
 
+	d.expr.pos = position{line: startTok.line, column: startTok.column, filename: d.filename, filenum: d.filesParsed, index: d.propertyIndex}
+	d.propertyIndex += 1
+	d.lastValue = d.expr
+	d.expr = &expression{}
 }
 
 func (d *Decoder) expression() {
@@ -580,17 +560,7 @@ func (d *Decoder) value(tok *token) {
 		}
 		d.expr.addValue(c, typeColor)
 	case tokenAtKeyword:
-		if d.deferEval {
-			d.expr.addValue(tok.value[1:], typeVar)
-			return
-		}
-		varname := tok.value[1:] // strip @
-		v, _ := d.vars.get(varname)
-		if v == nil {
-			d.error(d.pos(tok), "missing var %s at %v", varname, tok)
-		}
-		t := d.valueType(v)
-		d.expr.addValue(v, t)
+		d.expr.addValue(tok.value[1:], typeVar)
 	case tokenURI:
 		match := urlPath.FindStringSubmatch(tok.value)
 		d.expr.addValue(match[1], typeURL)

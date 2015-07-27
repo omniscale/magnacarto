@@ -20,7 +20,6 @@ type Builder struct {
 	mml       string
 	locator   config.Locator
 	dumpRules io.Writer
-	deferEval bool
 }
 
 // New returns a Builder
@@ -36,11 +35,6 @@ func (b *Builder) AddMSS(mss string) {
 // SetMML sets/overwirtes the mml file of this builder.
 func (b *Builder) SetMML(mml string) {
 	b.mml = mml
-}
-
-// EnableDeferredEval activates the evaluation of variables and expressions _after_ parsing all MMS files.
-func (b *Builder) EnableDeferredEval() {
-	b.deferEval = true
 }
 
 // SetDumpRulesDest enables internal debuging output.
@@ -76,9 +70,6 @@ func (b *Builder) Build() error {
 	}
 
 	carto := mss.New()
-	if b.deferEval {
-		carto.EnableDeferredEval()
-	}
 
 	for _, mss := range b.mss {
 		err := carto.ParseFile(mss)
