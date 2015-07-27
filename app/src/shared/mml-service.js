@@ -2,8 +2,6 @@ angular.module('magna-app')
 
 .provider('MMLService', [function() {
 
-  var loadUrl;
-  var saveUrl;
   var baseUrl;
 
   var fakePost = function(url, data) {
@@ -14,22 +12,13 @@ angular.module('magna-app')
     baseUrl = url;
   };
 
-  this.setLoadUrl = function(url) {
-    loadUrl = url;
-  };
-
-  this.setSaveUrl = function(url) {
-    saveUrl = url;
-  };
-
   this.$get = ['$http', '$rootScope', '$websocket', 'magnaConfig', 'StyleService', 'DashboardService',
     function($http, $rootScope, $websocket, magnaConfig, StyleService, DashboardService) {
-      var MMLServiceInstance = function(baseUrl, loadUrl, saveUrl) {
+      var MMLServiceInstance = function(baseUrl) {
         this.mml = undefined;
+        this.mmlData = undefined;
         this.styles = [];
         this.baseUrl = baseUrl;
-        this.loadUrl = loadUrl;
-        this.saveUrl = saveUrl;
         this.dashboardMaps = [];
         this.storedMaps = [];
         this.socketUrl = undefined;
@@ -180,6 +169,6 @@ angular.module('magna-app')
         }
       };
 
-      return new MMLServiceInstance(baseUrl, loadUrl, saveUrl);
+      return new MMLServiceInstance(baseUrl);
   }];
 }]);

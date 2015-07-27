@@ -34,8 +34,6 @@ angular.module('magna-app').constant('magnaConfig', {
   ProjectsServiceProvider.setProjectsUrl('http://localhost:8888/proxy/http://localhost:7070/api/v1/projects');
   // MMLServiceProvider.setBaseUrl('http://localhost:8888/proxy/')
   MMLServiceProvider.setBaseUrl('http://localhost:8888/proxy/http://localhost:7070/api/v1/projects/');
-  MMLServiceProvider.setSaveUrl('http://localhost:8000/save');
-  MMLServiceProvider.setLoadUrl('http://localhost:8000/');
 })
 
 .run(function($websocket, $rootScope, magnaConfig, ProjectsService, MMLService, DashboardService, StyleService) {
