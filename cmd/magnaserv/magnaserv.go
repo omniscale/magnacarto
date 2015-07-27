@@ -72,7 +72,7 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 	}
 
 	styleFile := mapReq.Query.Get("FILE")
-	if styleFile != "" {
+	if styleFile == "" {
 		mml, mss := s.styleParams(r)
 		if mml == "" {
 			log.Println("missing mml param in request")
