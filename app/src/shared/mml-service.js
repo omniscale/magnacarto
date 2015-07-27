@@ -45,18 +45,22 @@ angular.module('magna-app')
         self.loadPromise = $http.get(self.baseUrl + self.basePath + '/' + self.mml);
         // TODO add load project error handling
         self.loadPromise = self.loadPromise.then(function(response) {
-          var data = response.data;
+          self.mmlData = response.data;
           self.bindSocket_();
-          self.styles = data.Stylesheet;
           StyleService.setStyles(self.availableMss);
-          StyleService.setProjectStyles(self.styles);
+          StyleService.setProjectStyles(self.mmlData.Stylesheet);
 
-          if(data.magnacarto !== undefined) {
-            self.dashboardMaps = data.magnacarto.dashboardMaps;
-            self.storedMaps = data.magnacarto.storedMaps;
+          if(self.mmlData.magnacarto === undefined) {
+            self.mmlData.magnacarto = {
+              dashboardMaps: [],
+              storedMaps: []
+            };
           }
 
-          DashboardService.maps = self.dashboardMaps;
+          // assign to object property for easy access from outside;
+          self.storedMaps = self.mmlData.magnacarto.storedMaps;
+
+          DashboardService.maps = self.mmlData.magnacarto.dashboardMaps;
           DashboardService.layers = [{
             styles: StyleService.activeStyles,
             mml: self.mml
@@ -67,6 +71,11 @@ angular.module('magna-app')
         });
 
         return self.loadPromise;
+      };
+
+      MMLServiceInstance.prototype.saveProject = function() {
+        var self = this;
+        $http.post(self.baseUrl + self.basePath + '/' + self.mml, self.mmlData);
       };
 
       MMLServiceInstance.prototype.bindSocket_ = function() {
@@ -92,62 +101,32 @@ angular.module('magna-app')
         return this.socket;
       };
 
-      MMLServiceInstance.prototype.saveActiveStyles = function() {
-        var self = this;
-        fakePost(self.saveUrl, {
-          'type': 'styles',
-          'styles': self.styles
-        });
-      };
-
-      MMLServiceInstance.prototype.saveDashboardMaps = function() {
-        var self = this;
-        fakePost(self.saveUrl, {
-          'type': 'dashboardMaps',
-          'maps': self.dashboardMaps
-        });
-        // TODO readd when we have a real endpoint
-        // self.saveDashboardMapsPromise = $http.post(self.saveDashboardMapsUrl, self.dashboardMaps);
-        // return self.saveDashboardMapsPromise;
-      };
-
-      MMLServiceInstance.prototype.saveStoredMaps = function() {
-        var self = this;
-        fakePost(self.saveUrl, {
-          'type': 'storedMaps',
-          'maps': self.storedMaps
-        });
-        // TODO readd when we have a real endpoint
-        // self.saveStoredMapsPromise = $http.post(self.saveStoredMapsUrl, self.storedMaps);
-        // return self.saveStoredMapsPromise;
-      };
-
       MMLServiceInstance.prototype.enableWatchers = function() {
         var self = this;
 
         // listen on changes in dashboardMaps
         // save if change occurs
         self.dashboardMapsWatcher = $rootScope.$watch(function() {
-          return self.dashboardMaps;
-        }, function(o, n) {
+          return self.mmlData.magnacarto.dashboardMaps;
+        }, function(n, o) {
           if(n === o) return;
-          self.saveDashboardMaps();
+          self.saveProject();
         }, true);
 
         // listen on changes in storedMaps
         // save if change occurs
         self.storedMapsWatcher = $rootScope.$watch(function() {
           return self.storedMaps;
-        }, function(o, n) {
+        }, function(n, o) {
           if(n === o) return;
-          self.saveStoredMaps();
+          self.saveProject();
         }, true);
 
         self.stylesWatcher = $rootScope.$watch(function() {
-          return self.styles;
-        }, function(o, n) {
+          return self.mmlData.Stylesheet;
+        }, function(n, o) {
           if(n === o) return;
-          self.saveActiveStyles();
+          self.saveProject();
         }, true);
       };
 
