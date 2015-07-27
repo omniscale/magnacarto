@@ -40,15 +40,21 @@ type magnaserv struct {
 }
 
 func (s *magnaserv) styleParams(r *http.Request) (mml string, mss []string) {
+	baseDir := s.config.StylesDir
+	base := r.FormValue("base")
+	if base != "" {
+		filepath.Join(baseDir, base)
+	}
+
 	mml = r.FormValue("mml")
 	if mml != "" {
-		mml = filepath.Join(s.config.StylesDir, mml)
+		mml = filepath.Join(baseDir, mml)
 	}
 
 	mssList := r.FormValue("mss")
 	if mssList != "" {
 		for _, f := range strings.Split(mssList, ",") {
-			mss = append(mss, filepath.Join(s.config.StylesDir, f))
+			mss = append(mss, filepath.Join(baseDir, f))
 		}
 	}
 
@@ -124,6 +130,18 @@ func (s *magnaserv) projects(w http.ResponseWriter, r *http.Request) {
 		s.internalError(w, r, err)
 		return
 	}
+}
+
+func (s *magnaserv) mml(w http.ResponseWriter, r *http.Request) {
+	baseName := mux.Vars(r)["base"]
+	mmlName := mux.Vars(r)["mml"]
+
+	fileName, err := filepath.Abs(filepath.Join(s.config.StylesDir, baseName, mmlName+".mml"))
+	if err != nil {
+		s.internalError(w, r, err)
+		return
+	}
+	http.ServeFile(w, r, fileName)
 }
 
 func (s *magnaserv) internalError(w http.ResponseWriter, r *http.Request, err error) {
@@ -285,6 +303,7 @@ func main() {
 	}
 	v1 := r.PathPrefix("/api/v1").Subrouter()
 	v1.HandleFunc("/map", handler.render)
+	v1.HandleFunc("/projects/{project}/{mml}.mml", handler.mml)
 	v1.HandleFunc("/projects", handler.projects)
 	v1.Handle("/changes", websocket.Handler(handler.changes))
 

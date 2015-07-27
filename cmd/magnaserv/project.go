@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -11,6 +10,7 @@ import (
 
 type project struct {
 	Name         string   `json:"name"`
+	Base         string   `json:"base"`
 	MML          string   `json:"mml"`
 	AvailableMSS []string `json:"available_mss"`
 	SelectedMSS  []string `json:"selected_mss"`
@@ -27,8 +27,6 @@ func findProjects(path string) ([]project, error) {
 		projDir := filepath.Dir(mmlFile)
 		projName := filepath.Base(projDir)
 
-		log.Println(path, mmlFile, projDir, filepath.Join(projDir, "*.mss"))
-
 		mssFiles, err := filepath.Glob(filepath.Join(projDir, "*.mss"))
 		if err != nil {
 			return nil, err
@@ -44,30 +42,21 @@ func findProjects(path string) ([]project, error) {
 			return nil, fmt.Errorf("error parsing %s: %v", mmlFile, err)
 		}
 
-		// make mml/mss relative to path
-		mmlFile, err = filepath.Rel(path, mmlFile)
-		if err != nil {
-			return nil, err
-		}
+		// remove base dir from mml/mss
+		mmlFile = filepath.Base(mmlFile)
 		for i := range mssFiles {
-			mssFiles[i], err = filepath.Rel(path, mssFiles[i])
-			if err != nil {
-				return nil, err
-			}
+			mssFiles[i] = filepath.Base(mssFiles[i])
 		}
 
-		selectdMSS := make([]string, len(parsedMML.Stylesheets))
-		for i, mssFile := range parsedMML.Stylesheets {
-			selectdMSS[i] = filepath.Join(projName, mssFile)
-		}
 		name := parsedMML.Name
 
 		projects = append(projects,
 			project{
 				Name:         name,
+				Base:         projName,
 				MML:          mmlFile,
 				AvailableMSS: mssFiles,
-				SelectedMSS:  selectdMSS,
+				SelectedMSS:  parsedMML.Stylesheets,
 			})
 	}
 

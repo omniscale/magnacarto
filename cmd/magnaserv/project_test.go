@@ -13,11 +13,12 @@ func TestFindProjects(t *testing.T) {
 
 	project := projects[0]
 	if project.Name != "Magnacarto Test" ||
-		project.MML != "010-linestrings-default/test.mml" ||
+		project.MML != "test.mml" ||
+		project.Base != "010-linestrings-default" ||
 		len(project.SelectedMSS) != 1 ||
 		len(project.AvailableMSS) != 1 ||
-		project.SelectedMSS[0] != "010-linestrings-default/test.mss" ||
-		project.AvailableMSS[0] != "010-linestrings-default/test.mss" {
+		project.SelectedMSS[0] != "test.mss" ||
+		project.AvailableMSS[0] != "test.mss" {
 		t.Error("unexpected project", project)
 	}
 }
