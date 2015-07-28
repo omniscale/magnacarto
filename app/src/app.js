@@ -1,4 +1,4 @@
-angular.module('magna-app', ['ngRoute', 'ngWebsocket', 'gridster', 'ui.bootstrap']);
+angular.module('magna-app', ['ngRoute', 'ngWebsocket', 'gridster', 'ui.bootstrap', 'as.sortable']);
 
 // TODO get config values from elsewhere?
 angular.module('magna-app').constant('magnaConfig', {

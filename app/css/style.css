@@ -162,6 +162,25 @@ html, body {
   overflow-y: auto;
 }
 
+.as-sortable-placeholder {
+  border-radius: 4px;
+  background-color: #333;
+  max-width: 95%;
+  margin-top: 5px;
+}
+
+div.as-sortable-dragging {
+  background-color: rgba(24, 24, 24, 0.8);
+  color: #999;
+  overflow: hidden;
+  z-index: 10000;
+  border-radius: 4px;
+}
+
+div.as-sortable-dragging .checkbox {
+  margin: 0;
+}
+
 /* Notification Styling */
 
 .alert-box {
