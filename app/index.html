@@ -55,7 +55,7 @@
                 <span class="menu-icon glyphicon glyphicon-picture"></span>
               </a>
             </li>
-            <div collapse="(collapsed || !active)">
+            <div collapse="(!collapsed || !active || selectedNavItem === 'projects')">
               <div class="style-list">
                 <div class="active-styles" ng-model="activeStyles" as-sortable>
                   <div class="checkbox as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>
