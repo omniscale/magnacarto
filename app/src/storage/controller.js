@@ -3,7 +3,7 @@ angular.module('magna-app')
 
 .controller('StorageCtrl', ['$scope', '$location', 'MMLService', 'DashboardService', 'StyleService',
   function($scope, $location, MMLService, DashboardService, StyleService) {
-    if(!MMLService.loaded()) {
+    if(MMLService.loaded() === undefined) {
       $location.path('/');
     }
     $scope.navItemName = 'storage';

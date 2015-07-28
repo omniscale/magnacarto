@@ -2,7 +2,7 @@ angular.module('magna-app')
 
 .controller('DashboardCtrl', ['$scope', '$location', 'DashboardService', 'StyleService', 'MMLService',
   function($scope, $location, DashboardService, StyleService, MMLService) {
-    if(!MMLService.loaded()) {
+    if(MMLService.loaded() === undefined) {
       $location.path('/');
     }
     $scope.navItemName = 'dashboard';

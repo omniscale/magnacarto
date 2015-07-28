@@ -33,7 +33,7 @@ angular.module('magna-app')
         // TODO add load project error handling
         self.loadPromise = self.loadPromise.then(function(response) {
           self.mmlData = response.data;
-          self.bindSocket_();
+          self.bindSocket();
           StyleService.setStyles(self.availableMss);
           StyleService.setProjectStyles(self.mmlData.Stylesheet);
 
@@ -66,7 +66,7 @@ angular.module('magna-app')
         $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, self.mmlData);
       };
 
-      MMLServiceInstance.prototype.bindSocket_ = function() {
+      MMLServiceInstance.prototype.bindSocket = function() {
         var self = this;
         self.socketUrl = magnaConfig.socketUrl;
         self.socketUrl += 'mml=' + self.mml;
@@ -82,7 +82,7 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.loaded = function() {
         var self = this;
-        return self.loadPromise !== undefined;
+        return self.loadPromise;
       };
 
       MMLServiceInstance.prototype.getSocket = function() {
