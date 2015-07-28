@@ -55,10 +55,17 @@
               </a>
             </li>
             <div class="style-list">
-              <div class="checkbox" ng-repeat="style in styles" collapse="(collapsed || !active)">
+              <div class="checkbox" ng-repeat="style in activeStyles" collapse="(collapsed || !active)">
                 <label>
                   <input type="checkbox" value={{style}}
-                    ng-checked="activeStyles.indexOf(style) > -1"
+                    checked=checked
+                    ng-click="toggleSelection(style)">
+                  {{ style }}
+                </label>
+              </div>
+              <div class="checkbox" ng-repeat="style in styles | orderBy:'toString()'" collapse="(collapsed || !active)" ng-if="activeStyles.indexOf(style) === -1">
+                <label>
+                  <input type="checkbox" value={{style}}
                     ng-click="toggleSelection(style)">
                   {{ style }}
                 </label>
