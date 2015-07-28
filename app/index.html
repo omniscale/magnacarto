@@ -55,25 +55,27 @@
                 <span class="menu-icon glyphicon glyphicon-picture"></span>
               </a>
             </li>
-            <div class="style-list">
-              <div class="active-styles" ng-model="activeStyles" as-sortable>
-                <div class="checkbox as-sortable-item" ng-repeat="style in activeStyles" collapse="(collapsed || !active)" as-sortable-item>
-                  <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
-                  <label>
-                    <input type="checkbox" value={{style}}
-                      checked=checked
-                      ng-click="toggleSelection(style)">
-                    <span ng-bind="style"></span>
-                  </label>
+            <div collapse="(collapsed || !active)">
+              <div class="style-list">
+                <div class="active-styles" ng-model="activeStyles" as-sortable>
+                  <div class="checkbox as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>
+                    <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
+                    <label>
+                      <input type="checkbox" value={{style}}
+                        checked=checked
+                        ng-click="toggleSelection(style)">
+                      <span ng-bind="style"></span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div class="available-styles">
-                <div class="checkbox" ng-repeat="style in styles | orderBy:'toString()'" collapse="(collapsed || !active)" ng-if="activeStyles.indexOf(style) === -1">
-                  <label>
-                    <input type="checkbox" value={{style}}
-                      ng-click="toggleSelection(style)">
-                    {{ style }}
-                  </label>
+                <div class="available-styles">
+                  <div class="checkbox" ng-repeat="style in styles | orderBy:'toString()'" collapse="(collapsed || !active)" ng-if="activeStyles.indexOf(style) === -1">
+                    <label>
+                      <input type="checkbox" value={{style}}
+                        ng-click="toggleSelection(style)">
+                      {{ style }}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
