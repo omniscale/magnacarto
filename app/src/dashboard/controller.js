@@ -2,8 +2,9 @@ angular.module('magna-app')
 
 .controller('DashboardCtrl', ['$scope', '$location', 'DashboardService', 'StyleService', 'MMLService',
   function($scope, $location, DashboardService, StyleService, MMLService) {
-    if(MMLService.loaded() === undefined) {
+    if(MMLService.projectLoaded() === undefined) {
       $location.path('/');
+      return;
     }
     $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {

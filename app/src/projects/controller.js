@@ -4,6 +4,8 @@ angular.module('magna-app')
   function($scope, $location, ProjectsService, MMLService) {
     $scope.projects = [];
 
+    MMLService.unloadProject();
+
     ProjectsService.loaded().success(function() {
       $scope.projects = ProjectsService.projects;
     });

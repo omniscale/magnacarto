@@ -6,24 +6,17 @@ angular.module('magna-app')
       var MMLServiceInstance = function() {
         this.mml = undefined;
         this.mmlData = undefined;
-        this.styles = [];
         this.dashboardMaps = [];
         this.storedMaps = [];
         this.socketUrl = undefined;
         this.socket = undefined;
+        this.loadPromise = undefined;
       };
 
       MMLServiceInstance.prototype.loadProject = function(project) {
         var self = this;
 
-        self.disableWatchers();
-        // unbind socket
-        if(self.socket !== undefined) {
-          self.socket.$close();
-        }
-        // clear project data
-        self.dashboardMaps = [];
-        self.storedMaps = [];
+        self.unloadProject();
 
         self.basePath = project.base;
         self.mml = project.mml;
@@ -61,6 +54,31 @@ angular.module('magna-app')
         return self.loadPromise;
       };
 
+      MMLServiceInstance.prototype.unloadProject = function() {
+        var self = this;
+        if(self.mmlData === undefined) {
+          return;
+        }
+
+        self.disableWatchers();
+        if(self.socket !== undefined) {
+          self.socket.$close();
+        }
+
+        self.mml = undefined;
+        self.mmlData = undefined;
+        self.dashboardMaps = [];
+        self.storedMaps = [];
+        self.socketUrl = undefined;
+        self.socket = undefined;
+        self.loadPromise = undefined;
+
+        DashboardService.maps = [];
+        DashboardService.layers = [];
+        StyleService.setStyles([]);
+        StyleService.setProjectStyles([]);
+      };
+
       MMLServiceInstance.prototype.saveProject = function() {
         var self = this;
         $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, self.mmlData);
@@ -80,7 +98,7 @@ angular.module('magna-app')
         });
       };
 
-      MMLServiceInstance.prototype.loaded = function() {
+      MMLServiceInstance.prototype.projectLoaded = function() {
         var self = this;
         return self.loadPromise;
       };

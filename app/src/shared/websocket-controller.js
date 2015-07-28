@@ -17,7 +17,7 @@ angular.module('magna-app')
     $scope.$watch(function() {
       return MMLService.getSocket();
     }, function(n, o) {
-      if(n === o) return;
+      if(n === o || n === undefined) return;
       var socket = n;
       socket.$on('$open', function() {
         appendMessage('info', 'Connect to the websocket Server');
