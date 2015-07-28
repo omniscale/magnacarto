@@ -60,17 +60,17 @@
                 <div class="active-styles" ng-model="activeStyles" as-sortable>
                   <div class="checkbox as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>
                     <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
-                    <label>
+                    <label title="{{style}}">
                       <input type="checkbox" value={{style}}
                         checked=checked
                         ng-click="toggleSelection(style)">
-                      <span ng-bind="style"></span>
+                      {{ style }}
                     </label>
                   </div>
                 </div>
                 <div class="available-styles">
-                  <div class="checkbox" ng-repeat="style in styles | orderBy:'toString()'" collapse="(collapsed || !active)" ng-if="activeStyles.indexOf(style) === -1">
-                    <label>
+                  <div class="checkbox" ng-repeat="style in styles | orderBy:'toString()'" ng-if="activeStyles.indexOf(style) === -1">
+                    <label title="{{style}}">
                       <input type="checkbox" value={{style}}
                         ng-click="toggleSelection(style)">
                       {{ style }}
