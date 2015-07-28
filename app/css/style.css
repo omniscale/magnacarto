@@ -120,6 +120,13 @@ html, body {
   text-decoration: none;
 }
 
+.sidebar-nav li a.disabled,
+.sidebar-nav li a.disabled:hover {
+  color: #353535;
+  background: #252525;
+  cursor: default;
+}
+
 .sidebar-nav > .sidebar-brand {
   height: 65px;
   line-height: 60px;

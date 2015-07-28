@@ -3,6 +3,7 @@ angular.module('magna-app')
 .controller('ProjectsCtrl', ['$scope', '$location', 'ProjectsService', 'MMLService',
   function($scope, $location, ProjectsService, MMLService) {
     $scope.projects = [];
+    $scope.navItemName = 'projects';
 
     MMLService.unloadProject();
 
