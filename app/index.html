@@ -93,6 +93,7 @@
                 <div ng-model="layers" as-sortable>
                   <div class="checkbox" ng-repeat="layer in layers" as-sortable-item>
                     <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
+                    <i class="glyphicon glyphicon-edit" ng-click="openEditLayerModal(layer)"></i>
                     <label title="{{ layer.name }}">
                       <input type="checkbox" value="" ng-checked="layer.status !== 'off'" ng-model="layer.status" ng-true-value="''" ng-false-value="'off'">
                       <span ng-bind="layer.name"></span>
@@ -138,6 +139,7 @@
     <script src="src/shared/layer-service.js"></script>
     <script src="src/shared/stopevent-directive.js"></script>
     <script src="src/shared/websocket-controller.js"></script>
+    <script src="src/shared/edit-layer-controller.js"></script>
 
     <script src="src/projects/controller.js"></script>
 
