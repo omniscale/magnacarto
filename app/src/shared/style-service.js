@@ -23,6 +23,7 @@ angular.module('magna-app')
         if (idx > -1) {
           self.activeStyles.splice(idx, 1);
         } else {
+          // TODO place style at right place
           self.activeStyles.push(style);
         }
       };
