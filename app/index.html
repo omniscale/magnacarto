@@ -90,11 +90,14 @@
             </li>
             <div collapse="(!collapsed || !active || selectedNavItem === 'projects')">
               <div class="layer-list">
-                <div class="checkbox" ng-repeat="layer in layers">
-                  <label title="{{ layer.name }}">
-                    <input type="checkbox" value="" ng-checked="layer.status !== 'off'" ng-model="layer.status" ng-true-value="''" ng-false-value="'off'">
-                    <span ng-bind="layer.name"></span>
-                  </label>
+                <div ng-model="layers" as-sortable>
+                  <div class="checkbox" ng-repeat="layer in layers" as-sortable-item>
+                    <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
+                    <label title="{{ layer.name }}">
+                      <input type="checkbox" value="" ng-checked="layer.status !== 'off'" ng-model="layer.status" ng-true-value="''" ng-false-value="'off'">
+                      <span ng-bind="layer.name"></span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
