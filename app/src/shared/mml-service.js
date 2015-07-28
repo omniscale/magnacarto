@@ -22,7 +22,6 @@ angular.module('magna-app')
           self.socket.$close();
         }
         // clear project data
-        self.styles = [];
         self.dashboardMaps = [];
         self.storedMaps = [];
 
@@ -47,6 +46,7 @@ angular.module('magna-app')
 
           // assign to object property for easy access from outside;
           self.storedMaps = self.mmlData.magnacarto.storedMaps;
+
 
           DashboardService.maps = self.mmlData.magnacarto.dashboardMaps;
           DashboardService.layers = [{

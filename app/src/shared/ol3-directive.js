@@ -24,13 +24,12 @@ angular.module('magna-app')
           // intialize with default values
           scope.olControls = scope.staticMap ? [] : ol.control.defaults();
           scope.olInteractions = scope.staticMap ? [] : ol.interaction.defaults();
-
           scope.params = {
             LAYERS: magnaConfig.mapnikLayers,
             TRANSPARENT: false,
             VERSION: '1.1.1',
             mml: MMLService.mml,
-            mss: MMLService.styles.join(','),
+            mss: scope.styles.join(','),
             base: MMLService.basePath,
             t: Date.now()
           };
