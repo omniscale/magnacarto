@@ -2,7 +2,15 @@
   <div gridster-item="map" ng-repeat="map in maps" class="grid-map">
      <div ol3-map="map" styles="styles" static-map="true" class="map-box" gridster-item-element="gridsterItem">
         <div class="map-title">
-          <h4>{{ map.title }}</h4>
+          <h4 ng-click="editMode=true;" ng-hide="editMode">{{ map.title }}</h4>
+          <div class="input-group" ng-show="editMode">
+            <input name="editTitle" type="text" ng-model="map.title" ng-blur="editMode=false" focus-me="{{editMode}}" class="form-control"/>
+            <span class="input-group-btn">
+              <button ng-click="editMode=false" class="btn btn-success">
+                <i class="glyphicon glyphicon-ok"></i>
+              </button>
+            </span>
+          </div>
         </div>
         <div class="map-control-btns pull-right">
           <a title="Load Map to dashboard" ng-click="restore(map)">
