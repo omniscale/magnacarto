@@ -168,6 +168,12 @@ html, body {
   overflow-y: auto;
 }
 
+.style-list .checkbox,
+.layer-list .checkbox {
+  /* prevents linebreaks */
+  width: 1000px;
+}
+
 .as-sortable-placeholder {
   border-radius: 4px;
   background-color: #333;
