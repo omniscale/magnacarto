@@ -54,13 +54,15 @@
                 <span class="menu-icon glyphicon glyphicon-picture"></span>
               </a>
             </li>
-            <div class="checkbox" ng-repeat="style in styles" collapse="(collapsed || !active)">
-              <label>
-                <input type="checkbox" value={{style}}
-                  ng-checked="activeStyles.indexOf(style) > -1"
-                  ng-click="toggleSelection(style)">
-                {{ style }}
-              </label>
+            <div class="style-list">
+              <div class="checkbox" ng-repeat="style in styles" collapse="(collapsed || !active)">
+                <label>
+                  <input type="checkbox" value={{style}}
+                    ng-checked="activeStyles.indexOf(style) > -1"
+                    ng-click="toggleSelection(style)">
+                  {{ style }}
+                </label>
+              </div>
             </div>
           </ul>
         </div>

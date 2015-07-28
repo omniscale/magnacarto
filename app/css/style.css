@@ -149,10 +149,17 @@ html, body {
   color: #999999;
   margin-top: 30px;
   margin-left: 0;
+  position: relative;
 }
 
 .mss-nav div {
   margin-left: 5px;
+}
+
+.style-list {
+  height:400px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Notification Styling */
