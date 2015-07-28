@@ -34,7 +34,7 @@
             </li>
             <li>
               <a is-active-nav href="#/dashboard" ng-class="{disabled: selectedNavItem === 'projects'}">Dashboard
-                <span class="menu-icon glyphicon glyphicon-globe"></span>
+                <span class="menu-icon glyphicon glyphicon-th"></span>
               </a>
               <div collapse="(selectedNavItem !== 'dashboard' || !active)">
                 <button class="btn btn-default btn-sm" ng-click="addMap()">Add Map</button>
@@ -81,6 +81,25 @@
             </div>
           </ul>
           <!-- End TODO -->
+          <!-- TODO move into own template -->
+          <ul ng-controller="LayerListCtrl" class="sidebar-nav layer-nav">
+            <li ng-click="collapsed=!collapsed">
+              <a is-active-nav ng-class="{disabled: selectedNavItem === 'projects'}">Layers
+                <span class="menu-icon glyphicon glyphicon-globe"></span>
+              </a>
+            </li>
+            <div collapse="(!collapsed || !active || selectedNavItem === 'projects')">
+              <div class="layer-list">
+                <div class="checkbox" ng-repeat="layer in layers">
+                  <label title="{{ layer.name }}">
+                    <input type="checkbox" value="" ng-checked="layer.status !== 'off'" ng-model="layer.status" ng-true-value="''" ng-false-value="'off'">
+                    <span ng-bind="layer.name"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </ul>
+          <!-- End TODO -->
         </div>
         <div ng-view></div>
       </div>
@@ -113,6 +132,7 @@
     <script src="src/shared/notification-controller.js"></script>
     <script src="src/shared/ol3-directive.js"></script>
     <script src="src/shared/style-service.js"></script>
+    <script src="src/shared/layer-service.js"></script>
     <script src="src/shared/stopevent-directive.js"></script>
     <script src="src/shared/websocket-controller.js"></script>
 
@@ -120,6 +140,7 @@
 
     <script src="src/sidebar/side-nav-controller.js"></script>
     <script src="src/sidebar/style-list-controller.js"></script>
+    <script src="src/sidebar/layer-list-controller.js"></script>
 
     <script src="src/dashboard/dashboard-service.js"></script>
     <script src="src/dashboard/controller.js"></script>

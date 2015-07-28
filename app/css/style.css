@@ -145,19 +145,25 @@ html, body {
 }
 
 
-.mss-nav {
+.mss-nav,
+.layer-nav {
   color: #999999;
-  margin-top: 30px;
   margin-left: 0;
   position: relative;
 }
 
-.mss-nav div {
+.mss-nav {
+  margin-top: 30px;
+}
+
+.mss-nav div,
+.layer-nav div {
   margin-left: 5px;
 }
 
-.style-list {
-  height:400px;
+.style-list,
+.layer-list {
+  height: 300px;
   overflow-x: hidden;
   overflow-y: auto;
 }

@@ -1,8 +1,8 @@
 angular.module('magna-app')
 
 .provider('MMLService', [function() {
-  this.$get = ['$http', '$rootScope', '$websocket', 'magnaConfig', 'StyleService', 'DashboardService',
-    function($http, $rootScope, $websocket, magnaConfig, StyleService, DashboardService) {
+  this.$get = ['$http', '$rootScope', '$websocket', 'magnaConfig', 'StyleService', 'LayerService', 'DashboardService',
+    function($http, $rootScope, $websocket, magnaConfig, StyleService, LayerService, DashboardService) {
       var MMLServiceInstance = function() {
         this.mml = undefined;
         this.mmlData = undefined;
@@ -29,6 +29,8 @@ angular.module('magna-app')
           self.bindSocket();
           StyleService.setStyles(self.availableMss);
           StyleService.setProjectStyles(self.mmlData.Stylesheet);
+
+          LayerService.setLayers(self.mmlData.Layer);
 
           if(self.mmlData.magnacarto === undefined) {
             self.mmlData.magnacarto = {
@@ -77,6 +79,7 @@ angular.module('magna-app')
         DashboardService.layers = [];
         StyleService.setStyles([]);
         StyleService.setProjectStyles([]);
+        LayerService.setLayers([]);
       };
 
       MMLServiceInstance.prototype.saveProject = function() {
@@ -134,6 +137,13 @@ angular.module('magna-app')
           if(n === o) return;
           self.saveProject();
         }, true);
+
+        self.layersWatcher = $rootScope.$watch(function() {
+          return self.mmlData.Layer;
+        }, function(n, o) {
+          if(n === o) return;
+          self.saveProject();
+        }, true);
       };
 
       MMLServiceInstance.prototype.disableWatchers = function() {
@@ -151,6 +161,11 @@ angular.module('magna-app')
         if(self.stylesWatcher !== undefined) {
           self.stylesWatcher();
           self.stylesWatcher = undefined;
+        }
+
+        if(self.layersWatcher !== undefined) {
+          self.layersWatcher();
+          self.layersWatcher = undefined;
         }
       };
 
