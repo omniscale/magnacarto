@@ -65,16 +65,16 @@ html, body {
 }
 
 #wrapper.active {
-  padding-left: 175px;
+  padding-left: 250px;
 }
 #wrapper.active #sidebar-wrapper {
-  left: 175px;
+  left: 250px;
 }
 
 #sidebar-wrapper {
-  margin-left: -175px;
+  margin-left: -250px;
   left: 50px;
-  width: 175px;
+  width: 250px;
   background: #222;
   position: fixed;
   height: 100%;
@@ -85,7 +85,7 @@ html, body {
 .sidebar-nav {
   display: block;
   float: left;
-  width: 175px;
+  width: 250px;
   list-style: none;
   margin: 0;
   padding: 0;
