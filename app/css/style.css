@@ -73,13 +73,9 @@ html, body {
 }
 #wrapper {
   height: 100%;
-  padding-left: 50px;
 }
 
-#wrapper.active {
-  padding-left: 250px;
-}
-#wrapper.active #sidebar-wrapper {
+#wrapper #sidebar-wrapper.active {
   left: 250px;
 }
 
@@ -92,6 +88,14 @@ html, body {
   height: 100%;
   z-index: 10000;
   transition: all .3s ease 0s;
+}
+
+#sidebar-wrapper + #content-wrapper {
+  padding-left: 50px;
+}
+
+#sidebar-wrapper.active + #content-wrapper {
+  padding-left: 250px;
 }
 
 .sidebar-nav {

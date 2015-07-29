@@ -14,22 +14,10 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body ng-app="magna-app">
-
-    <!-- TODO move into template and include here -->
-    <!-- Sidenav -->
-    <div ng-controller="SideNavCtrl">
-      <div id="wrapper" class="active" ng-class="{active: active}" >
-        <div id="sidebar-wrapper">
-          <div ng-include="'src/sidebar/side-nav-template.html'"></div>
-          <div class="sidebar-nav delimiter"></div>
-          <div ng-include="'src/sidebar/layer-list-template.html'"></div>
-          <div ng-include="'src/sidebar/style-list-template.html'"></div>
-        </div>
-        <div ng-view></div>
-      </div>
+    <div id="wrapper">
+      <div id="sidebar-wrapper" class="active" ng-class="{active: active}" ng-controller="SideNavCtrl" ng-include="'src/sidebar/side-nav-template.html'"></div>
+      <div id="content-wrapper" ng-view></div>
     </div>
-    <!--/Sidenav -->
-
     <div class="alert-box" ng-controller="WebSocketCtrl">
       <div class="row">
         <div class="col-md-12">
