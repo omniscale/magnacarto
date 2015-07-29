@@ -257,3 +257,31 @@ div.as-sortable-dragging .checkbox {
   -ms-user-select: none;
   user-select: none;
 }
+
+/* ol3 overwrites */
+
+.ol-control,
+.ol-control:hover {
+  border-radius: 2px;
+  background-color: inherit;
+}
+
+/* Customize default OpenLayers buttons (like zoom buttons) */
+.ol-zoom button,
+.ol-zoom button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+  cursor: pointer;
+}
+
+.ol-zoom .ol-zoom-in {
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+.ol-zoom .ol-zoom-out {
+    border-radius: 0 0 4px 4px;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    margin-top: 2px;
+}
