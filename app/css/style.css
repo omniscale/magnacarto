@@ -268,6 +268,10 @@ div.as-sortable-dragging .checkbox {
   user-select: none;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 /* ol3 overwrites */
 
 .ol-control,
