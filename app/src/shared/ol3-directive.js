@@ -103,6 +103,12 @@ angular.module('magna-app')
                   scope.olMap.updateSize();
                 });
               };
+              // update map size when gridster react on browser window size change
+              scope.$on('gridster-resized', function() {
+                $timeout(function() {
+                  scope.olMap.updateSize();
+                });
+              });
             }
           });
 
