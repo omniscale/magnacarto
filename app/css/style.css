@@ -103,6 +103,11 @@ html, body {
   padding: 0;
 }
 
+.sidebar-nav.delimiter {
+  line-height: 20px;
+  height: 20px;
+}
+
 .sidebar-nav li {
   line-height: 40px;
   text-indent: 20px;
