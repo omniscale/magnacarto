@@ -191,6 +191,11 @@ html, body {
   font-weight: normal;
 }
 
+.style-list .glyphicon,
+.layer-list .glyphicon {
+  padding-right: 2px;
+}
+
 .style-list .as-sortable-item,
 .layer-list .as-sortable-item {
   white-space: nowrap;
