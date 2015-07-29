@@ -53,6 +53,13 @@ html, body {
   padding: 4px;
 }
 
+.map-title input {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgb(51, 51, 51);
+  line-height: 19.8px;
+}
+
 /* CSS for Sidebar */
 
 .row {
