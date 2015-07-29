@@ -682,9 +682,7 @@
 
             dragElement = angular.element($document[0].createElement(scope.sortableScope.element.prop('tagName')))
               .addClass(scope.sortableScope.element.attr('class')).addClass(sortableConfig.dragClass);
-            // Magnacarto customization
-            dragElement.css('min-width', $helper.width(scope.itemScope.element) + 'px');
-            // end
+            dragElement.css('width', $helper.width(scope.itemScope.element) + 'px');
             dragElement.css('height', $helper.height(scope.itemScope.element) + 'px');
 
             placeHolder = createPlaceholder(scope.itemScope)
