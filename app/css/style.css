@@ -240,3 +240,12 @@ div.as-sortable-dragging .checkbox {
 .alert-primary {
   border-color: #9ca6f1;
 }
+
+/* Misc */
+
+.disable-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
