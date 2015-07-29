@@ -152,10 +152,6 @@ html, body {
   position: relative;
 }
 
-.mss-nav {
-  margin-top: 30px;
-}
-
 .mss-nav div,
 .layer-nav div {
   margin-left: 2px;
