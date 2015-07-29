@@ -1,0 +1,21 @@
+<ul ng-controller="LayerListCtrl" class="sidebar-nav layer-nav">
+  <li ng-click="collapsed=!collapsed">
+    <a is-active-nav ng-class="{disabled: selectedNavItem === 'projects'}">Layers
+      <span class="menu-icon glyphicon glyphicon-globe"></span>
+    </a>
+  </li>
+  <div collapse="(!collapsed || !active || selectedNavItem === 'projects')">
+    <div class="layer-list">
+      <div ng-model="layers" as-sortable>
+        <div class="checkbox" ng-repeat="layer in layers" as-sortable-item>
+          <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
+          <i class="glyphicon glyphicon-edit" ng-click="openEditLayerModal(layer)"></i>
+          <label title="{{ layer.name }}">
+            <input type="checkbox" value="" ng-checked="layer.status !== 'off'" ng-model="layer.status" ng-true-value="''" ng-false-value="'off'">
+            <span ng-bind="layer.name"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</ul>
