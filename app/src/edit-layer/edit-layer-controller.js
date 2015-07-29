@@ -5,6 +5,13 @@ angular.module('magna-app')
     $scope.form = {};
     $scope.layer = angular.copy(layer);
 
+    $scope.datasourceTemplates = {
+      'raster': 'src/edit-layer/raster-datasource-template.html',
+      'sqlite': 'src/edit-layer/sqlite-datasource-template.html',
+      'postgis': 'src/edit-layer/postgis-datasource-template.html',
+      'shape': 'src/edit-layer/shape-datasource-template.html'
+    };
+
     $scope.ok = function () {
       if ($scope.layerForm.$invalid) {
         return false;

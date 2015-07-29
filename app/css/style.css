@@ -249,6 +249,16 @@ div.as-sortable-dragging .checkbox {
   border-color: #9ca6f1;
 }
 
+/* Edit layer from */
+.layer-form {
+  overflow: auto;
+  max-height: 50vh;
+}
+
+.layer-form form {
+  margin: 5px 10px 0;
+}
+
 /* Misc */
 
 .disable-select {

@@ -1,62 +1,72 @@
-<form name="layerForm">
-  <div class="modal-header">
-    <h3 class="modal-title">Edit layer</h3>
-  </div>
-  <div class="modal-body">
+<div class="modal-header">
+  <h3 class="modal-title">Edit layer</h3>
+</div>
+<div class="modal-body layer-form">
+  <form name="layerForm" class="form-horizontal">
     <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text" ng-model="layer.name" />
+      <label class="col-sm-2" for="name">Name</label>
+      <input name="name" class="col-sm-10" type="text" ng-model="layer.name" />
     </div>
     <div class="form-group">
-      <label for="geometry">Geometry</label>
-      <input type="text" ng-model="layer.geometry" />
+      <label class="col-sm-2" for="id">Id</label>
+      <input name="id" class="col-sm-10" type="text" ng-model="layer.id" />
     </div>
     <div class="form-group">
-      <label for="id">Id</label>
-      <input type="text" ng-model="layer.id" />
+      <label class="col-sm-2" for="class">Class</label>
+      <input name="class" class="col-sm-10" type="text" ng-model="layer.class" />
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2" for="geometry">Geometry</label>
+      <select name="geometry" class="col-sm-10" type="text" ng-model="layer.geometry">
+        <option value="point">Point</option>
+        <option value="linestring">Linestring</option>
+        <option value="polygon">Polygon</option>
+        <option value="raster">Raster</option>
+      </select>
+    </div>
+
+    <!-- TODO look at mapproxy-gui for extent input -->
+    <div class="form-group">
+      <label class="col-sm-2" for="extent">Extent</label>
+      <input name="extent" class="col-sm-10" float ng-model="layer.extent[0]" />
+      <input class="col-sm-offset-2 col-sm-10" float ng-model="layer.extent[1]" />
+      <input class="col-sm-offset-2 col-sm-10" float ng-model="layer.extent[2]" />
+      <input class="col-sm-offset-2 col-sm-10" float ng-model="layer.extent[3]" />
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2" for="srs">SRS</label>
+      <input name="srs" class="col-sm-10" type="text" ng-model="layer.srs" />
     </div>
     <div class="form-group">
-      <label for="class">Class</label>
-      <input type="text" ng-model="layer.class" />
+      <label class="col-sm-2" for="srs-name">SRS-Name</label>
+      <input name="srs" class="col-sm-10" type="text" ng-model="layer['srs-name']" />
     </div>
-    <div class="form-group">
-      <label for="extent">Extent</label>
-      <input type="number" ng-model="layer.extent[0]" />
-      <input type="number" ng-model="layer.extent[1]" />
-      <input type="number" ng-model="layer.extent[2]" />
-      <input type="number" ng-model="layer.extent[3]" />
-    </div>
-    <div class="form-group">
-      <label for="srs">SRS</label>
-      <input type="text" ng-model="layer.srs" />
-    </div>
-    <div class="form-group">
-      <label for="srs-name">SRS-Name</label>
-      <input type="text" ng-model="layer['srs-name']" />
-    </div>
+
     <h4>Datasource</h4>
     <div class="form-group">
-      <label for="type">Type</label>
-      <input type="text" ng-model="layer.Datasource.type" />
+      <label class="col-sm-2" for="type">Type</label>
+      <select name="type" class="col-sm-10" type="text" ng-model="layer.Datasource.type">
+        <option value="shape">Shape</option>
+        <option value="postgis">Postgis</option>
+        <option value="sqlite">SQlite</option>
+        <option value="gdal">Gdal</option>
+      </select>
     </div>
-    <div class="form-group">
-      <label for="srs">SRS</label>
-      <input type="text" ng-model="layer.srs" />
-    </div>
-    <div class="form-group">
-      <label for="extent">Extent</label>
-      <input type="text" ng-model="layer.Datasource.extent" />
-    </div>
+
+    <div ng-include="datasourceTemplates[layer.Datasource.type]"></div>
+
     <h4>Advanced</h4>
     <span ng-repeat-start="(key, value) in layer.advanced"></span>
     <div class="form-group">
-      <label for="{{ key }}">{{ key }}</label>
-      <input type="text" ng-model="layer.advanced[key]" />
+      <label class="col-sm-2" for="{{ key }}">{{ key }}</label>
+      <input class="col-sm-10" type="text" ng-model="layer.advanced[key]" />
     </div>
     <span ng-repeat-end></span>
-  </div>
-  <div class="modal-footer">
-    <input type="submit" class="btn btn-primary" ng-click="ok()" value="Save" />
-    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-  </div>
-</form>
+  </form>
+</div>
+<div class="modal-footer">
+  <input type="submit" class="btn btn-primary" ng-click="ok()" value="Save" />
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>
