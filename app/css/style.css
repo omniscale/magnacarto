@@ -145,14 +145,14 @@ html, body {
 }
 
 
-.mss-nav,
+.style-nav,
 .layer-nav {
   color: #999999;
   margin-left: 0;
   position: relative;
 }
 
-.mss-nav div,
+.style-nav div,
 .layer-nav div {
   margin-left: 2px;
 }
