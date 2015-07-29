@@ -13,7 +13,7 @@ angular.module('magna-app')
 
     $scope.openEditLayerModal = function(layer) {
       var modalInstance = $modal.open({
-        templateUrl: 'src/modals/edit-layer-template.html',
+        templateUrl: 'src/edit-layer/edit-layer-template.html',
         controller: 'EditLayerCtrl',
         resolve: {
           layer: function () {
