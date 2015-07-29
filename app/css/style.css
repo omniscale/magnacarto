@@ -299,6 +299,7 @@ div.as-sortable-dragging {
   background-color: rgba(255, 255, 255, 0.9);
   color: black;
   cursor: pointer;
+  padding-bottom: 3px;
 }
 
 .ol-zoom .ol-zoom-in {
