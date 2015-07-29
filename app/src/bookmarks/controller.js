@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
 
-.controller('StorageCtrl', ['$scope', '$location', 'MMLService', 'DashboardService', 'StyleService',
+.controller('BookmarksCtrl', ['$scope', '$location', 'MMLService', 'DashboardService', 'StyleService',
   function($scope, $location, MMLService, DashboardService, StyleService) {
     if(MMLService.projectLoaded() === undefined) {
       $location.path('/');

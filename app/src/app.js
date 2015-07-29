@@ -22,9 +22,9 @@ angular.module('magna-app').constant('magnaConfig', {
     templateUrl: 'src/dashboard/template.html',
     controller: 'DashboardCtrl'
   })
-  .when('/storage', {
-    templateUrl: 'src/storage/template.html',
-    controller: 'StorageCtrl'
+  .when('/bookmarks', {
+    templateUrl: 'src/bookmarks/template.html',
+    controller: 'BookmarksCtrl'
   })
   .otherwise({
     redirectTo: '/projects'

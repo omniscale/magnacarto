@@ -42,14 +42,14 @@
               </div>
             </li>
             <li>
-              <a is-active-nav href="#/storage" ng-class="{disabled: selectedNavItem === 'projects'}">Bookmarks
+              <a is-active-nav href="#/bookmarks" ng-class="{disabled: selectedNavItem === 'projects'}">Bookmarks
                 <span class="menu-icon glyphicon glyphicon-bookmark"></span>
               </a>
             </li>
           </ul>
           <!--/Nav items -->
-          <div ng-include="'src/sidebar/style-list-template.html'"></div>
           <div ng-include="'src/sidebar/layer-list-template.html'"></div>
+          <div ng-include="'src/sidebar/style-list-template.html'"></div>
         </div>
         <div ng-view></div>
       </div>
@@ -97,6 +97,6 @@
     <script src="src/dashboard/controller.js"></script>
     <script src="src/dashboard/pinmap-controller.js"></script>
 
-    <script src="src/storage/controller.js"></script>
+    <script src="src/bookmarks/controller.js"></script>
   </body>
 </html>
