@@ -58,6 +58,11 @@ html, body {
   font-weight: 500;
   color: rgb(51, 51, 51);
   line-height: 19.8px;
+  border-radius: 0;
+}
+
+.map-title button {
+  border-radius: 0;
 }
 
 /* CSS for Sidebar */
