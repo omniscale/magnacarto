@@ -14,6 +14,7 @@ angular.module('magna-app')
       floating: true,
       resizable: {
         stop: function(event, uiWidget) {
+          // resizeMap added by ol3-directive to gridster item scope
           uiWidget.scope().resizeMap();
         }
       },
