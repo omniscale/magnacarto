@@ -7,21 +7,18 @@
   <div collapse="(!collapsed || !active || selectedNavItem === 'projects')">
     <div class="style-list disable-select">
       <div class="active-styles" ng-model="activeStyles" as-sortable>
-        <div class="checkbox as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>
+        <div class="as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>
           <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
-          <label title="{{style}}">
-            <input type="checkbox" value={{style}}
-              checked=checked
-              ng-click="toggleSelection(style)">
+          <label title="{{style}}" ng-click="toggleSelection(style)" class="cursor-pointer">
+            <i class="glyphicon glyphicon-check"></i>
             {{ style }}
           </label>
         </div>
       </div>
       <div class="available-styles">
-        <div class="checkbox" ng-repeat="style in styles | orderBy:'toString()'" ng-if="activeStyles.indexOf(style) === -1">
-          <label title="{{style}}">
-            <input type="checkbox" value={{style}}
-              ng-click="toggleSelection(style)">
+        <div ng-repeat="style in styles | orderBy:'toString()'" ng-if="activeStyles.indexOf(style) === -1">
+          <label title="{{style}}" ng-click="toggleSelection(style)" class="cursor-pointer">
+            <i class="glyphicon glyphicon-unchecked"></i>
             {{ style }}
           </label>
         </div>

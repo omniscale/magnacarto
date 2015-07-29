@@ -11,6 +11,10 @@ angular.module('magna-app')
       $scope.layers = newLayers;
     }, true);
 
+    $scope.toggle = function(layer) {
+      layer.status = layer.status === 'off' ? '' : 'off';
+    };
+
     $scope.openEditLayerModal = function(layer) {
       var modalInstance = $modal.open({
         templateUrl: 'src/edit-layer/edit-layer-template.html',
