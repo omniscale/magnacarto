@@ -1,5 +1,5 @@
 <ul class="list-group">
-    <li ng-repeat="project in projects" ng-click="openProject(project)" class="list-group-item">
-        {{ project.name }} ({{ project.mml }})
+    <li ng-repeat="project in projects" ng-click="openProject(project)" class="list-group-item cursor-pointer">
+        {{ project.name }} ({{project.base}}/{{ project.mml }})
     </li>
 </ul>

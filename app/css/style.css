@@ -88,6 +88,12 @@ html, body {
   background: rgba(255,255,255,0.2);
 }
 
+/* project overview */
+.list-group-item:hover {
+  background-color: #999;
+  border: 1px solid #999;
+}
+
 /* CSS for Sidebar */
 
 .row {
