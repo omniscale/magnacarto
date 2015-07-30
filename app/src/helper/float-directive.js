@@ -17,7 +17,7 @@ angular.module('magna-app')
             return viewValue;
           } else {
             ctrl.$setValidity('float', true);
-            return replacement;
+            return parseFloat(replacement);
           }
         } else {
           ctrl.$setValidity('float', false);
