@@ -89,7 +89,7 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.bindSocket = function() {
         var self = this;
-        self.socketUrl = magnaConfig.socketUrl;
+        self.socketUrl = angular.copy(magnaConfig.socketUrl);
         self.socketUrl += 'mml=' + self.mml;
         self.socketUrl += '&mss=' + self.availableMss;
         self.socketUrl += '&base=' + self.basePath;
