@@ -6,10 +6,10 @@ angular.module('magna-app')
     $scope.layer = angular.copy(layer);
 
     $scope.datasourceTemplates = {
-      'gdal': 'src/edit-layer/gdal-datasource-template.html',
-      'sqlite': 'src/edit-layer/sqlite-datasource-template.html',
-      'postgis': 'src/edit-layer/postgis-datasource-template.html',
-      'shape': 'src/edit-layer/shape-datasource-template.html'
+      'gdal': 'src/layer/gdal-datasource-template.html',
+      'sqlite': 'src/layer/sqlite-datasource-template.html',
+      'postgis': 'src/layer/postgis-datasource-template.html',
+      'shape': 'src/layer/shape-datasource-template.html'
     };
 
     var cleanupDatasource = function(datasource) {
@@ -67,7 +67,7 @@ angular.module('magna-app')
 
     $scope.openRemoveModal = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'src/edit-layer/remove-layer-template.html',
+        templateUrl: 'src/layer/remove-layer-template.html',
         controller: 'RemoveLayerCtrl',
         resolve: {
           layer: function () {
