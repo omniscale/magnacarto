@@ -308,13 +308,41 @@ div.as-sortable-dragging {
 }
 
 .ol-zoom .ol-zoom-in {
-    border-radius: 4px 4px 0 0;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 }
 
 .ol-zoom .ol-zoom-out {
-    border-radius: 0 0 4px 4px;
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-    margin-top: 2px;
+  border-radius: 0 0 4px 4px;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+  margin-top: 2px;
+}
+
+/* angular gridster overwrites */
+
+.gridster-loaded {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: color 0 ease-in;
+  transition: none;
+}
+
+.gridster-loaded .gridster-item {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: color 0 ease-in;
+  transition: none;
+  -webkit-transition-delay: none;
+  -moz-transition-delay: none;
+  -o-transition-delay: none;
+  transition-delay: none;
+}
+
+.gridster-loaded .gridster-item.gridster-item-moving,
+.gridster-loaded .gridster-preview-holder {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: color 0 ease-in;
+  transition: none;
 }
