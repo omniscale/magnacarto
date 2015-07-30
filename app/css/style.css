@@ -65,6 +65,19 @@ html, body {
   border-radius: 0;
 }
 
+.ol-control.display-zoom-level {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    bottom: 10px;
+    padding: 0 5px;
+    position: absolute;
+    right: 10px;
+}
+
+.ol-control.display-zoom-level span {
+  margin-left: 5px;
+}
+
 /* CSS for Sidebar */
 
 .row {

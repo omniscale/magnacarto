@@ -59,6 +59,22 @@ angular.module('magna-app')
           }));
           scope.lastUpdate = new Date();
 
+          if(!scope.staticMap) {
+            var displayZoomLevel = angular.element('<span>' + scope.settings.zoom + '</span>');
+            var zoomLevelContainer = angular.element('<div></div>');
+            zoomLevelContainer.addClass('ol-control');
+            zoomLevelContainer.addClass('display-zoom-level');
+            zoomLevelContainer.append('Zoom level:');
+            zoomLevelContainer.append(displayZoomLevel);
+
+            var showZoomLevelControl = new ol.control.Control({element: zoomLevelContainer[0]});
+            var view = scope.olMap.getView();
+            view.on('change:resolution', function(e) {
+              displayZoomLevel.text(view.getZoom());
+            });
+            scope.olMap.addControl(showZoomLevelControl);
+          }
+
           scope.socket.$on('$message', function (resp) {
             // without updated_at do nothing
             if(resp.updated_at === undefined) {
