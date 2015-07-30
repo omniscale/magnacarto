@@ -2,10 +2,10 @@ angular.module('magna-app', ['ngRoute', 'ngWebsocket', 'gridster', 'ui.bootstrap
 
 // TODO get config values from elsewhere?
 angular.module('magna-app').constant('magnaConfig', {
-  projectsUrl: 'http://localhost:8888/proxy/http://localhost:7070/api/v1/projects',
-  projectBaseUrl: 'http://localhost:8888/proxy/http://localhost:7070/api/v1/projects/',
-  socketUrl: 'ws://localhost:7070/api/v1/changes?',
-  mapnikUrl: 'http://localhost:7070/api/v1/map?',
+  projectsUrl: '/api/v1/projects',
+  projectBaseUrl: '/api/v1/projects/',
+  socketUrl: 'ws://' + window.location.host + '/api/v1/changes?',
+  mapnikUrl: '/api/v1/map?',
   mapnikLayers: 'osm',
   mapnikImageFormat: 'image/png',
   defaultCenter: [8, 53],
