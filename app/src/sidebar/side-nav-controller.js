@@ -11,25 +11,8 @@ angular.module('magna-app')
   };
 
   $scope.createLayer = function() {
-    var modalInstance = $modal.open({
-      templateUrl: 'src/edit-layer/edit-layer-template.html',
-      controller: 'EditLayerCtrl',
-      resolve: {
-        layer: function () {
-          return {
-            'extent': [0, 0, 0, 0],
-            'Datasource': {},
-            'advanced': {}
-          };
-        }
-      }
-    });
-
-    modalInstance.result.then(function (item) {
-      LayerService.addLayer(item);
-    });
+    LayerService.addLayer();
   };
-
 
   $scope.$watch(function() {
     return $route.current && $route.current.scope ? $route.current.scope.navItemName : undefined;

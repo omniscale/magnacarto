@@ -16,24 +16,6 @@ angular.module('magna-app')
     };
 
     $scope.openEditLayerModal = function(layer) {
-      var modalInstance = $modal.open({
-        templateUrl: 'src/edit-layer/edit-layer-template.html',
-        controller: 'EditLayerCtrl',
-        resolve: {
-          layer: function () {
-            return layer;
-          }
-        }
-      });
-
-      modalInstance.result.then(function (item) {
-        var layerIdx = $scope.layers.indexOf(layer);
-
-        if(item === 'remove') {
-          $scope.layers.splice(layerIdx, 1);
-        } else {
-          $scope.layers[layerIdx] = item;
-        }
-      });
+      LayerService.editLayer(layer);
     };
 }]);
