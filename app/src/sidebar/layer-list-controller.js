@@ -28,7 +28,12 @@ angular.module('magna-app')
 
       modalInstance.result.then(function (item) {
         var layerIdx = $scope.layers.indexOf(layer);
-        $scope.layers[layerIdx] = item;
+
+        if(item === 'remove') {
+          $scope.layers.splice(layerIdx, 1);
+        } else {
+          $scope.layers[layerIdx] = item;
+        }
       });
     };
 }]);

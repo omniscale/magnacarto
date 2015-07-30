@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.controller('EditLayerCtrl', ['$scope', '$modalInstance', 'layer',
-  function($scope, $modalInstance, layer) {
+.controller('EditLayerCtrl', ['$scope', '$modal', '$modalInstance', 'layer',
+  function($scope, $modal, $modalInstance, layer) {
     $scope.form = {};
     $scope.layer = angular.copy(layer);
 
@@ -63,6 +63,22 @@ angular.module('magna-app')
       }
       $scope.layer.Datasource = cleanupDatasource($scope.layer.Datasource);
       $modalInstance.close($scope.layer);
+    };
+
+    $scope.openRemoveModal = function() {
+      var modalInstance = $modal.open({
+        templateUrl: 'src/edit-layer/remove-layer-template.html',
+        controller: 'RemoveLayerCtrl',
+        resolve: {
+          layer: function () {
+            return layer;
+          }
+        }
+      });
+
+      modalInstance.result.then(function () {
+        $modalInstance.close('remove');
+      });
     };
 
     $scope.cancel = function () {

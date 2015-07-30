@@ -1,0 +1,10 @@
+<div class="modal-header">
+  <h3 class="modal-title">Remove layer {{ layer.name }}</h3>
+</div>
+<div class="modal-body layer-form">
+  Do you realy want to remove layer {{ layer.name }}?
+</div>
+<div class="modal-footer">
+  <input type="submit" class="btn btn-primary" ng-click="ok()" value="Yes" />
+  <button class="btn btn-warning" ng-click="cancel()">No</button>
+</div>
