@@ -19,15 +19,17 @@ angular.module('magna-app')
         self.layers = layers;
       };
 
-      LayerServiceInstance.prototype.addLayer = function() {
+      LayerServiceInstance.prototype.addLayer = function(layer) {
         var self = this;
+
+        layer = layer === undefined ? angular.copy(DEFAULT_LAYER) : layer;
 
         var modalInstance = $modal.open({
           templateUrl: 'src/layer/edit-layer-template.html',
           controller: 'EditLayerCtrl',
           resolve: {
             layer: function () {
-              return angular.copy(DEFAULT_LAYER);
+              return angular.copy(layer);
             }
           }
         });
@@ -37,6 +39,12 @@ angular.module('magna-app')
             self.layers.push(newLayer);
           }
         });
+      };
+
+      LayerServiceInstance.prototype.copyLayer = function(layer) {
+        var self = this;
+        layer.name += '-copy';
+        self.addLayer(layer);
       };
 
       LayerServiceInstance.prototype.editLayer = function(layer) {

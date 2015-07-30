@@ -16,6 +16,14 @@
     <div collapse="(selectedNavItem !== 'dashboard' || !active)">
       <a class="cursor-pointer" ng-click="addMap()"><i class="glyphicon glyphicon-plus"></i> Map</a>
       <a class="cursor-pointer" ng-click="createLayer()"><i class="glyphicon glyphicon-plus"></i> Layer</a>
+      <a class="cursor-pointer" ng-click="showCopyLayer=true"><i class="glyphicon glyphicon-copy"></i> Layer</a>
+      <div ng-show="showCopyLayer">
+        <select class="select-copy-layer" ng-model="_copyLayer" ng-options="layer.name for layer in layers">
+          <option value="" disabled="disabled">Layer to copy</option>
+        </select>
+        <button class="btn btn-sm btn-mca" ng-disabled="!_copyLayer" ng-click="showCopyLayer=false; copyLayer(_copyLayer)"><i class="glyphicon glyphicon-copy"></i></button>
+        <button class="btn btn-sm btn-mca" ng-click="showCopyLayer=false; _copyLayer=undefined;"><i class="glyphicon glyphicon-remove"></i></button>
+      </div>
     </div>
   </li>
   <li>

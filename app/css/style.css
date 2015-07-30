@@ -78,6 +78,16 @@ html, body {
   margin-left: 5px;
 }
 
+.btn.btn-mca {
+  color: #999999;
+  background: #252525;
+}
+
+.btn.btn-mca:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+}
+
 /* CSS for Sidebar */
 
 .row {
@@ -161,6 +171,11 @@ html, body {
   cursor: default;
 }
 
+.sidebar-nav li div {
+  color: #999999;
+  background: #252525;
+}
+
 .sidebar-nav > .sidebar-brand {
   height: 65px;
   line-height: 60px;
@@ -176,6 +191,14 @@ html, body {
   padding-right: 20px;
   padding-top: 10px;
   cursor: pointer;
+}
+
+.select-copy-layer {
+  max-width: 150px;
+}
+
+.select-copy-layer option {
+  color: #000;
 }
 
 /* Layer / Style lists */

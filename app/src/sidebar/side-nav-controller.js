@@ -5,6 +5,7 @@ angular.module('magna-app')
   $scope.selectedNavItem = undefined;
   $scope.styles = DashboardService.styles;
   $scope.activeStyles = DashboardService.activeStyles;
+  $scope.layers = LayerService.layers;
 
   $scope.addMap = function() {
     DashboardService.addMap();
@@ -14,9 +15,19 @@ angular.module('magna-app')
     LayerService.addLayer();
   };
 
+  $scope.copyLayer = function(layer) {
+    LayerService.copyLayer(angular.copy(layer));
+  };
+
   $scope.$watch(function() {
     return $route.current && $route.current.scope ? $route.current.scope.navItemName : undefined;
   }, function(newNavItem) {
     $scope.selectedNavItem = newNavItem;
   });
+
+  $scope.$watch(function() {
+    return LayerService.layers;
+  }, function(newLayers) {
+    $scope.layers = newLayers;
+  }, true);
 }]);
