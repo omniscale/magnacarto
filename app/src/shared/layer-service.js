@@ -13,6 +13,11 @@ angular.module('magna-app')
         self.layers = layers;
       };
 
+      LayerServiceInstance.prototype.addLayer = function(layer) {
+        var self = this;
+        self.layers.push(layer);
+      };
+
       return new LayerServiceInstance();
     }];
 }]);
