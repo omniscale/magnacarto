@@ -17,6 +17,8 @@ angular.module('magna-app')
         case 'postgis':
           return {
             'type': datasource.type,
+            'host': datasource.host,
+            'port': datasource.port,
             'dbname': datasource.dbname,
             'user': datasource.user,
             'password': datasource.password,
