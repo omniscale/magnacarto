@@ -6,7 +6,7 @@ angular.module('magna-app')
     $scope.layer = angular.copy(layer);
 
     $scope.datasourceTemplates = {
-      'raster': 'src/edit-layer/raster-datasource-template.html',
+      'gdal': 'src/edit-layer/gdal-datasource-template.html',
       'sqlite': 'src/edit-layer/sqlite-datasource-template.html',
       'postgis': 'src/edit-layer/postgis-datasource-template.html',
       'shape': 'src/edit-layer/shape-datasource-template.html'
