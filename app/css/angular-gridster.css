@@ -17,9 +17,23 @@
     position: absolute;
     display: none
 }
+.gridster-loaded {
+    -webkit-transition: height .3s;
+    -moz-transition: height .3s;
+    -o-transition: height .3s;
+    transition: height .3s
+}
 .gridster-loaded .gridster-item {
     display: block;
     position: absolute;
+    -webkit-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+    -moz-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+    -o-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+    transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+    -webkit-transition-delay: 50ms;
+    -moz-transition-delay: 50ms;
+    -o-transition-delay: 50ms;
+    transition-delay: 50ms
 }
 .gridster-loaded .gridster-preview-holder {
     display: none;
@@ -27,7 +41,14 @@
     position: absolute;
     background-color: #ddd;
     border-color: #fff;
-    opacity: 0.2;
+    opacity: 0.2
+}
+.gridster-loaded .gridster-item.gridster-item-moving,
+.gridster-loaded .gridster-preview-holder {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none
 }
 .gridster-mobile {
     height: auto !important
@@ -49,7 +70,8 @@
 .gridster-item-resizable-handler {
     position: absolute;
     font-size: 1px;
-    display: block
+    display: block;
+    z-index: 5
 }
 .handle-se {
     cursor: se-resize;
