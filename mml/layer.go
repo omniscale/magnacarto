@@ -10,7 +10,7 @@ const (
 )
 
 type Layer struct {
-	Name       string
+	ID         string
 	Classes    []string
 	SRS        string
 	Datasource Datasource

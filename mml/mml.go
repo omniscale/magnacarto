@@ -23,7 +23,7 @@ type auxMML struct {
 type auxLayer struct {
 	Datasource map[string]interface{}
 	Geometry   string
-	Id         string
+	ID         string
 	Name       string
 	Class      string
 	SRS        string
@@ -45,7 +45,7 @@ func newLayer(l auxLayer) (*Layer, error) {
 	classes := strings.Split(l.Class, " ")
 	groupBy, _ := l.Properties["group-by"].(string)
 	return &Layer{
-		Name:       l.Name,
+		ID:         l.ID,
 		Classes:    classes,
 		Datasource: ds,
 		SRS:        l.SRS,

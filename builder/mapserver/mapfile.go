@@ -180,7 +180,7 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 	} else if layer.Type == mml.Point {
 		t = "POINT"
 	} else {
-		log.Println("unknown geometry type for layer", layer.Name)
+		log.Println("unknown geometry type for layer", layer.ID)
 		return
 	}
 

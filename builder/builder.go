@@ -44,7 +44,7 @@ func (b *Builder) SetDumpRulesDest(w io.Writer) {
 
 // Build parses MML, MSS files, builds all rules and adds them to the Map.
 func (b *Builder) Build() error {
-	layerNames := []string{}
+	layerIDs := []string{}
 	layers := []mml.Layer{}
 
 	if b.mml != "" {
@@ -65,7 +65,7 @@ func (b *Builder) Build() error {
 
 		for _, l := range mml.Layers {
 			layers = append(layers, l)
-			layerNames = append(layerNames, l.Name)
+			layerIDs = append(layerIDs, l.ID)
 		}
 	}
 
@@ -83,17 +83,17 @@ func (b *Builder) Build() error {
 	}
 
 	if b.mml == "" {
-		layerNames = carto.MSS().Layers()
-		for _, layerName := range layerNames {
+		layerIDs = carto.MSS().Layers()
+		for _, layerID := range layerIDs {
 			layers = append(layers,
 				// XXX assume we only have LineStrings for -mss only export
-				mml.Layer{Name: layerName, Type: mml.LineString},
+				mml.Layer{ID: layerID, Type: mml.LineString},
 			)
 		}
 	}
 
 	for _, l := range layers {
-		rules := carto.MSS().LayerRules(l.Name, l.Classes...)
+		rules := carto.MSS().LayerRules(l.ID, l.Classes...)
 
 		if b.dumpRules != nil {
 			for _, r := range rules {

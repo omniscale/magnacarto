@@ -69,7 +69,7 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 
 	layer := Layer{}
 	layer.SRS = &l.SRS
-	layer.Name = l.Name
+	layer.Name = l.ID
 	if !l.Active {
 		layer.Status = "off"
 	}
