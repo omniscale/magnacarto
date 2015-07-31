@@ -84,7 +84,7 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.saveProject = function() {
         var self = this;
-        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, JSON.stringify(self.mmlData, null, '  '));
+        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, angular.toJson(self.mmlData, true));
       };
 
       MMLServiceInstance.prototype.bindSocket = function() {
