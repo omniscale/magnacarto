@@ -30,8 +30,6 @@ import (
 	mssPkg "github.com/omniscale/magnacarto/mss"
 	"github.com/omniscale/magnacarto/render"
 
-	"github.com/omniscale/go-mapnik"
-
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
@@ -337,12 +335,20 @@ func main() {
 	r := mux.NewRouter()
 	handler := magnaserv{config: conf, builderCache: builderCache}
 
-	log.Println("using Mapnik", mapnik.Version.String)
-	if mapnik.Version.Major == 2 {
-		handler.mapnikMaker = mapnikBuilder.Maker2
-	} else {
-		handler.mapnikMaker = mapnikBuilder.Maker3
+	if err := render.StartMapnik(); err != nil {
+		log.Print(err)
 	}
+
+	for _, fontDir := range conf.Mapnik.FontDirs {
+		render.MapnikRegisterFonts(fontDir)
+	}
+
+	if is3, _ := render.MapnikIs3(); is3 {
+		handler.mapnikMaker = mapnikBuilder.Maker3
+	} else {
+		handler.mapnikMaker = mapnikBuilder.Maker2
+	}
+
 	v1 := r.PathPrefix("/api/v1").Subrouter()
 	v1.HandleFunc("/map", handler.render)
 	v1.HandleFunc("/projects/{base}/{mml}.mml", handler.mml)
@@ -355,9 +361,6 @@ func main() {
 		http.Redirect(w, r, "/magnacarto/", 302)
 	})
 
-	for _, fontDir := range conf.Mapnik.FontDirs {
-		mapnik.RegisterFonts(fontDir)
-	}
 	log.Printf("listening on http://%s", *listenAddr)
 
 	log.Fatal(http.ListenAndServe(*listenAddr, handlers.LoggingHandler(os.Stdout, r)))
