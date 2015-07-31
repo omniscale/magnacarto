@@ -14,6 +14,7 @@ func TestFindProjects(t *testing.T) {
 	project := projects[0]
 	if project.Name != "Magnacarto Test" ||
 		project.MML != "test.mml" ||
+		project.MCP != "test.mcp" ||
 		project.Base != "010-linestrings-default" ||
 		len(project.SelectedMSS) != 1 ||
 		len(project.AvailableMSS) != 1 ||

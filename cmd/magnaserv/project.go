@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/omniscale/magnacarto/mml"
 )
@@ -12,6 +13,7 @@ type project struct {
 	Name         string   `json:"name"`
 	Base         string   `json:"base"`
 	MML          string   `json:"mml"`
+	MCP          string   `json:"mcp"`
 	AvailableMSS []string `json:"available_mss"`
 	SelectedMSS  []string `json:"selected_mss"`
 }
@@ -55,6 +57,7 @@ func findProjects(path string) ([]project, error) {
 				Name:         name,
 				Base:         projName,
 				MML:          mmlFile,
+				MCP:          strings.TrimSuffix(mmlFile, filepath.Ext(mmlFile)) + ".mcp",
 				AvailableMSS: mssFiles,
 				SelectedMSS:  parsedMML.Stylesheets,
 			})

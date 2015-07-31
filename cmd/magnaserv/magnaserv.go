@@ -155,9 +155,56 @@ func (s *magnaserv) mml(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, fileName)
 }
 
+func (s *magnaserv) mcp(w http.ResponseWriter, r *http.Request) {
+	baseName := mux.Vars(r)["base"]
+	mcpName := mux.Vars(r)["mcp"]
+
+	fileName, err := filepath.Abs(filepath.Join(s.config.StylesDir, baseName, mcpName+".mcp"))
+	if err != nil {
+		s.internalError(w, r, err)
+		return
+	}
+
+	if r.Method == "POST" {
+		if err := writeCheckedJSON(r.Body, fileName); err != nil {
+			s.internalError(w, r, err)
+			return
+		}
+		return
+	}
+	http.ServeFile(w, r, fileName)
+}
+
 // writeCheckedMML writes MML from io.ReadCloser to fileName.
 // Checks if r is a valid MML before (over)writing file.
 func writeCheckedMML(r io.ReadCloser, fileName string) error {
+	return writeCheckedFile(r, fileName, func(r io.Reader) error {
+		_, err := mml.Parse(r)
+		return err
+	})
+	return nil
+}
+
+// writeCheckedMML writes JSON from io.ReadCloser to fileName.
+// Checks if r is a valid JSON before (over)writing file.
+func writeCheckedJSON(r io.ReadCloser, fileName string) error {
+	return writeCheckedFile(r, fileName, func(r io.Reader) error {
+		d := json.NewDecoder(r)
+		tmp := map[string]interface{}{}
+		return d.Decode(&tmp)
+	})
+	return nil
+}
+
+func (s *magnaserv) internalError(w http.ResponseWriter, r *http.Request, err error) {
+	log.Print(err)
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write([]byte("internal error"))
+}
+
+type fileChecker func(io.Reader) error
+
+func writeCheckedFile(r io.ReadCloser, fileName string, checker fileChecker) error {
 	tmpFile := fileName + ".tmp-" + strconv.FormatInt(int64(rand.Int31()), 16)
 	f, err := os.Create(tmpFile)
 	if err != nil {
@@ -177,19 +224,13 @@ func writeCheckedMML(r io.ReadCloser, fileName string) error {
 		return err
 	}
 	defer f.Close()
-	if _, err := mml.Parse(f); err != nil {
+	if err := checker(f); err != nil {
 		return err
 	}
 	if err := os.Rename(tmpFile, fileName); err != nil {
 		return err
 	}
 	return nil
-}
-
-func (s *magnaserv) internalError(w http.ResponseWriter, r *http.Request, err error) {
-	log.Print(err)
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte("internal error"))
 }
 
 func renderReq(r *maps.Request) render.Request {
@@ -347,6 +388,7 @@ func main() {
 	v1 := r.PathPrefix("/api/v1").Subrouter()
 	v1.HandleFunc("/map", handler.render)
 	v1.HandleFunc("/projects/{base}/{mml}.mml", handler.mml)
+	v1.HandleFunc("/projects/{base}/{mcp}.mcp", handler.mcp)
 	v1.HandleFunc("/projects", handler.projects)
 	v1.Handle("/changes", websocket.Handler(handler.changes))
 
