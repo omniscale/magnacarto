@@ -267,8 +267,9 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 				}
 			} else {
 				msg, err = json.Marshal(struct {
-					UpdatedAt time.Time `json:"updated_at"`
-				}{update.Time})
+					UpdatedAt  time.Time `json:"updated_at"`
+					UpdatedMML bool      `json:"updated_mml"`
+				}{update.Time, update.UpdatedMML})
 
 			}
 			if err != nil {
