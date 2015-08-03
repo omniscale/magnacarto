@@ -7,13 +7,13 @@ angular.module('magna-app')
       $location.path('/');
       return;
     }
-    $scope.navItemName = 'storage';
+    $scope.navItemName = 'bookmarks';
 
     $scope.styles = StyleService.activeStyles;
 
-    $scope.maps = ProjectService.storedMaps;
+    $scope.maps = ProjectService.bookmarkedMaps;
 
-    $scope.gridsterStorageOptions = {
+    $scope.gridsterOptions = {
       margins: [5, 5],
       resizable: {
         enabled: false

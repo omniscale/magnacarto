@@ -40,10 +40,10 @@ angular.module('magna-app')
 .controller('DashboardMapCtrl', ['$scope', '$modal', 'DashboardService', 'ProjectService',
   function($scope, $modal, DashboardService, ProjectService) {
 
-    $scope.openSaveModal = function (map) {
+    $scope.openBookmarkModal = function (map) {
       var modalInstance = $modal.open({
-        templateUrl: 'src/dashboard/pinmap.template.html',
-        controller: 'PinMapCtrl',
+        templateUrl: 'src/dashboard/bookmark-map-template.html',
+        controller: 'BookmarkMapCtrl',
         resolve: {
           map: function () {
             return map;
@@ -57,7 +57,7 @@ angular.module('magna-app')
         id = id.toString();
         item.id = id.replace(/\./g,'');
 
-        ProjectService.storedMaps.push(item);
+        ProjectService.bookmarkedMaps.push(item);
       });
     };
 

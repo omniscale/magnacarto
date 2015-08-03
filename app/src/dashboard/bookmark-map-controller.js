@@ -1,13 +1,13 @@
 angular.module('magna-app')
 
-.controller('PinMapCtrl', ['$scope', '$modalInstance', 'map',
+.controller('BookmarkMapCtrl', ['$scope', '$modalInstance', 'map',
   function($scope, $modalInstance, map) {
     $scope.form = {};
     $scope.map = map;
     $scope.title = '';
 
     $scope.ok = function () {
-      if ($scope.pinmapForm.$invalid) {
+      if ($scope.bookmarkMapFrom.$invalid) {
         return false;
       }
       var item = {

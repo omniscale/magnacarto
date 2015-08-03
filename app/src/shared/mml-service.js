@@ -7,7 +7,7 @@ angular.module('magna-app')
         this.mml = undefined;
         this.mmlData = undefined;
         this.dashboardMaps = [];
-        this.storedMaps = [];
+        this.bookmarkedMaps = [];
         this.socketUrl = undefined;
         this.socket = undefined;
         this.mmlLoadPromise = undefined;
@@ -75,11 +75,11 @@ angular.module('magna-app')
       ProjectServiceInstance.prototype.handleMCPResponse = function(response) {
         var self = this;
         response.dashboardMaps = response.dashboardMaps || [];
-        response.storedMaps = response.storedMaps || [];
+        response.bookmarkedMaps = response.bookmarkedMaps || [];
         self.mcpData = response;
 
         // assign to object property for easy access from outside;
-        self.storedMaps = self.mcpData.storedMaps;
+        self.bookmarkedMaps = self.mcpData.bookmarkedMaps;
         DashboardService.maps = self.mcpData.dashboardMaps;
       };
 
@@ -97,7 +97,7 @@ angular.module('magna-app')
         self.mml = undefined;
         self.mmlData = undefined;
         self.dashboardMaps = [];
-        self.storedMaps = [];
+        self.bookmarkedMaps = [];
         self.socketUrl = undefined;
         self.socket = undefined;
         self.mmlLoadPromise = undefined;
@@ -164,10 +164,10 @@ angular.module('magna-app')
           self.saveMCP();
         }, true);
 
-        // listen on changes in storedMaps
+        // listen on changes in bookmarkedMaps
         // save if change occurs
-        self.storedMapsWatcher = $rootScope.$watch(function() {
-          return self.storedMaps;
+        self.bookmarkedMapsWatcher = $rootScope.$watch(function() {
+          return self.bookmarkedMaps;
         }, function(n, o) {
           if(n === o) return;
           self.saveMCP();
@@ -195,9 +195,9 @@ angular.module('magna-app')
           self.dashboardMapsWatcher = undefined;
         }
 
-        if(self.storedMapsWatcher !== undefined) {
-          self.storedMapsWatcher();
-          self.storedMapsWatcher = undefined;
+        if(self.bookmarkedMapsWatcher !== undefined) {
+          self.bookmarkedMapsWatcher();
+          self.bookmarkedMapsWatcher = undefined;
         }
 
         if(self.stylesWatcher !== undefined) {
