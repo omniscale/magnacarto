@@ -84,12 +84,12 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.saveMML = function() {
         var self = this;
-        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, JSON.stringify(self.mmlData, null, '  '));
+        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, angular.toJson(self.mmlData, true));
       };
 
       MMLServiceInstance.prototype.saveMCP = function() {
         var self = this;
-        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp, JSON.stringify(self.mcpData, null, '  '));
+        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp, angular.toJson(self.mcpData, true));
       };
 
       MMLServiceInstance.prototype.bindSocket = function() {
