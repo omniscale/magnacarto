@@ -1,8 +1,8 @@
 angular.module('magna-app')
-
+/* Todo rename to ProjectServicev */
 .provider('MMLService', [function() {
-  this.$get = ['$http', '$rootScope', '$websocket', 'magnaConfig', 'StyleService', 'LayerService', 'DashboardService',
-    function($http, $rootScope, $websocket, magnaConfig, StyleService, LayerService, DashboardService) {
+  this.$get = ['$http', '$rootScope', '$q', '$websocket', 'magnaConfig', 'StyleService', 'LayerService', 'DashboardService',
+    function($http, $rootScope, $q, $websocket, magnaConfig, StyleService, LayerService, DashboardService) {
       var MMLServiceInstance = function() {
         this.mml = undefined;
         this.mmlData = undefined;
@@ -10,7 +10,7 @@ angular.module('magna-app')
         this.storedMaps = [];
         this.socketUrl = undefined;
         this.socket = undefined;
-        this.loadPromise = undefined;
+        this.projectLoadedPromise = undefined;
       };
 
       MMLServiceInstance.prototype.loadProject = function(project) {
@@ -20,40 +20,41 @@ angular.module('magna-app')
 
         self.basePath = project.base;
         self.mml = project.mml;
+        self.mcp = project.mcp;
         self.availableMss = project.available_mss;
 
-        self.loadPromise = $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml);
-        // TODO add load project error handling
-        self.loadPromise = self.loadPromise.then(function(response) {
-          self.mmlData = response.data;
+        var mmlLoadPromise = $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml);
+        var mcpLoadPromise = $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp);
+
+        self.projectLoadedPromise = $q.all([mmlLoadPromise, mcpLoadPromise]).then(function(data){
+          self.handleMMLResponse(data[0].data);
+          self.handleMCPResponse(data[1].data);
+
           self.bindSocket();
-          StyleService.setStyles(self.availableMss);
-          StyleService.setProjectStyles(self.mmlData.Stylesheet);
-
-          LayerService.setLayers(self.mmlData.Layer);
-
-          if(self.mmlData.magnacarto === undefined) {
-            self.mmlData.magnacarto = {
-              dashboardMaps: [],
-              storedMaps: []
-            };
-          }
-
-          // assign to object property for easy access from outside;
-          self.storedMaps = self.mmlData.magnacarto.storedMaps;
-
-
-          DashboardService.maps = self.mmlData.magnacarto.dashboardMaps;
-          DashboardService.layers = [{
-            styles: StyleService.activeStyles,
-            mml: self.mml
-          }];
-
           self.enableWatchers();
-
         });
 
-        return self.loadPromise;
+        return self.projectLoadedPromise;
+      };
+
+      MMLServiceInstance.prototype.handleMMLResponse = function(response) {
+        var self = this;
+        self.mmlData = response;
+        StyleService.setStyles(self.availableMss);
+        StyleService.setProjectStyles(self.mmlData.Stylesheet);
+
+        LayerService.setLayers(self.mmlData.Layer);
+      };
+
+      MMLServiceInstance.prototype.handleMCPResponse = function(response) {
+        var self = this;
+        response.dashboardMaps = response.dashboardMaps || [];
+        response.storedMaps = response.storedMaps || [];
+        self.mcpData = response;
+
+        // assign to object property for easy access from outside;
+        self.storedMaps = self.mcpData.storedMaps;
+        DashboardService.maps = self.mcpData.dashboardMaps;
       };
 
       MMLServiceInstance.prototype.unloadProject = function() {
@@ -73,18 +74,22 @@ angular.module('magna-app')
         self.storedMaps = [];
         self.socketUrl = undefined;
         self.socket = undefined;
-        self.loadPromise = undefined;
+        self.mmlLoadPromise = undefined;
 
         DashboardService.maps = [];
-        DashboardService.layers = [];
         StyleService.setStyles([]);
         StyleService.setProjectStyles([]);
         LayerService.setLayers([]);
       };
 
-      MMLServiceInstance.prototype.saveProject = function() {
+      MMLServiceInstance.prototype.saveMML = function() {
         var self = this;
         $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, JSON.stringify(self.mmlData, null, '  '));
+      };
+
+      MMLServiceInstance.prototype.saveMCP = function() {
+        var self = this;
+        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp, JSON.stringify(self.mcpData, null, '  '));
       };
 
       MMLServiceInstance.prototype.bindSocket = function() {
@@ -103,7 +108,7 @@ angular.module('magna-app')
 
       MMLServiceInstance.prototype.projectLoaded = function() {
         var self = this;
-        return self.loadPromise;
+        return self.projectLoadedPromise;
       };
 
       MMLServiceInstance.prototype.getSocket = function() {
@@ -116,10 +121,10 @@ angular.module('magna-app')
         // listen on changes in dashboardMaps
         // save if change occurs
         self.dashboardMapsWatcher = $rootScope.$watch(function() {
-          return self.mmlData.magnacarto.dashboardMaps;
+          return self.mcpData.dashboardMaps;
         }, function(n, o) {
           if(n === o) return;
-          self.saveProject();
+          self.saveMCP();
         }, true);
 
         // listen on changes in storedMaps
@@ -128,21 +133,21 @@ angular.module('magna-app')
           return self.storedMaps;
         }, function(n, o) {
           if(n === o) return;
-          self.saveProject();
+          self.saveMCP();
         }, true);
 
         self.stylesWatcher = $rootScope.$watch(function() {
           return self.mmlData.Stylesheet;
         }, function(n, o) {
           if(n === o) return;
-          self.saveProject();
+          self.saveMML();
         }, true);
 
         self.layersWatcher = $rootScope.$watch(function() {
           return self.mmlData.Layer;
         }, function(n, o) {
           if(n === o) return;
-          self.saveProject();
+          self.saveMML();
         }, true);
       };
 
