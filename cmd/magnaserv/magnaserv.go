@@ -159,20 +159,34 @@ func (s *magnaserv) mcp(w http.ResponseWriter, r *http.Request) {
 	baseName := mux.Vars(r)["base"]
 	mcpName := mux.Vars(r)["mcp"]
 
-	fileName, err := filepath.Abs(filepath.Join(s.config.StylesDir, baseName, mcpName+".mcp"))
+	projDir, err := filepath.Abs(filepath.Join(s.config.StylesDir, baseName))
 	if err != nil {
 		s.internalError(w, r, err)
 		return
 	}
+	mcpFile := filepath.Join(projDir, mcpName+".mcp")
 
 	if r.Method == "POST" {
-		if err := writeCheckedJSON(r.Body, fileName); err != nil {
+		if err := writeCheckedJSON(r.Body, mcpFile); err != nil {
 			s.internalError(w, r, err)
 			return
 		}
 		return
 	}
-	http.ServeFile(w, r, fileName)
+
+	// return mcp if exists
+	if _, err := os.Stat(mcpFile); err == nil {
+		http.ServeFile(w, r, mcpFile)
+	} else {
+		mmlFile := filepath.Join(projDir, mcpName+".mml")
+		// return empty JSON if mml exists
+		if _, err := os.Stat(mmlFile); err == nil {
+			w.Header().Add("Content-type", "application/json")
+			w.Write([]byte("{}\n"))
+		} else { // otherwise 404
+			http.NotFound(w, r)
+		}
+	}
 }
 
 // writeCheckedMML writes MML from io.ReadCloser to fileName.
