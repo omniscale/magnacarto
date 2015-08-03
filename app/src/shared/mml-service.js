@@ -10,6 +10,8 @@ angular.module('magna-app')
         this.storedMaps = [];
         this.socketUrl = undefined;
         this.socket = undefined;
+        this.mmlLoadPromise = undefined;
+        this.mcpLoadPromise = undefined;
         this.projectLoadedPromise = undefined;
       };
 
@@ -23,10 +25,10 @@ angular.module('magna-app')
         self.mcp = project.mcp;
         self.availableMss = project.available_mss;
 
-        var mmlLoadPromise = $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml);
-        var mcpLoadPromise = $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp);
+        self.mmlLoadPromise = self.loadMML();
+        self.mcpLoadPromise = self.loadMCP();
 
-        self.projectLoadedPromise = $q.all([mmlLoadPromise, mcpLoadPromise]).then(function(data){
+        self.projectLoadedPromise = $q.all([self.mmlLoadPromise, self.mcpLoadPromise]).then(function(data){
           self.handleMMLResponse(data[0].data);
           self.handleMCPResponse(data[1].data);
 
@@ -37,9 +39,33 @@ angular.module('magna-app')
         return self.projectLoadedPromise;
       };
 
+      MMLServiceInstance.prototype.loadMML = function() {
+        var self = this;
+        return $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml);
+      };
+
+      MMLServiceInstance.prototype.loadMCP = function() {
+        var self = this;
+        return $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp);
+      };
+
       MMLServiceInstance.prototype.handleMMLResponse = function(response) {
         var self = this;
-        self.mmlData = response;
+        if(self.mmlData !== undefined) {
+          // Clear array but keep reference to it.
+          // If a = [] is used instead of a.length = 0, reference changes
+          self.mmlData.Stylesheet.length = 0;
+          angular.forEach(response.Stylesheet, function(style) {
+            self.mmlData.Stylesheet.push(style);
+          });
+          self.mmlData.Layer.length = 0;
+          angular.forEach(response.Layer, function(layer) {
+            self.mmlData.Layer.push(layer);
+          });
+        } else {
+          self.mmlData = response;
+        }
+
         StyleService.setStyles(self.availableMss);
         StyleService.setProjectStyles(self.mmlData.Stylesheet);
 
@@ -103,6 +129,17 @@ angular.module('magna-app')
           url: self.socketUrl,
           reconnect: true,
           reconnectInterval: 100
+        });
+
+        self.projectLoadedPromise = self.projectLoadedPromise.then(function() {
+          self.socket.$on('$message', function (resp) {
+            if(resp.updated_mml === true) {
+              self.mmlLoadPromise = self.loadMML();
+              self.projectLoadedPromise = $q.all([self.mmlLoadPromise, self.mcpLoadPromise]).then(function(data) {
+                self.handleMMLResponse(data[0].data);
+              });
+            }
+          });
         });
       };
 
