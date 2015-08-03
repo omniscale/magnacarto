@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.directive('ol3Map', ['$timeout', '$websocket', 'magnaConfig', 'MMLService',
-  function($timeout, $websocket, magnaConfig, MMLService) {
+.directive('ol3Map', ['$timeout', '$websocket', 'magnaConfig', 'ProjectService',
+  function($timeout, $websocket, magnaConfig, ProjectService) {
     return {
       restrict: 'A',
       scope: {
@@ -18,7 +18,7 @@ angular.module('magna-app')
             scope.olSource.updateParams(scope.params);
           };
 
-          scope.socket = MMLService.getSocket();
+          scope.socket = ProjectService.getSocket();
           scope.staticMap = scope.staticMap === 'true' ? true : false;
 
           // intialize with default values
@@ -28,9 +28,9 @@ angular.module('magna-app')
             LAYERS: magnaConfig.mapnikLayers,
             TRANSPARENT: false,
             VERSION: '1.1.1',
-            mml: MMLService.mml,
+            mml: ProjectService.mml,
             mss: scope.styles.join(','),
-            base: MMLService.basePath,
+            base: ProjectService.basePath,
             t: Date.now()
           };
 

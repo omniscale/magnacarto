@@ -1,9 +1,9 @@
 angular.module('magna-app')
 /* Todo rename to ProjectServicev */
-.provider('MMLService', [function() {
+.provider('ProjectService', [function() {
   this.$get = ['$http', '$rootScope', '$q', '$websocket', 'magnaConfig', 'StyleService', 'LayerService', 'DashboardService',
     function($http, $rootScope, $q, $websocket, magnaConfig, StyleService, LayerService, DashboardService) {
-      var MMLServiceInstance = function() {
+      var ProjectServiceInstance = function() {
         this.mml = undefined;
         this.mmlData = undefined;
         this.dashboardMaps = [];
@@ -15,7 +15,7 @@ angular.module('magna-app')
         this.projectLoadedPromise = undefined;
       };
 
-      MMLServiceInstance.prototype.loadProject = function(project) {
+      ProjectServiceInstance.prototype.loadProject = function(project) {
         var self = this;
 
         self.unloadProject();
@@ -39,17 +39,17 @@ angular.module('magna-app')
         return self.projectLoadedPromise;
       };
 
-      MMLServiceInstance.prototype.loadMML = function() {
+      ProjectServiceInstance.prototype.loadMML = function() {
         var self = this;
         return $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml);
       };
 
-      MMLServiceInstance.prototype.loadMCP = function() {
+      ProjectServiceInstance.prototype.loadMCP = function() {
         var self = this;
         return $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp);
       };
 
-      MMLServiceInstance.prototype.handleMMLResponse = function(response) {
+      ProjectServiceInstance.prototype.handleMMLResponse = function(response) {
         var self = this;
         if(self.mmlData !== undefined) {
           // Clear array but keep reference to it.
@@ -72,7 +72,7 @@ angular.module('magna-app')
         LayerService.setLayers(self.mmlData.Layer);
       };
 
-      MMLServiceInstance.prototype.handleMCPResponse = function(response) {
+      ProjectServiceInstance.prototype.handleMCPResponse = function(response) {
         var self = this;
         response.dashboardMaps = response.dashboardMaps || [];
         response.storedMaps = response.storedMaps || [];
@@ -83,7 +83,7 @@ angular.module('magna-app')
         DashboardService.maps = self.mcpData.dashboardMaps;
       };
 
-      MMLServiceInstance.prototype.unloadProject = function() {
+      ProjectServiceInstance.prototype.unloadProject = function() {
         var self = this;
         if(self.mmlData === undefined) {
           return;
@@ -108,17 +108,17 @@ angular.module('magna-app')
         LayerService.setLayers([]);
       };
 
-      MMLServiceInstance.prototype.saveMML = function() {
+      ProjectServiceInstance.prototype.saveMML = function() {
         var self = this;
         $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, angular.toJson(self.mmlData, true));
       };
 
-      MMLServiceInstance.prototype.saveMCP = function() {
+      ProjectServiceInstance.prototype.saveMCP = function() {
         var self = this;
         $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp, angular.toJson(self.mcpData, true));
       };
 
-      MMLServiceInstance.prototype.bindSocket = function() {
+      ProjectServiceInstance.prototype.bindSocket = function() {
         var self = this;
         self.socketUrl = angular.copy(magnaConfig.socketUrl);
         self.socketUrl += 'mml=' + self.mml;
@@ -143,16 +143,16 @@ angular.module('magna-app')
         });
       };
 
-      MMLServiceInstance.prototype.projectLoaded = function() {
+      ProjectServiceInstance.prototype.projectLoaded = function() {
         var self = this;
         return self.projectLoadedPromise;
       };
 
-      MMLServiceInstance.prototype.getSocket = function() {
+      ProjectServiceInstance.prototype.getSocket = function() {
         return this.socket;
       };
 
-      MMLServiceInstance.prototype.enableWatchers = function() {
+      ProjectServiceInstance.prototype.enableWatchers = function() {
         var self = this;
 
         // listen on changes in dashboardMaps
@@ -188,7 +188,7 @@ angular.module('magna-app')
         }, true);
       };
 
-      MMLServiceInstance.prototype.disableWatchers = function() {
+      ProjectServiceInstance.prototype.disableWatchers = function() {
         var self = this;
         if(self.dashboardMapsWatcher !== undefined) {
           self.dashboardMapsWatcher();
@@ -211,6 +211,6 @@ angular.module('magna-app')
         }
       };
 
-      return new MMLServiceInstance();
+      return new ProjectServiceInstance();
   }];
 }]);

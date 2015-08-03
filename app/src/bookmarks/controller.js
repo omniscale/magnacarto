@@ -1,9 +1,9 @@
 angular.module('magna-app')
 
 
-.controller('BookmarksCtrl', ['$scope', '$location', 'MMLService', 'DashboardService', 'StyleService',
-  function($scope, $location, MMLService, DashboardService, StyleService) {
-    if(MMLService.projectLoaded() === undefined) {
+.controller('BookmarksCtrl', ['$scope', '$location', 'ProjectService', 'DashboardService', 'StyleService',
+  function($scope, $location, ProjectService, DashboardService, StyleService) {
+    if(ProjectService.projectLoaded() === undefined) {
       $location.path('/');
       return;
     }
@@ -11,7 +11,7 @@ angular.module('magna-app')
 
     $scope.styles = StyleService.activeStyles;
 
-    $scope.maps = MMLService.storedMaps;
+    $scope.maps = ProjectService.storedMaps;
 
     $scope.gridsterStorageOptions = {
       margins: [5, 5],

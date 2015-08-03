@@ -1,8 +1,8 @@
 angular.module('magna-app')
 
-.controller('DashboardCtrl', ['$scope', '$location', 'DashboardService', 'StyleService', 'MMLService',
-  function($scope, $location, DashboardService, StyleService, MMLService) {
-    if(MMLService.projectLoaded() === undefined) {
+.controller('DashboardCtrl', ['$scope', '$location', 'DashboardService', 'StyleService', 'ProjectService',
+  function($scope, $location, DashboardService, StyleService, ProjectService) {
+    if(ProjectService.projectLoaded() === undefined) {
       $location.path('/');
       return;
     }
@@ -37,8 +37,8 @@ angular.module('magna-app')
   }
 ])
 
-.controller('DashboardMapCtrl', ['$scope', '$modal', 'DashboardService', 'MMLService',
-  function($scope, $modal, DashboardService, MMLService) {
+.controller('DashboardMapCtrl', ['$scope', '$modal', 'DashboardService', 'ProjectService',
+  function($scope, $modal, DashboardService, ProjectService) {
 
     $scope.openSaveModal = function (map) {
       var modalInstance = $modal.open({
@@ -57,7 +57,7 @@ angular.module('magna-app')
         id = id.toString();
         item.id = id.replace(/\./g,'');
 
-        MMLService.storedMaps.push(item);
+        ProjectService.storedMaps.push(item);
       });
     };
 

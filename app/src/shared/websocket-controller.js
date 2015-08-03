@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.controller('WebSocketCtrl', ['$scope', '$websocket', 'magnaConfig', 'MMLService',
-  function($scope, $websocket, magnaConfig, MMLService) {
+.controller('WebSocketCtrl', ['$scope', '$websocket', 'magnaConfig', 'ProjectService',
+  function($scope, $websocket, magnaConfig, ProjectService) {
     $scope.alerts = [];
 
     var appendMessage = function(type, msg) {
@@ -15,7 +15,7 @@ angular.module('magna-app')
 
     // Add messages handler when socket changes
     $scope.$watch(function() {
-      return MMLService.getSocket();
+      return ProjectService.getSocket();
     }, function(n, o) {
       if(n === o || n === undefined) return;
       var socket = n;
