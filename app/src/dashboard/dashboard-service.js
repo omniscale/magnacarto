@@ -10,6 +10,8 @@ angular.module('magna-app')
 
       DashboardServiceInstance.prototype.clearMaps = function() {
         var self = this;
+        // Clear array but keep reference to it.
+        // If a = [] is used instead of a.length = 0, reference changes
         self.maps.length = 0;
       };
 
