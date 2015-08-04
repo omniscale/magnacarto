@@ -1,7 +1,8 @@
-.PHONY: test all build clean test test-full update_version cmds install build-and-upload
+.PHONY: test all build install cmds clean dist test test-full
 
 GO_FILES=$(shell find . -name \*.go)
 GOMAPNIK_CONFIG=Godeps/_workspace/src/github.com/omniscale/go-mapnik/mapnik_config.go
+DEPS=$(GO_FILES) $(GOMAPNIK_CONFIG)
 
 BUILD_DATE=$(shell date +%Y%m%d)
 BUILD_REV=$(shell git rev-parse --short HEAD)
@@ -20,19 +21,19 @@ CMDS=magnacarto magnacarto-mapnik magnaserv
 $(GOMAPNIK_CONFIG):
 	$(GO) generate github.com/omniscale/go-mapnik
 
-build: $(GO_FILES) $(GOMAPNIK_CONFIG)
+build: $(DEPS)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" -v ./...
 
-magnacarto: $(GO_FILES)
+magnacarto: $(DEPS)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnacarto
 
-magnaserv: $(GO_FILES)
+magnaserv: $(DEPS)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnaserv
 
-magnacarto-mapnik: $(GO_FILES)
+magnacarto-mapnik: $(DEPS)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik
 
-install: $(GO_FILES) $(GOMAPNIK_CONFIG)
+install: $(DEPS)
 	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./cmd/... ./render/magnacarto-mapnik
 
 cmds: build $(CMDS)
