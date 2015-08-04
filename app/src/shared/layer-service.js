@@ -56,6 +56,7 @@ angular.module('magna-app')
           templateUrl: 'src/layer/edit-layer-template.html',
           controller: 'EditLayerCtrl',
           backdrop: 'static',
+          windowClass: 'layer-modal',
           resolve: {
             layer: function () {
               return layer;

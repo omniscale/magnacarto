@@ -2,7 +2,7 @@
   <h3 class="modal-title">Edit layer</h3>
 </div>
 <div class="modal-body layer-form">
-  <form name="layerForm">
+  <form name="layerForm" class="">
     <div class="panel panel-default">
       <div class="panel-heading" ng-click="hideGeneral = !hideGeneral">
         <span>General</span>
@@ -10,35 +10,34 @@
       </div>
       <div class="panel-body form-horizontal" collapse="hideGeneral">
         <div class="form-group">
-          <label class="col-sm-2" for="name">Name</label>
-          <input name="name" class="col-sm-10" type="text" ng-model="layer.name" />
+          <label class="col-sm-2 control-label" for="name">Name</label>
+          <div class="col-sm-10">
+            <input id="name" name="name" class="form-control" type="text" ng-model="layer.name" />
+          </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2" for="id">Id</label>
-          <input name="id" class="col-sm-10" type="text" ng-model="layer.id" />
+          <label class="col-sm-2 control-label" for="id">Id</label>
+          <div class="col-sm-10">
+            <input id="id" name="id" class="form-control" type="text" ng-model="layer.id" />
+          </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2" for="class">Class</label>
-          <input name="class" class="col-sm-10" type="text" ng-model="layer.class" />
+          <label class="col-sm-2 control-label" for="class">Class</label>
+          <div class="col-sm-10">
+            <input id="class" name="class" class="form-control" type="text" ng-model="layer.class" />
+          </div>
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2" for="geometry">Geometry</label>
-          <select name="geometry" class="col-sm-10" type="text" ng-model="layer.geometry">
-            <option value="point">Point</option>
-            <option value="linestring">Linestring</option>
-            <option value="polygon">Polygon</option>
-            <option value="raster">Raster</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2" for="type">Type</label>
-          <select name="type" class="col-sm-10" type="text" ng-model="layer.Datasource.type">
-            <option value="shape">Shape</option>
-            <option value="postgis">Postgis</option>
-            <option value="sqlite">SQlite</option>
-            <option value="gdal">Gdal</option>
-          </select>
+          <label class="col-sm-2 control-label" for="geometry">Geometry</label>
+          <div class="col-sm-10">
+            <select id="geometry" name="geometry" class="form-control" type="text" ng-model="layer.geometry">
+              <option value="point">Point</option>
+              <option value="linestring">Linestring</option>
+              <option value="polygon">Polygon</option>
+              <option value="raster">Raster</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -49,35 +48,58 @@
       </div>
       <div class="panel-body form-horizontal" collapse="hideExtentSRS">
         <div class="form-group">
-          <label class="col-sm-2" for="extent">Extent</label>
-          <input name="extent" class="col-sm-10" float ng-model="layer.extent[0]" />
-          <input class="col-sm-offset-2 col-sm-10" float ng-model="layer.extent[1]" />
-          <input class="col-sm-offset-2 col-sm-10" float ng-model="layer.extent[2]" />
-          <input class="col-sm-offset-2 col-sm-10" float ng-model="layer.extent[3]" />
+          <label class="col-sm-2 control-label" for="extent">Extent</label>
+          <div class="col-sm-10">
+            <input id="extent" name="extent" class="form-control" float ng-model="layer.extent[0]" />
+          </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2" for="srs">SRS</label>
-          <input name="srs" class="col-sm-10" type="text" ng-model="layer.srs" />
+          <div class="col-sm-10 col-sm-offset-2">
+            <input class="form-control" float ng-model="layer.extent[1]" />
+          </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2" for="srs-name">SRS-Name</label>
-          <input name="srs" class="col-sm-10" type="text" ng-model="layer['srs-name']" />
+          <div class="col-sm-10 col-sm-offset-2">
+            <input class="form-control" float ng-model="layer.extent[2]" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-10 col-sm-offset-2">
+            <input class="form-control" float ng-model="layer.extent[3]" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="srs">SRS</label>
+          <div class="col-sm-10">
+            <input id="srs" name="srs" class="form-control" type="text" ng-model="layer.srs" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="srs-name">SRS-Name</label>
+          <div class="col-sm-10">
+            <input id="srs-name" name="srs-name" class="form-control" type="text" ng-model="layer['srs-name']" />
+          </div>
         </div>
       </div>
     </div>
-    <div ng-include="datasourceTemplates[layer.Datasource.type]"></div>
     <div class="panel panel-default">
-      <div class="panel-heading" ng-click="hideAdvanced = !hideAdvanced">
-        <span>Advanced</span>
-        <i class="glyphicon" ng-class="{'glyphicon-chevron-right': hideAdvanced, 'glyphicon-chevron-down': !hideAdvanced}"></i>
+      <div class="panel-heading cursor-pointer" ng-click="hideDatasource = !hideDatasource">
+        <span>Datasource</span>
+        <i class="glyphicon" ng-class="{'glyphicon-chevron-right': hideDatasource, 'glyphicon-chevron-down': !hideDatasource}"></i>
       </div>
-      <div class="panel-body form-horizontal" collapse="hideAdvanced">
-        <span ng-repeat-start="(key, value) in layer.advanced"></span>
+      <div class="panel-body form-horizontal" collapse="hideDatasource">
         <div class="form-group">
-          <label class="col-sm-2" for="{{ key }}">{{ key }}</label>
-          <input class="col-sm-10" type="text" ng-model="layer.advanced[key]" />
+          <label class="col-sm-2 control-label" for="type">Type</label>
+          <div class="col-sm-10">
+            <select id="type" name="type" class="form-control" type="text" ng-model="layer.Datasource.type">
+              <option value="shape">Shape</option>
+              <option value="postgis">Postgis</option>
+              <option value="sqlite">SQlite</option>
+              <option value="gdal">Gdal</option>
+            </select>
+          </div>
         </div>
-        <span ng-repeat-end></span>
+        <div ng-include="datasourceTemplates[layer.Datasource.type]"></div>
       </div>
     </div>
   </form>

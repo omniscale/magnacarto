@@ -14,10 +14,7 @@ angular.module('magna-app')
 
     $scope.hideGeneral = false;
     $scope.hideExtentSRS = true;
-    $scope.hideSource = false;
-    $scope.hideDB = false;
-    $scope.hideDBConnection = true;
-    $scope.hideAdvanced = true;
+    $scope.hideDatasource = false;
 
     var cleanupDatasource = function(datasource) {
       switch(datasource.type) {
