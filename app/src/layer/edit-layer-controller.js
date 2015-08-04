@@ -1,8 +1,33 @@
 angular.module('magna-app')
 
-.controller('EditLayerCtrl', ['$scope', '$modal', '$modalInstance', 'layer',
-  function($scope, $modal, $modalInstance, layer) {
-    $scope.form = {};
+.factory('EditLayerFormStatus', [function() {
+  var hideGeneral, hideExtentSRS, hideDatasource;
+
+  var reset = function() {
+    hideGeneral = false;
+    hideExtentSRS = true;
+    hideDatasource = false;
+  };
+  reset();
+  return {
+    hideGeneral: function(val) {
+      if(val !== undefined) { hideGeneral = val; }
+      return hideGeneral;
+    },
+    hideExtentSRS: function(val) {
+      if(val !== undefined) { hideExtentSRS = val; }
+      return hideExtentSRS;
+    },
+    hideDatasource: function(val) {
+      if(val !== undefined) { hideDatasource = val; }
+      return hideDatasource;
+    },
+    reset: reset
+  };
+}])
+
+.controller('EditLayerCtrl', ['$scope', 'EditLayerFormStatus', '$modal', '$modalInstance', 'layer',
+  function($scope, EditLayerFormStatus, $modal, $modalInstance, layer) {
     $scope.layer = angular.copy(layer);
 
     $scope.datasourceTemplates = {
@@ -12,9 +37,21 @@ angular.module('magna-app')
       'shape': 'src/layer/shape-datasource-template.html'
     };
 
-    $scope.hideGeneral = false;
-    $scope.hideExtentSRS = true;
-    $scope.hideDatasource = false;
+    $scope.hideGeneral = EditLayerFormStatus.hideGeneral();
+    $scope.hideExtentSRS = EditLayerFormStatus.hideExtentSRS();
+    $scope.hideDatasource = EditLayerFormStatus.hideDatasource();
+
+    $scope.$watch('hideGeneral', function(hideGeneral) {
+      EditLayerFormStatus.hideGeneral(hideGeneral);
+    });
+
+    $scope.$watch('hideExtentSRS', function(hideExtentSRS) {
+      EditLayerFormStatus.hideExtentSRS(hideExtentSRS);
+    });
+
+    $scope.$watch('hideDatasource', function(hideDatasource) {
+      EditLayerFormStatus.hideDatasource(hideDatasource);
+    });
 
     var cleanupDatasource = function(datasource) {
       switch(datasource.type) {
