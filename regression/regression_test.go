@@ -22,7 +22,6 @@ import (
 	"github.com/omniscale/magnacarto/render"
 
 	"github.com/BurntSushi/toml"
-	gomapnik "github.com/omniscale/go-mapnik"
 
 	"testing"
 )
@@ -42,9 +41,16 @@ type testCase struct {
 	MapServerPxDiff  int64
 }
 
+var mapnikRenderer *render.Mapnik
+var mapserverRenderer *render.MapServer
+
 func init() {
-	here, _ := os.Getwd()
-	gomapnik.RegisterFonts(here)
+	mapnikRenderer, _ = render.NewMapnik()
+	if mapnikRenderer != nil {
+		wd, _ := os.Getwd()
+		mapnikRenderer.RegisterFonts(wd)
+	}
+	mapserverRenderer, _ = render.NewMapServer()
 }
 
 var cmdsChecked bool
@@ -215,7 +221,10 @@ func renderMapnik(t *testing.T, c testCase, name string) {
 	mapReq.Height = c.Height
 	mapReq.Format = "png24"
 
-	buf, err := render.Mapnik(filepath.Join(caseBuildDir, name+".xml"), mapReq)
+	if mapnikRenderer == nil {
+		t.Skip("mapnik not initialized")
+	}
+	buf, err := mapnikRenderer.Render(filepath.Join(caseBuildDir, name+".xml"), mapReq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -234,7 +243,10 @@ func renderMapserver(t *testing.T, c testCase) {
 	mapReq.Height = c.Height
 	mapReq.Format = "image/png"
 
-	buf, err := render.MapServer("mapserv", filepath.Join(caseBuildDir, "magnacarto.map"), mapReq)
+	if mapserverRenderer == nil {
+		t.Skip("mapserver not initialized")
+	}
+	buf, err := mapserverRenderer.Render(filepath.Join(caseBuildDir, "magnacarto.map"), mapReq)
 	if err != nil {
 		t.Fatal(err)
 	}
