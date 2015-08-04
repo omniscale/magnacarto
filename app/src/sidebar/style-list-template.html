@@ -8,10 +8,9 @@
     <div class="style-list disable-select">
       <div class="active-styles" ng-model="activeStyles" as-sortable>
         <div class="as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>
-          <i class="glyphicon glyphicon-move as-sortable-item-handle" as-sortable-item-handle></i>
           <label title="{{style}}" ng-click="toggleSelection(style)" class="cursor-pointer">
             <i class="glyphicon glyphicon-check"></i>
-            {{ style }}
+            <span as-sortable-item-handle>{{ style }}</span>
           </label>
         </div>
       </div>
