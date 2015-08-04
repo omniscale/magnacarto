@@ -14,7 +14,7 @@ angular.module('magna-app')
     $scope.openProject = function(project) {
       var promise = ProjectService.loadProject(project);
       promise.then(function() {
-        $location.path('dashboard');
+        $location.path('dashboard/' + project.base + '/' + project.mml);
       });
     };
   }

@@ -4,7 +4,7 @@ angular.module('magna-app')
   this.$get = ['$http', '$rootScope', '$q', '$websocket', 'magnaConfig', 'StyleService', 'LayerService', 'DashboardService',
     function($http, $rootScope, $q, $websocket, magnaConfig, StyleService, LayerService, DashboardService) {
       var ProjectServiceInstance = function() {
-        this.mml = undefined;
+        this.project = undefined;
         this.mmlData = undefined;
         this.dashboardMaps = [];
         this.bookmarkedMaps = [];
@@ -20,10 +20,7 @@ angular.module('magna-app')
 
         self.unloadProject();
 
-        self.basePath = project.base;
-        self.mml = project.mml;
-        self.mcp = project.mcp;
-        self.availableMss = project.available_mss;
+        self.project = project;
 
         self.mmlLoadPromise = self.loadMML();
         self.mcpLoadPromise = self.loadMCP();
@@ -41,12 +38,12 @@ angular.module('magna-app')
 
       ProjectServiceInstance.prototype.loadMML = function() {
         var self = this;
-        return $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml);
+        return $http.get(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mml);
       };
 
       ProjectServiceInstance.prototype.loadMCP = function() {
         var self = this;
-        return $http.get(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp);
+        return $http.get(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mcp);
       };
 
       ProjectServiceInstance.prototype.handleMMLResponse = function(response) {
@@ -66,7 +63,7 @@ angular.module('magna-app')
           self.mmlData = response;
         }
 
-        StyleService.setStyles(self.availableMss);
+        StyleService.setStyles(self.project.available_mss);
         StyleService.setProjectStyles(self.mmlData.Stylesheet);
 
         LayerService.setLayers(self.mmlData.Layer);
@@ -94,7 +91,7 @@ angular.module('magna-app')
           self.socket.$close();
         }
 
-        self.mml = undefined;
+        self.project = undefined;
         self.mmlData = undefined;
         self.dashboardMaps = [];
         self.bookmarkedMaps = [];
@@ -110,21 +107,20 @@ angular.module('magna-app')
 
       ProjectServiceInstance.prototype.saveMML = function() {
         var self = this;
-        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mml, angular.toJson(self.mmlData, true));
+        $http.post(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mml, angular.toJson(self.mmlData, true));
       };
 
       ProjectServiceInstance.prototype.saveMCP = function() {
         var self = this;
-        $http.post(magnaConfig.projectBaseUrl + self.basePath + '/' + self.mcp, angular.toJson(self.mcpData, true));
+        $http.post(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mcp, angular.toJson(self.mcpData, true));
       };
 
       ProjectServiceInstance.prototype.bindSocket = function() {
         var self = this;
         self.socketUrl = angular.copy(magnaConfig.socketUrl);
-        self.socketUrl += 'mml=' + self.mml;
-        self.socketUrl += '&mss=' + self.availableMss;
-        self.socketUrl += '&base=' + self.basePath;
-
+        self.socketUrl += 'mml=' + self.project.mml;
+        self.socketUrl += '&mss=' + self.project.available_mss;
+        self.socketUrl += '&base=' + self.project.base;
         self.socket = $websocket.$new({
           url: self.socketUrl,
           reconnect: true,

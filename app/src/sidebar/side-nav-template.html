@@ -10,7 +10,7 @@
     </a>
   </li>
   <li>
-    <a is-active-nav href="#/dashboard" ng-class="{disabled: selectedNavItem === 'projects'}">Dashboard
+    <a is-active-nav href="{{ dashboardUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Dashboard
       <span class="menu-icon glyphicon glyphicon-th"></span>
     </a>
     <div collapse="(selectedNavItem !== 'dashboard' || !active)">
@@ -27,7 +27,7 @@
     </div>
   </li>
   <li>
-    <a is-active-nav href="#/bookmarks" ng-class="{disabled: selectedNavItem === 'projects'}">Bookmarks
+    <a is-active-nav href="{{ bookmarksUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Bookmarks
       <span class="menu-icon glyphicon glyphicon-bookmark"></span>
     </a>
   </li>

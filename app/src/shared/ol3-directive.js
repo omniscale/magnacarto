@@ -28,9 +28,9 @@ angular.module('magna-app')
             LAYERS: magnaConfig.mapnikLayers,
             TRANSPARENT: false,
             VERSION: '1.1.1',
-            mml: ProjectService.mml,
+            mml: ProjectService.project.mml,
             mss: scope.styles.join(','),
-            base: ProjectService.basePath,
+            base: ProjectService.project.base,
             t: Date.now()
           };
 

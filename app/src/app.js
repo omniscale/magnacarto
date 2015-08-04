@@ -18,11 +18,11 @@ angular.module('magna-app').constant('magnaConfig', {
     templateUrl: 'src/projects/template.html',
     controller: 'ProjectsCtrl'
   })
-  .when('/dashboard', {
+  .when('/dashboard/:base/:mml', {
     templateUrl: 'src/dashboard/template.html',
     controller: 'DashboardCtrl'
   })
-  .when('/bookmarks', {
+  .when('/bookmarks/:base/:mml', {
     templateUrl: 'src/bookmarks/template.html',
     controller: 'BookmarksCtrl'
   })
