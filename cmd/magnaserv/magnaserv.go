@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -35,9 +36,10 @@ import (
 )
 
 type magnaserv struct {
-	config       *config.Magnacarto
-	builderCache *builder.Cache
-	mapnikMaker  builder.MapMaker
+	config         *config.Magnacarto
+	builderCache   *builder.Cache
+	mapnikMaker    builder.MapMaker
+	mapnikRenderer *render.Mapnik
 }
 
 func (s *magnaserv) styleParams(r *http.Request) (mml string, mss []string) {
@@ -100,8 +102,11 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 		mapReq.Format = mapReq.Query.Get("FORMAT") // use requested format, not internal mapnik format
 		b, err = render.MapServer(s.config.MapServer.DevBin, styleFile, renderReq(mapReq))
 	} else {
-		b, err = render.Mapnik(styleFile, renderReq(mapReq))
-
+		if s.mapnikRenderer == nil {
+			err = errors.New("mapnik not initialized")
+		} else {
+			b, err = s.mapnikRenderer.Render(styleFile, renderReq(mapReq))
+		}
 	}
 	if err != nil {
 		s.internalError(w, r, err)
@@ -334,19 +339,19 @@ func main() {
 
 	r := mux.NewRouter()
 	handler := magnaserv{config: conf, builderCache: builderCache}
+	handler.mapnikMaker = mapnikBuilder.Maker2
 
-	if err := render.StartMapnik(); err != nil {
+	mapnikRenderer, err := render.NewMapnik()
+	if err != nil {
 		log.Print(err)
-	}
-
-	for _, fontDir := range conf.Mapnik.FontDirs {
-		render.MapnikRegisterFonts(fontDir)
-	}
-
-	if is3, _ := render.MapnikIs3(); is3 {
-		handler.mapnikMaker = mapnikBuilder.Maker3
 	} else {
-		handler.mapnikMaker = mapnikBuilder.Maker2
+		for _, fontDir := range conf.Mapnik.FontDirs {
+			mapnikRenderer.RegisterFonts(fontDir)
+		}
+		if is3, _ := mapnikRenderer.Is3(); is3 {
+			handler.mapnikMaker = mapnikBuilder.Maker3
+		}
+		handler.mapnikRenderer = mapnikRenderer
 	}
 
 	v1 := r.PathPrefix("/api/v1").Subrouter()
