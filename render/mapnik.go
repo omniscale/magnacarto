@@ -5,6 +5,8 @@ import (
 	"net/rpc"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 
 	"github.com/natefinch/pie"
 )
@@ -13,11 +15,24 @@ type Mapnik struct {
 	client *rpc.Client
 }
 
-func NewMapnik() (*Mapnik, error) {
-	path, err := exec.LookPath("magnacarto-mapnik")
-	if err != nil {
-		return nil, err
+var mapnikPluginName = "magnacarto-mapnik"
+
+func init() {
+	if runtime.GOOS == "windows" {
+		mapnikPluginName += ".exe"
 	}
+}
+
+func NewMapnik() (*Mapnik, error) {
+	path, err := exec.LookPath(mapnikPluginName)
+	if err != nil {
+		path = filepath.Join(filepath.Dir(os.Args[0]), mapnikPluginName)
+		path, _ = filepath.Abs(path)
+		if _, serr := os.Stat(path); serr != nil {
+			return nil, err
+		}
+	}
+
 	client, err := pie.StartProvider(os.Stderr, path)
 	if err != nil {
 		return nil, err

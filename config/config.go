@@ -13,7 +13,6 @@ import (
 
 type Magnacarto struct {
 	Mapnik      Mapnik
-	MapServer   MapServer
 	StylesDir   string `toml:"styles_dir"`
 	OutDir      string `toml:"out_dir"`
 	Datasources Datasource
@@ -24,11 +23,6 @@ type Magnacarto struct {
 type Mapnik struct {
 	PluginDirs []string `toml:"plugin_dirs"`
 	FontDirs   []string `toml:"font_dirs"`
-}
-
-type MapServer struct {
-	Bin    string
-	DevBin string
 }
 
 type Datasource struct {

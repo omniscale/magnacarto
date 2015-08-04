@@ -36,10 +36,11 @@ import (
 )
 
 type magnaserv struct {
-	config         *config.Magnacarto
-	builderCache   *builder.Cache
-	mapnikMaker    builder.MapMaker
-	mapnikRenderer *render.Mapnik
+	config            *config.Magnacarto
+	builderCache      *builder.Cache
+	mapnikMaker       builder.MapMaker
+	mapnikRenderer    *render.Mapnik
+	mapserverRenderer *render.MapServer
 }
 
 func (s *magnaserv) styleParams(r *http.Request) (mml string, mss []string) {
@@ -100,7 +101,10 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 	var b []byte
 	if renderer == "mapserver" {
 		mapReq.Format = mapReq.Query.Get("FORMAT") // use requested format, not internal mapnik format
-		b, err = render.MapServer(s.config.MapServer.DevBin, styleFile, renderReq(mapReq))
+		if s.mapserverRenderer == nil {
+			err = errors.New("mapserver not initialized")
+		}
+		b, err = s.mapserverRenderer.Render(styleFile, renderReq(mapReq))
 	} else {
 		if s.mapnikRenderer == nil {
 			err = errors.New("mapnik not initialized")
@@ -343,8 +347,9 @@ func main() {
 
 	mapnikRenderer, err := render.NewMapnik()
 	if err != nil {
-		log.Print(err)
+		log.Print("Mapnik plugin: ", err)
 	} else {
+		log.Print("Mapnik plugin available")
 		for _, fontDir := range conf.Mapnik.FontDirs {
 			mapnikRenderer.RegisterFonts(fontDir)
 		}
@@ -352,6 +357,14 @@ func main() {
 			handler.mapnikMaker = mapnikBuilder.Maker3
 		}
 		handler.mapnikRenderer = mapnikRenderer
+	}
+
+	mapserverRenderer, err := render.NewMapServer()
+	if err != nil {
+		log.Print("MapServer plugin: ", err)
+	} else {
+		log.Print("MapServer plugin available")
+		handler.mapserverRenderer = mapserverRenderer
 	}
 
 	v1 := r.PathPrefix("/api/v1").Subrouter()

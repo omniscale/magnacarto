@@ -8,11 +8,24 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
 
-func MapServer(bin, mapfile string, mapReq Request) ([]byte, error) {
+type MapServer struct {
+	bin string
+}
+
+func NewMapServer() (*MapServer, error) {
+	bin, err := exec.LookPath("mapserv")
+	if err != nil {
+		return nil, err
+	}
+	return &MapServer{bin: bin}, nil
+}
+
+func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
 	if !filepath.IsAbs(mapfile) {
 		if wd, err := os.Getwd(); err == nil {
 			mapfile = filepath.Join(wd, mapfile)
@@ -33,18 +46,9 @@ func MapServer(bin, mapfile string, mapReq Request) ([]byte, error) {
 	q.Set("SRS", fmt.Sprintf("EPSG:%d", mapReq.EPSGCode))
 	q.Set("FORMAT", mapReq.Format)
 
-	if !filepath.IsAbs(bin) {
-		for _, path := range strings.Split(os.Getenv("PATH"), string(filepath.ListSeparator)) {
-			if fi, _ := os.Stat(filepath.Join(path, bin)); fi != nil {
-				bin = filepath.Join(path, bin)
-				break
-			}
-		}
-	}
-
 	wd := filepath.Dir(mapfile)
 	handler := cgi.Handler{
-		Path: bin,
+		Path: m.bin,
 		Dir:  wd,
 	}
 
