@@ -6,13 +6,30 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "code.google.com/p/go.net/websocket",
+			"Comment": "null-144",
+			"Rev": "ad01a6fcc8a19d3a4478c836895ffe883bd2ceab"
+		},
+		{
 			"ImportPath": "github.com/BurntSushi/toml",
 			"Comment": "v0.1.0-18-g443a628",
 			"Rev": "443a628bc233f634a75bcbdd71fe5350789f1afa"
 		},
 		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/handlers",
+			"Rev": "60c7bfde3e33c201519a200a4507a158cc03a17b"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "8096f47503459bcc74d1f4c487b7e6e42e5746b5"
+		},
+		{
 			"ImportPath": "github.com/omniscale/go-mapnik",
-			"Rev": "da1bb94d40b12e5e61a33024da002ba5fef9e746"
+			"Rev": "e4f86bd9499d730f27ebebad868303fc43c3a975"
 		},
 		{
 			"ImportPath": "github.com/stretchr/testify/assert",
