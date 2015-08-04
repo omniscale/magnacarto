@@ -138,8 +138,9 @@ func (c *Cache) ClearTill(till time.Time) {
 }
 
 type Update struct {
-	Err  error
-	Time time.Time
+	Err        error
+	Time       time.Time
+	UpdatedMML bool
 }
 
 func (c *Cache) Notify(mm MapMaker, mml string, mss []string, done <-chan struct{}) (updatec chan Update, errc chan error) {
@@ -192,10 +193,11 @@ func (c *Cache) Notify(mm MapMaker, mml string, mss []string, done <-chan struct
 					}
 				}
 				style, err := c.style(mm, mml, mss)
+
 				if err != nil {
 					updatec <- Update{Err: err}
 				} else {
-					updatec <- Update{Time: style.lastUpdate}
+					updatec <- Update{Time: style.lastUpdate, UpdatedMML: evt.Name == mml}
 				}
 			case err := <-watcher.Errors:
 				errc <- err

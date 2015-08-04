@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/png"
 	"io/ioutil"
+	"math"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -103,14 +104,24 @@ func TestBackgroundColor(t *testing.T) {
 	if c.R != 100 || c.G != 50 || c.B != 200 || c.A != 150 {
 		t.Error("background not set", c)
 	}
-	img, err := m.RenderImage(RenderOpts{})
+	img, err := m.RenderImage(RenderOpts{Format: "png24"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	bg := color.NRGBAModel.Convert(img.At(0, 0)).(color.NRGBA)
-	if bg.R != 98 || bg.G != 49 || bg.B != 198 || bg.A != 150 {
+	if !colorEqual(color.NRGBA{100, 50, 200, 150}, bg, 2) {
 		t.Error("background in rendered image not set", bg)
 	}
+}
+
+func colorEqual(expected, actual color.NRGBA, delta int) bool {
+	if math.Abs(float64(expected.R-actual.R)) > float64(delta) ||
+		math.Abs(float64(expected.G-actual.G)) > float64(delta) ||
+		math.Abs(float64(expected.B-actual.B)) > float64(delta) ||
+		math.Abs(float64(expected.A-actual.A)) > float64(delta) {
+		return false
+	}
+	return true
 }
 
 func TestRender(t *testing.T) {

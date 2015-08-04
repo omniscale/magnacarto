@@ -49,6 +49,26 @@ func LogSeverity(level LogLevel) {
 	C.mapnik_logging_set_severity(C.int(level))
 }
 
+type version struct {
+	Numeric int
+	Major   int
+	Minor   int
+	Patch   int
+	Release bool
+	String  string
+}
+
+var Version version
+
+func init() {
+	Version.Numeric = int(C.mapnik_version)
+	Version.Major = int(C.mapnik_version_major)
+	Version.Minor = int(C.mapnik_version_minor)
+	Version.Patch = int(C.mapnik_version_patch)
+	Version.Release = int(C.mapnik_version_release) != 0
+	Version.String = C.GoString(C.mapnik_version_string)
+}
+
 // Map base type
 type Map struct {
 	m           *C.struct__mapnik_map_t

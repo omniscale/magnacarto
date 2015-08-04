@@ -3,13 +3,23 @@
 
 #include <mapnik/debug.hpp>
 #include <mapnik/version.hpp>
-#include <mapnik/graphics.hpp>
+#include <mapnik/map.hpp>
+#include <mapnik/layer.hpp>
 #include <mapnik/color.hpp>
 #include <mapnik/image_util.hpp>
 #include <mapnik/agg_renderer.hpp>
 #include <mapnik/load_map.hpp>
 #include <mapnik/datasource_cache.hpp>
 #include <mapnik/font_engine_freetype.hpp>
+
+
+#if MAPNIK_VERSION < 300000
+#define MAPNIK_2
+#endif
+
+#ifdef MAPNIK_2
+#include <mapnik/graphics.hpp>
+#endif
 
 #include "mapnik_c_api.h"
 
@@ -19,6 +29,20 @@
 extern "C"
 {
 #endif
+
+const int mapnik_version = MAPNIK_VERSION;
+const char *mapnik_version_string = MAPNIK_VERSION_STRING;
+const int mapnik_version_major = MAPNIK_MAJOR_VERSION;
+const int mapnik_version_minor = MAPNIK_MINOR_VERSION;
+const int mapnik_version_patch = MAPNIK_PATCH_VERSION;
+const int mapnik_version_release = MAPNIK_VERSION_IS_RELEASE;
+
+#ifdef MAPNIK_2
+    typedef mapnik::image_32 mapnik_rgba_image;
+#else
+    typedef mapnik::image_rgba8 mapnik_rgba_image;
+#endif
+
 
 static std::string * register_err;
 
@@ -204,7 +228,7 @@ void mapnik_map_zoom_to_box(mapnik_map_t * m, mapnik_bbox_t * b) {
 }
 
 struct _mapnik_image_t {
-    mapnik::image_32 *i;
+    mapnik_rgba_image *i;
     std::string * err;
 };
 
@@ -236,10 +260,10 @@ const char *mapnik_image_last_error(mapnik_image_t *i) {
 
 mapnik_image_t * mapnik_map_render_to_image(mapnik_map_t * m, double scale, double scale_factor) {
     mapnik_map_reset_last_error(m);
-    mapnik::image_32 * im = new mapnik::image_32(m->m->width(), m->m->height());
+    mapnik_rgba_image * im = new mapnik_rgba_image(m->m->width(), m->m->height());
     if (m && m->m) {
         try {
-            mapnik::agg_renderer<mapnik::image_32> ren(*m->m, *im, scale_factor);
+            mapnik::agg_renderer<mapnik_rgba_image> ren(*m->m, *im, scale_factor);
             if (scale > 0.0) {
                 ren.apply(scale);
             } else {
@@ -261,8 +285,8 @@ int mapnik_map_render_to_file(mapnik_map_t * m, const char* filepath, double sca
     mapnik_map_reset_last_error(m);
     if (m && m->m) {
         try {
-            mapnik::image_32 buf(m->m->width(), m->m->height());
-            mapnik::agg_renderer<mapnik::image_32> ren(*m->m, buf, scale_factor);
+            mapnik_rgba_image buf(m->m->width(), m->m->height());
+            mapnik::agg_renderer<mapnik_rgba_image> ren(*m->m, buf, scale_factor);
             if (scale > 0.0) {
                 ren.apply(scale);
             } else {
@@ -310,16 +334,25 @@ mapnik_image_blob_t * mapnik_image_to_blob(mapnik_image_t * i, const char *forma
 const uint8_t * mapnik_image_to_raw(mapnik_image_t * i, size_t * size) {
     if (i && i->i) {
         *size = i->i->width() * i->i->height() * 4;
+#ifdef MAPNIK_2
         return i->i->raw_data();
+#else
+        return (uint8_t *)i->i->data();
+#endif
+
     }
     return NULL;
 }
 
 mapnik_image_t * mapnik_image_from_raw(const uint8_t * raw, int width, int height) {
     mapnik_image_t * img = new mapnik_image_t;
-    img->i = new mapnik::image_32(width, height);
-    img->err = NULL;
+    img->i = new mapnik_rgba_image(width, height);
+#ifdef MAPNIK_2
     memcpy(img->i->raw_data(), raw, width * height * 4);
+#else
+    memcpy(img->i->data(), raw, width * height * 4);
+#endif
+    img->err = NULL;
     return img;
 }
 
@@ -332,7 +365,11 @@ int mapnik_map_layer_count(mapnik_map_t * m) {
 
 const char * mapnik_map_layer_name(mapnik_map_t * m, size_t idx) {
     if (m && m->m) {
+#ifdef MAPNIK_2
         mapnik::layer const& layer = m->m->getLayer(idx);
+#else
+        mapnik::layer const& layer = m->m->get_layer(idx);
+#endif
         return layer.name().c_str();
     }
     return NULL;
@@ -340,7 +377,11 @@ const char * mapnik_map_layer_name(mapnik_map_t * m, size_t idx) {
 
 int mapnik_map_layer_is_active(mapnik_map_t * m, size_t idx) {
     if (m && m->m) {
+#ifdef MAPNIK_2
         mapnik::layer const& layer = m->m->getLayer(idx);
+#else
+        mapnik::layer const& layer = m->m->get_layer(idx);
+#endif
         return layer.active();
     }
     return 0;
@@ -348,7 +389,11 @@ int mapnik_map_layer_is_active(mapnik_map_t * m, size_t idx) {
 
 void mapnik_map_layer_set_active(mapnik_map_t * m, size_t idx, int active) {
     if (m && m->m) {
+#ifdef MAPNIK_2
         mapnik::layer &layer = m->m->getLayer(idx);
+#else
+        mapnik::layer &layer = m->m->get_layer(idx);
+#endif
         layer.set_active(active);
     }
 }
