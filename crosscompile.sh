@@ -24,6 +24,7 @@ function build() {
     echo building $build_name
     cd $build_name
     env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
+    env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnaserv
     cp ../../../{README.md,LICENSE} ./
     cd ..
     if [ $os = windows ]; then
