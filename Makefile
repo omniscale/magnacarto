@@ -32,8 +32,8 @@ magnaserv: $(GO_FILES)
 magnacarto-mapnik: $(GO_FILES)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik
 
-install: $(GO_FILES)
-	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./cmd/...
+install: $(GO_FILES) $(GOMAPNIK_CONFIG)
+	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./cmd/... ./render/magnacarto-mapnik
 
 cmds: build $(CMDS)
 
