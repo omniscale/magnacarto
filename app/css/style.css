@@ -312,11 +312,23 @@ div.as-sortable-dragging {
 /* Edit layer from */
 .layer-form {
   overflow: auto;
-  max-height: 50vh;
+  max-height: 75vh;
+  padding: 0;
 }
 
-.layer-form form {
-  margin: 5px 10px 0;
+.layer-form .panel {
+  border: none;
+  border-radius: 0;
+  box-shadow: 0;
+  margin: 0;
+}
+
+.layer-form .panel .panel-body {
+  margin-right: 15px;
+}
+
+.layer-form .panel .panel-heading span {
+  margin-right: 5px;
 }
 
 /* Misc */

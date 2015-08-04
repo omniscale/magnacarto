@@ -1,8 +1,16 @@
-<div class="form-group">
-  <label class="col-sm-2" for="file">File</label>
-  <input name="file" class="col-sm-10" type="text" ng-model="layer.Datasource.file" />
-</div>
-<div class="form-group">
-  <label class="col-sm-2" for="band">Band</label>
-  <input name="band" class="col-sm-10" type="text" ng-model="layer.Datasource.band" />
+<div class="panel panel-default">
+  <div class="panel-heading" ng-click="hideSource = !hideSource">
+    <span>Source<span>
+    <i class="glyphicon" ng-class="{'glyphicon-chevron-right': hideSource, 'glyphicon-chevron-down': !hideSource}"></i>
+  </div>
+  <div class="panel-body form-horizontal" collapse="hideSource">
+    <div class="form-group">
+      <label class="col-sm-2" for="file">File</label>
+      <input name="file" class="col-sm-10" type="text" ng-model="layer.Datasource.file" />
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2" for="band">Band</label>
+      <input name="band" class="col-sm-10" type="text" ng-model="layer.Datasource.band" />
+    </div>
+  </div>
 </div>

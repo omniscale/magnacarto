@@ -5,7 +5,9 @@ angular.module('magna-app')
     function($modal) {
       var DEFAULT_LAYER = {
         'extent': [0, 0, 0, 0],
-        'Datasource': {},
+        'Datasource': {
+          'type': 'postgis'
+        },
         'advanced': {}
       };
 

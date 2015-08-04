@@ -12,6 +12,13 @@ angular.module('magna-app')
       'shape': 'src/layer/shape-datasource-template.html'
     };
 
+    $scope.hideGeneral = false;
+    $scope.hideExtentSRS = true;
+    $scope.hideSource = false;
+    $scope.hideDB = false;
+    $scope.hideDBConnection = true;
+    $scope.hideAdvanced = true;
+
     var cleanupDatasource = function(datasource) {
       switch(datasource.type) {
         case 'postgis':
