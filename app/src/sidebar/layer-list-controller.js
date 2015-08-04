@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.controller('LayerListCtrl', ['$scope', '$modal', 'LayerService',
-  function($scope, $modal, LayerService) {
+.controller('LayerListCtrl', ['$scope', 'LayerService',
+  function($scope, LayerService) {
     $scope.collapsed = false;
     $scope.layers = LayerService.layers;
 

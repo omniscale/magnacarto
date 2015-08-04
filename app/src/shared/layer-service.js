@@ -29,6 +29,7 @@ angular.module('magna-app')
         var modalInstance = $modal.open({
           templateUrl: 'src/layer/edit-layer-template.html',
           controller: 'EditLayerCtrl',
+          backdrop: 'static',
           resolve: {
             layer: function () {
               return angular.copy(layer);
@@ -54,6 +55,7 @@ angular.module('magna-app')
         var modalInstance = $modal.open({
           templateUrl: 'src/layer/edit-layer-template.html',
           controller: 'EditLayerCtrl',
+          backdrop: 'static',
           resolve: {
             layer: function () {
               return layer;

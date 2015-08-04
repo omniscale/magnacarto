@@ -76,6 +76,7 @@ angular.module('magna-app')
       var modalInstance = $modal.open({
         templateUrl: 'src/layer/remove-layer-template.html',
         controller: 'RemoveLayerCtrl',
+        backdrop: 'static',
         resolve: {
           layer: function () {
             return layer;

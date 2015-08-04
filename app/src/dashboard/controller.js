@@ -44,6 +44,7 @@ angular.module('magna-app')
       var modalInstance = $modal.open({
         templateUrl: 'src/dashboard/bookmark-map-template.html',
         controller: 'BookmarkMapCtrl',
+        backdrop: 'static',
         resolve: {
           map: function () {
             return map;
