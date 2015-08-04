@@ -323,12 +323,16 @@ div.as-sortable-dragging {
   margin: 0;
 }
 
+.layer-form .panel .panel-heading span {
+  margin-right: 5px;
+}
+
 .layer-form .panel .panel-body {
   margin-right: 15px;
 }
 
-.layer-form .panel .panel-heading span {
-  margin-right: 5px;
+.layer-form .panel .panel-body textarea {
+  font-family: monospace,Courier;
 }
 
 /* Misc */
