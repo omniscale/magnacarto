@@ -13,7 +13,7 @@ BUILD_DATE=`date +%Y%m%d`
 BUILD_REF=`git rev-parse --short HEAD`
 BUILD_VERSION=dev-$BUILD_DATE-$BUILD_REF
 
-perl -p -i -e 's/buildVersion = ".*"/buildVersion = "'${BUILD_VERSION}'"/' version.go
+VERSION_LDFLAGS="-X github.com/omniscale/magnacarto.buildVersion ${BUILD_VERSION}"
 
 # build os arch
 function build() {
@@ -23,7 +23,7 @@ function build() {
     mkdir -p $build_name
     echo building $build_name
     cd $build_name
-    env GOOS=$os GOARCH=$arch godep go build github.com/omniscale/magnacarto/cmd/magnacarto
+    env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
     cp ../../../{README.md,LICENSE} ./
     cd ..
     if [ $os = windows ]; then
@@ -45,4 +45,3 @@ build linux amd64
 build darwin amd64
 
 cd ../../
-perl -p -i -e 's/buildVersion = ".*"/buildVersion = ""/' version.go
