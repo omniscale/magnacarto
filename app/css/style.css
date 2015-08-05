@@ -369,10 +369,17 @@ div.as-sortable-dragging label {
   border-color: #9ca6f1;
 }
 
+/* Modals common */
+.modal-dialog .modal-header .close {
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+
 /* Edit layer from */
 .layer-modal .modal-dialog {
   max-width: 980px;
-  width: 90vw;
+  width: 90%;
 }
 
 .layer-modal .modal-dialog .modal-header .modal-title {
@@ -381,6 +388,10 @@ div.as-sortable-dragging label {
   margin-top: 20px;
   font-weight: 500;
   line-height: 1.1;
+}
+
+.layer-modal .modal-dialog .modal-header .copy-layer-form {
+  margin-right: 28px;
 }
 
 .layer-form {
