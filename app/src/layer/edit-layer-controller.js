@@ -1,33 +1,7 @@
 angular.module('magna-app')
 
-.factory('EditLayerFormStatus', [function() {
-  var hideGeneral, hideExtentSRS, hideDatasource;
-
-  var reset = function() {
-    hideGeneral = false;
-    hideExtentSRS = true;
-    hideDatasource = false;
-  };
-  reset();
-  return {
-    hideGeneral: function(val) {
-      if(val !== undefined) { hideGeneral = val; }
-      return hideGeneral;
-    },
-    hideExtentSRS: function(val) {
-      if(val !== undefined) { hideExtentSRS = val; }
-      return hideExtentSRS;
-    },
-    hideDatasource: function(val) {
-      if(val !== undefined) { hideDatasource = val; }
-      return hideDatasource;
-    },
-    reset: reset
-  };
-}])
-
-.controller('EditLayerCtrl', ['$scope', 'EditLayerFormStatus', '$modal', '$modalInstance', 'layer',
-  function($scope, EditLayerFormStatus, $modal, $modalInstance, layer) {
+.controller('EditLayerCtrl', ['$scope', 'EditLayerFormStatusService', '$modal', '$modalInstance', 'layer',
+  function($scope, EditLayerFormStatusService, $modal, $modalInstance, layer) {
     $scope.layer = angular.copy(layer);
 
     $scope.datasourceTemplates = {
@@ -37,20 +11,20 @@ angular.module('magna-app')
       'shape': 'src/layer/shape-datasource-template.html'
     };
 
-    $scope.hideGeneral = EditLayerFormStatus.hideGeneral();
-    $scope.hideExtentSRS = EditLayerFormStatus.hideExtentSRS();
-    $scope.hideDatasource = EditLayerFormStatus.hideDatasource();
+    $scope.hideGeneral = EditLayerFormStatusService.hideGeneral();
+    $scope.hideExtentSRS = EditLayerFormStatusService.hideExtentSRS();
+    $scope.hideDatasource = EditLayerFormStatusService.hideDatasource();
 
     $scope.$watch('hideGeneral', function(hideGeneral) {
-      EditLayerFormStatus.hideGeneral(hideGeneral);
+      EditLayerFormStatusService.hideGeneral(hideGeneral);
     });
 
     $scope.$watch('hideExtentSRS', function(hideExtentSRS) {
-      EditLayerFormStatus.hideExtentSRS(hideExtentSRS);
+      EditLayerFormStatusService.hideExtentSRS(hideExtentSRS);
     });
 
     $scope.$watch('hideDatasource', function(hideDatasource) {
-      EditLayerFormStatus.hideDatasource(hideDatasource);
+      EditLayerFormStatusService.hideDatasource(hideDatasource);
     });
 
     var cleanupDatasource = function(datasource) {
