@@ -1,10 +1,10 @@
 <ul ng-controller="StyleListCtrl" class="sidebar-nav style-nav">
-  <li ng-click="collapsed=!collapsed">
+  <li ng-click="toggleCollapsed();">
     <a is-active-nav ng-class="{disabled: selectedNavItem === 'projects'}">Styles
       <span class="menu-icon glyphicon glyphicon-file"></span>
     </a>
   </li>
-  <div collapse="(!collapsed || !active || selectedNavItem === 'projects')">
+  <div collapse="(collapsed || !active || selectedNavItem === 'projects')">
     <div class="style-list disable-select">
       <div class="active-styles" ng-model="activeStyles" as-sortable>
         <div class="as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>

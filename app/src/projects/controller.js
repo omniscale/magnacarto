@@ -1,12 +1,13 @@
 angular.module('magna-app')
 
-.controller('ProjectsCtrl', ['$scope', '$location', 'ProjectsService', 'ProjectService', 'EditLayerFormStatus',
-  function($scope, $location, ProjectsService, ProjectService, EditLayerFormStatus) {
+.controller('ProjectsCtrl', ['$scope', '$location', 'ProjectsService', 'ProjectService', 'EditLayerFormStatus', 'SideNavStatusService',
+  function($scope, $location, ProjectsService, ProjectService, EditLayerFormStatus, SideNavStatusService) {
     $scope.projects = [];
     $scope.navItemName = 'projects';
 
     ProjectService.unloadProject();
     EditLayerFormStatus.reset();
+    SideNavStatusService.reset();
 
     ProjectsService.loaded().success(function() {
       $scope.projects = ProjectsService.projects;

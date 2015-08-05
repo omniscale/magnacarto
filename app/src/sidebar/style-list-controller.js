@@ -1,10 +1,20 @@
 angular.module('magna-app')
 
-.controller('StyleListCtrl', ['$scope', 'StyleService',
-  function($scope, StyleService) {
-    $scope.collapsed = false;
+.controller('StyleListCtrl', ['$scope', 'StyleService', 'SideNavStatusService',
+  function($scope, StyleService, SideNavStatusService) {
+    $scope.collapsed = SideNavStatusService.hideStyles();
+
     $scope.styles = StyleService.styles;
     $scope.activeStyles = StyleService.activeStyles;
+
+    $scope.toggleCollapsed = function() {
+      $scope.collapsed = $scope.selectedNavItem === 'projects' ? true : !$scope.collapsed;
+      SideNavStatusService.hideStyles($scope.collapsed);
+    };
+
+    $scope.toggleSelection = function(style) {
+      StyleService.toggleStyle(style);
+    };
 
     $scope.$watch(function() {
       return StyleService.styles;
@@ -18,7 +28,9 @@ angular.module('magna-app')
       $scope.activeStyles = newStyles;
     }, true);
 
-    $scope.toggleSelection = function(style) {
-      StyleService.toggleStyle(style);
-    };
+    $scope.$on('$routeChangeSuccess', function(event, toState) {
+      if(toState.controller !== 'ProjectsController') {
+        $scope.collapsed = SideNavStatusService.hideStyles();
+      }
+    });
 }]);

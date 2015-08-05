@@ -1,10 +1,10 @@
 <ul ng-controller="LayerListCtrl" class="sidebar-nav layer-nav">
-  <li ng-click="collapsed=!collapsed">
+  <li ng-click="toggleCollapsed();">
     <a is-active-nav ng-class="{disabled: selectedNavItem === 'projects'}">Layers
       <span class="menu-icon glyphicon glyphicon-globe"></span>
     </a>
   </li>
-  <div collapse="(!collapsed || !active || selectedNavItem === 'projects')">
+  <div collapse="(collapsed || !active || selectedNavItem === 'projects')">
     <div class="layer-list disable-select">
       <div ng-model="layers" as-sortable>
         <div ng-repeat="layer in layers" as-sortable-item>
