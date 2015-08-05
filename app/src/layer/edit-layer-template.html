@@ -3,14 +3,18 @@
     Edit layer
   </span>
   <div ng-show="isNewLayer" class="pull-right">
-    <div class="form-inline">
+    <div class="form-inline copy-layer-form">
         <select class="selectpicker form-control" ng-model="layerCopy" ng-options="layer.name for layer in layers">
           <option value="" disabled="disabled">Layer to copy</option>
         </select>
         <button class="btn btn-default" ng-disabled="!layerCopy" ng-click="copyLayer(layerCopy)"><i class="glyphicon glyphicon-copy"></i></button>
       </div>
     </div>
+    <button ng-click="cancel()" class="close" type="button" >
+      <span aria-hidden="true">×</span>
+    </button>
   </div>
+
 </div>
 <div class="modal-body layer-form">
   <form name="layerForm" class="">
