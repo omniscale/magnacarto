@@ -233,6 +233,14 @@ html, body {
   font-weight: normal;
 }
 
+.layer-list label,
+div.as-sortable-dragging .layer-list-item label {
+  width: 140px;
+  overflow: hidden;
+  vertical-align: top;
+  margin-right: 15px;
+}
+
 .style-list .glyphicon,
 .layer-list .glyphicon {
   padding-right: 2px;
@@ -259,6 +267,58 @@ div.as-sortable-dragging {
   white-space: nowrap;
   padding-top: 2px;
   padding-right: 2px;
+  padding-left: 2px;
+}
+
+div.as-sortable-dragging label {
+  font-weight: normal;
+}
+
+.mca-icon {
+  display: inline-block;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 20px;
+  position: relative;
+  text-align: center;
+  top: 1px;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  border: 1px solid #999;
+  cursor: default;
+}
+
+.mca-icon.icon-postgis:before {
+  content: 'P';
+}
+
+.mca-icon.icon-gdal:before {
+  content: 'G';
+}
+
+.mca-icon.icon-shape:before {
+  content: 'S';
+}
+
+.mca-icon.icon-sqlite:before {
+  content: 'Q';
+}
+
+.mca-icon.icon-point:before {
+  content: 'Pt';
+}
+
+.mca-icon.icon-linestring:before {
+  content: 'Ls';
+}
+
+.mca-icon.icon-polygon:before {
+  content: 'Po';
+}
+
+.mca-icon.icon-raster:before {
+  content: 'Ra';
 }
 
 /* Notification Styling */
