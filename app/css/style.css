@@ -1,105 +1,15 @@
+/* Base */
 html, body {
   height: 100%;
 }
 
-.grid-map {
-  border: 1px solid #ccc;
-}
 
-.map-control-btns {
-  z-index: 1000;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-  position: absolute;
-}
-
-.map-control-btns a,
-.map-control-btns a:hover {
-  width: 26px;
-  height: 26px;
-  line-height: 26px;
-  border-radius: 4px;
-  border-bottom: 1px solid #ccc;
-  display: block;
-  text-align: center;
-  text-decoration: none;
-  color: black;
-  opacity: 0.9;
-  float:left;
-  margin-left: 10px;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-  background-color: #fff;
-}
-
-.map-title {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1000;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-  background-color: #fff;
-  opacity: 0.9;
-  line-height: 26px;
-}
-
-.map-box {
-  height: 100%;
-  width: 100%;
-}
-
-.map-title h4 {
-  margin: 0;
-  padding: 4px;
-}
-
-.map-title input {
-  font-size: 18px;
-  font-weight: 500;
-  color: rgb(51, 51, 51);
-  line-height: 19.8px;
-  border-radius: 0;
-}
-
-.map-title button {
-  border-radius: 0;
-}
-
-.ol-control.display-zoom-level {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 2px;
-    bottom: 10px;
-    padding: 0 5px;
-    position: absolute;
-    right: 10px;
-}
-
-.ol-control.display-zoom-level span {
-  margin-left: 5px;
-}
-
-.btn.btn-mca {
-  color: #999999;
-  background: #252525;
-}
-
-.btn.btn-mca:hover {
-  color: #fff;
-  background: rgba(255,255,255,0.2);
-}
-
-/* project overview */
-.list-group-item:hover {
-  background-color: #999;
-  border: 1px solid #999;
-}
-
-/* CSS for Sidebar */
-
+/* Sitebar */
 .row {
   margin-right: 0;
   margin-left: 0;
 }
+
 #wrapper {
   height: 100%;
 }
@@ -148,7 +58,6 @@ html, body {
   border-top: 1px solid #373737;
   border-bottom: 1px solid #1A1A1A;
 }
-
 
 .sidebar-nav li.active-navbar a,
 .sidebar-nav li.active-navbar {
@@ -199,16 +108,82 @@ html, body {
   cursor: pointer;
 }
 
-.select-copy-layer {
-  max-width: 150px;
+
+/* Map-grid used in Dashboard and on Bookmaprs */
+.grid-map {
+  border: 1px solid #ccc;
 }
 
-.select-copy-layer option {
-  color: #000;
+.map-box {
+  height: 100%;
+  width: 100%;
 }
+
+
+/* Bookmark map controls */
+.map-control-btns {
+  z-index: 1000;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.map-control-btns a,
+.map-control-btns a:hover {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 4px;
+  border-bottom: 1px solid #ccc;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  opacity: 0.9;
+  float:left;
+  margin-left: 10px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+  background-color: #fff;
+}
+
+.map-title {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+  background-color: #fff;
+  opacity: 0.9;
+  line-height: 26px;
+}
+
+.map-title h4 {
+  margin: 0;
+  padding: 4px;
+}
+
+.map-title input {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgb(51, 51, 51);
+  line-height: 19.8px;
+  border-radius: 0;
+}
+
+.map-title button {
+  border-radius: 0;
+}
+
+
+/* Project Overview */
+.list-group-item:hover {
+  background-color: #999;
+  border: 1px solid #999;
+}
+
 
 /* Layer / Style lists */
-
 .style-nav,
 .layer-nav {
   color: #999999;
@@ -321,8 +296,8 @@ div.as-sortable-dragging label {
   content: 'Ra';
 }
 
-/* Notification Styling */
 
+/* Notification Styling */
 .alert-box {
   position: fixed;
   right: 0px;
@@ -423,28 +398,14 @@ div.as-sortable-dragging label {
   cursor: pointer;
 }
 
-/* Misc */
 
-.disable-select {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* ol3 overwrites */
-
+/* OpenLayers 3 controls and overwrites */
 .ol-control,
 .ol-control:hover {
   border-radius: 2px;
   background-color: inherit;
 }
 
-/* Customize default OpenLayers buttons (like zoom buttons) */
 .ol-zoom button,
 .ol-zoom button:hover {
   background-color: rgba(255, 255, 255, 0.9);
@@ -465,8 +426,21 @@ div.as-sortable-dragging label {
   margin-top: 2px;
 }
 
-/* angular gridster overwrites */
+.ol-control.display-zoom-level {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    bottom: 10px;
+    padding: 0 5px;
+    position: absolute;
+    right: 10px;
+}
 
+.ol-control.display-zoom-level span {
+  margin-left: 5px;
+}
+
+
+/* Angular Gridster overwrites */
 .gridster-loaded {
   -webkit-transition: none;
   -moz-transition: none;
@@ -491,4 +465,17 @@ div.as-sortable-dragging label {
   -moz-transition: none;
   -o-transition: color 0 ease-in;
   transition: none;
+}
+
+
+/* Helper */
+.disable-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
