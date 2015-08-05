@@ -18,10 +18,10 @@
       <div id="sidebar-wrapper" class="active" ng-class="{active: active}" ng-controller="SideNavCtrl" ng-include="'src/sidebar/side-nav-template.html'"></div>
       <div id="content-wrapper" ng-view></div>
     </div>
-    <div class="alert-box" ng-controller="WebSocketCtrl">
+    <div class="alert-box" ng-controller="NotificationCtrl">
       <div class="row">
         <div class="col-md-12">
-          <notification ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"></notification>
+          <notification ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)"></notification>
         </div>
       </div>
     </div>
@@ -42,8 +42,8 @@
     <script src="src/helper/stopevent-directive.js"></script>
     <script src="src/helper/float-directive.js"></script>
 
+    <script src="src/notification/notification-directive.js"></script>
     <script src="src/notification/notification-controller.js"></script>
-    <script src="src/notification/websocket-controller.js"></script>
 
     <script src="src/layer/layer-service.js"></script>
     <script src="src/layer/edit-layer-form-status-service.js"></script>

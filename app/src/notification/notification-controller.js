@@ -1,20 +1,34 @@
 angular.module('magna-app')
 
-.directive('notification', ['$timeout',
-  function($timeout) {
-    return {
-    restrict: 'E',
-    replace: true,
-    controller: function NotificationCtrl ($scope) {
-      $scope.close = function(index) {
-        $scope.alerts.splice(index, 1);
-      };
-    },
-    templateUrl: 'src/notification/notification-template.html',
-    link: function(scope, element, attrs) {
-      $timeout(function(){
-        scope.alerts.splice(attrs.index, 1);
-      }, 2000);
-    }
-  };
+.controller('NotificationCtrl', ['$scope', '$websocket', 'magnaConfig', 'ProjectService',
+  function($scope, $websocket, magnaConfig, ProjectService) {
+    $scope.notifications = [];
+
+    var appendMessage = function(type, msg) {
+      $scope.$apply(function() {
+        $scope.notifications.push({
+          type: type,
+          msg: msg
+        });
+      });
+    };
+
+    // Add messages handler when socket changes
+    $scope.$watch(function() {
+      return ProjectService.getSocket();
+    }, function(n, o) {
+      if(n === o || n === undefined) return;
+      var socket = n;
+      socket.$on('$open', function() {
+        appendMessage('info', 'Connect to the websocket Server');
+      });
+
+      socket.$on('$message', function (resp) {
+        var type = 'success';
+        if(resp.error !== undefined) {
+          type = 'error';
+        }
+        appendMessage(type, resp);
+      });
+    });
 }]);
