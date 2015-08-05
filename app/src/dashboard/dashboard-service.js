@@ -8,13 +8,6 @@ angular.module('magna-app')
         self.maps = [];
       };
 
-      DashboardServiceInstance.prototype.clearMaps = function() {
-        var self = this;
-        // Clear array but keep reference to it.
-        // If a = [] is used instead of a.length = 0, reference changes
-        self.maps.length = 0;
-      };
-
       DashboardServiceInstance.prototype.addMap = function(map) {
         var self = this;
         var coords = magnaConfig.defaultCenter;
