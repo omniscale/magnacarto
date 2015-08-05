@@ -1,5 +1,16 @@
 <div class="modal-header">
-  <h3 class="modal-title">Edit layer</h3>
+  <span class="modal-title">
+    Edit layer
+  </span>
+  <div ng-show="isNewLayer" class="pull-right">
+    <div class="form-inline">
+        <select class="selectpicker form-control" ng-model="layerCopy" ng-options="layer.name for layer in layers">
+          <option value="" disabled="disabled">Layer to copy</option>
+        </select>
+        <button class="btn btn-default" ng-disabled="!layerCopy" ng-click="copyLayer(layerCopy)"><i class="glyphicon glyphicon-copy"></i></button>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal-body layer-form">
   <form name="layerForm" class="">

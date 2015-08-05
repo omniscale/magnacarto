@@ -21,33 +21,10 @@ angular.module('magna-app')
         self.layers = layers;
       };
 
-      LayerServiceInstance.prototype.addLayer = function(layer) {
+      LayerServiceInstance.prototype.addLayer = function() {
         var self = this;
-
-        layer = layer === undefined ? angular.copy(DEFAULT_LAYER) : layer;
-
-        var modalInstance = $modal.open({
-          templateUrl: 'src/layer/edit-layer-template.html',
-          controller: 'EditLayerCtrl',
-          backdrop: 'static',
-          resolve: {
-            layer: function () {
-              return angular.copy(layer);
-            }
-          }
-        });
-
-        modalInstance.result.then(function (newLayer) {
-          if(newLayer !== 'remove') {
-            self.layers.push(newLayer);
-          }
-        });
-      };
-
-      LayerServiceInstance.prototype.copyLayer = function(layer) {
-        var self = this;
-        layer.name += '-copy';
-        self.addLayer(layer);
+        var layer = angular.copy(DEFAULT_LAYER);
+        self.editLayer(layer);
       };
 
       LayerServiceInstance.prototype.editLayer = function(layer) {
@@ -67,13 +44,22 @@ angular.module('magna-app')
         modalInstance.result.then(function (item) {
           var layerIdx = self.layers.indexOf(layer);
 
-           if(item === 'remove') {
-            self.layers.splice(layerIdx, 1);
+          if(item === 'remove') {
+            if(layerIdx !== -1) {
+              self.layers.splice(layerIdx, 1);
+            }
+          } else if(layerIdx === -1) {
+            self.layers.push(item);
           } else {
             self.layers[layerIdx] = item;
           }
         });
       };
+
+      LayerServiceInstance.prototype.isDefaultLayer = function(layer) {
+        return angular.equals(DEFAULT_LAYER, layer);
+      };
+
       return new LayerServiceInstance();
     }];
 }]);

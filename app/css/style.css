@@ -375,6 +375,14 @@ div.as-sortable-dragging label {
   width: 90vw;
 }
 
+.layer-modal .modal-dialog .modal-header .modal-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
 .layer-form {
   overflow: auto;
   max-height: 75vh;

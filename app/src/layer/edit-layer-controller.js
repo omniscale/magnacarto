@@ -1,8 +1,10 @@
 angular.module('magna-app')
 
-.controller('EditLayerCtrl', ['$scope', 'EditLayerFormStatusService', '$modal', '$modalInstance', 'layer',
-  function($scope, EditLayerFormStatusService, $modal, $modalInstance, layer) {
+.controller('EditLayerCtrl', ['$scope', 'LayerService', 'EditLayerFormStatusService', '$modal', '$modalInstance', 'layer',
+  function($scope, LayerService, EditLayerFormStatusService, $modal, $modalInstance, layer) {
     $scope.layer = angular.copy(layer);
+    $scope.layers = LayerService.layers;
+    $scope.isNewLayer = LayerService.isDefaultLayer(layer);
 
     $scope.datasourceTemplates = {
       'gdal': 'src/layer/gdal-datasource-template.html',
@@ -70,6 +72,13 @@ angular.module('magna-app')
           return datasource;
       }
 
+    };
+
+    $scope.copyLayer = function(layer) {
+      $scope.layer = angular.copy(layer);
+      $scope.layer.name += '-copy';
+      $scope.layer.id += '-copy';
+      $scope.isNewLayer = false;
     };
 
     $scope.ok = function () {

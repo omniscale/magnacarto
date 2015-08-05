@@ -17,10 +17,6 @@ angular.module('magna-app')
     LayerService.addLayer();
   };
 
-  $scope.copyLayer = function(layer) {
-    LayerService.copyLayer(angular.copy(layer));
-  };
-
   $scope.$watch(function() {
     return $route.current && $route.current.scope ? $route.current.scope.navItemName : undefined;
   }, function(newNavItem) {
