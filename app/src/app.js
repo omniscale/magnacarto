@@ -15,15 +15,15 @@ angular.module('magna-app').constant('magnaConfig', {
 .config(function($routeProvider){
   $routeProvider
   .when('/projects', {
-    templateUrl: 'src/projects/template.html',
+    templateUrl: 'src/projects/projects-template.html',
     controller: 'ProjectsCtrl'
   })
   .when('/dashboard/:base/:mml', {
-    templateUrl: 'src/dashboard/template.html',
+    templateUrl: 'src/dashboard/dashboard-template.html',
     controller: 'DashboardCtrl'
   })
   .when('/bookmarks/:base/:mml', {
-    templateUrl: 'src/bookmarks/template.html',
+    templateUrl: 'src/bookmarks/bookmarks-template.html',
     controller: 'BookmarksCtrl'
   })
   .otherwise({

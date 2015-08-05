@@ -10,7 +10,7 @@ angular.module('magna-app')
         $scope.alerts.splice(index, 1);
       };
     },
-    templateUrl: 'src/shared/notification-template.html',
+    templateUrl: 'src/notification/notification-template.html',
     link: function(scope, element, attrs) {
       $timeout(function(){
         scope.alerts.splice(attrs.index, 1);

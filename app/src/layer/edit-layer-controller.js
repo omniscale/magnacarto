@@ -7,10 +7,10 @@ angular.module('magna-app')
     $scope.isNewLayer = LayerService.isDefaultLayer(layer);
 
     $scope.datasourceTemplates = {
-      'gdal': 'src/layer/gdal-datasource-template.html',
-      'sqlite': 'src/layer/sqlite-datasource-template.html',
-      'postgis': 'src/layer/postgis-datasource-template.html',
-      'shape': 'src/layer/shape-datasource-template.html'
+      'gdal': 'src/layer/datasource-gdal-template.html',
+      'sqlite': 'src/layer/datasource-sqlite-template.html',
+      'postgis': 'src/layer/datasource-postgis-template.html',
+      'shape': 'src/layer/datasource-shape-template.html'
     };
 
     $scope.hideGeneral = EditLayerFormStatusService.hideGeneral();
