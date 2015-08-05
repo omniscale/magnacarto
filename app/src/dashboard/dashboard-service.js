@@ -30,8 +30,8 @@ angular.module('magna-app')
         }
 
         self.maps.push({
-          sizeX: 2,
-          sizeY: 2,
+          sizeX: 4,
+          sizeY: 3,
           coords: coords,
           zoom: zoom
         });

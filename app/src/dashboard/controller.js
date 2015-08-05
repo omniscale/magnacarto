@@ -20,7 +20,7 @@ angular.module('magna-app')
     $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {
       margins: [5, 5],
-      columns: 4,
+      columns: 8,
       swapping: true,
       floating: true,
       resizable: {
