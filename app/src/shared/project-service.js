@@ -1,8 +1,8 @@
 angular.module('magna-app')
 /* Todo rename to ProjectServicev */
 .provider('ProjectService', [function() {
-  this.$get = ['$http', '$rootScope', '$q', '$websocket', 'magnaConfig', 'StyleService', 'LayerService', 'DashboardService',
-    function($http, $rootScope, $q, $websocket, magnaConfig, StyleService, LayerService, DashboardService) {
+  this.$get = ['$http', '$rootScope', '$q', '$timeout', '$websocket', 'magnaConfig', 'StyleService', 'LayerService', 'DashboardService',
+    function($http, $rootScope, $q, $timeout, $websocket, magnaConfig, StyleService, LayerService, DashboardService) {
       var ProjectServiceInstance = function() {
         this.project = undefined;
         this.mmlData = undefined;
@@ -13,6 +13,7 @@ angular.module('magna-app')
         this.mmlLoadPromise = undefined;
         this.mcpLoadPromise = undefined;
         this.projectLoadedPromise = undefined;
+        this.mcpSaveTimeout = undefined;
       };
 
       ProjectServiceInstance.prototype.loadProject = function(project) {
@@ -112,7 +113,14 @@ angular.module('magna-app')
 
       ProjectServiceInstance.prototype.saveMCP = function() {
         var self = this;
-        $http.post(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mcp, angular.toJson(self.mcpData, true));
+        if(self.mcpSaveTimeout !== undefined) {
+          $timeout.cancel(self.mcpSaveTimeout);
+        }
+        // prevent too often safe. mostly triggered by gridster when resize or dragging a map
+        self.mcpSaveTimeout = $timeout(function() {
+          $http.post(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mcp, angular.toJson(self.mcpData, true));
+          self.mcpSaveTimeout = undefined;
+        }, 1000);
       };
 
       ProjectServiceInstance.prototype.bindSocket = function() {
