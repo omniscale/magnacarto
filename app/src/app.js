@@ -9,7 +9,8 @@ angular.module('magna-app').constant('magnaConfig', {
   mapnikLayers: 'osm',
   mapnikImageFormat: 'image/png',
   defaultCenter: [8, 53],
-  defaultZoom: 12
+  defaultZoom: 12,
+  version: 'v0.0.1-alpha'
 })
 
 .config(function($routeProvider){
