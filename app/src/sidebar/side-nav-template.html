@@ -1,11 +1,11 @@
 <ul class="sidebar-nav" id="sidebar">
   <li class="sidebar-brand">
-    <a ng-click="active=!active" class="cursor-pointer">Magnacarto
+    <a ng-click="active=!active">Magnacarto
       <span class="menu-icon glyphicon glyphicon-align-justify"></span>
     </a>
   </li>
   <li>
-    <a ng-click="openAbout();" class="cursor-pointer">About
+    <a ng-click="openAbout();">About
       <span class="menu-icon glyphicon glyphicon-info-sign"></span>
     </a>
   </li>
@@ -19,8 +19,8 @@
       <span class="menu-icon glyphicon glyphicon-th"></span>
     </a>
     <div collapse="(selectedNavItem !== 'dashboard' || !active)">
-      <a class="cursor-pointer" ng-click="addMap()"><i class="glyphicon glyphicon-plus"></i> Map</a>
-      <a class="cursor-pointer" ng-click="createLayer()"><i class="glyphicon glyphicon-plus"></i> Layer</a>
+      <a ng-click="addMap()"><i class="glyphicon glyphicon-plus"></i> Map</a>
+      <a ng-click="createLayer()"><i class="glyphicon glyphicon-plus"></i> Layer</a>
     </div>
   </li>
   <li>
