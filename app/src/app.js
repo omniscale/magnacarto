@@ -30,6 +30,7 @@ angular.module('magna-app').constant('magnaConfig', {
           deferred.resolve();
         });
       }
+      deferred.resolve();
     });
     return deferred.promise;
   };
