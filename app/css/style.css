@@ -131,6 +131,14 @@ html, body {
   border-left: 4px solid #19aa8d;
 }
 
+.sidebar-nav li.active:hover {
+  background-color: #4c4a49;
+}
+
+.sidebar-nav li.active div a:hover {
+  background-color: rgba(255,255,255,0.2);
+  cursor: pointer
+}
 
 /* Map-grid used in Dashboard and on Bookmaprs */
 .grid-map {
