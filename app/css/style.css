@@ -92,10 +92,19 @@ html, body {
   font-size: 18px;
 }
 
+.sidebar-nav > .sidebar-brand:hover {
+  background-color: #4c4a49;
+}
+.sidebar-nav > .sidebar-brand a:hover {
+ cursor: default;
+}
+.sidebar-nav > .sidebar-brand span:hover {
+ cursor: pointer;
+}
+
 .sidebar-nav > .sidebar-brand .menu-icon {
  padding-top: 10px;
 }
-
 
 .collapse.in {
   color: #bbbbbb;
