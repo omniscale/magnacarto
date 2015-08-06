@@ -1,6 +1,6 @@
 <ul ng-controller="LayerListCtrl" class="sidebar-nav layer-nav">
   <li ng-click="toggleCollapsed();"
-      ng-class="{active: !collapsed }">
+      ng-class="{active: !collapsed && selectedNavItem !== 'projects'}">
     <a ng-class="{disabled: selectedNavItem === 'projects'}">Layers
       <span class="menu-icon glyphicon glyphicon-globe"></span>
     </a>
