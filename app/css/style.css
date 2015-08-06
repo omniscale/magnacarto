@@ -104,12 +104,18 @@ html, body {
 
 .sidebar-nav > .sidebar-brand .menu-icon {
  padding-top: 10px;
+ right: -3px;
 }
 
 .sidebar-nav > .collapse.in,
 .sidebar-nav li > .collapse.in {
   color: #bbbbbb;
   background-color: #454241;
+}
+
+.sidebar-nav li div.collapse a {
+  color: #bbbbbb;
+  margin-left: 15px;
 }
 
 .menu-icon {
@@ -222,7 +228,7 @@ html, body {
 
 .style-list-item,
 .layer-list-item {
-  margin-left: 5px;
+  margin-left: 15px;
 }
 
 .layer-list label,
@@ -230,7 +236,7 @@ div.as-sortable-dragging .layer-list-item label {
   width: 140px;
   overflow: hidden;
   vertical-align: top;
-  margin-right: 15px;
+  margin-right: 10px;
 }
 
 .style-list .glyphicon,
