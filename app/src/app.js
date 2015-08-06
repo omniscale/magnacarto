@@ -14,22 +14,52 @@ angular.module('magna-app').constant('magnaConfig', {
 })
 
 .config(function($routeProvider){
+  var loadProjectOrRedirect = function($q, $location, $route, ProjectsService, ProjectService) {
+    var deferred = $q.defer();
+    ProjectsService.loaded().then(function() {
+      var project = ProjectsService.projectByRouteParams($route.current.params);
+      if(project === undefined) {
+        $location.path('projects');
+        deferred.reject();
+        return;
+      }
+
+      if(ProjectService.projectLoaded() === undefined || ProjectService.project !== project) {
+        var loadedPromise = ProjectService.loadProject(project);
+        loadedPromise.then(function() {
+          deferred.resolve();
+        });
+      }
+    });
+    return deferred.promise;
+  };
+
   $routeProvider
-  .when('/projects', {
-    templateUrl: 'src/projects/projects-template.html',
-    controller: 'ProjectsCtrl'
-  })
-  .when('/dashboard/:base/:mml', {
-    templateUrl: 'src/dashboard/dashboard-template.html',
-    controller: 'DashboardCtrl'
-  })
-  .when('/bookmarks/:base/:mml', {
-    templateUrl: 'src/bookmarks/bookmarks-template.html',
-    controller: 'BookmarksCtrl'
-  })
-  .otherwise({
-    redirectTo: '/projects'
-  });
+    .when('/projects', {
+      templateUrl: 'src/projects/projects-template.html',
+      controller: 'ProjectsCtrl'
+    })
+    .when('/dashboard/:base/:mml', {
+      templateUrl: 'src/dashboard/dashboard-template.html',
+      controller: 'DashboardCtrl',
+      resolve: {
+        projectPromise: function ($q, $location, $route, ProjectsService, ProjectService) {
+          return loadProjectOrRedirect($q, $location, $route, ProjectsService, ProjectService);
+        }
+      }
+    })
+    .when('/bookmarks/:base/:mml', {
+      templateUrl: 'src/bookmarks/bookmarks-template.html',
+      controller: 'BookmarksCtrl',
+      resolve: {
+        projectPromise: function ($q, $location, $route, ProjectsService, ProjectService) {
+          return loadProjectOrRedirect($q, $location, $route, ProjectsService, ProjectService);
+        }
+      }
+    })
+    .otherwise({
+      redirectTo: '/projects'
+    });
 })
 
 .run(function(ProjectsService) {
