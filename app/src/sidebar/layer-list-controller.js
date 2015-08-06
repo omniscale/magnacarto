@@ -1,13 +1,13 @@
 angular.module('magna-app')
 
-.controller('LayerListCtrl', ['$scope', 'LayerService', 'SideNavStatusService',
-  function($scope, LayerService, SideNavStatusService) {
-    $scope.collapsed = SideNavStatusService.hideLayers();
+.controller('LayerListCtrl', ['$scope', 'LayerService', 'SideNavService',
+  function($scope, LayerService, SideNavService) {
+    $scope.collapsed = SideNavService.hideLayers();
     $scope.layers = LayerService.layers;
 
     $scope.toggleCollapsed = function() {
       $scope.collapsed = $scope.selectedNavItem === 'projects' ? true : !$scope.collapsed;
-      SideNavStatusService.hideLayers($scope.collapsed);
+      SideNavService.hideLayers($scope.collapsed);
     };
 
     $scope.toggle = function(layer) {
@@ -26,7 +26,7 @@ angular.module('magna-app')
 
     $scope.$on('$routeChangeSuccess', function(event, toState) {
       if(toState.controller !== 'ProjectsController') {
-        $scope.collapsed = SideNavStatusService.hideLayers();
+        $scope.collapsed = SideNavService.hideLayers();
       }
     });
 }]);

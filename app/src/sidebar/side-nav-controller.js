@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.controller('SideNavCtrl',['$scope', '$route', '$modal', 'DashboardService', 'LayerService', 'ProjectService',
-  function($scope, $route, $modal, DashboardService, LayerService, ProjectService) {
+.controller('SideNavCtrl',['$scope', '$route', '$modal', 'DashboardService', 'LayerService', 'ProjectService', 'SideNavService',
+  function($scope, $route, $modal, DashboardService, LayerService, ProjectService, SideNavService) {
     $scope.active = true;
     $scope.selectedNavItem = undefined;
     $scope.styles = DashboardService.styles;
@@ -27,7 +27,7 @@ angular.module('magna-app')
     };
 
     $scope.$watch(function() {
-      return $route.current && $route.current.scope ? $route.current.scope.navItemName : undefined;
+      return SideNavService.currentPage();
     }, function(newNavItem) {
       $scope.selectedNavItem = newNavItem;
     });

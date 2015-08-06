@@ -1,11 +1,11 @@
 angular.module('magna-app')
 
-.controller('DashboardCtrl', ['$scope', 'DashboardService', 'StyleService',
-  function($scope, DashboardService, StyleService) {
+.controller('DashboardCtrl', ['$scope', 'DashboardService', 'StyleService', 'SideNavService',
+  function($scope, DashboardService, StyleService, SideNavService) {
     $scope.maps = DashboardService.maps;
     $scope.styles = StyleService.activeStyles;
 
-    $scope.navItemName = 'dashboard';
+    SideNavService.currentPage('dashboard');
     $scope.gridsterOptions = {
       margins: [5, 5],
       columns: 8,
