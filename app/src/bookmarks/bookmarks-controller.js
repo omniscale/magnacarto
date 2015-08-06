@@ -1,22 +1,10 @@
 angular.module('magna-app')
 
 
-.controller('BookmarksCtrl', ['$scope', '$location', '$routeParams', 'ProjectsService', 'ProjectService', 'DashboardService', 'StyleService',
-  function($scope, $location, $routeParams, ProjectsService, ProjectService, DashboardService, StyleService) {
-    var project = ProjectsService.projectByRouteParams($routeParams);
-
-    if(project === undefined) {
-      $location.path('projects');
-      return;
-    }
-
-    if(ProjectService.projectLoaded() === undefined || ProjectService.project !== project) {
-      var loadedPromise = ProjectService.loadProject(project);
-      loadedPromise.then(function() {
-        $scope.styles = StyleService.activeStyles;
-        $scope.maps = ProjectService.bookmarkedMaps;
-      });
-    }
+.controller('BookmarksCtrl', ['$scope', 'ProjectService', 'DashboardService', 'StyleService',
+  function($scope, ProjectService, DashboardService, StyleService) {
+    $scope.maps = ProjectService.bookmarkedMaps;
+    $scope.styles = StyleService.activeStyles;
 
     $scope.navItemName = 'bookmarks';
 

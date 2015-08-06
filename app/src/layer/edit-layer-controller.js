@@ -13,6 +13,10 @@ angular.module('magna-app')
       'shape': 'src/layer/datasource-shape-template.html'
     };
 
+    $scope.aceOptions = {
+      mode: 'sql'
+    };
+
     $scope.hideGeneral = EditLayerFormStatusService.hideGeneral();
     $scope.hideExtentSRS = EditLayerFormStatusService.hideExtentSRS();
     $scope.hideDatasource = EditLayerFormStatusService.hideDatasource();
@@ -28,6 +32,14 @@ angular.module('magna-app')
     $scope.$watch('hideDatasource', function(hideDatasource) {
       EditLayerFormStatusService.hideDatasource(hideDatasource);
     });
+
+    // calculate height of sql query input
+    var text = '';
+    if(angular.isDefined($scope.layer.Datasource)) {
+      text = $scope.layer.Datasource.table || '';
+    }
+    var lines = Math.min(text.split(/\r*\n/).length + 4, 20);
+    $scope.tableInputHeight = Math.ceil(lines * 14);
 
     var cleanupDatasource = function(datasource) {
       switch(datasource.type) {
