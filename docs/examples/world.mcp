@@ -1,0 +1,26 @@
+{
+  "dashboardMaps": [
+    {
+      "sizeX": 4,
+      "sizeY": 3,
+      "coords": [
+        0,
+        0
+      ],
+      "zoom": 1,
+      "row": 0,
+      "col": 0
+    }
+  ],
+  "bookmarkedMaps": [
+    {
+      "coords": [
+        9.80032884119171,
+        51.45744087208567
+      ],
+      "zoom": 6,
+      "title": "Germany",
+      "id": "980032884119171"
+    }
+  ]
+}
