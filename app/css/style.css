@@ -70,7 +70,8 @@ html, body {
   color: #999999;
   text-decoration: none;
   background: #252525;
-  outline:none
+  outline:none;
+  cursor: pointer;
 }
 
 .sidebar-nav li a:hover {
