@@ -1,7 +1,7 @@
 angular.module('magna-app')
 
-.factory('SideNavStatusService', [function() {
-  var hideLayers, hideStyles;
+.factory('SideNavService', [function() {
+  var hideLayers, hideStyles, currentPage;
 
   var reset = function() {
     hideLayers = false;
@@ -16,6 +16,10 @@ angular.module('magna-app')
     hideStyles: function(val) {
       if(val !== undefined) { hideStyles = val; }
       return hideStyles;
+    },
+    currentPage: function(val) {
+      if(val !== undefined) { currentPage = val; }
+      return currentPage;
     },
     reset: reset
   };

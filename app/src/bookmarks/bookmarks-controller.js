@@ -1,12 +1,12 @@
 angular.module('magna-app')
 
 
-.controller('BookmarksCtrl', ['$scope', 'ProjectService', 'DashboardService', 'StyleService',
-  function($scope, ProjectService, DashboardService, StyleService) {
+.controller('BookmarksCtrl', ['$scope', 'ProjectService', 'DashboardService', 'StyleService', 'SideNavService',
+  function($scope, ProjectService, DashboardService, StyleService, SideNavService) {
     $scope.maps = ProjectService.bookmarkedMaps;
     $scope.styles = StyleService.activeStyles;
 
-    $scope.navItemName = 'bookmarks';
+    SideNavService.currentPage('bookmarks');
 
     $scope.styles = StyleService.activeStyles;
 
