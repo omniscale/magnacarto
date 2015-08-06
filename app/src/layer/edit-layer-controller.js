@@ -29,6 +29,14 @@ angular.module('magna-app')
       EditLayerFormStatusService.hideDatasource(hideDatasource);
     });
 
+    // calculate height of sql query input
+    var text = '';
+    if(angular.isDefined($scope.layer.Datasource)) {
+      text = $scope.layer.Datasource.table || '';
+    }
+    var lines = Math.min(text.split(/\r*\n/).length + 4, 20);
+    $scope.tableInputHeight = Math.ceil(lines * 14);
+
     var cleanupDatasource = function(datasource) {
       switch(datasource.type) {
         case 'postgis':
