@@ -6,11 +6,35 @@ angular.module('magna-app')
 
     var appendMessage = function(type, msg) {
       $scope.$apply(function() {
+        if(type === 'success') {
+          angular.forEach($scope.notifications, function(notification) {
+            notification.close(1000);
+          });
+        }
         $scope.notifications.push({
           type: type,
           msg: msg
         });
       });
+    };
+
+    var handleMessage = function(resp) {
+      var type, msg;
+      if(resp === undefined) {
+        return;
+      } else  if(resp.error !== undefined) {
+        type = 'error';
+        msg = [
+          'Error in ' + resp.filename + ':',
+          resp.error
+        ];
+      } else if(resp.updated_at !== undefined) {
+        type = 'success';
+        msg = ['Updated'];
+      } else {
+        return;
+      }
+      appendMessage(type, msg);
     };
 
     // Add messages handler when socket changes
@@ -20,15 +44,9 @@ angular.module('magna-app')
       if(n === o || n === undefined) return;
       var socket = n;
       socket.$on('$open', function() {
-        appendMessage('info', 'Connect to the websocket Server');
+        appendMessage('info', ['Connect to the websocket Server']);
       });
 
-      socket.$on('$message', function (resp) {
-        var type = 'success';
-        if(resp.error !== undefined) {
-          type = 'error';
-        }
-        appendMessage(type, resp);
-      });
+      socket.$on('$message', handleMessage);
     });
 }]);

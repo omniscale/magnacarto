@@ -12,9 +12,20 @@ angular.module('magna-app')
     },
     templateUrl: 'src/notification/notification-template.html',
     link: function(scope, element, attrs) {
-      $timeout(function(){
-        scope.notifications.splice(attrs.index, 1);
-      }, 2000);
+      var notification = scope.notifications[attrs.index];
+
+      notification.close = function(timeout) {
+        timeout = timeout === undefined ? 0 : timeout;
+        $timeout(function() {
+          scope.close(attrs.index);
+        }, timeout);
+      };
+
+      if(notification.type !== 'error') {
+        $timeout(function() {
+          scope.close(attrs.index);
+        }, 2000);
+      }
     }
   };
 }]);

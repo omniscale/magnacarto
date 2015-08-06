@@ -1,5 +1,5 @@
 <div class="alert alert-success" ng-class="{'alert-success': notification.type === 'success', 'alert-info': notification.type === 'info', 'alert-danger': notification.type === 'error'}" index="{{ $index }}">
-  {{notification.msg}}
+  <div ng-repeat="msg in notification.msg">{{ msg }}</div>
   <button ng-click="close($index)" class="close" type="button" >
     <span aria-hidden="true">×</span>
   </button>
