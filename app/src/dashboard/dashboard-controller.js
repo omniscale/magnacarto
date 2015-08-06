@@ -2,20 +2,22 @@ angular.module('magna-app')
 
 .controller('DashboardCtrl', ['$scope', '$location', '$routeParams', 'ProjectsService', 'DashboardService', 'StyleService', 'ProjectService',
   function($scope, $location, $routeParams, ProjectsService, DashboardService, StyleService, ProjectService) {
-    var project = ProjectsService.projectByRouteParams($routeParams);
+    ProjectsService.loaded().then(function() {
+      var project = ProjectsService.projectByRouteParams($routeParams);
+      if(project === undefined) {
+        $location.path('projects');
+        return;
+      }
 
-    if(project === undefined) {
-      $location.path('projects');
-      return;
-    }
+      if(ProjectService.projectLoaded() === undefined || ProjectService.project !== project) {
+        var loadedPromise = ProjectService.loadProject(project);
+        loadedPromise.then(function() {
+          $scope.maps = DashboardService.maps;
+          $scope.styles = StyleService.activeStyles;
+        });
+      }
+    });
 
-    if(ProjectService.projectLoaded() === undefined || ProjectService.project !== project) {
-      var loadedPromise = ProjectService.loadProject(project);
-      loadedPromise.then(function() {
-        $scope.maps = DashboardService.maps;
-        $scope.styles = StyleService.activeStyles;
-      });
-    }
 
     $scope.navItemName = 'dashboard';
     $scope.gridsterOptions = {
