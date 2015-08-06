@@ -14,21 +14,21 @@
       <span class="menu-icon glyphicon glyphicon-list-alt"></span>
     </a>
   </li>
-  <li>
-    <a is-active-nav href="{{ dashboardUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Dashboard
+  <li ng-class="{active: selectedNavItem === 'dashboard'}">
+    <a href="{{ dashboardUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Map
       <span class="menu-icon glyphicon glyphicon-th"></span>
     </a>
     <div collapse="(selectedNavItem !== 'dashboard' || !active)">
-      <a ng-click="addMap()"><i class="glyphicon glyphicon-plus"></i> Map</a>
-      <a ng-click="createLayer()"><i class="glyphicon glyphicon-plus"></i> Layer</a>
+      <a ng-click="addMap()">Add View</a>
+      <a ng-click="createLayer()">Add Layer</a>
     </div>
   </li>
-  <li>
-    <a is-active-nav href="{{ bookmarksUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Bookmarks
+  <li ng-class="{active: selectedNavItem === 'bookmarks'}">
+    <a href="{{ bookmarksUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Bookmarks
       <span class="menu-icon glyphicon glyphicon-bookmark"></span>
     </a>
   </li>
 </ul>
-<div class="sidebar-nav delimiter"></div>
+
 <div ng-include="'src/sidebar/layer-list-template.html'"></div>
 <div ng-include="'src/sidebar/style-list-template.html'"></div>

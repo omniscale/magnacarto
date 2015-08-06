@@ -1,6 +1,7 @@
 <ul ng-controller="StyleListCtrl" class="sidebar-nav style-nav">
-  <li ng-click="toggleCollapsed();">
-    <a is-active-nav ng-class="{disabled: selectedNavItem === 'projects'}">Styles
+  <li ng-click="toggleCollapsed();"
+      ng-class="{active: !collapsed }">
+    <a ng-class="{disabled: selectedNavItem === 'projects'}">Styles
       <span class="menu-icon glyphicon glyphicon-file"></span>
     </a>
   </li>

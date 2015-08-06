@@ -3,6 +3,13 @@ html, body {
   height: 100%;
 }
 
+.top-buffer-1 {
+  padding-top: 1em;
+}
+
+.top-buffer-2 {
+  padding-top: 2em;
+}
 
 /* Sitebar */
 .row {
@@ -22,7 +29,7 @@ html, body {
   margin-left: -250px;
   left: 50px;
   width: 250px;
-  background: #222;
+  background: #4c4a49;
   position: fixed;
   height: 100%;
   z-index: 1000;
@@ -52,29 +59,21 @@ html, body {
 }
 
 .sidebar-nav li {
-  line-height: 40px;
-  text-indent: 20px;
-  outline:none
-  border-top: 1px solid #373737;
-  border-bottom: 1px solid #1A1A1A;
-}
-
-.sidebar-nav li.active-navbar a,
-.sidebar-nav li.active-navbar {
-  background-color: #999999;
-  color: black;
+  line-height: 35px;
+  border-bottom: 1px solid #454241;
+  outline:none;
 }
 
 .sidebar-nav li a {
   display: block;
-  color: #999999;
+  color: #ffffff;
   text-decoration: none;
-  background: #252525;
   outline:none;
   cursor: pointer;
+  margin-left: 10px;
 }
 
-.sidebar-nav li a:hover {
+.sidebar-nav li:hover {
   color: #fff;
   background: rgba(255,255,255,0.2);
   text-decoration: none;
@@ -83,23 +82,24 @@ html, body {
 .sidebar-nav li a.disabled,
 .sidebar-nav li a.disabled:hover {
   color: #353535;
-  background: #252525;
+  background: #4c4a49;
   cursor: default;
 }
 
-.sidebar-nav li div {
-  color: #999999;
-  background: #252525;
-}
-
 .sidebar-nav > .sidebar-brand {
-  height: 65px;
-  line-height: 60px;
+  height: 40px;
+  line-height: 40px;
   font-size: 18px;
 }
 
 .sidebar-nav > .sidebar-brand .menu-icon {
- padding-top: 20px;
+ padding-top: 10px;
+}
+
+
+.collapse.in {
+  color: #bbbbbb;
+  background-color: #454241;
 }
 
 .menu-icon {
@@ -111,7 +111,7 @@ html, body {
 
 .style-list,
 .layer-list,
-.sidebar-nav li div.collapse {
+.sidebar-nav li.active {
   border-left: 4px solid #19aa8d;
 }
 
