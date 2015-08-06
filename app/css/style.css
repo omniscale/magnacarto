@@ -109,6 +109,12 @@ html, body {
   cursor: pointer;
 }
 
+.style-list,
+.layer-list,
+.sidebar-nav li div.collapse {
+  border-left: 4px solid #19aa8d;
+}
+
 
 /* Map-grid used in Dashboard and on Bookmaprs */
 .grid-map {
@@ -192,11 +198,6 @@ html, body {
   position: relative;
 }
 
-.style-nav div,
-.layer-nav div {
-  margin-left: 2px;
-}
-
 .style-list,
 .layer-list {
   height: 300px;
@@ -207,6 +208,11 @@ html, body {
 .style-list label,
 .layer-list label {
   font-weight: normal;
+}
+
+.style-list-item,
+.layer-list-item {
+  margin-left: 5px;
 }
 
 .layer-list label,
