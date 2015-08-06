@@ -13,6 +13,10 @@ angular.module('magna-app')
       'shape': 'src/layer/datasource-shape-template.html'
     };
 
+    $scope.aceOptions = {
+      mode: 'sql'
+    };
+
     $scope.hideGeneral = EditLayerFormStatusService.hideGeneral();
     $scope.hideExtentSRS = EditLayerFormStatusService.hideExtentSRS();
     $scope.hideDatasource = EditLayerFormStatusService.hideDatasource();
