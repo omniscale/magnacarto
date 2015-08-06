@@ -106,7 +106,8 @@ html, body {
  padding-top: 10px;
 }
 
-.collapse.in {
+.sidebar-nav > .collapse.in,
+.sidebar-nav li > .collapse.in {
   color: #bbbbbb;
   background-color: #454241;
 }

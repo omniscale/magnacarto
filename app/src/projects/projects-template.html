@@ -1,5 +1,30 @@
-<ul class="list-group">
-    <li ng-repeat="project in projects" ng-click="openProject(project)" class="list-group-item cursor-pointer">
-        {{ project.name }} ({{project.base}}/{{ project.mml }})
-    </li>
-</ul>
+<div class="row">
+  <div class="col-sm-12">
+    <h2>Project Overview</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>MML-File</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="project in projects">
+          <th class="row">
+            {{ project.name }}
+          </th>
+          <td>
+             {{project.base}}/{{ project.mml }}
+          </td>
+          <td>
+            <button class="btn btn-default btn-sm"
+                ng-click="openProject(project)">Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
