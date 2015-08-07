@@ -24,10 +24,16 @@ angular.module('magna-app')
         return;
       } else  if(resp.error !== undefined) {
         type = 'error';
-        msg = [
-          'Error in ' + resp.filename + ':',
-          resp.error
-        ];
+        msg = [];
+        if (resp.filename !== undefined) {
+          msg.append('Error in ' + resp.filename + ':');
+          msg.push(resp.error)
+        } else {
+          msg.push("Error: " + resp.error)
+        }
+        if (resp.files !== undefined) {
+          msg = msg.concat(resp.files);
+        }
       } else if(resp.updated_at !== undefined) {
         type = 'success';
         msg = ['Updated'];
