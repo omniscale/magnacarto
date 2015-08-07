@@ -2,9 +2,9 @@
 package config
 
 import (
-	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/BurntSushi/toml"
@@ -47,6 +47,10 @@ type Locator interface {
 	Shape(string) string
 	Image(string) string
 	PostGIS(mml.PostGIS) mml.PostGIS
+	SetBaseDir(string)
+	SetOutDir(string)
+	UseAbsPaths(bool)
+	MissingFiles() []string
 }
 
 func Load(fileName string) (*Magnacarto, error) {
@@ -68,22 +72,6 @@ func (m *Magnacarto) Load(fileName string) error {
 }
 
 func (m *Magnacarto) Locator() Locator {
-	if m.Datasources.NoCheckFiles {
-		locator := &StaticLocator{baseDir: m.BaseDir}
-		if len(m.Mapnik.FontDirs) > 0 {
-			locator.fontDir = m.Mapnik.FontDirs[0]
-		}
-		if len(m.Datasources.SQLiteDirs) > 0 {
-			locator.sqliteDir = m.Datasources.SQLiteDirs[0]
-		}
-		if len(m.Datasources.ShapefileDirs) > 0 {
-			locator.shapeDir = m.Datasources.ShapefileDirs[0]
-		}
-		if len(m.Datasources.ImageDirs) > 0 {
-			locator.imageDir = m.Datasources.ImageDirs[0]
-		}
-		return locator
-	}
 	locator := &LookupLocator{baseDir: m.BaseDir}
 	for _, dir := range m.Datasources.SQLiteDirs {
 		locator.AddSQLiteDir(dir)
@@ -97,63 +85,8 @@ func (m *Magnacarto) Locator() Locator {
 	for _, dir := range m.Mapnik.FontDirs {
 		locator.AddFontDir(dir)
 	}
-	locator.AddPGConfig(m.PostGIS)
+	locator.SetPGConfig(m.PostGIS)
 	return locator
-}
-
-type StaticLocator struct {
-	fontDir   string
-	sqliteDir string
-	shapeDir  string
-	imageDir  string
-	pgConfig  *PostGIS
-	baseDir   string
-}
-
-func (l *StaticLocator) path(basename, dir string) string {
-	if dir != "" {
-		return filepath.Join(dir, basename)
-	}
-	return filepath.Join(l.baseDir, basename)
-}
-
-func (l *StaticLocator) Font(basename string) string {
-	return filepath.Join(basename, l.fontDir)
-}
-func (l *StaticLocator) SQLite(basename string) string {
-	return l.path(basename, l.sqliteDir)
-}
-func (l *StaticLocator) Shape(basename string) string {
-	return l.path(basename, l.shapeDir)
-}
-func (l *StaticLocator) Image(basename string) string {
-	return l.path(basename, l.imageDir)
-}
-func (l *StaticLocator) PostGIS(ds mml.PostGIS) mml.PostGIS {
-	if l.pgConfig == nil {
-		return ds
-	}
-	c := l.pgConfig
-	if c.Host != "" {
-		ds.Host = c.Host
-	}
-	if c.Port != "" {
-		ds.Port = c.Port
-	}
-	if c.Database != "" {
-		ds.Database = c.Database
-	}
-	if c.Username != "" {
-		ds.Username = c.Username
-	}
-	if c.Password != "" {
-		ds.Password = c.Password
-	}
-	if c.SRID != "" {
-		ds.SRID = c.SRID
-	}
-
-	return ds
 }
 
 type LookupLocator struct {
@@ -163,33 +96,68 @@ type LookupLocator struct {
 	imageDirs  []string
 	pgConfig   *PostGIS
 	baseDir    string
+	outDir     string
+	relative   bool
+	missing    map[string]struct{}
 }
 
-func (l *LookupLocator) find(basename string, dirs []string) string {
-	if len(dirs) == 0 {
-		if _, err := os.Stat(basename); err == nil {
-			return basename
+func (l *LookupLocator) SetBaseDir(dir string) {
+	l.baseDir = dir
+}
+
+func (l *LookupLocator) SetOutDir(dir string) {
+	l.outDir = dir
+}
+
+func (l *LookupLocator) UseAbsPaths(abs bool) {
+	l.relative = !abs
+}
+
+func (l *LookupLocator) find(basename string, dirs []string) (fname string) {
+	defer func() {
+		if fname == "" {
+			if l.missing == nil {
+				l.missing = make(map[string]struct{})
+			}
+			l.missing[basename] = struct{}{}
+			fname = basename
 		}
-	}
-	if filepath.IsAbs(basename) {
-		if _, err := os.Stat(basename); err == nil {
-			return basename
+
+		if l.relative {
+			relfname, err := filepath.Rel(l.outDir, fname)
+			if err == nil {
+				fname = relfname
+			}
+		} else {
+			if !filepath.IsAbs(fname) { // for missing files
+				fname = filepath.Join(l.outDir, fname)
+			}
 		}
-		basename = filepath.Base(basename)
-	}
-	if len(dirs) == 0 {
-		dirs = []string{l.baseDir}
-	}
-	for _, d := range dirs {
-		fname, err := filepath.Abs(filepath.Join(d, basename))
-		if err != nil {
-			log.Printf("unable to build abs path for %s and %s", d, basename)
-			continue
-		}
+	}()
+
+	check := func(dir string) string {
+		fname := filepath.Join(dir, basename)
 		if _, err := os.Stat(fname); err == nil {
 			return fname
 		}
+		return ""
 	}
+
+	if filepath.IsAbs(basename) {
+		if fname := check(""); fname != "" {
+			return fname
+		}
+	}
+
+	for _, d := range dirs {
+		if fname := check(d); fname != "" {
+			return fname
+		}
+	}
+	if fname := check(l.baseDir); fname != "" {
+		return fname
+	}
+
 	return ""
 }
 
@@ -205,7 +173,7 @@ func (l *LookupLocator) AddShapeDir(dir string) {
 func (l *LookupLocator) AddImageDir(dir string) {
 	l.imageDirs = append(l.imageDirs, dir)
 }
-func (l *LookupLocator) AddPGConfig(pgConfig PostGIS) {
+func (l *LookupLocator) SetPGConfig(pgConfig PostGIS) {
 	l.pgConfig = &pgConfig
 }
 
@@ -216,25 +184,6 @@ func (l *LookupLocator) Font(basename string) string {
 		}
 	}
 	return ""
-}
-
-func fontVariations(font, suffix string) []string {
-	parts := strings.Split(font, " ")
-	var result []string
-
-	result = append(result, strings.Join(parts, "")+suffix)
-
-	for i := 1; i < len(parts); i++ {
-		result = append(result,
-			strings.Join(parts[:i], "")+"-"+strings.Join(parts[i:], "")+suffix,
-		)
-	}
-
-	if len(parts) > 1 { // drop last part for "DejaVu Sans Book" -> DejaVuSans.ttf variation
-		result = append(result, strings.Join(parts[:len(parts)-1], "")+suffix)
-	}
-
-	return result
 }
 
 func (l *LookupLocator) SQLite(basename string) string {
@@ -273,4 +222,32 @@ func (l *LookupLocator) PostGIS(ds mml.PostGIS) mml.PostGIS {
 	return ds
 }
 
+func (l *LookupLocator) MissingFiles() []string {
+	files := make([]string, 0, len(l.missing))
+	for f := range l.missing {
+		files = append(files, f)
+	}
+	sort.Strings(files)
+	return files
+}
+
 var _ Locator = &LookupLocator{}
+
+func fontVariations(font, suffix string) []string {
+	parts := strings.Split(font, " ")
+	var result []string
+
+	result = append(result, strings.Join(parts, "")+suffix)
+
+	for i := 1; i < len(parts); i++ {
+		result = append(result,
+			strings.Join(parts[:i], "")+"-"+strings.Join(parts[i:], "")+suffix,
+		)
+	}
+
+	if len(parts) > 1 { // drop last part for "DejaVu Sans Book" -> DejaVuSans.ttf variation
+		result = append(result, strings.Join(parts[:len(parts)-1], "")+suffix)
+	}
+
+	return result
+}

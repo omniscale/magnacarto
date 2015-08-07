@@ -322,6 +322,11 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 						Line      int    `json:"line"`
 						Column    int    `json:"column"`
 					}{parseErr.Error(), parseErr.Err, parseErr.Filename, parseErr.Line, parseErr.Column})
+				} else if missingFilesErr, ok := update.Err.(*builder.FilesMissingError); ok {
+					msg, err = json.Marshal(struct {
+						Error string   `json:"error"`
+						Files []string `json:"files"`
+					}{"missing files", missingFilesErr.Files})
 				} else {
 					msg, err = json.Marshal(struct {
 						Error string `json:"error"`
@@ -378,9 +383,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	locator := conf.Locator()
-
-	builderCache := builder.NewCache(locator)
+	builderCache := builder.NewCache(conf.Locator)
 	if conf.OutDir != "" {
 		if err := os.MkdirAll(conf.OutDir, 0755); err != nil && !os.IsExist(err) {
 			log.Fatal("unable to create outdir: ", err)

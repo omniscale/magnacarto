@@ -24,6 +24,8 @@ type MapMaker interface {
 	FileSuffix() string
 }
 
+type locatorCreator func() config.Locator
+
 type style struct {
 	mapMaker   MapMaker
 	mml        string
@@ -78,16 +80,16 @@ const stylePrefix = "magnacarto-style-"
 // It automatically detects changes to the MSS and MML files and rebuilds
 // styles if requested again.
 type Cache struct {
-	mu      sync.Mutex
-	locator config.Locator
-	styles  map[uint32]*style
-	destDir string
+	mu         sync.Mutex
+	newLocator locatorCreator
+	styles     map[uint32]*style
+	destDir    string
 }
 
-func NewCache(locator config.Locator) *Cache {
+func NewCache(newLocator locatorCreator) *Cache {
 	return &Cache{
-		locator: locator,
-		styles:  make(map[uint32]*style),
+		newLocator: newLocator,
+		styles:     make(map[uint32]*style),
 	}
 }
 
@@ -263,8 +265,21 @@ func (c *Cache) style(mm MapMaker, mml string, mss []string) (*style, error) {
 	}
 }
 
+type FilesMissingError struct {
+	Files []string
+}
+
+func (e *FilesMissingError) Error() string {
+	return fmt.Sprintf("missing files: %v", e.Files)
+}
+
 func (c *Cache) build(style *style) error {
-	m := style.mapMaker.New(c.locator)
+	l := c.newLocator()
+	l.SetBaseDir(filepath.Dir(style.mml))
+	l.SetOutDir(c.destDir)
+	l.UseAbsPaths(true)
+
+	m := style.mapMaker.New(l)
 	builder := New(m)
 
 	builder.SetMML(style.mml)
@@ -274,6 +289,10 @@ func (c *Cache) build(style *style) error {
 
 	if err := builder.Build(); err != nil {
 		return err
+	}
+
+	if files := l.MissingFiles(); files != nil {
+		return &FilesMissingError{files}
 	}
 
 	var styleFile string
