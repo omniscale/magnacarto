@@ -14,6 +14,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -130,6 +131,7 @@ func (s *magnaserv) projects(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sort.Sort(sort.Reverse(byLastChange(projects)))
 	w.Header().Add("Content-Type", "application/json")
 
 	enc := json.NewEncoder(w)
