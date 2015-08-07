@@ -38,7 +38,7 @@ angular.module('magna-app')
     if(angular.isDefined($scope.layer.Datasource)) {
       text = $scope.layer.Datasource.table || '';
     }
-    var lines = Math.min(text.split(/\r*\n/).length + 4, 20);
+    var lines = Math.min(text.split(/\r*\n/).length + 4, 35);
     $scope.tableInputHeight = Math.ceil(lines * 14);
 
     var cleanupDatasource = function(datasource) {
