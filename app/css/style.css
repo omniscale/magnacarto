@@ -66,7 +66,7 @@ html, body {
 
 .sidebar-nav li a {
   display: block;
-  color: #ffffff;
+  color: #F2F2F2;
   text-decoration: none;
   outline:none;
   cursor: pointer;
@@ -74,7 +74,7 @@ html, body {
 }
 
 .sidebar-nav li:hover {
-  color: #fff;
+  color: #F2F2F2;
   background: rgba(255,255,255,0.2);
   text-decoration: none;
 }
