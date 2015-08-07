@@ -379,8 +379,8 @@ div.as-sortable-dragging label {
 /* Modals common */
 .modal-dialog .modal-header .close {
   position: absolute;
-  top: 0;
-  right: 5px;
+  top: 5px;
+  right: 10px;
 }
 
 /* Edit layer from */
