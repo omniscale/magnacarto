@@ -32,7 +32,9 @@ angular.module('magna-app')
           msg.push("Error: " + resp.error)
         }
         if (resp.files !== undefined) {
-          msg = msg.concat(resp.files);
+          angular.forEach(resp.files, function(file) {
+            msg.push("• " + file);
+          });
         }
       } else if(resp.updated_at !== undefined) {
         type = 'success';
