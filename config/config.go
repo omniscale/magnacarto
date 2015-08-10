@@ -26,7 +26,6 @@ type Mapnik struct {
 }
 
 type Datasource struct {
-	NoCheckFiles  bool     `toml:"no_check_files"`
 	ShapefileDirs []string `toml:"shapefile_dirs"`
 	SQLiteDirs    []string `toml:"sqlite_dirs"`
 	ImageDirs     []string `toml:"image_dirs"`
@@ -49,7 +48,7 @@ type Locator interface {
 	PostGIS(mml.PostGIS) mml.PostGIS
 	SetBaseDir(string)
 	SetOutDir(string)
-	UseAbsPaths(bool)
+	UseRelPaths(bool)
 	MissingFiles() []string
 }
 
@@ -109,8 +108,8 @@ func (l *LookupLocator) SetOutDir(dir string) {
 	l.outDir = dir
 }
 
-func (l *LookupLocator) UseAbsPaths(abs bool) {
-	l.relative = !abs
+func (l *LookupLocator) UseRelPaths(rel bool) {
+	l.relative = rel
 }
 
 func (l *LookupLocator) find(basename string, dirs []string) (fname string) {

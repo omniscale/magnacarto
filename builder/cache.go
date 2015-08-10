@@ -277,7 +277,7 @@ func (c *Cache) build(style *style) error {
 	l := c.newLocator()
 	l.SetBaseDir(filepath.Dir(style.mml))
 	l.SetOutDir(c.destDir)
-	l.UseAbsPaths(true)
+	l.UseRelPaths(false)
 
 	m := style.mapMaker.New(l)
 	builder := New(m)

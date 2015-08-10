@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"runtime/pprof"
 
 	"github.com/omniscale/magnacarto"
@@ -27,7 +28,7 @@ func (f *files) Set(value string) error {
 }
 
 func main() {
-	mmlFilename := flag.String("mml", "", "mml file")
+	mmlFile := flag.String("mml", "", "mml file")
 	var mssFilenames files
 
 	flag.Var(&mssFilenames, "mss", "mss file")
@@ -39,8 +40,8 @@ func main() {
 	dumpRules := flag.Bool("dumprules", false, "print calculated rules to stderr")
 	builderType := flag.String("builder", "mapnik2", "builder type {mapnik2,mapnik3,mapserver}")
 	outFile := flag.String("out", "", "out file")
+	relPaths := flag.Bool("relpaths", false, "use relative paths in output style")
 	version := flag.Bool("version", false, "print version and exit")
-	noCheckFiles := flag.Bool("no-check-files", false, "do not check if images/shps/etc exists")
 
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 
@@ -83,11 +84,21 @@ func main() {
 		conf.Datasources.ImageDirs = []string{*imageDir}
 	}
 
-	if *noCheckFiles {
-		conf.Datasources.NoCheckFiles = true
-	}
-
 	locator := conf.Locator()
+	if *mmlFile != "" {
+		locator.SetBaseDir(filepath.Dir(*mmlFile))
+	}
+	if *outFile != "" {
+		locator.SetOutDir(filepath.Dir(*outFile))
+	} else if *mmlFile != "" {
+		locator.SetOutDir(filepath.Dir(*mmlFile))
+	} else {
+		wd, _ := os.Getwd()
+		locator.SetOutDir(wd)
+	}
+	if *relPaths {
+		locator.UseRelPaths(*relPaths)
+	}
 
 	var m builder.MapWriter
 
@@ -107,7 +118,7 @@ func main() {
 	}
 
 	b := builder.New(m)
-	b.SetMML(*mmlFilename)
+	b.SetMML(*mmlFile)
 	for _, mss := range mssFilenames {
 		b.AddMSS(mss)
 	}
@@ -126,6 +137,12 @@ func main() {
 	} else {
 		if err := m.WriteFiles(*outFile); err != nil {
 			log.Fatal("error writing map: ", err)
+		}
+	}
+
+	if mf := locator.MissingFiles(); mf != nil {
+		for _, f := range mf {
+			log.Println("File not found:", f)
 		}
 	}
 }
