@@ -138,14 +138,12 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 		}
 	case mml.Shapefile:
 		fname := m.locator.Shape(ds.Filename)
-		// TODO missing file
 		params = []Parameter{
 			{Name: "file", Value: fname},
 			{Name: "type", Value: "shape"},
 		}
 	case mml.SQLite:
 		fname := m.locator.SQLite(ds.Filename)
-		// TODO missing file
 		params = []Parameter{
 			{Name: "file", Value: fname},
 			{Name: "srid", Value: ds.SRID},
@@ -155,7 +153,6 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "type", Value: "sqlite"},
 		}
 	case mml.OGR:
-		// TODO missing file
 		params = []Parameter{
 			{Name: "file", Value: ds.Filename},
 			{Name: "srid", Value: ds.SRID},
@@ -164,7 +161,6 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "type", Value: "ogr"},
 		}
 	case mml.GDAL:
-		// TODO missing file
 		params = []Parameter{
 			{Name: "file", Value: ds.Filename},
 			{Name: "srid", Value: ds.SRID},
@@ -360,9 +356,6 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 		symb := ShieldSymbolizer{}
 
 		fname := m.locator.Image(shieldFile)
-		if fname == "" {
-			log.Println("missing shield", shieldFile)
-		}
 		symb.File = &fname
 
 		symb.Size = fmtFloat(r.Properties.GetFloat("shield-size"))
@@ -406,9 +399,6 @@ func (m *Map) addMarkerSymbolizer(result *Rule, r mss.Rule) {
 	if markerFile, ok := r.Properties.GetString("marker-file"); ok {
 		symb := MarkersSymbolizer{}
 		fname := m.locator.Image(markerFile)
-		if fname == "" {
-			log.Println("missing marker", markerFile)
-		}
 		symb.File = &fname
 		symb.Height = fmtFloat(r.Properties.GetFloat("marker-height"))
 		symb.Width = fmtFloat(r.Properties.GetFloat("marker-width"))
@@ -445,9 +435,6 @@ func (m *Map) addPointSymbolizer(result *Rule, r mss.Rule) {
 	if pointFile, ok := r.Properties.GetString("point-file"); ok {
 		symb := PointSymbolizer{}
 		fname := m.locator.Image(pointFile)
-		if fname == "" {
-			log.Println("missing point", pointFile)
-		}
 		symb.File = &fname
 		symb.AllowOverlap = fmtBool(r.Properties.GetBool("point-allow-overlap"))
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("point-opacity"))
@@ -461,9 +448,6 @@ func (m *Map) addPolygonPatternSymbolizer(result *Rule, r mss.Rule) {
 	if patFile, ok := r.Properties.GetString("polygon-pattern-file"); ok {
 		symb := PolygonPatternSymbolizer{}
 		fname := m.locator.Image(patFile)
-		if fname == "" {
-			log.Println("missing pattern", patFile)
-		}
 		symb.File = &fname
 		symb.Alignment = fmtString(r.Properties.GetString("polygon-pattern-alignment"))
 		result.Symbolizers = append(result.Symbolizers, &symb)

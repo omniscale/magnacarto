@@ -130,9 +130,6 @@ func (m *Map) writeFontsList(filename string) error {
 	defer f.Close()
 	for font, shortName := range m.fonts {
 		file := m.locator.Font(font)
-		if file == "" {
-			log.Printf("font '%s' not found", font)
-		}
 		fmt.Fprintln(f, shortName, file)
 	}
 	m.Map.Add("Fontset", "'"+filepath.Base(filename)+"'")
@@ -608,9 +605,6 @@ func (m *Map) symbolName(symbol mss.Value) *string {
 	shortName := sanitizeSymbolName.ReplaceAllString(str, "-")
 
 	file := m.locator.Image(str)
-	if file == "" {
-		log.Printf("symbol '%s' not found", str)
-	}
 	if m.svgSymbols == nil {
 		m.svgSymbols = make(map[string]string)
 	}
@@ -782,23 +776,16 @@ func (m *Map) addDatasource(block *Block, ds mml.Datasource, rules []mss.Rule) {
 	// 	}
 	case mml.Shapefile:
 		fname := m.locator.Shape(ds.Filename)
-		if fname != "" {
-			// TODO missing file
-			idx := strings.LastIndex(fname, ".") // without suffix
-			block.Add("data", quote(fname[:idx]))
-			block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
-		}
+		idx := strings.LastIndex(fname, ".") // without suffix
+		block.Add("data", quote(fname[:idx]))
+		block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
 	case mml.SQLite:
 		fname := m.locator.SQLite(ds.Filename)
-		if fname != "" {
-			// TODO missing file
-			block.Add("connection", quote(fname))
-		}
+		block.Add("connection", quote(fname))
 		block.Add("data", quote(sqliteSelectString(ds.Query, ds.SRID)))
 		block.Add("connectiontype", "ogr")
 		block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
 	case mml.OGR:
-		// TODO missing file
 		block.Add("connection", quote(ds.Filename))
 		// block.Add("data", quote((ds.Query, ds.SRID)))
 		block.Add("connectiontype", "ogr")
