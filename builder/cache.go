@@ -291,7 +291,7 @@ func (c *Cache) build(style *style) error {
 		return err
 	}
 
-	if files := l.MissingFiles(); files != nil {
+	if files := l.MissingFiles(); len(files) > 0 {
 		return &FilesMissingError{files}
 	}
 

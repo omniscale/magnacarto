@@ -222,6 +222,9 @@ func (l *LookupLocator) PostGIS(ds mml.PostGIS) mml.PostGIS {
 }
 
 func (l *LookupLocator) MissingFiles() []string {
+	if len(l.missing) == 0 {
+		return nil
+	}
 	files := make([]string, 0, len(l.missing))
 	for f := range l.missing {
 		files = append(files, f)
