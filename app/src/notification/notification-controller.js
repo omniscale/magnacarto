@@ -27,13 +27,13 @@ angular.module('magna-app')
         msg = [];
         if (resp.filename !== undefined) {
           msg.append('Error in ' + resp.filename + ':');
-          msg.push(resp.error)
+          msg.push(resp.error);
         } else {
-          msg.push("Error: " + resp.error)
+          msg.push('Error: ' + resp.error);
         }
         if (resp.files !== undefined) {
           angular.forEach(resp.files, function(file) {
-            msg.push("• " + file);
+            msg.push('• ' + file);
           });
         }
       } else if(resp.updated_at !== undefined) {
