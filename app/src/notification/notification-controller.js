@@ -22,11 +22,11 @@ angular.module('magna-app')
       var type, msg;
       if(resp === undefined) {
         return;
-      } else  if(resp.error !== undefined) {
+      } else if(resp.error !== undefined) {
         type = 'error';
         msg = [];
         if (resp.filename !== undefined) {
-          msg.append('Error in ' + resp.filename + ':');
+          msg.push('Error in ' + resp.filename + ':');
           msg.push(resp.error);
         } else {
           msg.push('Error: ' + resp.error);
