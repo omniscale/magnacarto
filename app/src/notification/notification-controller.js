@@ -6,11 +6,9 @@ angular.module('magna-app')
 
     var appendMessage = function(type, msg) {
       $scope.$apply(function() {
-        if(type === 'success') {
-          angular.forEach($scope.notifications, function(notification) {
-            notification.close(1000);
-          });
-        }
+        angular.forEach($scope.notifications, function(notification) {
+          notification.close(500);
+        });
         $scope.notifications.push({
           type: type,
           msg: msg
