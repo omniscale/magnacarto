@@ -356,6 +356,16 @@ div.as-sortable-dragging label {
   box-shadow: 0 10px 10px -5px rgba(0,0,0,.08);
 }
 
+.alert .close {
+  position: absolute;
+  top: -5px;
+  right: 1px;
+}
+
+.alert div {
+  padding-right: 10px;
+}
+
 .alert-info {
   border-color: #b8dbf2;
 }
