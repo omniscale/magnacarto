@@ -1,0 +1,17 @@
+<div class="gridster-element" gridster="gridsterOptions">
+  <div gridster-item="map" ng-repeat="map in maps" ng-controller="DashboardMapCtrl" class="grid-map">
+    <div ol3-map="map" styles="styles" class="map-box" gridster-item-element="gridsterItem">
+      <div class="map-control-btns pull-right">
+        <a title="Bookmark Map" class="pin-map" ng-click="openBookmarkModal(map)">
+          <i class="glyphicon glyphicon-pushpin"></i>
+        </a>
+        <a title="Move Map" class="move-map" stop-event>
+          <i class="glyphicon glyphicon-move"></i>
+        </a>
+        <a title="Remove Map" ng-click="remove(map)">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<form name="bookmarkMapFrom">
+  <div class="modal-header">
+    <h3 class="modal-title">Add this map to your bookmarks</h3>
+    <button ng-click="cancel()" class="close" type="button" >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Center: {{ map.coords }}</p>
+    <p>Zoom: {{ map.zoom }}</p>
+    <div class="form-group">
+      <label>Title:</label>
+      <input type="text" ng-model="title"
+        focus-me="true"
+        class="form-control" required>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <input type="submit" class="btn btn-primary" ng-click="ok()" value="Save" />
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

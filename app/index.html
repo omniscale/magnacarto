@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Magnacarto App - Design maps</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="css/ol.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/angular-gridster.min.css" />
+    <link rel="stylesheet" href="css/ng-sortable.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body ng-app="magna-app">
+    <div id="wrapper">
+      <div id="sidebar-wrapper" class="active" ng-class="{active: active}" ng-controller="SideNavCtrl" ng-include="'src/sidebar/side-nav-template.html'"></div>
+      <div id="content-wrapper" ng-view></div>
+    </div>
+    <div class="alert-box" ng-controller="NotificationCtrl">
+      <div class="row">
+        <div class="col-md-12">
+          <notification ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)"></notification>
+        </div>
+      </div>
+    </div>
+    <script src="src/require.js"></script>
+  </body>
+</html>

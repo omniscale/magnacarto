@@ -1,0 +1,21 @@
+<ul ng-controller="LayerListCtrl" class="sidebar-nav layer-nav">
+  <li ng-click="toggleCollapsed();"
+      ng-class="{active: !collapsed && selectedNavItem !== 'projects'}">
+    <a ng-class="{disabled: selectedNavItem === 'projects'}">Layers
+      <span class="menu-icon glyphicon glyphicon-globe"></span>
+    </a>
+  </li>
+  <div collapse="(collapsed || !active || selectedNavItem === 'projects')">
+    <div class="layer-list disable-select">
+      <div ng-model="layers" as-sortable>
+        <div ng-repeat="layer in layers" as-sortable-item class="layer-list-item">
+          <i class="glyphicon cursor-pointer" ng-class="{'glyphicon-eye-close': layer.status === 'off', 'glyphicon-eye-open': layer.status !== 'off'}" ng-click="toggle(layer)"></i>
+          <i class="glyphicon glyphicon-edit cursor-pointer" ng-click="openEditLayerModal(layer)"></i>
+          <label title="{{ layer.name }}" as-sortable-item-handle>{{ layer.name }}</label>
+          <i class="mca-icon" ng-class="{'icon-postgis': layer.Datasource.type === 'postgis', 'icon-gdal': layer.Datasource.type === 'gdal', 'icon-shape': layer.Datasource.type === 'shape', 'icon-sqlite': layer.Datasource.type === 'sqlite'}"></i>
+          <!--<i class="mca-icon" ng-class="{'icon-point': layer.geometry === 'point', 'icon-linestring': layer.geometry === 'linestring', 'icon-polygon': layer.geometry === 'polygon', 'icon-raster': layer.geometry === 'raster'}"></i>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</ul>

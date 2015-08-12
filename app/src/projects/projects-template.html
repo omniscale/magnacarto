@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h2>Project Overview</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>MML-File</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="project in projects" ng-click="openProject(project)" class="cursor-pointer">
+          <th class="row">
+            {{ project.name }}
+          </th>
+          <td>
+           {{project.base}}/{{ project.mml }}
+         </td>
+       </tr>
+     </tbody>
+   </table>
+ </div>
+</div>

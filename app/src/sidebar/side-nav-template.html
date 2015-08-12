@@ -1,0 +1,33 @@
+<ul class="sidebar-nav" id="sidebar">
+  <li class="sidebar-brand">
+    <a>
+      <span ng-click="openAbout();">Magnacarto</span>
+      <span
+          ng-click="active=!active"
+          class="menu-icon glyphicon glyphicon-align-justify">
+       </span>
+    </a>
+  </li>
+  <li>
+    <a href="#/projects">Projects
+      <span class="menu-icon glyphicon glyphicon-list-alt"></span>
+    </a>
+  </li>
+  <li ng-class="{active: selectedNavItem === 'dashboard'}">
+    <a href="{{ dashboardUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Map
+      <span class="menu-icon glyphicon glyphicon-th"></span>
+    </a>
+    <div collapse="(selectedNavItem !== 'dashboard' || !active)">
+      <a ng-click="addMap()">Add View</a>
+      <a ng-click="createLayer()">Add Layer</a>
+    </div>
+  </li>
+  <li ng-class="{active: selectedNavItem === 'bookmarks'}">
+    <a href="{{ bookmarksUrl }}" ng-class="{disabled: selectedNavItem === 'projects'}">Bookmarks
+      <span class="menu-icon glyphicon glyphicon-bookmark"></span>
+    </a>
+  </li>
+</ul>
+
+<div ng-include="'src/sidebar/layer-list-template.html'"></div>
+<div ng-include="'src/sidebar/style-list-template.html'"></div>
