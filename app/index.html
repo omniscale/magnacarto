@@ -18,7 +18,7 @@
       <div id="content-wrapper" ng-view></div>
     </div>
     <div class="alert-box" ng-controller="NotificationCtrl">
-      <notification ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)"></notification>
+      <notification item="notification" ng-model="notifications" ng-repeat="notification in notifications"></notification>
     </div>
     <script src="src/require.js"></script>
   </body>

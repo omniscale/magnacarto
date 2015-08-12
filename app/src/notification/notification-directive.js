@@ -5,26 +5,36 @@ angular.module('magna-app')
     return {
     restrict: 'E',
     replace: true,
+    scope: {
+      notification: '=item',
+      notifications: '=ngModel'
+    },
     controller: function NotificationCtrl ($scope) {
-      $scope.close = function(index) {
-        $scope.notifications.splice(index, 1);
+      var close = function() {
+        var idx = $scope.notifications.indexOf($scope.notification);
+        if(idx > -1) {
+          $scope.notifications.splice(idx, 1);
+        }
+      };
+
+      $scope.closeTimeout = undefined;
+
+      $scope.close = function(closeTime) {
+        closeTime = closeTime === undefined ? 0 : closeTime;
+
+        if($scope.notification.timeout !== undefined) {
+          $timeout.cancel($scope.notification.timeout);
+        }
+
+        $scope.closeTimeout = $timeout(close, closeTime);
       };
     },
     templateUrl: 'src/notification/notification-template.html',
-    link: function(scope, element, attrs) {
-      var notification = scope.notifications[attrs.index];
+    link: function(scope) {
+      scope.notification.close = scope.close;
 
-      notification.close = function(timeout) {
-        timeout = timeout === undefined ? 0 : timeout;
-        $timeout(function() {
-          scope.close(attrs.index);
-        }, timeout);
-      };
-
-      if(notification.type !== 'error') {
-        $timeout(function() {
-          scope.close(attrs.index);
-        }, 2000);
+      if(scope.notification.type !== 'error') {
+        scope.notification.close(2000);
       }
     }
   };
