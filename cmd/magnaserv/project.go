@@ -45,7 +45,7 @@ func findProjects(path string) ([]project, error) {
 
 	for _, mmlFile := range mmls {
 		projDir := filepath.Dir(mmlFile)
-		projName := filepath.Base(projDir)
+		projBase, _ := filepath.Rel(path, projDir)
 
 		mssFiles, err := findMSS(projDir)
 		if err != nil {
@@ -75,7 +75,7 @@ func findProjects(path string) ([]project, error) {
 		projects = append(projects,
 			project{
 				Name:         name,
-				Base:         projName,
+				Base:         projBase,
 				LastChange:   lastChange,
 				MML:          mmlFile,
 				MCP:          strings.TrimSuffix(mmlFile, filepath.Ext(mmlFile)) + ".mcp",
