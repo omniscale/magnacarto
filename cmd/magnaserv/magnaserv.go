@@ -40,6 +40,7 @@ type magnaserv struct {
 	config            *config.Magnacarto
 	builderCache      *builder.Cache
 	mapnikMaker       builder.MapMaker
+	defaultMaker      builder.MapMaker
 	mapnikRenderer    *render.Mapnik
 	mapserverRenderer *render.MapServer
 }
@@ -76,10 +77,16 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 
 	var maker builder.MapMaker
 	renderer := mapReq.Query.Get("RENDERER")
-	if renderer == "mapserver" {
-		maker = mapserver.Maker
-	} else {
+	switch renderer {
+	case "mapnik":
 		maker = s.mapnikMaker
+	case "mapserver":
+		maker = mapserver.Maker
+	default:
+		maker = s.defaultMaker
+		if mapserver.Maker == s.defaultMaker {
+			renderer = "mapserver"
+		}
 	}
 
 	styleFile := mapReq.Query.Get("FILE")
@@ -280,10 +287,13 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 	var maker builder.MapMaker
 
 	renderer := ws.Request().Form.Get("renderer")
-	if renderer == "mapserver" {
-		maker = mapserver.Maker
-	} else {
+	switch renderer {
+	case "mapnik":
 		maker = s.mapnikMaker
+	case "mapserver":
+		maker = mapserver.Maker
+	default:
+		maker = s.defaultMaker
 	}
 
 	done := make(chan struct{})
@@ -391,6 +401,7 @@ func main() {
 
 	var listenAddr = flag.String("listen", "localhost:7070", "listen address")
 	var configFile = flag.String("config", DefaultConfigFile, "config")
+	var builderType = flag.String("builder", "mapnik", "builder type {mapnik,mapserver}")
 	var version = flag.Bool("version", false, "print version and exit")
 
 	flag.Parse()
@@ -448,6 +459,15 @@ func main() {
 	} else {
 		log.Print("MapServer plugin available")
 		handler.mapserverRenderer = mapserverRenderer
+	}
+
+	switch *builderType {
+	case "mapnik", "mapnik2", "mapnik3":
+		handler.defaultMaker = handler.mapnikMaker
+	case "mapserver":
+		handler.defaultMaker = mapserver.Maker
+	default:
+		log.Fatal("unknown -builder ", *builderType)
 	}
 
 	v1 := r.PathPrefix("/api/v1").Subrouter()
