@@ -12,7 +12,7 @@ angular.module('magna-app')
     EditLayerFormStatusService.reset();
 
     ProjectsService.loaded().success(function() {
-      $scope.projects = ProjectsService.projects;
+      $scope.projects = ProjectsService.projectsList;
     });
 
     $scope.openProject = function(project) {
