@@ -64,7 +64,7 @@ type layerStats struct {
 	query         string
 }
 
-func parseStats(lines []string) error {
+func parseStats(lines []string, withSQL bool) error {
 	var err error
 	var lastQuery string
 	var lastQueryDuration time.Duration
@@ -136,7 +136,7 @@ func parseStats(lines []string) error {
 		if stats.styles != nil {
 			numStyled += 1
 			fmt.Printf("%-40s %5.1fms %4.1f%% %5.1fms %4.1f%%", layer, stats.total.Seconds()*1000.0, float64(stats.total)/float64(totalStyleRender)*100, stats.queryDuration.Seconds()*1000, float64(stats.queryDuration)/float64(totalQueryDuration)*100)
-			if *withSQL {
+			if withSQL {
 				fmt.Print(" ", stats.query)
 			}
 			fmt.Print("\n")
@@ -149,9 +149,8 @@ func parseStats(lines []string) error {
 	return nil
 }
 
-var withSQL = flag.Bool("sql", false, "output SQL queries")
-
 func main1() {
+	var withSQL = flag.Bool("sql", false, "output SQL queries")
 	flag.Parse()
 	for {
 		lines, err := parseStatsBlock(os.Stdin)
@@ -161,6 +160,6 @@ func main1() {
 		if lines == nil {
 			break
 		}
-		parseStats(lines)
+		parseStats(lines, *withSQL)
 	}
 }

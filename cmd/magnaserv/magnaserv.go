@@ -364,13 +364,33 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 	}
 }
 
+func findAppDir() string {
+	binDir := filepath.Dir(os.Args[0])
+	appDir := filepath.Join(binDir, "app")
+	if _, err := os.Stat(appDir); err == nil {
+		return appDir
+	}
+	here, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	appDir = filepath.Join(here, "app")
+	if _, err := os.Stat(appDir); err == nil {
+		return appDir
+	}
+	log.Fatal("magnacarto ./app dir not found")
+	return ""
+}
+
+const DefaultConfigFile = "magnaserv.tml"
+
 func main() {
 	if os.Getenv("GOMAXPROCS") == "" {
 		runtime.GOMAXPROCS(runtime.NumCPU())
 	}
 
 	var listenAddr = flag.String("listen", "localhost:7070", "listen address")
-	var configFile = flag.String("config", "magnaserv.tml", "config")
+	var configFile = flag.String("config", DefaultConfigFile, "config")
 	var version = flag.Bool("version", false, "print version and exit")
 
 	flag.Parse()
@@ -381,7 +401,9 @@ func main() {
 	}
 
 	conf, err := config.Load(*configFile)
-	if err != nil {
+	if *configFile == DefaultConfigFile && os.IsNotExist(err) {
+		// ignore error for missing default config
+	} else if err != nil {
 		log.Fatal(err)
 	}
 
@@ -435,7 +457,8 @@ func main() {
 	v1.HandleFunc("/projects", handler.projects)
 	v1.Handle("/changes", websocket.Handler(handler.changes))
 
-	r.Handle("/magnacarto/{path:.*}", http.StripPrefix("/magnacarto/", http.FileServer(http.Dir("app"))))
+	appDir := findAppDir()
+	r.Handle("/magnacarto/{path:.*}", http.StripPrefix("/magnacarto/", http.FileServer(http.Dir(appDir))))
 
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/magnacarto/", 302)

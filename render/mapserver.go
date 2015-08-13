@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/cgi"
-	"net/http/httptest"
 	"net/url"
 	"os"
 	"os/exec"
@@ -52,8 +51,8 @@ func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
 		Dir:  wd,
 	}
 
-	w := &httptest.ResponseRecorder{
-		Body: bytes.NewBuffer(nil),
+	w := &responseRecorder{
+		Body: &bytes.Buffer{},
 	}
 
 	req, err := http.NewRequest("GET", "/?"+q.Encode(), nil)
@@ -70,4 +69,51 @@ func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
 		return nil, fmt.Errorf(" mapserv CGI did not return image (%v)\n%v", w.Header(), string(w.Body.Bytes()))
 	}
 	return w.Body.Bytes(), nil
+}
+
+// responseRecorder from net/http/httptest
+// copied here to work around global -httptest.server flag from httptest package
+
+// responseRecorder is an implementation of http.ResponseWriter that
+// records its mutations for later inspection in tests.
+type responseRecorder struct {
+	Code      int           // the HTTP response code from WriteHeader
+	HeaderMap http.Header   // the HTTP response headers
+	Body      *bytes.Buffer // if non-nil, the bytes.Buffer to append written data to
+	Flushed   bool
+
+	wroteHeader bool
+}
+
+func (rw *responseRecorder) Header() http.Header {
+	m := rw.HeaderMap
+	if m == nil {
+		m = make(http.Header)
+		rw.HeaderMap = m
+	}
+	return m
+}
+
+func (rw *responseRecorder) Write(buf []byte) (int, error) {
+	if !rw.wroteHeader {
+		rw.WriteHeader(200)
+	}
+	if rw.Body != nil {
+		rw.Body.Write(buf)
+	}
+	return len(buf), nil
+}
+
+func (rw *responseRecorder) WriteHeader(code int) {
+	if !rw.wroteHeader {
+		rw.Code = code
+	}
+	rw.wroteHeader = true
+}
+
+func (rw *responseRecorder) Flush() {
+	if !rw.wroteHeader {
+		rw.WriteHeader(200)
+	}
+	rw.Flushed = true
 }
