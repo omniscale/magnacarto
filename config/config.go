@@ -120,6 +120,11 @@ func (l *LookupLocator) find(basename string, dirs []string) (fname string) {
 			}
 			l.missing[basename] = struct{}{}
 			fname = basename
+		} else {
+			absfname, err := filepath.Abs(fname)
+			if err == nil {
+				fname = absfname
+			}
 		}
 
 		if l.relative {
