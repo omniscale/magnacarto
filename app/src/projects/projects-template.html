@@ -6,15 +6,19 @@
         <tr>
           <th>Name</th>
           <th>MML-File</th>
+          <th>Last change</th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="project in projects" ng-click="openProject(project)" class="cursor-pointer">
+        <tr ng-repeat="project in projects | orderBy:'-last_change'" ng-click="openProject(project)" class="cursor-pointer">
           <th class="row">
             {{ project.name }}
           </th>
           <td>
            {{project.base}}/{{ project.mml }}
+         </td>
+         <td>
+           {{ project.last_change | date:'yyyy-MM-dd HH:mm:ss' }}
          </td>
        </tr>
      </tbody>
