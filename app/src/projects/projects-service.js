@@ -14,6 +14,7 @@ angular.module('magna-app')
         // TODO add on error
         self.loadPromise.success(function(data) {
           angular.forEach(data.projects, function(project) {
+            project.last_change = Date.parse(project.last_change);
             self.projects[project.base + '|' + project.mml] = project;
           });
         });
