@@ -57,7 +57,7 @@ func Load(fileName string) (*Magnacarto, error) {
 	config.BaseDir = filepath.Dir(fileName)
 	_, err := toml.DecodeFile(fileName, &config)
 	if err != nil {
-		return nil, err
+		return &config, err
 	}
 	return &config, nil
 }

@@ -364,13 +364,15 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 	}
 }
 
+const DefaultConfigFile = "magnaserv.tml"
+
 func main() {
 	if os.Getenv("GOMAXPROCS") == "" {
 		runtime.GOMAXPROCS(runtime.NumCPU())
 	}
 
 	var listenAddr = flag.String("listen", "localhost:7070", "listen address")
-	var configFile = flag.String("config", "magnaserv.tml", "config")
+	var configFile = flag.String("config", DefaultConfigFile, "config")
 	var version = flag.Bool("version", false, "print version and exit")
 
 	flag.Parse()
@@ -381,7 +383,9 @@ func main() {
 	}
 
 	conf, err := config.Load(*configFile)
-	if err != nil {
+	if *configFile == DefaultConfigFile && os.IsNotExist(err) {
+		// ignore error for missing default config
+	} else if err != nil {
 		log.Fatal(err)
 	}
 
