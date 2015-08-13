@@ -47,7 +47,7 @@ func findProjects(path string) ([]project, error) {
 		projDir := filepath.Dir(mmlFile)
 		projName := filepath.Base(projDir)
 
-		mssFiles, err := filepath.Glob(filepath.Join(projDir, "*.mss"))
+		mssFiles, err := findMSS(projDir)
 		if err != nil {
 			return nil, err
 		}
@@ -67,7 +67,7 @@ func findProjects(path string) ([]project, error) {
 		// remove base dir from mml/mss
 		mmlFile = filepath.Base(mmlFile)
 		for i := range mssFiles {
-			mssFiles[i] = filepath.Base(mssFiles[i])
+			mssFiles[i], _ = filepath.Rel(projDir, mssFiles[i])
 		}
 
 		name := parsedMML.Name
@@ -85,6 +85,29 @@ func findProjects(path string) ([]project, error) {
 	}
 
 	return projects, nil
+}
+
+func findMSS(base string) ([]string, error) {
+	var mss []string
+
+	err := filepath.Walk(base, func(path string, fi os.FileInfo, err error) error {
+		fmt.Println("path:", path)
+		if err != nil {
+			return err
+		}
+		if fi.IsDir() {
+			return nil
+		}
+		if strings.HasSuffix(path, ".mss") {
+			mss = append(mss, path)
+		}
+		return nil
+	})
+	fmt.Println(err, mss)
+	if err != nil {
+		return nil, err
+	}
+	return mss, nil
 }
 
 func lastModTime(files ...string) time.Time {
