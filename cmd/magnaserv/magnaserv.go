@@ -364,6 +364,24 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 	}
 }
 
+func findAppDir() string {
+	binDir := filepath.Dir(os.Args[0])
+	appDir := filepath.Join(binDir, "app")
+	if _, err := os.Stat(appDir); err == nil {
+		return appDir
+	}
+	here, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	appDir = filepath.Join(here, "app")
+	if _, err := os.Stat(appDir); err == nil {
+		return appDir
+	}
+	log.Fatal("magnacarto ./app dir not found")
+	return ""
+}
+
 const DefaultConfigFile = "magnaserv.tml"
 
 func main() {
@@ -439,7 +457,8 @@ func main() {
 	v1.HandleFunc("/projects", handler.projects)
 	v1.Handle("/changes", websocket.Handler(handler.changes))
 
-	r.Handle("/magnacarto/{path:.*}", http.StripPrefix("/magnacarto/", http.FileServer(http.Dir("app"))))
+	appDir := findAppDir()
+	r.Handle("/magnacarto/{path:.*}", http.StripPrefix("/magnacarto/", http.FileServer(http.Dir(appDir))))
 
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/magnacarto/", 302)
