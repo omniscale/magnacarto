@@ -26,11 +26,21 @@ type project struct {
 	SelectedMSS  []string  `json:"selected_mss"`
 }
 
+// findProjects searches for .mml files in path and in all sub-directories of
+// path, but not any deeper.
 func findProjects(path string) ([]project, error) {
 	projects := []project{}
-	mmls, err := filepath.Glob(filepath.Join(path, "*", "*.mml"))
-	if err != nil {
+	var mmls []string
+	if files, err := filepath.Glob(filepath.Join(path, "*.mml")); err != nil {
 		return nil, err
+	} else {
+		mmls = append(mmls, files...)
+	}
+
+	if files, err := filepath.Glob(filepath.Join(path, "*", "*.mml")); err != nil {
+		return nil, err
+	} else {
+		mmls = append(mmls, files...)
 	}
 
 	for _, mmlFile := range mmls {

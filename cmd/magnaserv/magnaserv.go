@@ -152,10 +152,11 @@ func (s *magnaserv) projects(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *magnaserv) mml(w http.ResponseWriter, r *http.Request) {
-	baseName := mux.Vars(r)["base"]
-	mmlName := mux.Vars(r)["mml"]
+	path := mux.Vars(r)["path"]
+	// mux returns safe path (e.g no /-root or ../ tricks)
+	path = filepath.FromSlash(path)
 
-	fileName, err := filepath.Abs(filepath.Join(s.config.StylesDir, baseName, mmlName+".mml"))
+	fileName, err := filepath.Abs(filepath.Join(s.config.StylesDir, path+".mml"))
 	if err != nil {
 		s.internalError(w, r, err)
 		return
@@ -172,15 +173,15 @@ func (s *magnaserv) mml(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *magnaserv) mcp(w http.ResponseWriter, r *http.Request) {
-	baseName := mux.Vars(r)["base"]
-	mcpName := mux.Vars(r)["mcp"]
+	path := mux.Vars(r)["path"]
+	// mux returns safe path (e.g no /-root or ../ tricks)
+	path = filepath.FromSlash(path)
 
-	projDir, err := filepath.Abs(filepath.Join(s.config.StylesDir, baseName))
+	mcpFile, err := filepath.Abs(filepath.Join(s.config.StylesDir, path+".mcp"))
 	if err != nil {
 		s.internalError(w, r, err)
 		return
 	}
-	mcpFile := filepath.Join(projDir, mcpName+".mcp")
 
 	if r.Method == "POST" {
 		if err := writeCheckedJSON(r.Body, mcpFile); err != nil {
@@ -194,7 +195,7 @@ func (s *magnaserv) mcp(w http.ResponseWriter, r *http.Request) {
 	if _, err := os.Stat(mcpFile); err == nil {
 		http.ServeFile(w, r, mcpFile)
 	} else {
-		mmlFile := filepath.Join(projDir, mcpName+".mml")
+		mmlFile := mcpFile[:len(mcpFile)-3] + "mml"
 		// return empty JSON if mml exists
 		if _, err := os.Stat(mmlFile); err == nil {
 			w.Header().Add("Content-type", "application/json")
@@ -472,8 +473,8 @@ func main() {
 
 	v1 := r.PathPrefix("/api/v1").Subrouter()
 	v1.HandleFunc("/map", handler.render)
-	v1.HandleFunc("/projects/{base}/{mml}.mml", handler.mml)
-	v1.HandleFunc("/projects/{base}/{mcp}.mcp", handler.mcp)
+	v1.HandleFunc("/projects/{path:.*?}.mml", handler.mml)
+	v1.HandleFunc("/projects/{path:.*?}.mcp", handler.mcp)
 	v1.HandleFunc("/projects", handler.projects)
 	v1.Handle("/changes", websocket.Handler(handler.changes))
 
