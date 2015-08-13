@@ -91,7 +91,6 @@ func findMSS(base string) ([]string, error) {
 	var mss []string
 
 	err := filepath.Walk(base, func(path string, fi os.FileInfo, err error) error {
-		fmt.Println("path:", path)
 		if err != nil {
 			return err
 		}
@@ -103,7 +102,6 @@ func findMSS(base string) ([]string, error) {
 		}
 		return nil
 	})
-	fmt.Println(err, mss)
 	if err != nil {
 		return nil, err
 	}
