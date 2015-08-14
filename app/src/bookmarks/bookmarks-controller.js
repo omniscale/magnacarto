@@ -36,5 +36,11 @@ angular.module('magna-app')
         }
       });
     };
+
+    $scope.$watchCollection(function() {
+      return ProjectService.bookmarkedMaps;
+    }, function() {
+      $scope.maps = ProjectService.bookmarkedMaps;
+    });
   }
 ]);

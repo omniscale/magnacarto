@@ -42,8 +42,8 @@ angular.module('magna-app')
       return ProjectService.project;
     }, function(project) {
       if(project !== undefined) {
-        $scope.dashboardUrl = '#/dashboard/' + project.base + '/' + project.mml;
-        $scope.bookmarksUrl = '#/bookmarks/' + project.base + '/' + project.mml;
+        $scope.dashboardUrl = '#/dashboard/' + project.url;
+        $scope.bookmarksUrl = '#/bookmarks/' + project.url;
       } else {
         $scope.dashboardUrl = '#/dashboard/';
         $scope.bookmarksUrl = '#/bookmarks/';

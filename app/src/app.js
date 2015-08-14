@@ -17,7 +17,7 @@ angular.module('magna-app').constant('magnaConfig', {
   var loadProjectOrRedirect = function($q, $location, $route, ProjectsService, ProjectService) {
     var deferred = $q.defer();
     ProjectsService.loaded().then(function() {
-      var project = ProjectsService.projectByRouteParams($route.current.params);
+      var project = ProjectsService.projectByUrl($route.current.params.projectUrl);
       if(project === undefined) {
         $location.path('projects');
         deferred.reject();
@@ -40,7 +40,7 @@ angular.module('magna-app').constant('magnaConfig', {
       templateUrl: 'src/projects/projects-template.html',
       controller: 'ProjectsCtrl'
     })
-    .when('/dashboard/:base/:mml', {
+    .when('/dashboard/:projectUrl*', {
       templateUrl: 'src/dashboard/dashboard-template.html',
       controller: 'DashboardCtrl',
       resolve: {
@@ -49,7 +49,7 @@ angular.module('magna-app').constant('magnaConfig', {
         }
       }
     })
-    .when('/bookmarks/:base/:mml', {
+    .when('/bookmarks/:projectUrl*', {
       templateUrl: 'src/bookmarks/bookmarks-template.html',
       controller: 'BookmarksCtrl',
       resolve: {

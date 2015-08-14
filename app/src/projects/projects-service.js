@@ -17,7 +17,9 @@ angular.module('magna-app')
         self.loadPromise.success(function(data) {
           angular.forEach(data.projects, function(project) {
             project.last_change = Date.parse(project.last_change);
-            self.projects[project.base + '|' + project.mml] = project;
+            project.url = project.base === '.' ? '' : project.base + '/';
+            project.url += project.mml;
+            self.projects[project.url] = project;
             self.projectsList.push(project);
           });
         });
@@ -29,9 +31,9 @@ angular.module('magna-app')
         return self.loadPromise;
       };
 
-      ProjectsServiceInstance.prototype.projectByRouteParams = function(routeParams) {
+      ProjectsServiceInstance.prototype.projectByUrl = function(url) {
         var self = this;
-        return self.projects[routeParams.base + '|' + routeParams.mml];
+        return self.projects[url];
       };
 
       return new ProjectsServiceInstance();
