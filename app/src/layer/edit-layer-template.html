@@ -54,45 +54,10 @@
             </select>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading cursor-pointer" ng-click="hideExtentSRS = !hideExtentSRS">
-        <span>Extent / SRS</span>
-        <i class="glyphicon" ng-class="{'glyphicon-chevron-right': hideExtentSRS, 'glyphicon-chevron-down': !hideExtentSRS}"></i>
-      </div>
-      <div class="panel-body form-horizontal" collapse="hideExtentSRS">
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="extent">Extent</label>
-          <div class="col-sm-10">
-            <input id="extent" name="extent" class="form-control" float ng-model="layer.extent[0]" />
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-sm-10 col-sm-offset-2">
-            <input class="form-control" float ng-model="layer.extent[1]" />
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-sm-10 col-sm-offset-2">
-            <input class="form-control" float ng-model="layer.extent[2]" />
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-sm-10 col-sm-offset-2">
-            <input class="form-control" float ng-model="layer.extent[3]" />
-          </div>
-        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="srs">SRS</label>
           <div class="col-sm-10">
             <input id="srs" name="srs" class="form-control" type="text" ng-model="layer.srs" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="srs-name">SRS-Name</label>
-          <div class="col-sm-10">
-            <input id="srs-name" name="srs-name" class="form-control" type="text" ng-model="layer['srs-name']" />
           </div>
         </div>
       </div>
