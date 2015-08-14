@@ -160,8 +160,7 @@ html, body {
   position: absolute;
 }
 
-.map-control-btns a,
-.map-control-btns a:hover {
+.map-control-btns a {
   width: 26px;
   height: 26px;
   line-height: 26px;
@@ -175,7 +174,15 @@ html, body {
   float:left;
   margin-left: 10px;
   box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.map-control-btns a:hover {
+  background-color: rgba(238, 238, 238, 0.9);
+}
+
+.map-control-btns a:active {
+  background-color: rgba(221, 221, 221, 0.9);
 }
 
 .map-title {
@@ -448,12 +455,19 @@ div.as-sortable-dragging label {
   background-color: inherit;
 }
 
-.ol-zoom button,
-.ol-zoom button:hover {
+.ol-zoom button {
   background-color: rgba(255, 255, 255, 0.9);
   color: black;
   cursor: pointer;
   padding-bottom: 3px;
+}
+
+.ol-zoom button:hover {
+  background-color: rgba(238, 238, 238, 0.9);
+}
+
+.ol-zoom button:active {
+  background-color: rgba(221, 221, 221, 0.9);
 }
 
 .ol-zoom .ol-zoom-in {
