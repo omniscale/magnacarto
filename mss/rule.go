@@ -119,6 +119,7 @@ func filterIsSubset(a, b []Filter) bool {
 				// field not in b
 				return false
 			}
+			// TODO: handle subfilter like <=6 =5, >=6 >8, etc.
 			if a[ia].CompOp != b[ib].CompOp || a[ia].Value != b[ib].Value {
 				return false
 			} else {
