@@ -18,7 +18,7 @@ angular.module('magna-app')
         enabled: false
       },
       draggable: {
-        enabled: false
+        handle: '.move-bookmark'
       }
     };
 
