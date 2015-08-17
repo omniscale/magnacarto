@@ -1,14 +1,14 @@
 <div form-group>
-  <div ui-ace="{{ aceOptions }}" name="table" ng-model="layer.Datasource.table" style="height: {{ tableInputHeight }}px;"></div>
+  <div ui-ace="{{ aceOptions }}" name="table" ng-model="layer.Datasource.table" style="height: {{ tableInputHeight }}px;" required></div>
 </div>
 <div form-group>
-  <input name="file" type="text" ng-model="layer.Datasource.file" placeholder="SQLite file location"/>
+  <input name="file" type="text" ng-model="layer.Datasource.file" placeholder="SQLite file location" required/>
 </div>
 <div form-group>
   <input name="extent" type="text" ng-model="layer.Datasource.extent" />
 </div>
 <div form-group>
-  <input name="geometry_field" title="Geometry Field" type="text" ng-model="layer.Datasource.geometry_field" />
+  <input name="geometry_field" title="Geometry Field" type="text" ng-model="layer.Datasource.geometry_field" required />
 </div>
 <div form-group>
   <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
