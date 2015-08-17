@@ -16,7 +16,7 @@ uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not' | tr '[:upper:]' '[:
 
 all: build test
 
-CMDS=magnacarto magnacarto-mapnik magnaserv
+CMDS=magnacarto magnaserv magnacarto-mapnik
 
 $(GOMAPNIK_CONFIG):
 	$(GO) generate github.com/omniscale/go-mapnik
@@ -31,10 +31,11 @@ magnaserv: $(DEPS)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnaserv
 
 magnacarto-mapnik: $(DEPS)
-	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik
+	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
 install: $(DEPS)
-	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./cmd/... ./render/magnacarto-mapnik
+	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./cmd/...
+	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
 cmds: build $(CMDS)
 

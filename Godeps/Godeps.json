@@ -28,6 +28,10 @@
 			"Rev": "8096f47503459bcc74d1f4c487b7e6e42e5746b5"
 		},
 		{
+			"ImportPath": "github.com/natefinch/pie",
+			"Rev": "83bfd1821ee0ba96a47d98cbed424313fb60f57a"
+		},
+		{
 			"ImportPath": "github.com/omniscale/go-mapnik",
 			"Rev": "e4f86bd9499d730f27ebebad868303fc43c3a975"
 		},

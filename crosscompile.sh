@@ -13,7 +13,7 @@ BUILD_DATE=`date +%Y%m%d`
 BUILD_REF=`git rev-parse --short HEAD`
 BUILD_VERSION=dev-$BUILD_DATE-$BUILD_REF
 
-VERSION_LDFLAGS="-X github.com/omniscale/magnacarto.buildVersion ${BUILD_VERSION}"
+VERSION_LDFLAGS="-X github.com/omniscale/magnacarto.buildVersion=${BUILD_VERSION}"
 
 # build os arch
 function build() {
@@ -25,7 +25,7 @@ function build() {
     cd $build_name
     env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
     env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnaserv
-    cp ../../../{README.md,LICENSE} ./
+    cp -r ../../../{README.md,LICENSE,app,docs/examples} ./
     cd ..
     if [ $os = windows ]; then
         zip -r $build_name.zip $build_name
