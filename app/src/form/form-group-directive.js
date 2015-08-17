@@ -33,7 +33,7 @@ angular.module('magna-app')
       scope.id = item.attr('id') || scope.name;
 
       scope.itemScope = scope.form[scope.name];
-      scope.$watchGroup(['itemScope.$touched', 'itemScope.$invalid', 'itemScope.$error'],
+      scope.$watchGroup(['itemScope.$dirty', 'itemScope.$invalid', 'itemScope.$error'],
         function (n, o, scope) {
           scope.error.required = n[0] && n[2].required;
           scope.formClass['has-error'] = n[0] && n[1];
