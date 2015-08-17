@@ -19,6 +19,9 @@ angular.module('magna-app')
       if (items.length === 0) {
         items = element.find('select');
       }
+      if (items.length === 0) {
+        items = angular.element(element[0].getElementsByClassName('ace_editor'));
+      }
       if(items.length === 0) {
         throw 'NoInputElementError';
       }
