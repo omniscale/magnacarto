@@ -13,7 +13,7 @@ BUILD_DATE=`date +%Y%m%d`
 BUILD_REF=`git rev-parse --short HEAD`
 BUILD_VERSION=dev-$BUILD_DATE-$BUILD_REF
 
-VERSION_LDFLAGS="-X github.com/omniscale/magnacarto.buildVersion ${BUILD_VERSION}"
+VERSION_LDFLAGS="-X github.com/omniscale/magnacarto.buildVersion=${BUILD_VERSION}"
 
 # build os arch
 function build() {
