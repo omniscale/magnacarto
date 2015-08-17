@@ -184,6 +184,28 @@ func TestFilterIsSubset(t *testing.T) {
 	assert.False(t, filterIsSubset([]Filter{Filter{"foo", EQ, "barbaz"}}, []Filter{Filter{"baz", EQ, "bar"}, Filter{"foo", EQ, "bar"}}))
 }
 
+func TestFilterIsSubset_TODO(t *testing.T) {
+	t.Skip("TODO: implement filterIsSubset for numerical comparsions")
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GTE, 5}}, []Filter{Filter{"foo", EQ, 5}}))
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GT, 4}}, []Filter{Filter{"foo", EQ, 5}}))
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LTE, 5}}, []Filter{Filter{"foo", EQ, 5}}))
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LT, 6}}, []Filter{Filter{"foo", EQ, 5}}))
+
+	assert.False(t, filterIsSubset([]Filter{Filter{"foo", GTE, 6}}, []Filter{Filter{"foo", EQ, 5}}))
+	assert.False(t, filterIsSubset([]Filter{Filter{"foo", GT, 5}}, []Filter{Filter{"foo", EQ, 5}}))
+	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LTE, 4}}, []Filter{Filter{"foo", EQ, 5}}))
+	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LT, 5}}, []Filter{Filter{"foo", EQ, 5}}))
+
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GTE, 5}}, []Filter{Filter{"foo", GT, 5}}))
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GT, 4}}, []Filter{Filter{"foo", GT, 5}}))
+	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LT, 10}}, []Filter{Filter{"foo", GT, 5}}))
+	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LTE, 10}}, []Filter{Filter{"foo", GT, 5}}))
+	assert.False(t, filterIsSubset([]Filter{Filter{"foo", EQ, 6}}, []Filter{Filter{"foo", GT, 5}}))
+
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LTE, 5}}, []Filter{Filter{"foo", LT, 5}}))
+	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LT, 5}}, []Filter{Filter{"foo", LT, 5}}))
+}
+
 func BenchmarkFilterIsSubset(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		filterIsSubset(
