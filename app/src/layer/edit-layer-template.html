@@ -69,5 +69,5 @@
 <div class="modal-footer">
   <button class="btn btn-default pull-left" ng-click="openRemoveModal()">Remove Layer</button>
   <button class="btn btn-default" ng-click="cancel()">Cancel</button>
-  <input type="submit" class="btn btn-success" ng-click="ok()" value="Save" />
+  <input type="submit" class="btn btn-success" ng-disabled="layerForm.$invalid" ng-click="ok()" value="Save" />
 </div>
