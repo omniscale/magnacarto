@@ -17,6 +17,11 @@ Please get in touch if you need commercial support or if you need specific featu
 Features
 --------
 
+* Easy to use map viewer
+
+![Magnaserv](./docs/magnaserv.png)
+
+
 * Generate styles for Mapnik 2/3 and MapServer
 
 #### MapServer
@@ -51,72 +56,54 @@ Installation
 
 ### Binary
 
-There are binarie releases available for Windows, Linux and Mac OS X (Darwin): http://download.omniscale.de/magnacarto/rel/
+There are binary releases available for Windows, Linux and Mac OS X (Darwin): <http://download.omniscale.de/magnacarto/rel/>
 
 ### Source
 
-There are some dependencies:
+#### Dependencies
 
-#### Compiler
+You need [Go][] and [git][].
 
-You need [Go](http://golang.org).
+[Go]: https://golang.org
+[git]: https://git-scm.com/
 
+#### Compiling
 
-#### Go libraries
+Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set. First create a `GOPATH` and install godep:
 
-Magnacarto uses the following libraries.
-
-- <https://github.com/BurntSushi/toml>
-- <https://gopkg.in/fsnotify.v1>
-
-The tests require:
-
-- <https://github.com/omniscale/go-mapnik>
-- <https://github.com/stretchr/testify/assert>
-
-`go get` will fetch these, but you can also use [godep][] to use a provided (vendorized) set of these dependencies.
-
-[godep]: https://github.com/tools/godep
-
-
-#### Other
-
-Fetching Magnacarto requires [git][].
-
-[git]: http://git-scm.com/
-
-
-#### Compile
-
-Create a new [Go workspace](http://golang.org/doc/code.html):
 
     mkdir magnacarto
     cd magnacarto
     export GOPATH=`pwd`
+    go get github.com/tools/godep
 
-Get Magnacarto and all dependencies:
-
-    go get github.com/omniscale/magnacarto/cmd/magnacarto
-    go install github.com/omniscale/magnacarto/cmd/magnacarto
-
-Done. You should now have a `magnacarto` binary in `$GOPATH/bin`.
-
-Go compiles to static binaries and so Magnacarto has no runtime dependencies to Go.
-Just copy the `magnacarto` binary to your server for deployment.
-
-##### Godep
-
-Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set. First create a `GOPATH` (see above), then call the following commands:
+Then call the following commands:
 
     cd $GOPATH
     git clone https://github.com/omniscale/magnacarto src/github.com/omniscale/magnacarto
     cd src/github.com/omniscale/magnacarto
-    godep go generate github.com/omniscale/go-mapnik
-    godep go install ./...
+    make install
 
+[godep]: https://github.com/tools/godep
+
+
+#### Render Plugins
+
+The web-frontend of Magnacarto can render map images with Mapserver and Mapnik.
+
+##### Mapserver
+
+The Mapserver plugin is already included in the default `magnaserv` installation and it requires the `mapserv` binary in your `PATH` on runtime.
+
+
+##### Mapnik
+
+The Mapnik plugin needs to be compiled as an additional binary (`magnacarto-mapnik`). You need to have Mapnik installed with all header files. Make sure `mapnik-config` is in your `PATH`. Call `make install` to build the plugin binary.
 
 Usage
 -----
+
+### magnacarto
 
 `magnacarto` takes a single `-mml` file.
 
@@ -127,6 +114,27 @@ To build a MapServer map file:
     magnacarto -builder mapserver -mml project.mml > /tmp/magnacarto.map
 
 See `magnacarto -help` for more options.
+
+### magnaserv
+
+
+Magnaserv is a web-frontend for Magnacasta. Make sure the `./app` directory is in your working directory or next to the `magnaserv` executable.
+
+
+To start magnaserv on port 7070:
+
+    magnaserv
+
+Magnaserv will search for .mml files in the current working directory or in direct sub-directories.
+
+To start magnaserv on port 8080 with the Mapserver plugin enabled:
+
+    magnaserv -builder mapserver -listen 127.0.0.1:8080
+
+You can configure the location of stylings, shapefiles or images, and database connection parameters with a configuration file. See `example-magnacarto.tml`:
+
+    magnaserv -builder mapserver -config magnacarto.tml
+
 
 Documentation
 -------------
