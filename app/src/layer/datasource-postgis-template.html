@@ -1,5 +1,5 @@
 <div form-group>
-  <div ui-ace="{{ aceOptions }}" name="table" ng-model="layer.Datasource.table" style="height: {{ tableInputHeight }}px;"></div>
+  <div ui-ace="{{ aceOptions }}" name="table" ng-model="layer.Datasource.table" style="height: {{ tableInputHeight }}px;" required></div>
 </div>
 <div form-group>
   <input name="extent" type="text" ng-model="layer.Datasource.extent" />
@@ -11,17 +11,17 @@
   <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
 </div>
 <div form-group>
-  <input name="host" type="text" ng-model="layer.Datasource.host" />
+  <input name="host" type="text" ng-model="layer.Datasource.host" required />
 </div>
 <div form-group>
-  <input name="port" type="text" ng-model="layer.Datasource.port" />
+  <input name="port" type="number" ng-model="layer.Datasource.port" required />
 </div>
 <div form-group>
-  <input name="dbname" title="Database Name" type="text" ng-model="layer.Datasource.dbname" />
+  <input name="dbname" title="Database Name" type="text" ng-model="layer.Datasource.dbname" required />
 </div>
 <div form-group>
-  <input name="user" type="text" ng-model="layer.Datasource.user" />
+  <input name="user" type="text" ng-model="layer.Datasource.user" required />
 </div>
 <div form-group>
-  <input name="password" type="text" ng-model="layer.Datasource.password" />
+  <input name="password" type="text" ng-model="layer.Datasource.password" required />
 </div>
