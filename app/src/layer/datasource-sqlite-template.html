@@ -1,30 +1,15 @@
-<div class="form-group">
-  <label class="col-sm-2 control-label" for="table">Table</label>
-  <div class="col-sm-10">
-    <div ui-ace="{{ aceOptions }}" id="table" name="table" class="form-control" ng-model="layer.Datasource.table" style="height: {{ tableInputHeight }}px;"></div>
-  </div>
+<div form-group>
+  <div ui-ace="{{ aceOptions }}" name="table" ng-model="layer.Datasource.table" style="height: {{ tableInputHeight }}px;"></div>
 </div>
-<div class="form-group">
-  <label class="col-sm-2 control-label" for="file">File</label>
-  <div class="col-sm-10">
-    <input id="file" name="file" class="form-control" type="text" ng-model="layer.Datasource.file" placeholder="SQLite file location"/>
-  </div>
+<div form-group>
+  <input name="file" type="text" ng-model="layer.Datasource.file" placeholder="SQLite file location"/>
 </div>
-<div class="form-group">
-  <label class="col-sm-2 control-label" for="extent">Extent</label>
-  <div class="col-sm-10">
-    <input id="extent" name="extent" class="form-control" type="text" ng-model="layer.Datasource.extent" />
-  </div>
+<div form-group>
+  <input name="extent" type="text" ng-model="layer.Datasource.extent" />
 </div>
-<div class="form-group">
-  <label class="col-sm-2 control-label" for="geometry_field">Geometry Field</label>
-  <div class="col-sm-10">
-    <input id="geometry_field" name="geometry_field" class="form-control" type="text" ng-model="layer.Datasource.geometry_field" />
-  </div>
+<div form-group>
+  <input name="geometry_field" title="Geometry Field" type="text" ng-model="layer.Datasource.geometry_field" />
 </div>
-<div class="form-group">
-  <label class="col-sm-2 control-label" for="srid">SRID</label>
-  <div class="col-sm-10">
-    <input id="srid" name="srid" class="form-control" type="text" ng-model="layer.Datasource.srid" />
-  </div>
+<div form-group>
+  <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
 </div>

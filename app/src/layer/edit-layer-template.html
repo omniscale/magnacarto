@@ -24,41 +24,26 @@
         <i class="glyphicon" ng-class="{'glyphicon-chevron-right': hideGeneral, 'glyphicon-chevron-down': !hideGeneral}"></i>
       </div>
       <div class="panel-body form-horizontal" collapse="hideGeneral">
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="name">Name</label>
-          <div class="col-sm-10">
-            <input id="name" name="name" class="form-control" type="text" ng-model="layer.name" />
-          </div>
+        <div form-group>
+          <input name="name" type="text" ng-model="layer.name" required />
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="id">Id</label>
-          <div class="col-sm-10">
-            <input id="id" name="id" class="form-control" type="text" ng-model="layer.id" />
-          </div>
+        <div form-group>
+          <input name="id" type="text" ng-model="layer.id" required />
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="class">Class</label>
-          <div class="col-sm-10">
-            <input id="class" name="class" class="form-control" type="text" ng-model="layer.class" />
-          </div>
+        <div form-group>
+          <input name="class" type="text" ng-model="layer.class" />
         </div>
 
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="geometry">Geometry</label>
-          <div class="col-sm-10">
-            <select id="geometry" name="geometry" class="form-control" type="text" ng-model="layer.geometry">
-              <option value="point">Point</option>
-              <option value="linestring">Linestring</option>
-              <option value="polygon">Polygon</option>
-              <option value="raster">Raster</option>
-            </select>
-          </div>
+        <div form-group>
+          <select name="geometry" type="text" ng-model="layer.geometry">
+            <option value="point">Point</option>
+            <option value="linestring">Linestring</option>
+            <option value="polygon">Polygon</option>
+            <option value="raster">Raster</option>
+          </select>
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="srs">SRS</label>
-          <div class="col-sm-10">
-            <input id="srs" name="srs" class="form-control" type="text" ng-model="layer.srs" />
-          </div>
+        <div form-group>
+          <input name="srs" type="text" ng-model="layer.srs" title="SRS" required />
         </div>
       </div>
     </div>
@@ -68,16 +53,13 @@
         <i class="glyphicon" ng-class="{'glyphicon-chevron-right': hideDatasource, 'glyphicon-chevron-down': !hideDatasource}"></i>
       </div>
       <div class="panel-body form-horizontal" collapse="hideDatasource">
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="type">Type</label>
-          <div class="col-sm-10">
-            <select id="type" name="type" class="form-control" type="text" ng-model="layer.Datasource.type">
-              <option value="shape">Shape</option>
-              <option value="postgis">Postgis</option>
-              <option value="sqlite">SQlite</option>
-              <option value="gdal">Gdal</option>
-            </select>
-          </div>
+        <div form-group>
+          <select name="type" type="text" ng-model="layer.Datasource.type">
+            <option value="shape">Shape</option>
+            <option value="postgis">Postgis</option>
+            <option value="sqlite">SQlite</option>
+            <option value="gdal">Gdal</option>
+          </select>
         </div>
         <div ng-include="datasourceTemplates[layer.Datasource.type]"></div>
       </div>
