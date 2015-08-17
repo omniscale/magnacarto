@@ -13,6 +13,7 @@ angular.module('magna-app')
         'has-error': undefined,
         'has-warning': undefined
       };
+      var isAce = false;
 
       var items = element.find('input');
       if (items.length === 0) {
@@ -20,6 +21,9 @@ angular.module('magna-app')
       }
       if (items.length === 0) {
         items = angular.element(element[0].getElementsByClassName('ace_editor'));
+        if(items.length > 0) {
+          isAce = true;
+        }
       }
       if(items.length === 0) {
         throw 'NoInputElementError';
@@ -37,6 +41,11 @@ angular.module('magna-app')
         item.attr('id', scope.name);
       }
       scope.id = item.attr('id');
+
+      if(isAce) {
+        item.removeAttr('id');
+        item.find('textarea').attr('id', scope.id);
+      }
 
       scope.itemScope = scope.form[scope.name];
       scope.$watchGroup(['itemScope.$dirty', 'itemScope.$invalid'],
