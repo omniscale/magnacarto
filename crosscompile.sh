@@ -25,7 +25,7 @@ function build() {
     cd $build_name
     env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
     env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnaserv
-    cp ../../../{README.md,LICENSE} ./
+    cp -r ../../../{README.md,LICENSE,app,docs/examples} ./
     cd ..
     if [ $os = windows ]; then
         zip -r $build_name.zip $build_name
