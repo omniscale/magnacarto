@@ -28,8 +28,15 @@ angular.module('magna-app')
       var item = angular.element(items[0]);
       item.addClass('form-control');
       scope.name = item.attr('name');
-      scope.title = item.attr('title') || $filter('titleCase')(scope.name);
-      scope.id = item.attr('id') || scope.name;
+      if(!item.attr('title')) {
+        item.attr('title', $filter('titleCase')(scope.name));
+      }
+      scope.title = item.attr('title');
+
+      if(!item.attr('id')) {
+        item.attr('id', scope.name);
+      }
+      scope.id = item.attr('id');
 
       scope.itemScope = scope.form[scope.name];
       scope.$watchGroup(['itemScope.$dirty', 'itemScope.$invalid'],
