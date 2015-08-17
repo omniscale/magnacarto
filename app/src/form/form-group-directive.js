@@ -2,13 +2,18 @@ angular.module('magna-app')
 
 .directive('formGroup', ['$filter', function($filter) {
   return {
-    // replace: true,
+    replace: true,
     transclude: true,
     require: '^form',
     scope: {},
     templateUrl: 'src/form/form-group.html',
     link: function(scope, element, attrs, formController) {
       scope.form = formController;
+      scope.formClass = {
+        'has-error': undefined,
+        'has-warning': undefined
+      };
+      scope.error = {};
 
       var items = element.find('input');
       if (items.length === 0) {
@@ -25,14 +30,9 @@ angular.module('magna-app')
       scope.id = item.attr('id') || scope.name;
 
       scope.itemScope = scope.form[scope.name];
-
-      scope.formClass = {
-        'has-error': undefined,
-        'has-warning': undefined
-      };
-
-      scope.$watchGroup(['itemScope.$touched', 'itemScope.$invalid'],
+      scope.$watchGroup(['itemScope.$touched', 'itemScope.$invalid', 'itemScope.$error'],
         function (n, o, scope) {
+          scope.error.required = n[0] && n[2].required;
           scope.formClass['has-error'] = n[0] && n[1];
           scope.formClass['has-warning'] = !n[0] && n[1];
       });

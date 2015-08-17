@@ -1,4 +1,8 @@
 <div class="form-group" ng-class="formClass">
   <label class="col-sm-2 control-label" for="{{ name }}">{{ title }}</label>
-  <div class="col-sm-10" ng-transclude></div>
+  <div class="col-sm-10">
+    <ng-transclude></ng-transclude>
+    <div ng-show="error.required" class="text-danger">This field is required</div>
+  </div>
+
 </div>
