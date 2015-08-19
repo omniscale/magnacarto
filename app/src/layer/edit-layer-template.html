@@ -25,7 +25,7 @@
       </div>
       <div class="panel-body form-horizontal" collapse="hideGeneral">
         <div form-group>
-          <input name="name" type="text" ng-model="layer.name" required />
+          <input name="name" type="text" ng-model="layer.name" required ng-blur="setId()"/>
         </div>
         <div form-group>
           <input name="id" type="text" ng-model="layer.id" required />

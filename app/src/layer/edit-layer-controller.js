@@ -86,6 +86,12 @@ angular.module('magna-app')
 
     };
 
+    $scope.setId = function() {
+      if($scope.layer.name !== undefined && ($scope.layer.id === undefined || $scope.layer.id === '')) {
+        $scope.layer.id = $scope.layer.name.toLowerCase().replace(new RegExp(/[^\w\d_]/g), '_');
+      }
+    };
+
     $scope.copyLayer = function(layer) {
       $scope.layer = angular.copy(layer);
       $scope.layer.name += '-copy';
