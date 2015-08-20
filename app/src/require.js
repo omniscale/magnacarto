@@ -22,7 +22,7 @@ require('libs/angular.js');
 require('libs/angular-gridster.js');
 require('libs/angular-route.js');
 require('libs/ng-websocket.js');
-require('libs/ui-bootstrap-tpls-0.12.1.js');
+require('libs/ui-bootstrap-tpls-0.13.3.js');
 require('libs/ng-sortable.js');
 require('libs/ui-ace.js');
 require('src/app.js');
