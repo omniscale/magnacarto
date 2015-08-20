@@ -1,9 +1,65 @@
 angular.module('magna-app')
 
-.controller('EditLayerCtrl', ['$scope', 'LayerService', 'EditLayerFormStatusService', '$modal', '$modalInstance', 'layer',
-  function($scope, LayerService, EditLayerFormStatusService, $modal, $modalInstance, layer) {
+.controller('EditLayerCtrl', ['$scope', 'magnaConfig', 'LayerService', 'EditLayerFormStatusService', '$modal', '$modalInstance', 'layer',
+  function($scope, magnaConfig, LayerService, EditLayerFormStatusService, $modal, $modalInstance, layer) {
     $scope.layer = angular.copy(layer);
     $scope.layers = LayerService.layers;
+
+    var uniquePush = function(array, value) {
+      if(angular.isUndefined(value)) {
+        return;
+      }
+      if(angular.isString(value)) {
+        value = value.trim();
+        if(value === '') {
+          return;
+        }
+      }
+      if(array.indexOf(value) === -1) {
+        array.push(value);
+      }
+    };
+
+    var prepareSuggestions = function(defaults) {
+      if(angular.isUndefined(defaults)) {
+        return [];
+      }
+      var target = angular.copy(defaults);
+      if(target.length > 0) {
+        target.push('_separator_');
+      }
+      return target;
+    };
+
+    $scope.srsSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.srs);
+    $scope.extentSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.extent);
+    $scope.geometryFieldSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.geometry_field);
+    $scope.sridSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.srid);
+    $scope.dbHostSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.host);
+    $scope.dbPortSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.port);
+    $scope.dbNameSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.dbname);
+    $scope.dbUserSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.user);
+    $scope.dbPasswordSuggestions = prepareSuggestions(magnaConfig.defaultSuggestions.password);
+
+    angular.forEach($scope.layers, function(_layer) {
+      if(_layer.srs !== undefined && _layer.srs !== '') {
+        uniquePush($scope.srsSuggestions, _layer.srs);
+        if(_layer.Datasource !== undefined && _layer.Datasource.type !== undefined) {
+          if(_layer.Datasource.type === 'postgis' || _layer.Datasource.type === 'sqlite') {
+              uniquePush($scope.extentSuggestions, _layer.Datasource.extent);
+              uniquePush($scope.geometryFieldSuggestions, _layer.Datasource.geometry_field);
+              uniquePush($scope.sridSuggestions, _layer.Datasource.srid);
+          }
+          if(_layer.Datasource.type === 'postgis') {
+              uniquePush($scope.dbHostSuggestions, _layer.Datasource.host);
+              uniquePush($scope.dbPortSuggestions, _layer.Datasource.port);
+              uniquePush($scope.dbNameSuggestions, _layer.Datasource.dbname);
+              uniquePush($scope.dbUserSuggestions, _layer.Datasource.user);
+              uniquePush($scope.dbPasswordSuggestions, _layer.Datasource.password);
+          }
+        }
+      }
+    });
     $scope.isNewLayer = LayerService.isDefaultLayer(layer);
 
     $scope.datasourceTemplates = {

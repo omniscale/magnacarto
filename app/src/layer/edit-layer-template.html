@@ -43,7 +43,9 @@
           </select>
         </div>
         <div form-group>
-          <input name="srs" type="text" ng-model="layer.srs" title="SRS" required />
+            <div input-dropdown="srsSuggestions" ng-model="layer.srs">
+              <input name="srs" type="text" ng-model="layer.srs" title="SRS" required />
+            </div>
         </div>
       </div>
     </div>

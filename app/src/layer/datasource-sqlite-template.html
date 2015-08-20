@@ -5,11 +5,17 @@
   <input name="file" type="text" ng-model="layer.Datasource.file" placeholder="SQLite file location" required/>
 </div>
 <div form-group>
-  <input name="extent" type="text" ng-model="layer.Datasource.extent" />
+  <div input-dropdown="extentSuggestions" ng-model="layer.Datasource.extent">
+    <input name="extent" type="text" ng-model="layer.Datasource.extent" />
+  </div>
 </div>
 <div form-group>
-  <input name="geometry_field" title="Geometry Field" type="text" ng-model="layer.Datasource.geometry_field" required />
+  <div input-dropdown="geometryFieldSuggestions" ng-model="layer.Datasource.geometry_field">
+    <input name="geometry_field" title="Geometry Field" type="text" ng-model="layer.Datasource.geometry_field" required />
+  </div>
 </div>
 <div form-group>
-  <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
+  <div input-dropdown="sridSuggestions" ng-model="layer.Datasource.srid">
+    <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
+  </div>
 </div>

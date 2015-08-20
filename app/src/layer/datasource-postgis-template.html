@@ -2,26 +2,42 @@
   <div ui-ace="{{ aceOptions }}" name="table" ng-model="layer.Datasource.table" style="height: {{ tableInputHeight }}px;" required></div>
 </div>
 <div form-group>
-  <input name="extent" type="text" ng-model="layer.Datasource.extent" />
+  <div input-dropdown="extentSuggestions" ng-model="layer.Datasource.extent">
+    <input name="extent" type="text" ng-model="layer.Datasource.extent" />
+  </div>
 </div>
 <div form-group>
-  <input name="geometry_field" title="Geometry Field" type="text" ng-model="layer.Datasource.geometry_field" required/>
+  <div input-dropdown="geometryFieldSuggestions" ng-model="layer.Datasource.geometry_field">
+    <input name="geometry_field" title="Geometry Field" type="text" ng-model="layer.Datasource.geometry_field" required />
+  </div>
 </div>
 <div form-group>
-  <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
+  <div input-dropdown="sridSuggestions" ng-model="layer.Datasource.srid">
+    <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid"/>
+  </div>
 </div>
 <div form-group>
-  <input name="host" type="text" ng-model="layer.Datasource.host" required />
+  <div input-dropdown="dbHostSuggestions" ng-model="layer.Datasource.host">
+    <input name="host" type="text" ng-model="layer.Datasource.host" required />
+  </div>
 </div>
 <div form-group>
-  <input name="port" type="number" ng-model="layer.Datasource.port" required />
+  <div input-dropdown="dbPortSuggestions" ng-model="layer.Datasource.port">
+    <input name="port" type="number" ng-model="layer.Datasource.port" required />
+  </div>
 </div>
 <div form-group>
-  <input name="dbname" title="Database Name" type="text" ng-model="layer.Datasource.dbname" required />
+  <div input-dropdown="dbNameSuggestions" ng-model="layer.Datasource.dbname">
+    <input name="dbname" title="Database Name" type="text" ng-model="layer.Datasource.dbname" required />
+  </div>
 </div>
 <div form-group>
-  <input name="user" type="text" ng-model="layer.Datasource.user" required />
+  <div input-dropdown="dbUserSuggestions" ng-model="layer.Datasource.user">
+    <input name="user" type="text" ng-model="layer.Datasource.user" required />
+  </div>
 </div>
 <div form-group>
-  <input name="password" type="text" ng-model="layer.Datasource.password" required />
+  <div input-dropdown="dbPasswordSuggestions" ng-model="layer.Datasource.password">
+    <input name="password" type="text" ng-model="layer.Datasource.password" required />
+  </div>
 </div>

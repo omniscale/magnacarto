@@ -51,3 +51,4 @@ require('src/dashboard/bookmark-map-controller.js');
 require('src/bookmarks/bookmarks-controller.js');
 require('src/about/about-controller.js');
 require('src/form/form-group-directive.js');
+require('src/form/input-dropdown-directive.js');
