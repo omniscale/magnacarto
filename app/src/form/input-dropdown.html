@@ -1,10 +1,10 @@
 <div class="input-group">
   <ng-transclude></ng-transclude>
   <div class="input-group-btn">
-    <button type="button" class="btn btn-default dropdown-toggle" ng-click="toggle();">
+    <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown">
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-right" ng-show="form.inputDropdownOpen===$id">
+    <ul class="dropdown-menu dropdown-menu-right">
       <div ng-repeat-start="suggestion in suggestions"></div>
         <li ng-if="suggestion !== '_separator_'" role="menuitem" ng-click="select(suggestion)" class="cursor-pointer"><a>{{ suggestion }}</a></li>
         <li ng-if="!$last && suggestion === '_separator_'" role="separator" class="divider"></li>

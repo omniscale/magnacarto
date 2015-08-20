@@ -447,12 +447,6 @@ div.as-sortable-dragging label {
   cursor: pointer;
 }
 
-/* overwrite bootstrap default to be able to use dropdown-menu
- * without bootstrap.js */
-.layer-form .dropdown-menu {
-  display: inherit;
-}
-
 
 /* OpenLayers 3 controls and overwrites */
 .ol-control,

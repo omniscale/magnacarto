@@ -16,6 +16,8 @@ function require(jspath) {
     document.write('<script type="text/javascript" src="'+ l + jspath+'"><\/script>');
 }
 require('libs/ol.js');
+require('libs/jquery-2.1.4.min.js');
+require('libs/bootstrap.min.js');
 require('libs/ace.js');
 require('libs/ace-mode-sql.js');
 require('libs/angular.js');
