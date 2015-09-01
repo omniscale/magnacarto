@@ -7,7 +7,7 @@ DEPS=$(GO_FILES) $(GOMAPNIK_CONFIG)
 BUILD_DATE=$(shell date +%Y%m%d)
 BUILD_REV=$(shell git rev-parse --short HEAD)
 BUILD_VERSION=dev-$(BUILD_DATE)-$(BUILD_REV)
-VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.buildVersion $(BUILD_VERSION)
+VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.buildVersion=$(BUILD_VERSION)
 
 GO=godep go
 
