@@ -25,12 +25,15 @@ function build() {
     cd $build_name
     env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
     env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnaserv
-    cp -r ../../../{README.md,LICENSE,app,docs/examples} ./
+    # use git archive to only include checked-in files
+    (cd ../../../ && git archive --format tar HEAD app README.md LICENSE) | tar -x -
+    (cd ../../../docs && git archive --format tar HEAD examples/) | tar -x -
     cd ..
     if [ $os = windows ]; then
-        zip -r $build_name.zip $build_name
+        rm -f $build_name.zip
+        zip -q -r $build_name.zip $build_name
     else
-        tar -cvzf $build_name.tar.gz $build_name
+        tar -czf $build_name.tar.gz $build_name
     fi
     rm -r $build_name
 }
