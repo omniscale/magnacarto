@@ -49,6 +49,7 @@ Current status
 - Regexp filters
 - Not all CartoCSS features are supported by the MapServer builder
 - Improved configuration
+- Support for new Mapnik 3 features
 - ...
 
 Installation
@@ -98,7 +99,7 @@ The Mapserver plugin is already included in the default `magnaserv` installation
 
 ##### Mapnik
 
-The Mapnik plugin needs to be compiled as an additional binary (`magnacarto-mapnik`). You need to have Mapnik installed with all header files. Make sure `mapnik-config` is in your `PATH`. Call `make install` to build the plugin binary.
+The Mapnik plugin needs to be compiled as an additional binary (`magnacarto-mapnik`). You need to have Mapnik installed with all header files. It supports Mapnik 2.2 and 3.0. Make sure `mapnik-config` is in your `PATH`. Call `make install` to build the plugin binary.
 
 Usage
 -----
