@@ -1,8 +1,8 @@
 angular.module('magna-app')
 
 
-.controller('BookmarksCtrl', ['$scope', 'ProjectService', 'DashboardService', 'StyleService', 'SideNavService',
-  function($scope, ProjectService, DashboardService, StyleService, SideNavService) {
+.controller('BookmarksCtrl', ['$scope', '$location', 'magnaConfig', 'ProjectService', 'DashboardService', 'StyleService', 'SideNavService',
+  function($scope, $location, magnaConfig, ProjectService, DashboardService, StyleService, SideNavService) {
     $scope.maps = ProjectService.bookmarkedMaps;
     $scope.styles = StyleService.activeStyles;
 
@@ -22,11 +22,14 @@ angular.module('magna-app')
       }
     };
 
-    $scope.restore = function(map) {
+    $scope.restore = function(event, map) {
       DashboardService.addMap({
         coords: map.coords,
         zoom: map.zoom
       });
+      if(!event[magnaConfig.selectMultipleBookmarksKey]) {
+        $location.path('dashboard/' + ProjectService.project.url);
+      }
     };
 
     $scope.remove = function(map) {
