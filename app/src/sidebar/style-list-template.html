@@ -8,13 +8,13 @@
   <div collapse="(collapsed || !active || selectedNavItem === 'projects')">
     <div class="style-list disable-select">
       <div class="active-styles style-list-item" ng-model="activeStyles" as-sortable>
-        <div class="as-sortable-item" ng-repeat="style in activeStyles" as-sortable-item>
-          <i class="glyphicon glyphicon-check cursor-pointer" ng-click="toggleSelection(style)"></i>
-          <label title="{{style}}" as-sortable-item-handle>{{ style }}</label>
+        <div class="as-sortable-item" ng-repeat="styleObj in activeStyles" as-sortable-item>
+          <i class="glyphicon glyphicon-check cursor-pointer" ng-click="toggleSelection(styleObj.style)" ng-class="{'glyphicon-unchecked': !styleObj.active, 'glyphicon-checked': styleObj.active}"></i>
+          <label title="{{styleObj.style}}" as-sortable-item-handle>{{ styleObj.style }}</label>
         </div>
       </div>
       <div class="available-styles">
-        <div class="style-list-item" ng-repeat="style in styles | orderBy:'toString()'" ng-if="activeStyles.indexOf(style) === -1">
+        <div class="style-list-item" ng-repeat="style in styles | orderBy:'toString()'" ng-if="inActiveStyles(style) === false">
           <label title="{{style}}" ng-click="toggleSelection(style)" class="cursor-pointer">
             <i class="glyphicon glyphicon-unchecked"></i>
             {{ style }}

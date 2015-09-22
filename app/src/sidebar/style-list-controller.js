@@ -16,6 +16,10 @@ angular.module('magna-app')
       StyleService.toggleStyle(style);
     };
 
+    $scope.inActiveStyles = function(style) {
+      return StyleService.inActiveStyles(style);
+    };
+
     $scope.$watch(function() {
       return StyleService.styles;
     }, function(newStyles) {
@@ -25,7 +29,7 @@ angular.module('magna-app')
     $scope.$watch(function() {
       return StyleService.activeStyles;
     }, function(newStyles) {
-      $scope.activeStyles = newStyles;
+      $scope.activeStyles = StyleService.activeStyles;
     }, true);
 
     $scope.$on('$routeChangeSuccess', function(event, toState) {
