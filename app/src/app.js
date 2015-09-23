@@ -27,7 +27,8 @@ angular.module('magna-app').constant('magnaConfig', {
     dbname: ['osm'],
     user: ['osm'],
     password: ['osm']
-  }
+  },
+  selectMultipleBookmarksKey: 'shiftKey'
 })
 
 .config(function($routeProvider){

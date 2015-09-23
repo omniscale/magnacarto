@@ -12,8 +12,18 @@ angular.module('magna-app')
       },
       link: {
         pre: function(scope) {
+          var createMMLString = function() {
+            var styles = [];
+            angular.forEach(scope.styles, function(styleObj) {
+              if(styleObj.active) {
+                styles.push(styleObj.style);
+              }
+            });
+            return styles.join(',');
+          };
+
           scope.updateSource = function() {
-            scope.params.mss = scope.styles.join(',');
+            scope.params.mss = createMMLString();
             scope.params.t = Date.now();
             scope.olSource.updateParams(scope.params);
           };
@@ -29,7 +39,7 @@ angular.module('magna-app')
             TRANSPARENT: false,
             VERSION: '1.1.1',
             mml: ProjectService.project.mml,
-            mss: scope.styles.join(','),
+            mss: createMMLString,
             base: ProjectService.project.base,
             t: Date.now()
           };
