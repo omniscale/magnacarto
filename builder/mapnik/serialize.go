@@ -427,6 +427,13 @@ func (m *Map) addMarkerSymbolizer(result *Rule, r mss.Rule) {
 		symb.Stroke = fmtColor(r.Properties.GetColor("marker-line-color"))
 		symb.StrokeWidth = fmtFloat(r.Properties.GetFloat("marker-line-width"))
 		symb.AllowOverlap = fmtBool(r.Properties.GetBool("marker-allow-overlap"))
+
+		if !ok {
+			// default marker type requires at least fill, stroke or strokewidth
+			if symb.Fill == nil && symb.Stroke == nil && symb.StrokeWidth == nil {
+				return
+			}
+		}
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
 }
