@@ -73,15 +73,27 @@ func (m *Magnacarto) Load(fileName string) error {
 func (m *Magnacarto) Locator() Locator {
 	locator := &LookupLocator{baseDir: m.BaseDir}
 	for _, dir := range m.Datasources.SQLiteDirs {
+		if !filepath.IsAbs(dir) {
+			dir = filepath.Join(m.BaseDir, dir)
+		}
 		locator.AddSQLiteDir(dir)
 	}
 	for _, dir := range m.Datasources.ImageDirs {
+		if !filepath.IsAbs(dir) {
+			dir = filepath.Join(m.BaseDir, dir)
+		}
 		locator.AddImageDir(dir)
 	}
 	for _, dir := range m.Datasources.ShapefileDirs {
+		if !filepath.IsAbs(dir) {
+			dir = filepath.Join(m.BaseDir, dir)
+		}
 		locator.AddShapeDir(dir)
 	}
 	for _, dir := range m.Mapnik.FontDirs {
+		if !filepath.IsAbs(dir) {
+			dir = filepath.Join(m.BaseDir, dir)
+		}
 		locator.AddFontDir(dir)
 	}
 	locator.SetPGConfig(m.PostGIS)
