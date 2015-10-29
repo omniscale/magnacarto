@@ -59,6 +59,15 @@ func Load(fileName string) (*Magnacarto, error) {
 	if err != nil {
 		return &config, err
 	}
+
+	// make dirs relative to BaseDir
+	// datasource dirs are converted in Locator
+	if !filepath.IsAbs(config.StylesDir) {
+		config.StylesDir = filepath.Join(config.BaseDir, config.StylesDir)
+	}
+	if !filepath.IsAbs(config.OutDir) {
+		config.OutDir = filepath.Join(config.BaseDir, config.OutDir)
+	}
 	return &config, nil
 }
 
@@ -124,7 +133,7 @@ func (l *LookupLocator) UseRelPaths(rel bool) {
 	l.relative = rel
 }
 
-func (l *LookupLocator) find(basename string, dirs []string) (fname string) {
+func (l *LookupLocator) find(basename string, dirs []string) (fname string, ok bool) {
 	defer func() {
 		if fname == "" {
 			if l.missing == nil {
@@ -161,20 +170,20 @@ func (l *LookupLocator) find(basename string, dirs []string) (fname string) {
 
 	if filepath.IsAbs(basename) {
 		if fname := check(""); fname != "" {
-			return fname
+			return fname, true
 		}
 	}
 
 	for _, d := range dirs {
 		if fname := check(d); fname != "" {
-			return fname
+			return fname, true
 		}
 	}
 	if fname := check(l.baseDir); fname != "" {
-		return fname
+		return fname, true
 	}
 
-	return ""
+	return "", false
 }
 
 func (l *LookupLocator) AddFontDir(dir string) {
@@ -195,7 +204,7 @@ func (l *LookupLocator) SetPGConfig(pgConfig PostGIS) {
 
 func (l *LookupLocator) Font(basename string) string {
 	for _, variation := range fontVariations(basename, ".ttf") {
-		if file := l.find(variation, l.fontDirs); file != "" {
+		if file, ok := l.find(variation, l.fontDirs); ok {
 			return file
 		}
 	}
@@ -203,13 +212,16 @@ func (l *LookupLocator) Font(basename string) string {
 }
 
 func (l *LookupLocator) SQLite(basename string) string {
-	return l.find(basename, l.sqliteDirs)
+	fname, _ := l.find(basename, l.sqliteDirs)
+	return fname
 }
 func (l *LookupLocator) Shape(basename string) string {
-	return l.find(basename, l.shapeDirs)
+	fname, _ := l.find(basename, l.shapeDirs)
+	return fname
 }
 func (l *LookupLocator) Image(basename string) string {
-	return l.find(basename, l.imageDirs)
+	fname, _ := l.find(basename, l.imageDirs)
+	return fname
 }
 func (l *LookupLocator) PostGIS(ds mml.PostGIS) mml.PostGIS {
 	if l.pgConfig == nil {
