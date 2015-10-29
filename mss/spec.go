@@ -231,6 +231,7 @@ func init() {
 		"text-min-padding":       isNumber,
 		"text-name":              isString,
 		"text-opacity":           isNumber,
+		"text-orientation":       isNumber,
 		"text-placement":         isKeyword("line", "point", "vertex", "interior"),
 		"text-size":              isNumber,
 		"text-spacing":           isNumber,

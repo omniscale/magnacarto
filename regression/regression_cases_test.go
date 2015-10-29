@@ -18,6 +18,7 @@ func Test_030_labels_sizes(t *testing.T)       { testIt(t, testCase{Name: "030-l
 func Test_031_label_point(t *testing.T)        { testIt(t, testCase{Name: "031-label-point"}) }
 func Test_032_label_point_dxdy(t *testing.T)   { testIt(t, testCase{Name: "032-label-point-dxdy"}) }
 func Test_033_label_fields(t *testing.T)       { testIt(t, testCase{Name: "033-label-fields"}) }
+func Test_034_label_orientation(t *testing.T)  { testIt(t, testCase{Name: "034-label-orientation"}) }
 func Test_040_point_svg(t *testing.T)          { testIt(t, testCase{Name: "040-point-svg"}) }
 func Test_041_marker_svg(t *testing.T)         { testIt(t, testCase{Name: "041-marker-svg"}) }
 func Test_042_marker_arrow(t *testing.T)       { testIt(t, testCase{Name: "042-marker-arrow"}) }

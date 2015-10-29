@@ -137,6 +137,7 @@ type TextSymbolizer struct {
 	MinimumPadding   *string  `xml:"minimum-padding,attr"`
 	Name             *string  `xml:",chardata"`
 	Opacity          *string  `xml:"opacity,attr"`
+	Orientation      *string  `xml:"orientation,attr"`
 	Placement        *string  `xml:"placement,attr"`
 	Size             *string  `xml:"size,attr"`
 	Spacing          *string  `xml:"spacing,attr"`

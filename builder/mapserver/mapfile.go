@@ -376,6 +376,8 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 			style.AddNonNil("Partials", fmtBool(!avoidEdges, true))
 		}
 
+		style.AddNonNil("Angle", fmtFloat(r.Properties.GetFloat("text-orientation")))
+
 		// TODO http://mapserver.org/development/rfc/ms-rfc-57.html
 		style.AddNonNil("MinDistance", fmtFloat(r.Properties.GetFloat("text-spacing")))
 		style.AddNonNil("RepeatDistance", fmtFloat(r.Properties.GetFloat("text-spacing")))

@@ -8,7 +8,7 @@
     text-face-name: "Noto Sans Regular";
     text-placement: point;
 
-    [id=1] { text-name: [name] + [id]; }
-    [id=2] { text-name: '|' + [name] + '|'; } // TODO not supported by mapserver
+    [id=1] { text-name: [name] + "-" + [id]; }
+    [id=2] { text-name: '|' + [name] + '|'; } // TODO | not supported by mapserver
     [id=3] { text-name: "{" + [name] + "}"; }
 }
