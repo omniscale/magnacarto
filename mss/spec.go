@@ -46,6 +46,18 @@ func isStringOrStrings(val interface{}) bool {
 	return isString(val) || isStrings(val)
 }
 
+func isFieldOr(other isValid) isValid {
+	return func(val interface{}) bool {
+		if s, ok := val.(string); ok {
+			if len(s) > 2 && s[0] == '[' && s[len(s)-1] == ']' {
+				return true
+			}
+			return false
+		}
+		return other(val)
+	}
+}
+
 func isColor(val interface{}) bool {
 	_, ok := val.(color.RGBA)
 	return ok
@@ -56,7 +68,7 @@ func isBool(val interface{}) bool {
 	return ok
 }
 
-func isKeyword(keywords ...string) func(interface{}) bool {
+func isKeyword(keywords ...string) isValid {
 	return func(val interface{}) bool {
 		k, ok := val.(string)
 		if !ok {
@@ -231,7 +243,7 @@ func init() {
 		"text-min-padding":       isNumber,
 		"text-name":              isString,
 		"text-opacity":           isNumber,
-		"text-orientation":       isNumber,
+		"text-orientation":       isFieldOr(isNumber),
 		"text-placement":         isKeyword("line", "point", "vertex", "interior"),
 		"text-size":              isNumber,
 		"text-spacing":           isNumber,

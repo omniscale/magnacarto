@@ -368,7 +368,7 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		style := NewBlock("LABEL")
 		style.AddNonNil("Size", fmtFloat(textSize*FontFactor-0.5, true))
 		style.AddNonNil("Color", fmtColor(r.Properties.GetColor("text-fill")))
-		style.AddNonNil("Text", fmtField(r.Properties.GetFieldList("text-name")))
+		style.AddNonNil("Text", fmtFieldString(r.Properties.GetFieldList("text-name")))
 
 		style.AddNonNil("Force", fmtBool(r.Properties.GetBool("text-allow-overlap")))
 
@@ -376,7 +376,11 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 			style.AddNonNil("Partials", fmtBool(!avoidEdges, true))
 		}
 
-		style.AddNonNil("Angle", fmtFloat(r.Properties.GetFloat("text-orientation")))
+		if v, ok := r.Properties.GetFloat("text-orientation"); ok {
+			style.AddNonNil("Angle", fmtFloat(v, true))
+		} else if v, ok := r.Properties.GetFieldList("text-orientation"); ok {
+			style.AddNonNil("Angle", fmtField(v, true))
+		}
 
 		// TODO http://mapserver.org/development/rfc/ms-rfc-57.html
 		style.AddNonNil("MinDistance", fmtFloat(r.Properties.GetFloat("text-spacing")))
@@ -425,7 +429,7 @@ func (m *Map) addShieldSymbolizer(b *Block, r mss.Rule) (styled bool) {
 		if shieldSize, ok := r.Properties.GetFloat("shield-size"); ok {
 			style.AddNonNil("Size", fmtFloat(shieldSize*FontFactor-0.5, true))
 			style.AddNonNil("Color", fmtColor(r.Properties.GetColor("shield-fill")))
-			style.AddNonNil("Text", fmtField(r.Properties.GetFieldList("shield-name")))
+			style.AddNonNil("Text", fmtFieldString(r.Properties.GetFieldList("shield-name")))
 
 			style.AddNonNil("Force", fmtBool(r.Properties.GetBool("shield-allow-overlap")))
 
@@ -985,7 +989,8 @@ func fmtPattern(v []float64, ok bool) *Block {
 	return &b
 }
 
-func fmtField(vals []interface{}, ok bool) *string {
+// fmtFieldString formats a list of fields as single quoted string, eg. 'Foo: [name]'
+func fmtFieldString(vals []interface{}, ok bool) *string {
 	if !ok {
 		return nil
 	}
@@ -1000,6 +1005,24 @@ func fmtField(vals []interface{}, ok bool) *string {
 		}
 	}
 	r := "'" + strings.Join(parts, "") + "'"
+	return &r
+}
+
+// fmtField formats a field as a single attribute, eg. [angle]
+func fmtField(vals []interface{}, ok bool) *string {
+	if !ok {
+		return nil
+	}
+	var r string
+	if len(vals) != 1 {
+		return nil
+	}
+	switch vals[0].(type) {
+	case mss.Field:
+		r = escapeSingleQuote(string(vals[0].(mss.Field)))
+	case string:
+		r = escapeSingleQuote(vals[0].(string))
+	}
 	return &r
 }
 

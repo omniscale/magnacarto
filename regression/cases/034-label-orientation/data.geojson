@@ -56,6 +56,21 @@
           53.149061060139786
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "name": "Point 5",
+        "rotation": -45
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.215923641204834,
+          53.150061060139786
+        ]
+      }
     }
   ]
 }

@@ -9,4 +9,5 @@
     [id=1] { text-orientation: 80;}
     [id=2] { text-orientation: -80; }
     [id=3] { text-orientation: 80 + 360; }
+    [id=4] { text-orientation: [rotation]; }
 }

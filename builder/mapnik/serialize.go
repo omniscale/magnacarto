@@ -323,7 +323,12 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 
 		symb.Dx = fmtFloat(r.Properties.GetFloat("text-dx"))
 		symb.Dy = fmtFloat(r.Properties.GetFloat("text-dy"))
-		symb.Orientation = fmtFloat(r.Properties.GetFloat("text-orientation"))
+
+		if v, ok := r.Properties.GetFloat("text-orientation"); ok {
+			symb.Orientation = fmtFloat(v, true)
+		} else if v, ok := r.Properties.GetFieldList("text-orientation"); ok {
+			symb.Orientation = fmtField(v, true)
+		}
 
 		symb.CharacterSpacing = fmtFloat(r.Properties.GetFloat("text-character-spacing"))
 		symb.LineSpacing = fmtFloat(r.Properties.GetFloat("text-line-spacing"))
