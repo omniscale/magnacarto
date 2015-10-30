@@ -38,6 +38,7 @@ func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
 	q.Set("STYLES", "")
 	q.Set("LAYERS", "map")
 	q.Set("MAP", mapfile)
+	q.Set("TRANSPARENT", "false")
 
 	q.Set("BBOX", fmt.Sprintf("%f,%f,%f,%f", mapReq.BBOX[0], mapReq.BBOX[1], mapReq.BBOX[2], mapReq.BBOX[3]))
 	q.Set("WIDTH", fmt.Sprintf("%d", mapReq.Width))
