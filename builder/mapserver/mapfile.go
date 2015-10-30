@@ -312,6 +312,10 @@ func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
 		style := NewBlock("STYLE")
 		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor, true))
+		if width*LineWidthFactor > 32 {
+			// MaxWidth defaults to 32, override for wider lines
+			style.AddNonNil("MaxWidth", fmtFloat(width*LineWidthFactor, true))
+		}
 		if pat := fmtPattern(r.Properties.GetFloatList("line-dasharray")); pat != nil {
 			style.Add("", pat)
 		}
