@@ -15,16 +15,17 @@ import (
 
 // Builder builds map styles from MML and MSS files.
 type Builder struct {
-	dstMap    Map
-	mss       []string
-	mml       string
-	locator   config.Locator
-	dumpRules io.Writer
+	dstMap          Map
+	mss             []string
+	mml             string
+	locator         config.Locator
+	dumpRules       io.Writer
+	includeInactive bool
 }
 
 // New returns a Builder
 func New(mw Map) *Builder {
-	return &Builder{dstMap: mw}
+	return &Builder{dstMap: mw, includeInactive: true}
 }
 
 // AddMSS adds another mss file to this builder.
@@ -40,6 +41,11 @@ func (b *Builder) SetMML(mml string) {
 // SetDumpRulesDest enables internal debuging output.
 func (b *Builder) SetDumpRulesDest(w io.Writer) {
 	b.dumpRules = w
+}
+
+// SetIncludeInactive set whether status=off layers should be included in output.
+func (b *Builder) SetIncludeInactive(includeInactive bool) {
+	b.includeInactive = includeInactive
 }
 
 // Build parses MML, MSS files, builds all rules and adds them to the Map.
@@ -100,7 +106,7 @@ func (b *Builder) Build() error {
 				fmt.Fprintln(b.dumpRules, r.String())
 			}
 		}
-		if len(rules) > 0 {
+		if len(rules) > 0 && l.Active || b.includeInactive {
 			b.dstMap.AddLayer(l, rules)
 		}
 	}

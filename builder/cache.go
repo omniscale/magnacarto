@@ -281,6 +281,7 @@ func (c *Cache) build(style *style) error {
 
 	m := style.mapMaker.New(l)
 	builder := New(m)
+	builder.SetIncludeInactive(false)
 
 	builder.SetMML(style.mml)
 	for _, mss := range style.mss {
