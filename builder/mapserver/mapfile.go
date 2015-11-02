@@ -159,6 +159,7 @@ func (m *Map) WriteFiles(basename string) error {
 type classGroup struct {
 	name    string
 	classes []Block
+	opacity float64
 }
 
 func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
@@ -192,6 +193,9 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 			}
 			style = classGroup{name: styleName}
 		}
+		if v, ok := r.Properties.GetFloat("opacity"); ok {
+			style.opacity = v
+		}
 		c, ok := m.newClass(r, t)
 		if ok {
 			style.classes = append(style.classes, *c)
@@ -212,6 +216,10 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 		}
 		if z := z.Last(); z < 22 {
 			l.Add("MinScaleDenom", zoomRanges[z+1])
+		}
+
+		if style.opacity != 0 {
+			l.AddNonNil("Opacity", fmtFloat(style.opacity, true))
 		}
 
 		if layer.Active {
