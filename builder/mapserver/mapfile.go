@@ -329,7 +329,9 @@ func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 		}
 
 		style.AddDefault("Color", fmtColor(r.Properties.GetColor("line-color")), "0 0 0")
-		style.AddNonNil("Opacity", fmtFloat(r.Properties.GetFloat("line-opacity")))
+		if opacity, ok := r.Properties.GetFloat("line-opacity"); ok {
+			style.AddNonNil("Opacity", fmtFloat(opacity*100, true))
+		}
 		style.AddDefault("Linecap", fmtKeyword(r.Properties.GetString("line-cap")), "BUTT")
 		style.AddDefault("Linejoin", fmtKeyword(r.Properties.GetString("line-join")), "MITER")
 		b.Add("", style)
@@ -342,7 +344,12 @@ func (m *Map) addPolygonOutlineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
 		style := NewBlock("STYLE")
 		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor, true))
-		style.AddNonNil("OutlineColor", fmtColor(r.Properties.GetColor("line-color")))
+		if c, ok := r.Properties.GetColor("line-color"); ok {
+			if opacity, ok := r.Properties.GetFloat("line-opacity"); ok {
+				c = color.FadeOut(c, 1-opacity)
+			}
+			style.AddNonNil("OutlineColor", fmtColor(c, true))
+		}
 		if pat := fmtPattern(r.Properties.GetFloatList("line-dasharray")); pat != nil {
 			style.Add("", pat)
 		}
@@ -358,7 +365,9 @@ func (m *Map) addPolygonSymbolizer(b *Block, r mss.Rule) (styled bool) {
 	if fill, ok := r.Properties.GetColor("polygon-fill"); ok {
 		style := NewBlock("STYLE")
 		style.AddNonNil("Color", fmtColor(fill, true))
-		style.AddNonNil("Opacity", fmtFloat(r.Properties.GetFloat("polygon-opacity")))
+		if opacity, ok := r.Properties.GetFloat("polygon-opacity"); ok {
+			style.AddNonNil("Opacity", fmtFloat(opacity*100, true))
+		}
 		b.Add("", style)
 		return true
 	}

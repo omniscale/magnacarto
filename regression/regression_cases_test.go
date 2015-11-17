@@ -14,6 +14,7 @@ func Test_020_polygons_default(t *testing.T)   { testIt(t, testCase{Name: "020-p
 func Test_021_polygons(t *testing.T)           { testIt(t, testCase{Name: "021-polygons"}) }
 func Test_022_polygon_patterns(t *testing.T)   { testIt(t, testCase{Name: "022-polygon-patterns"}) }
 func Test_023_polygons_buildings(t *testing.T) { testIt(t, testCase{Name: "023-polygons-buildings"}) }
+func Test_024_polygons_opacity(t *testing.T)   { testIt(t, testCase{Name: "024-polygons-opacity"}) }
 func Test_030_labels_sizes(t *testing.T)       { testIt(t, testCase{Name: "030-labels-sizes"}) }
 func Test_031_label_point(t *testing.T)        { testIt(t, testCase{Name: "031-label-point"}) }
 func Test_032_label_point_dxdy(t *testing.T)   { testIt(t, testCase{Name: "032-label-point-dxdy"}) }

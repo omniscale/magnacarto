@@ -1,0 +1,48 @@
+{
+  "Layer": [
+    {
+      "Datasource": {
+        "file": "data.geojson",
+        "srs": "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
+        "srid": "4326",
+        "layer": "OGRGeoJSON",
+        "type": "ogr"
+      },
+      "advanced": {},
+      "class": "",
+      "extent": [
+        -179.999999974944,
+        -85.051128777645,
+        179.999999974944,
+        85.051128777645
+      ],
+      "geometry": "polygon",
+      "id": "test",
+      "name": "test",
+      "srs": "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
+      "srs-name": "WGS84"
+    }
+  ],
+  "Stylesheet": [
+    "test.mss"
+  ],
+  "bounds": [
+    9.8876,
+    53.4926,
+    10.0895,
+    53.5913
+  ],
+  "center": [
+    9.9604,
+    53.544,
+    10
+  ],
+  "description": "",
+  "format": "png",
+  "maxzoom": 19,
+  "metatile": 6,
+  "minzoom": 0,
+  "name": "Magnacarto Test",
+  "scale": 1,
+  "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+}
