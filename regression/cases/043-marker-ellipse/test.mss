@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 #test {
   marker-type: ellipse;
   marker-line-width: 1;

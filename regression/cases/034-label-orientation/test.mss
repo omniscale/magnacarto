@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 #test::label{
     text-size: 14;
     text-halo-radius: 2;

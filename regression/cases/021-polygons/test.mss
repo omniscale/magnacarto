@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 #test[type="cemetery"] {
     line-color: #26c600;
     line-width: 8;

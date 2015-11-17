@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 #test{
     marker-file: url(rail-24.svg);
 

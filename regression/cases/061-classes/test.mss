@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 .testlines {
     line-width: 5;
 }

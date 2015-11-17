@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 #test {
     line-color: #26c600;
     line-width: 1;

@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 #test {
   [id=1] {
     [zoom >= 13] {

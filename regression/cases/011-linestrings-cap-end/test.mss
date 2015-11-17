@@ -1,3 +1,5 @@
+Map { background-color: white; }
+
 #test::outline{
     line-width: 16;
     line-color: #555;

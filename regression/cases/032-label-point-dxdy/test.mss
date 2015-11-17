@@ -1,3 +1,4 @@
+Map { background-color: white; }
 
 #test::label{
     text-name: [name];
