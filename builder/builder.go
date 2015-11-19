@@ -106,7 +106,7 @@ func (b *Builder) Build() error {
 				fmt.Fprintln(b.dumpRules, r.String())
 			}
 		}
-		if len(rules) > 0 && l.Active || b.includeInactive {
+		if len(rules) > 0 && (l.Active || b.includeInactive) {
 			b.dstMap.AddLayer(l, rules)
 		}
 	}
