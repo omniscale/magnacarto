@@ -127,16 +127,16 @@ func main() {
 	}
 
 	if err := b.Build(); err != nil {
-		log.Fatal("error building map: ", err)
+		log.Fatal("error building style: ", err)
 	}
 
 	if *outFile == "" || *outFile == "-" {
 		if err := m.Write(os.Stdout); err != nil {
-			log.Fatal("error writing map to stdout: ", err)
+			log.Fatal("error writing style to stdout: ", err)
 		}
 	} else {
 		if err := m.WriteFiles(*outFile); err != nil {
-			log.Fatal("error writing map: ", err)
+			log.Fatal("error writing style: ", err)
 		}
 	}
 
