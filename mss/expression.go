@@ -99,6 +99,9 @@ func (e *expression) evaluate() (Value, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(codes) == 0 {
+		return nil, fmt.Errorf("unable to evaluate expression")
+	}
 	if len(codes) > 1 {
 		// create copy since c points to internal code slice
 		l := make([]Value, 0, len(codes))
