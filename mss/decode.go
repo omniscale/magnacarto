@@ -210,6 +210,8 @@ func (d *Decoder) valueType(v interface{}) codeType {
 		return typeNum
 	case color.RGBA:
 		return typeColor
+	case bool:
+		return typeBool
 	case []Value:
 		return typeList // TODO convert v to typeList?
 	default:

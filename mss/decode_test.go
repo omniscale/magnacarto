@@ -234,6 +234,12 @@ func TestParseMissingVar(t *testing.T) {
 	assert.Contains(t, err.Error(), "missing var bar")
 }
 
+func TestParseBoolVar(t *testing.T) {
+	d, err := decodeString(`@foo: false; @bar: @foo;`)
+	assert.NoError(t, err)
+	assert.Equal(t, false, d.vars.getKey(key{name: "bar"}))
+}
+
 func TestParseList(t *testing.T) {
 	d, err := decodeString(`@foo: 1, 2, 3;`)
 	assert.NoError(t, err)
