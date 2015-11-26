@@ -135,6 +135,7 @@ func evaluate(codes []code) ([]code, int, error) {
 			if err != nil {
 				return v, 0, err
 			}
+			// TODO refactor parameter checking
 			if colorF, ok := colorFuncs[c.Value.(string)]; ok {
 				if len(v) != 2 {
 					return nil, 0, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
@@ -146,6 +147,17 @@ func evaluate(codes []code) ([]code, int, error) {
 					return nil, 0, fmt.Errorf("function %s requires number/percent as second argument, got %v", c.Value.(string), v[1])
 				}
 				v = []code{{Value: colorF(v[0].Value.(color.RGBA), v[1].Value.(float64)/100), T: typeColor}}
+			} else if c.Value.(string) == "mix" {
+				if len(v) != 3 {
+					return nil, 0, fmt.Errorf("function mix takes exactly three arguments, got %d", len(v))
+				}
+				if v[0].T != typeColor || v[1].T != typeColor {
+					return nil, 0, fmt.Errorf("function mix requires color as first and second argument, got %v and %v", v[0], v[1])
+				}
+				if v[2].T != typeNum && v[2].T != typePercent {
+					return nil, 0, fmt.Errorf("function mix requires number/percent as this argument, got %v", v[2])
+				}
+				v = []code{{Value: color.Mix(v[0].Value.(color.RGBA), v[1].Value.(color.RGBA), v[2].Value.(float64)/100), T: typeColor}}
 			} else if c.Value.(string) == "-mc-set-hue" {
 				if len(v) != 2 {
 					return nil, 0, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
