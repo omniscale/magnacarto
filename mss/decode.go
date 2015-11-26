@@ -189,6 +189,9 @@ func (d *Decoder) evaluateExpression(expr *expression) Value {
 				d.vars.set(varname, v)
 			}
 			t := d.valueType(v)
+			if t == typeUnknown {
+				d.error(expr.pos, "unable to determine type of var %s (%v)", varname, v)
+			}
 			expr.code[i] = code{Value: v, T: t}
 		}
 	}
