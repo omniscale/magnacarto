@@ -206,8 +206,12 @@ func (l *LookupLocator) Font(basename string) string {
 	for _, variation := range fontVariations(basename, ".ttf") {
 		if file, ok := l.find(variation, l.fontDirs); ok {
 			return file
+		} else {
+			// only record basename, if all variations fail
+			delete(l.missing, variation)
 		}
 	}
+	l.missing[basename] = struct{}{}
 	return ""
 }
 
