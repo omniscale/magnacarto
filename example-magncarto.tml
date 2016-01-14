@@ -1,0 +1,28 @@
+# Example magnacarto configuration.
+
+styles_dir = "/magnacarto-projects"
+
+# where to store temporary .xml and .map files
+out_dir = "/tmp/magnacarto-styles"
+
+[datasources]
+# where to search for data/image files
+shapefile_dirs = ["/shapefiles"]
+sqlite_dirs = ["/sqlites"]
+image_dirs = [
+    "/images",
+    "/other-images",
+]
+
+[mapnik]
+# where to search for .ttf files
+# font_dirs = ["/Library/Fonts"]
+
+[postgis]
+# db connection, will overwrite any connection params in your .mml
+username = "osm"
+password = "osm"
+database = "osm"
+host = "localhost"
+port = "5432" # as string!
+srid = "3857" # as string!
