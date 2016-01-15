@@ -9,7 +9,7 @@ BUILD_REV=$(shell git rev-parse --short HEAD)
 BUILD_VERSION=dev-$(BUILD_DATE)-$(BUILD_REV)
 VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.buildVersion=$(BUILD_VERSION)
 
-GO=godep go
+GO=$(GOPATH)/bin/godep go
 
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
 uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
@@ -59,4 +59,3 @@ test:
 test-full:
 	$(GO) test ./... -i
 	export PATH=$(shell pwd):$$PATH; $(GO) test -parallel 4 ./...
-
