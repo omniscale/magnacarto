@@ -119,7 +119,7 @@ See `magnacarto -help` for more options.
 ### magnaserv
 
 
-Magnaserv is a web-frontend for Magnacasta. Make sure the `./app` directory is in your working directory or next to the `magnaserv` executable.
+Magnaserv is a web-frontend for Magnacarto. Make sure the `./app` directory is in your working directory or next to the `magnaserv` executable.
 
 
 To start magnaserv on port 7070:
