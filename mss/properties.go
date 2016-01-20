@@ -243,12 +243,12 @@ func (p *Properties) GetFloat(property string) (float64, bool) {
 	return r, ok
 }
 
-func (p *Properties) GetColor(property string) (color.RGBA, bool) {
+func (p *Properties) GetColor(property string) (color.Color, bool) {
 	v, ok := p.get(property)
 	if !ok {
-		return color.RGBA{}, false
+		return color.Color{}, false
 	}
-	r, ok := v.(color.RGBA)
+	r, ok := v.(color.Color)
 	return r, ok
 }
 

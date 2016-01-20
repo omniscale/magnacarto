@@ -32,7 +32,7 @@ var Maker = maker{}
 type Map struct {
 	Map            Block
 	Layers         Block
-	bgColor        *color.RGBA
+	bgColor        *color.Color
 	fonts          map[string]string
 	svgSymbols     map[string]string
 	pointSymbols   map[string]struct{}
@@ -76,7 +76,7 @@ func New(locator config.Locator) *Map {
 	}
 }
 
-func (m *Map) SetBackgroundColor(c color.RGBA) {
+func (m *Map) SetBackgroundColor(c color.Color) {
 	m.bgColor = &c
 }
 
@@ -955,16 +955,12 @@ func fmtBool(v bool, ok bool) *string {
 	return &r
 }
 
-func fmtColor(v color.RGBA, ok bool) *string {
+func fmtColor(v color.Color, ok bool) *string {
 	if !ok {
 		return nil
 	}
 	var r string
-	if v.A != 1.0 {
-		r = fmt.Sprintf(`"#%02x%02x%02x%02x"`, int(v.R*255), int(v.G*255), int(v.B*255), int(v.A*255))
-	} else {
-		r = fmt.Sprintf(`"#%02x%02x%02x"`, int(v.R*255), int(v.G*255), int(v.B*255))
-	}
+	r = v.HexString()
 	return &r
 }
 

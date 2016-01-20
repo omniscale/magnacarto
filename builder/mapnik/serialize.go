@@ -55,7 +55,7 @@ func (m *Map) SetAutoTypeFilter(enable bool) {
 	m.autoTypeFilter = enable
 }
 
-func (m *Map) SetBackgroundColor(c color.RGBA) {
+func (m *Map) SetBackgroundColor(c color.Color) {
 	m.XML.BgColor = fmtColor(c, true)
 }
 
@@ -584,7 +584,7 @@ func fmtBool(v bool, ok bool) *string {
 	return &r
 }
 
-func fmtColor(v color.RGBA, ok bool) *string {
+func fmtColor(v color.Color, ok bool) *string {
 	if !ok {
 		return nil
 	}
