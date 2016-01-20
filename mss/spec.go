@@ -59,7 +59,7 @@ func isFieldOr(other isValid) isValid {
 }
 
 func isColor(val interface{}) bool {
-	_, ok := val.(color.RGBA)
+	_, ok := val.(color.Color)
 	return ok
 }
 

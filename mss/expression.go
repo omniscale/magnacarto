@@ -146,7 +146,7 @@ func evaluate(codes []code) ([]code, int, error) {
 				if v[1].T != typeNum && v[1].T != typePercent {
 					return nil, 0, fmt.Errorf("function %s requires number/percent as second argument, got %v", c.Value.(string), v[1])
 				}
-				v = []code{{Value: colorF(v[0].Value.(color.RGBA), v[1].Value.(float64)/100), T: typeColor}}
+				v = []code{{Value: colorF(v[0].Value.(color.Color), v[1].Value.(float64)/100), T: typeColor}}
 			} else if c.Value.(string) == "mix" {
 				if len(v) != 3 {
 					return nil, 0, fmt.Errorf("function mix takes exactly three arguments, got %d", len(v))
@@ -157,7 +157,7 @@ func evaluate(codes []code) ([]code, int, error) {
 				if v[2].T != typeNum && v[2].T != typePercent {
 					return nil, 0, fmt.Errorf("function mix requires number/percent as this argument, got %v", v[2])
 				}
-				v = []code{{Value: color.Mix(v[0].Value.(color.RGBA), v[1].Value.(color.RGBA), v[2].Value.(float64)/100), T: typeColor}}
+				v = []code{{Value: color.Mix(v[0].Value.(color.Color), v[1].Value.(color.Color), v[2].Value.(float64)/100), T: typeColor}}
 			} else if c.Value.(string) == "-mc-set-hue" {
 				if len(v) != 2 {
 					return nil, 0, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
@@ -168,7 +168,7 @@ func evaluate(codes []code) ([]code, int, error) {
 				if v[1].T != typeColor {
 					return nil, 0, fmt.Errorf("function %s requires color as second argument, got %v", c.Value.(string), v[1])
 				}
-				v = []code{{Value: color.SetHue(v[0].Value.(color.RGBA), v[1].Value.(color.RGBA)), T: typeColor}}
+				v = []code{{Value: color.SetHue(v[0].Value.(color.Color), v[1].Value.(color.Color)), T: typeColor}}
 			} else if c.Value.(string) == "rgb" || c.Value.(string) == "rgba" {
 				if c.Value.(string) == "rgb" && len(v) != 3 {
 					return nil, 0, fmt.Errorf("rgb takes exactly three arguments, got %d", len(v))
@@ -198,12 +198,52 @@ func evaluate(codes []code) ([]code, int, error) {
 						c[i] = 255
 					}
 				}
+				h, s, l := color.RgbToHsl(c[0], c[1], c[2])
 				v = []code{{
-					Value: color.RGBA{
+					Value: color.Color{
+						h,
+						s,
+						l,
+						c[3],
+						false,
+					},
+					T: typeColor}}
+			} else if c.Value.(string) == "hsl" || c.Value.(string) == "hsla" {
+				if c.Value.(string) == "hsl" && len(v) != 3 {
+					return nil, 0, fmt.Errorf("hsl takes exactly three arguments, got %d", len(v))
+				}
+				if c.Value.(string) == "hsla" && len(v) != 4 {
+					return nil, 0, fmt.Errorf("hsla takes exactly four arguments, got %d", len(v))
+				}
+				c := [4]float64{1, 1, 1, 1}
+				for i := range v {
+					if v[i].T == typeNum {
+						if i == 0 {
+							c[i] = v[i].Value.(float64)
+						} else {
+							c[i] = v[i].Value.(float64) // saturation, lightness, alpha values are from 0.0-1.0
+							if c[i] > 1.0 {
+								c[i] /= 100 // TODO or clamp? compat with Carto?
+							}
+						}
+					} else if v[i].T == typePercent {
+						c[i] = v[i].Value.(float64) / 100
+					} else {
+						return nil, 0, fmt.Errorf("hsl/hsla takes float or percent arguments only, got %v", v[i])
+					}
+					if c[i] < 0 {
+						c[i] = 0
+					} else if c[i] > 100 {
+						c[i] = 100
+					}
+				}
+				v = []code{{
+					Value: color.Color{
 						c[0],
 						c[1],
 						c[2],
 						c[3],
+						false,
 					},
 					T: typeColor}}
 			} else if c.Value.(string) == "stop" {
@@ -217,7 +257,7 @@ func evaluate(codes []code) ([]code, int, error) {
 					return nil, 0, fmt.Errorf("stop takes color as second argument only, got %v", v[i])
 				}
 				val := int(v[0].Value.(float64))
-				c := v[1].Value.(color.RGBA)
+				c := v[1].Value.(color.Color)
 				v = []code{{
 					Value: Stop{Value: val, Color: c},
 					T:     typeStop},
@@ -261,7 +301,7 @@ func evaluate(codes []code) ([]code, int, error) {
 			} else if c.T == typeAdd && a.T == typeFieldExpr && b.T == typeString {
 				codes[top] = code{T: typeFieldExpr, Value: append(a.Value.([]Value), b.Value.(string))}
 			} else if c.T == typeMultiply && a.T == typeColor && b.T == typeNum {
-				c := a.Value.(color.RGBA)
+				c := a.Value.(color.Color)
 				f := b.Value.(float64)
 				c = color.Multiply(c, f)
 				codes[top] = code{T: typeColor, Value: c}
@@ -276,14 +316,14 @@ func evaluate(codes []code) ([]code, int, error) {
 
 type Stop struct {
 	Value int
-	Color color.RGBA
+	Color color.Color
 }
 
 type functype func(args []code) ([]code, error)
 
 var colorFuncs map[string]colorFunc
 
-type colorFunc func(color.RGBA, float64) color.RGBA
+type colorFunc func(color.Color, float64) color.Color
 
 func init() {
 	colorFuncs = map[string]colorFunc{

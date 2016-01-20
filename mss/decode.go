@@ -208,7 +208,7 @@ func (d *Decoder) valueType(v interface{}) codeType {
 		return typeString
 	case float64:
 		return typeNum
-	case color.RGBA:
+	case color.Color:
 		return typeColor
 	case bool:
 		return typeBool

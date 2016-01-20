@@ -28,6 +28,11 @@
 			"Rev": "8096f47503459bcc74d1f4c487b7e6e42e5746b5"
 		},
 		{
+			"ImportPath": "github.com/husl-colors/husl-go",
+			"Comment": "v1.0.0-3-g5702cec",
+			"Rev": "5702ceca9df8d6859c989e22797ebb7e5ee18b96"
+		},
+		{
 			"ImportPath": "github.com/natefinch/pie",
 			"Rev": "83bfd1821ee0ba96a47d98cbed424313fb60f57a"
 		},

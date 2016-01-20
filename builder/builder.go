@@ -120,7 +120,7 @@ func (b *Builder) Build() error {
 }
 
 type MapOptionsSetter interface {
-	SetBackgroundColor(color.RGBA)
+	SetBackgroundColor(color.Color)
 }
 
 type Writer interface {
