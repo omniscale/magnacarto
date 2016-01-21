@@ -92,6 +92,8 @@ func (color Color) ToPerceptual() Color {
 		// transformed into HUSL values easily
 		r, g, b := HslToRgb(color.H, color.S, color.L)
 		color.H, color.S, color.L = husl.HuslFromRGB(r, g, b)
+		color.S /= 100
+		color.L /= 100
 		color.Perceptual = true
 		return color
 	}
@@ -113,7 +115,7 @@ func (color Color) ToStandard() Color {
 func (color Color) String() string {
 	var r, g, b float64
 	if color.Perceptual {
-		r, g, b = husl.HuslToRGB(color.H, color.S, color.L)
+		r, g, b = husl.HuslToRGB(color.H, color.S * 100.0, color.L * 100.0)
 	} else {
 		r, g, b = HslToRgb(color.H, color.S, color.L)
 	}

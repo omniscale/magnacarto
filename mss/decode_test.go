@@ -107,6 +107,22 @@ func TestParseColor(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, color.Color{24.0, 1.0, 0.5, 0.2, false}, d.vars.getKey(key{name: "foo"}))
 
+	d, err = decodeString(`@foo: hsl(125, 55%, 25%);`)
+	assert.NoError(t, err)
+	assert.Equal(t, color.Color{125.0, 0.55, 0.25, 1.0, false}, d.vars.getKey(key{name: "foo"}))
+
+	d, err = decodeString(`@foo: hsla(125, 0.55, 0.25, 20%);`)
+	assert.NoError(t, err)
+	assert.Equal(t, color.Color{125.0, 0.55, 0.25, 0.2, false}, d.vars.getKey(key{name: "foo"}))
+
+	d, err = decodeString(`@foo: husl(125, 55%, 25%);`)
+	assert.NoError(t, err)
+	assert.Equal(t, color.Color{125.0, 0.55, 0.25, 1.0, true}, d.vars.getKey(key{name: "foo"}))
+
+	d, err = decodeString(`@foo: husla(125, 0.55, 0.25, 20%);`)
+	assert.NoError(t, err)
+	assert.Equal(t, color.Color{125.0, 0.55, 0.25, 0.2, true}, d.vars.getKey(key{name: "foo"}))
+
 	d, err = decodeString(`@foo: -mc-set-hue(#996644, red); `)
 	assert.NoError(t, err)
 	assert.Equal(t, "#c64545", d.vars.getKey(key{name: "foo"}).(color.Color).String())
