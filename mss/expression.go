@@ -147,6 +147,14 @@ func evaluate(codes []code) ([]code, int, error) {
 					return nil, 0, fmt.Errorf("function %s requires number/percent as second argument, got %v", c.Value.(string), v[1])
 				}
 				v = []code{{Value: colorF(v[0].Value.(color.Color), v[1].Value.(float64)/100), T: typeColor}}
+			} else if colorP, ok := colorParams[c.Value.(string)]; ok {
+				if len(v) != 1 {
+					return nil, 0, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
+				}
+				if v[0].T != typeColor {
+					return nil, 0, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
+				}
+				v = []code{{Value: colorP(v[0].Value.(color.Color)), T: typeNum}}
 			} else if c.Value.(string) == "mix" {
 				if len(v) != 3 {
 					return nil, 0, fmt.Errorf("function mix takes exactly three arguments, got %d", len(v))
@@ -169,6 +177,18 @@ func evaluate(codes []code) ([]code, int, error) {
 					return nil, 0, fmt.Errorf("function %s requires color as second argument, got %v", c.Value.(string), v[1])
 				}
 				v = []code{{Value: color.SetHue(v[0].Value.(color.Color), v[1].Value.(color.Color)), T: typeColor}}
+			} else if c.Value.(string) == "greyscale" || c.Value.(string) == "greyscalep" {
+				if len(v) != 1 {
+					return nil, 0, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
+				}
+				if v[0].T != typeColor {
+					return nil, 0, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
+				}
+				if c.Value.(string) == "greyscale" {
+					v = []code{{Value: color.Greyscale(v[0].Value.(color.Color)), T: typeColor}}
+				} else {
+					v = []code{{Value: color.GreyscaleP(v[0].Value.(color.Color)), T: typeColor}}
+				}
 			} else if c.Value.(string) == "rgb" || c.Value.(string) == "rgba" {
 				if c.Value.(string) == "rgb" && len(v) != 3 {
 					return nil, 0, fmt.Errorf("rgb takes exactly three arguments, got %d", len(v))
@@ -223,18 +243,29 @@ func evaluate(codes []code) ([]code, int, error) {
 						} else {
 							c[i] = v[i].Value.(float64) // saturation, lightness, alpha values are from 0.0-1.0
 							if c[i] > 1.0 {
-								c[i] /= 100 // TODO or clamp? compat with Carto?
+								c[i] = 1.0
+							} else if c[i] < 0 {
+								c[i] = 0
 							}
 						}
 					} else if v[i].T == typePercent {
-						c[i] = v[i].Value.(float64) / 100
+						if i == 0 {
+							c[i] = v[i].Value.(float64) / 360
+							if c[i] < 0 {
+								c[i] = 0
+							} else if c[i] > 100 {
+								c[i] = 1.0
+							}
+						} else {
+							c[i] = v[i].Value.(float64) / 100
+							if c[i] < 0 {
+								c[i] = 0
+							} else if c[i] > 100 {
+								c[i] = 1.0
+							}
+						}
 					} else {
 						return nil, 0, fmt.Errorf("hsl/hsla takes float or percent arguments only, got %v", v[i])
-					}
-					if c[i] < 0 {
-						c[i] = 0
-					} else if c[i] > 100 {
-						c[i] = 100
 					}
 				}
 				v = []code{{
@@ -244,6 +275,55 @@ func evaluate(codes []code) ([]code, int, error) {
 						c[2],
 						c[3],
 						false,
+					},
+					T: typeColor}}
+			} else if c.Value.(string) == "husl" || c.Value.(string) == "husla" {
+				if c.Value.(string) == "husl" && len(v) != 3 {
+					return nil, 0, fmt.Errorf("husl takes exactly three arguments, got %d", len(v))
+				}
+				if c.Value.(string) == "husla" && len(v) != 4 {
+					return nil, 0, fmt.Errorf("husla takes exactly four arguments, got %d", len(v))
+				}
+				c := [4]float64{1, 1, 1, 1}
+				for i := range v {
+					if v[i].T == typeNum {
+						if i == 0 {
+							c[i] = v[i].Value.(float64)
+						} else {
+							c[i] = v[i].Value.(float64) // saturation, lightness, alpha values are from 0.0-1.0
+							if c[i] > 1.0 {
+								c[i] = 1.0
+							} else if c[i] < 0 {
+								c[i] = 0
+							}
+						}
+					} else if v[i].T == typePercent {
+						if i == 0 {
+							c[i] = v[i].Value.(float64) / 360
+							if c[i] < 0 {
+								c[i] = 0
+							} else if c[i] > 100 {
+								c[i] = 1.0
+							}
+						} else {
+							c[i] = v[i].Value.(float64) / 100
+							if c[i] < 0 {
+								c[i] = 0
+							} else if c[i] > 100 {
+								c[i] = 1.0
+							}
+						}
+					} else {
+						return nil, 0, fmt.Errorf("husl/husla takes float or percent arguments only, got %v", v[i])
+					}
+				}
+				v = []code{{
+					Value: color.Color{
+						c[0],
+						c[1],
+						c[2],
+						c[3],
+						true,
 					},
 					T: typeColor}}
 			} else if c.Value.(string) == "stop" {
@@ -322,18 +402,35 @@ type Stop struct {
 type functype func(args []code) ([]code, error)
 
 var colorFuncs map[string]colorFunc
+var colorParams map[string]colorParam
 
 type colorFunc func(color.Color, float64) color.Color
+type colorParam func(color.Color) float64
 
 func init() {
 	colorFuncs = map[string]colorFunc{
-		"lighten":    color.Lighten,
-		"darken":     color.Darken,
-		"saturate":   color.Saturate,
-		"desaturate": color.Desaturate,
-		"fadein":     color.FadeIn,
-		"fadeout":    color.FadeOut,
-		"spin":       color.Spin,
+		"lighten":     color.Lighten,
+		"lightenp":    color.LightenP,
+		"darken":      color.Darken,
+		"darkenp":     color.DarkenP,
+		"saturate":    color.Saturate,
+		"saturatep":   color.SaturateP,
+		"desaturate":  color.Desaturate,
+		"desaturatep": color.DesaturateP,
+		"fadein":      color.FadeIn,
+		"fadeout":     color.FadeOut,
+		"spin":        color.Spin,
+		"spinp":       color.SpinP,
+	}
+
+	colorParams = map[string]colorParam{
+		"hue":         color.Hue,
+		"huep":        color.HueP,
+		"lightness":   color.Lightness,
+		"lightnessp":  color.LightnessP,
+		"saturation":  color.Saturation,
+		"saturationp": color.SaturationP,
+		"alpha":       color.Alpha,
 	}
 }
 

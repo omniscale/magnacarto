@@ -8,10 +8,24 @@ func Lighten(c Color, v float64) Color {
 	return c
 }
 
+func LightenP(c Color, v float64) Color {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Lighten(c, v)
+}
+
 func Darken(c Color, v float64) Color {
 	c.L -= v
 	c.L = clamp(c.L)
 	return c
+}
+
+func DarkenP(c Color, v float64) Color {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Darken(c, v)
 }
 
 func Saturate(c Color, v float64) Color {
@@ -20,10 +34,24 @@ func Saturate(c Color, v float64) Color {
 	return c
 }
 
+func SaturateP(c Color, v float64) Color {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Saturate(c, v)
+}
+
 func Desaturate(c Color, v float64) Color {
 	c.S -= v
 	c.S = clamp(c.S)
 	return c
+}
+
+func DesaturateP(c Color, v float64) Color {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Desaturate(c, v)
 }
 
 func FadeIn(c Color, v float64) Color {
@@ -46,6 +74,58 @@ func Spin(c Color, v float64) Color {
 		c.H -= 360
 	}
 	return c
+}
+
+func SpinP(c Color, v float64) Color {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Spin(c, v)
+}
+
+func Greyscale(c Color) Color {
+	return Desaturate(c, 1.0)
+}
+
+func GreyscaleP(c Color) Color {
+	return DesaturateP(c, 1.0)
+}
+
+func Hue(c Color) float64 {
+	return c.H
+}
+
+func HueP(c Color) float64 {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Hue(c)
+}
+
+func Saturation(c Color) float64 {
+	return c.S
+}
+
+func SaturationP(c Color) float64 {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Saturation(c)
+}
+
+func Lightness(c Color) float64 {
+	return c.L
+}
+
+func LightnessP(c Color) float64 {
+	if !c.Perceptual {
+		c = c.ToPerceptual()
+	}
+	return Lightness(c)
+}
+
+func Alpha(c Color) float64 {
+	return c.A
 }
 
 func Multiply(c Color, v float64) Color {
