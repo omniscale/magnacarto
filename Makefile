@@ -52,9 +52,11 @@ dist: cmds
 	cp magnaserv dist/magnaserv-$(BIN_VERSION)
 	cp magnacarto-mapnik dist/magnacarto-mapnik-$(BIN_VERSION)
 
+# exclude render and regression packages in non-full tests
+SHORT_TEST_PACKAGES=$(shell $(GO) list ./... | grep -Ev '/render|/regression')
 test:
-	$(GO) test -i ./...
-	$(GO) test -test.short -parallel 4 ./...
+	$(GO) test -i $(SHORT_TEST_PACKAGES)
+	$(GO) test -test.short -parallel 4 $(SHORT_TEST_PACKAGES)
 
 test-full:
 	$(GO) test ./... -i
