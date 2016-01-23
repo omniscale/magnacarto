@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime/pprof"
+	"time"
 
 	"github.com/omniscale/magnacarto"
 	"github.com/omniscale/magnacarto/builder"
@@ -42,12 +43,15 @@ func main() {
 	outFile := flag.String("out", "", "out file")
 	relPaths := flag.Bool("relpaths", false, "use relative paths in output style")
 	version := flag.Bool("version", false, "print version and exit")
+	benchmark := flag.Bool("benchmark", false, "print total compile time")
 
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 
 	msNoMapBlock := flag.Bool("ms-no-map-block", false, "hide MAP block, only output layers/symbols for INCLUDE")
 
 	flag.Parse()
+
+	start := time.Now()
 
 	if *cpuprofile != "" {
 		f, err := os.Create(*cpuprofile)
@@ -126,23 +130,32 @@ func main() {
 		b.SetDumpRulesDest(os.Stderr)
 	}
 
+	if *benchmark {
+		b.SetBenchmark(true)
+	}
+
 	if err := b.Build(); err != nil {
 		log.Fatal("error building style: ", err)
 	}
 
-	if *outFile == "" || *outFile == "-" {
-		if err := m.Write(os.Stdout); err != nil {
-			log.Fatal("error writing style to stdout: ", err)
+	if !*benchmark {
+		if *outFile == "" || *outFile == "-" {
+			if err := m.Write(os.Stdout); err != nil {
+				log.Fatal("error writing style to stdout: ", err)
+			}
+		} else {
+			if err := m.WriteFiles(*outFile); err != nil {
+				log.Fatal("error writing style: ", err)
+			}
+		}
+
+		if mf := locator.MissingFiles(); mf != nil {
+			for _, f := range mf {
+				log.Println("File not found:", f)
+			}
 		}
 	} else {
-		if err := m.WriteFiles(*outFile); err != nil {
-			log.Fatal("error writing style: ", err)
-		}
-	}
-
-	if mf := locator.MissingFiles(); mf != nil {
-		for _, f := range mf {
-			log.Println("File not found:", f)
-		}
+		fmt.Println("")
+		fmt.Println("TOTAL:", time.Since(start))
 	}
 }
