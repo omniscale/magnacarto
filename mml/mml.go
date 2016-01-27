@@ -1,11 +1,13 @@
-// Package mml parses mml-JSON files.
+// Package mml parses mml-YAML/JSON files.
 package mml
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 type MML struct {
@@ -16,8 +18,8 @@ type MML struct {
 
 type auxMML struct {
 	Name        string
-	Stylesheets []string   `json:"Stylesheet"`
-	Layers      []auxLayer `json:"Layer"`
+	Stylesheets []string   `yaml:"Stylesheet"`
+	Layers      []auxLayer `yaml:"Layer"`
 }
 
 type auxLayer struct {
@@ -127,8 +129,11 @@ func newDatasource(params map[string]interface{}) (Datasource, error) {
 
 func Parse(r io.Reader) (*MML, error) {
 	aux := auxMML{}
-	d := json.NewDecoder(r)
-	err := d.Decode(&aux)
+	input, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+	err = yaml.Unmarshal(input, &aux)
 	if err != nil {
 		return nil, err
 	}
