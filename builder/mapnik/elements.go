@@ -16,7 +16,7 @@ type XMLMap struct {
 
 type Parameter struct {
 	Name  string `xml:"name,attr"`
-	Value string `xml:",chardata"`
+	Value string `xml:",cdata"`
 }
 
 type FontSet struct {
