@@ -169,8 +169,8 @@ type ShieldSymbolizer struct {
 	AvoidEdges       *string  `xml:"avoid-edges,attr"`
 	CharacterSpacing *string  `xml:"character-spacing,attr"`
 	Clip             *string  `xml:"clip,attr"`
-	Dx               *string  `xml:"dx,attr"`
-	Dy               *string  `xml:"dy,attr"`
+	Dx               *string  `xml:"shield-dx,attr"`
+	Dy               *string  `xml:"shield-dy,attr"`
 	FaceName         *string  `xml:"face-name,attr"`
 	File             *string  `xml:"file,attr"`
 	Fill             *string  `xml:"fill,attr"`
@@ -185,8 +185,8 @@ type ShieldSymbolizer struct {
 	Placement        *string  `xml:"placement,attr"`
 	Size             *string  `xml:"size,attr"`
 	Spacing          *string  `xml:"spacing,attr"`
-	TextDx           *string  `xml:"text-dx,attr"`
-	TextDy           *string  `xml:"text-dy,attr"`
+	TextDx           *string  `xml:"dx,attr"`
+	TextDy           *string  `xml:"dy,attr"`
 	TextOpacity      *string  `xml:"text-opacity,attr"`
 	TextTransform    *string  `xml:"text-transform,attr"`
 	WrapBefore       *string  `xml:"wrap-before,attr"`
