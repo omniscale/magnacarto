@@ -119,7 +119,7 @@ func TestLightenFunctionExpression(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, "#fe53f3", v.(color.RGBA).Hex())
+	assert.Equal(t, "#ff53f3", v.(color.Color).String())
 }
 
 func TestExpressionErrors(t *testing.T) {
