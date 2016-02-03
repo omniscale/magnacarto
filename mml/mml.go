@@ -23,7 +23,7 @@ type auxMML struct {
 }
 
 type auxLayer struct {
-	Datasource map[string]interface{}
+	Datasource map[string]interface{} `yaml:"Datasource"`
 	Geometry   string
 	ID         string
 	Name       string
@@ -133,7 +133,7 @@ func Parse(r io.Reader) (*MML, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = yaml.Unmarshal(input, &aux)
+	err = yaml.Unmarshal([]byte(input), &aux)
 	if err != nil {
 		return nil, err
 	}
