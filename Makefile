@@ -62,3 +62,6 @@ test:
 test-full:
 	$(GO) test -i $(FULL_TEST_PACKAGES)
 	export PATH=$(shell pwd):$$PATH; $(GO) test -parallel 4 $(FULL_TEST_PACKAGES)
+
+test-coverage:
+	$(GOPATH)/bin/overalls -project=github.com/omniscale/magnacarto -debug -covermode=count -ignore=.git,Godeps,app,docs,render,regression

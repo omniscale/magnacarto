@@ -4,8 +4,15 @@ go:
  - 1.5.3
  - tip
 
+before_install:
+ - go get github.com/axw/gocov/gocov
+ - go get github.com/go-playground/overalls
+ - go get github.com/mattn/goveralls
+ - if ! go get github.com/golang/tools/cmd/cover; then go get golang.org/x/tools/cmd/cover; fi
+
 install:
  - go get github.com/tools/godep
 
 script:
- - make test
+ - make test-coverage
+ - $HOME/gopath/bin/goveralls -coverprofile=overalls.coverprofile -service=travis-ci
