@@ -139,6 +139,8 @@ type TextSymbolizer struct {
 	Opacity          *string  `xml:"opacity,attr"`
 	Orientation      *string  `xml:"orientation,attr"`
 	Placement        *string  `xml:"placement,attr"`
+	PlacementType    *string  `xml:"placement-type,attr"`
+	Placements       *string  `xml:"placements,attr"`
 	Size             *string  `xml:"size,attr"`
 	Spacing          *string  `xml:"spacing,attr"`
 	TextTransform    *string  `xml:"text-transform,attr"`
@@ -183,6 +185,9 @@ type ShieldSymbolizer struct {
 	Name             *string  `xml:",chardata"`
 	Opacity          *string  `xml:"opacity,attr"`
 	Placement        *string  `xml:"placement,attr"`
+	PlacementType    *string  `xml:"placement-type,attr"`
+	Placements       *string  `xml:"placements,attr"`
+	UnlockImage      *string  `xml:"unlock-image,attr"`
 	Size             *string  `xml:"size,attr"`
 	Spacing          *string  `xml:"spacing,attr"`
 	TextDx           *string  `xml:"dx,attr"`

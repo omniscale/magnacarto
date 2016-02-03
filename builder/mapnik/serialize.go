@@ -313,13 +313,16 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 		symb.Size = fmtFloat(size, true)
 		symb.Fill = fmtColor(r.Properties.GetColor("text-fill"))
 		symb.Name = fmtField(r.Properties.GetFieldList("text-name"))
-		symb.Placement = fmtString(r.Properties.GetString("text-placement"))
 		symb.HaloFill = fmtColor(r.Properties.GetColor("text-halo-fill"))
 		symb.HaloRadius = fmtFloat(r.Properties.GetFloat("text-halo-radius"))
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("text-opacity"))
 		symb.WrapCharacter = fmtString(r.Properties.GetString("text-wrap-character"))
 		symb.WrapBefore = fmtString(r.Properties.GetString("text-wrap-before"))
 		symb.WrapWidth = fmtFloat(r.Properties.GetFloat("text-wrap-width"))
+
+		symb.Placement = fmtString(r.Properties.GetString("text-placement"))
+		symb.PlacementType = fmtString(r.Properties.GetString("text-placement-type"))
+		symb.Placements = fmtString(r.Properties.GetString("text-placements"))
 
 		symb.Dx = fmtFloat(r.Properties.GetFloat("text-dx"))
 		symb.Dy = fmtFloat(r.Properties.GetFloat("text-dy"))
@@ -367,9 +370,13 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 		symb.Size = fmtFloat(r.Properties.GetFloat("shield-size"))
 		symb.Fill = fmtColor(r.Properties.GetColor("shield-fill"))
 		symb.Name = fmtField(r.Properties.GetFieldList("shield-name"))
-		symb.Placement = fmtString(r.Properties.GetString("shield-placement"))
 		symb.TextOpacity = fmtFloat(r.Properties.GetFloat("shield-opacity"))
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("shield-opacity"))
+
+		symb.Placement = fmtString(r.Properties.GetString("shield-placement"))
+		symb.PlacementType = fmtString(r.Properties.GetString("shield-placement-type"))
+		symb.Placements = fmtString(r.Properties.GetString("shield-placements"))
+		symb.UnlockImage = fmtBool(r.Properties.GetBool("shield-unlock-image"))
 
 		symb.Clip = fmtBool(r.Properties.GetBool("shield-clip"))
 		symb.AllowOverlap = fmtBool(r.Properties.GetBool("shield-allow-overlap"))
