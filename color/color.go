@@ -18,6 +18,19 @@ type Color struct {
 
 var hexRe = regexp.MustCompile(`[a-fA-F0-9]{6,6}`)
 
+func FromRgba(r, g, b, a float64) Color {
+	h, s, l := rgbToHsl(r, g, b)
+	return Color{h, s, l, a, false}
+}
+
+func FromHsla(h, s, l, a float64) Color {
+	return Color{h, s, l, a, false}
+}
+
+func FromHusl(h, s, l, a float64) Color {
+	return Color{h, s, l, a, true}
+}
+
 func Parse(colorStr string) (Color, error) {
 	color := Color{}
 	color.A = 1
@@ -69,7 +82,7 @@ func parseHex(hex string) (Color, error) {
 		}
 		b := float64(v) / 255.0
 
-		color.H, color.S, color.L = RgbToHsl(r, g, b)
+		color.H, color.S, color.L = rgbToHsl(r, g, b)
 	} else {
 		return color, errors.New("hex color not 3 or 6 chars long")
 	}
@@ -90,7 +103,7 @@ func (color Color) ToPerceptual() Color {
 	} else {
 		// transition via RGB, because HSL values cannot be directly
 		// transformed into HUSL values easily
-		r, g, b := HslToRgb(color.H, color.S, color.L)
+		r, g, b := hslToRgb(color.H, color.S, color.L)
 		color.H, color.S, color.L = husl.HuslFromRGB(r, g, b)
 		color.S /= 100
 		color.L /= 100
@@ -106,7 +119,7 @@ func (color Color) ToStandard() Color {
 		// transition via RGB, because HUSL values cannot be directly
 		// transformed into HSL values easily
 		r, g, b := husl.HuslToRGB(color.H, color.S, color.L)
-		color.H, color.S, color.L = RgbToHsl(r, g, b)
+		color.H, color.S, color.L = rgbToHsl(r, g, b)
 		color.Perceptual = false
 		return color
 	}
@@ -115,9 +128,9 @@ func (color Color) ToStandard() Color {
 func (color Color) String() string {
 	var r, g, b float64
 	if color.Perceptual {
-		r, g, b = husl.HuslToRGB(color.H, color.S * 100.0, color.L * 100.0)
+		r, g, b = husl.HuslToRGB(color.H, color.S*100.0, color.L*100.0)
 	} else {
-		r, g, b = HslToRgb(color.H, color.S, color.L)
+		r, g, b = hslToRgb(color.H, color.S, color.L)
 	}
 
 	if color.A == 1.0 {
@@ -132,7 +145,7 @@ func (color Color) HexString() string {
 	if color.Perceptual {
 		r, g, b = husl.HuslToRGB(color.H, color.S, color.L)
 	} else {
-		r, g, b = HslToRgb(color.H, color.S, color.L)
+		r, g, b = hslToRgb(color.H, color.S, color.L)
 	}
 
 	if color.A == 1.0 {

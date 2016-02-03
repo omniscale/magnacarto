@@ -218,16 +218,7 @@ func evaluate(codes []code) ([]code, int, error) {
 						c[i] = 255
 					}
 				}
-				h, s, l := color.RgbToHsl(c[0], c[1], c[2])
-				v = []code{{
-					Value: color.Color{
-						h,
-						s,
-						l,
-						c[3],
-						false,
-					},
-					T: typeColor}}
+				v = []code{{Value: color.FromRgba(c[0], c[1], c[2], c[3]), T: typeColor}}
 			} else if c.Value.(string) == "hsl" || c.Value.(string) == "hsla" {
 				if c.Value.(string) == "hsl" && len(v) != 3 {
 					return nil, 0, fmt.Errorf("hsl takes exactly three arguments, got %d", len(v))
@@ -268,15 +259,7 @@ func evaluate(codes []code) ([]code, int, error) {
 						return nil, 0, fmt.Errorf("hsl/hsla takes float or percent arguments only, got %v", v[i])
 					}
 				}
-				v = []code{{
-					Value: color.Color{
-						c[0],
-						c[1],
-						c[2],
-						c[3],
-						false,
-					},
-					T: typeColor}}
+				v = []code{{Value: color.FromHsla(c[0], c[1], c[2], c[3]), T: typeColor}}
 			} else if c.Value.(string) == "husl" || c.Value.(string) == "husla" {
 				if c.Value.(string) == "husl" && len(v) != 3 {
 					return nil, 0, fmt.Errorf("husl takes exactly three arguments, got %d", len(v))
@@ -317,15 +300,7 @@ func evaluate(codes []code) ([]code, int, error) {
 						return nil, 0, fmt.Errorf("husl/husla takes float or percent arguments only, got %v", v[i])
 					}
 				}
-				v = []code{{
-					Value: color.Color{
-						c[0],
-						c[1],
-						c[2],
-						c[3],
-						true,
-					},
-					T: typeColor}}
+				v = []code{{Value: color.FromHusl(c[0], c[1], c[2], c[3]), T: typeColor}}
 			} else if c.Value.(string) == "stop" {
 				if len(v) != 2 {
 					return nil, 0, fmt.Errorf("stop takes exactly two arguments, got %d", len(v))

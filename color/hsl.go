@@ -7,7 +7,7 @@ import (
 /* from https://github.com/gka/chroma.js written by Gregor Aisch
 under BSD license */
 
-func HslToRgb(h, s, l float64) (r, g, b float64) {
+func hslToRgb(h, s, l float64) (r, g, b float64) {
 	if s == 0 {
 		r = l
 		g = l
@@ -50,7 +50,7 @@ func HslToRgb(h, s, l float64) (r, g, b float64) {
 	return
 }
 
-func RgbToHsl(r, g, b float64) (h, s, l float64) {
+func rgbToHsl(r, g, b float64) (h, s, l float64) {
 	min := math.Min(r, math.Min(g, b))
 	max := math.Max(r, math.Max(g, b))
 	l = (max + min) / 2.0
