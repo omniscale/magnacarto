@@ -960,7 +960,7 @@ func fmtColor(v color.Color, ok bool) *string {
 		return nil
 	}
 	var r string
-	r = v.HexString()
+	r = "\"" + v.HexString() + "\""
 	return &r
 }
 
