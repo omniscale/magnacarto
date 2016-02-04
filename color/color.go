@@ -155,6 +155,69 @@ func (color Color) HexString() string {
 	}
 }
 
+func rgbToHsl(r, g, b float64) (float64, float64, float64) {
+	max := math.Max(math.Max(r, g), b)
+	min := math.Min(math.Min(r, g), b)
+	h := (max + min) / 2.0
+	s := h
+	l := h
+
+	if max == min {
+		h = 0
+		s = 0
+	} else {
+		d := max - min
+		if l > 0.5 {
+			s = d / (2 - max - min)
+		} else {
+			s = d / (max + min)
+		}
+
+		switch max {
+		case r:
+			h = (g - b) / d
+			if g < b {
+				h += 6
+			}
+		case g:
+			h = (b-r)/d + 2
+		case b:
+			h = (r-g)/d + 4
+		}
+		h /= 6
+	}
+	return h * 360, s, l
+}
+
+func hslToRgb(h, s, l float64) (float64, float64, float64) {
+	h = math.Mod(h, 360) / 360
+	m2 := l + s - l*s
+	if l <= 0.5 {
+		m2 = l * (s + 1.0)
+	}
+	m1 := l*2.0 - m2
+
+	hue := func(h float64) float64 {
+		if h < 0.0 {
+			h = h + 1.0
+		} else if h > 1.0 {
+			h = h - 1.0
+		}
+
+		if h*6.0 < 1.0 {
+			return m1 + (m2-m1)*h*6.0
+		} else if h*2.0 < 1.0 {
+			return m2
+		} else if h*3.0 < 2.0 {
+			return m1 + (m2-m1)*(2.0/3.0-h)*6.0
+		} else {
+			return m1
+		}
+	}
+
+	return hue(h + 1.0/3.0), hue(h), hue(h - 1.0/3.0)
+}
+
 func round(f float64) int {
 	if math.Abs(f) < 0.5 {
 		return 0
