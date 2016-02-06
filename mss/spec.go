@@ -98,6 +98,7 @@ func isStops(val interface{}) bool {
 
 func isCompOp(val interface{}) bool {
 	return isKeyword(
+		"clear",
 		"src",
 		"dst",
 		"src-over",
@@ -112,6 +113,7 @@ func isCompOp(val interface{}) bool {
 		"plus",
 		"minus",
 		"multiply",
+		"divide",
 		"screen",
 		"overlay",
 		"darken",
