@@ -378,6 +378,9 @@ func (d *Decoder) filter() {
 		if err != nil {
 			d.error(d.pos(tok), "invalid zoom level %v: %v", tok, err)
 		}
+		if compOp == REGEX {
+			d.error(d.pos(tok), "regular expressions are not allowed for zoom levels")
+		}
 		d.mss.addZoom(compOp, level)
 		d.expect(tokenRBracket)
 		return

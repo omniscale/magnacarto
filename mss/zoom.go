@@ -28,6 +28,7 @@ const (
 	LTE
 	EQ
 	NEQ
+	REGEX
 )
 
 func (c CompOp) String() string {
@@ -44,6 +45,8 @@ func (c CompOp) String() string {
 		return "<"
 	case NEQ:
 		return "!="
+	case REGEX:
+		return "=~"
 	default:
 		return "?"
 	}
@@ -51,6 +54,8 @@ func (c CompOp) String() string {
 
 func parseCompOp(comp string) (CompOp, error) {
 	switch comp {
+	case "=~":
+		return REGEX, nil
 	case "=":
 		return EQ, nil
 	case ">=":
