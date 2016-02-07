@@ -325,14 +325,30 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 		symb.Name = fmtField(r.Properties.GetFieldList("text-name"))
 		symb.HaloFill = fmtColor(r.Properties.GetColor("text-halo-fill"))
 		symb.HaloRadius = fmtFloat(r.Properties.GetFloat("text-halo-radius"))
+		symb.HaloOpacity = fmtFloat(r.Properties.GetFloat("text-halo-opacity"))
+		symb.HaloRasterizer = fmtString(r.Properties.GetString("text-halo-rasterizer"))
+		symb.HaloTransform = fmtString(r.Properties.GetString("text-halo-transform"))
+		symb.HaloCompOp = fmtString(r.Properties.GetString("text-halo-comp-op"))
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("text-opacity"))
 		symb.WrapCharacter = fmtString(r.Properties.GetString("text-wrap-character"))
 		symb.WrapBefore = fmtString(r.Properties.GetString("text-wrap-before"))
 		symb.WrapWidth = fmtFloat(r.Properties.GetFloat("text-wrap-width"))
+		symb.RepeatWrapCharacter = fmtBool(r.Properties.GetBool("text-repeat-wrap-characater"))
+		symb.Ratio = fmtFloat(r.Properties.GetFloat("text-ratio"))
+		symb.MaxCharAngleDelta = fmtFloat(r.Properties.GetFloat("text-max-char-angle-delta"))
 
 		symb.Placement = fmtString(r.Properties.GetString("text-placement"))
 		symb.PlacementType = fmtString(r.Properties.GetString("text-placement-type"))
 		symb.Placements = fmtString(r.Properties.GetString("text-placements"))
+		symb.LabelPositionTolerance = fmtFloat(r.Properties.GetFloat("text-label-position-tolerance"))
+		symb.VerticalAlign = fmtString(r.Properties.GetString("text-vertical-alignment"))
+		symb.HorizontalAlign = fmtString(r.Properties.GetString("text-horizontal-alignment"))
+		symb.JustifyAlign = fmtString(r.Properties.GetString("text-justify-alignment"))
+		symb.Margin = fmtFloat(r.Properties.GetFloat("text-margin"))
+		symb.Simplify = fmtFloat(r.Properties.GetFloat("text-simplify"))
+		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("text-simplify-algorithm"))
+		symb.Smooth = fmtFloat(r.Properties.GetFloat("text-smooth"))
+		symb.CompOp = fmtString(r.Properties.GetString("text-comp-op"))
 
 		symb.Dx = fmtFloat(r.Properties.GetFloat("text-dx"))
 		symb.Dy = fmtFloat(r.Properties.GetFloat("text-dy"))
@@ -342,11 +358,15 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 		} else if v, ok := r.Properties.GetFieldList("text-orientation"); ok {
 			symb.Orientation = fmtField(v, true)
 		}
+		symb.RotateDisplacement = fmtBool(r.Properties.GetBool("text-rotate-displacement"))
+		symb.Upright = fmtString(r.Properties.GetString("text-upgright"))
 
 		symb.CharacterSpacing = fmtFloat(r.Properties.GetFloat("text-character-spacing"))
 		symb.LineSpacing = fmtFloat(r.Properties.GetFloat("text-line-spacing"))
 
 		symb.AllowOverlap = fmtBool(r.Properties.GetBool("text-allow-overlap"))
+
+		symb.LargestBboxOnly = fmtBool(r.Properties.GetBool("text-largest-bbox-only"))
 
 		// TODO see for issue/upcoming fixes with 3.0 https://github.com/mapnik/mapnik/issues/2362
 
@@ -354,12 +374,15 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 		symb.Spacing = fmtFloat(r.Properties.GetFloat("text-spacing"))
 		// min-distance to other label, does not work with placement-line
 		symb.MinimumDistance = fmtFloat(r.Properties.GetFloat("text-min-distance"))
+		symb.RepeatDistance = fmtFloat(r.Properties.GetFloat("text-repeat-distance"))
 		// min-padding to map edge
-		// symb.MinimumPadding = fmtFloat(r.Properties.GetFloat("text-min-padding"))
+		symb.MinimumPadding = fmtFloat(r.Properties.GetFloat("text-min-padding"))
+		symb.MinPathLength = fmtFloat(r.Properties.GetFloat("text-min-path-length"))
 
 		symb.Clip = fmtBool(r.Properties.GetBool("text-clip"))
 		symb.TextTransform = fmtString(r.Properties.GetString("text-transform"))
 
+		symb.FontFeatureSettings = fmtString(r.Properties.GetString("font-feature-settings"))
 		if faceNames, ok := r.Properties.GetStringList("text-face-name"); ok {
 			symb.FontsetName = m.fontSetName(faceNames)
 		}

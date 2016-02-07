@@ -174,6 +174,24 @@ func isRasterizer(val interface{}) bool {
 	)(val)
 }
 
+func isVerticalAlignment(val interface{}) bool {
+	return isKeyword(
+		"top",
+		"middle",
+		"bottom",
+		"auto",
+	)(val)
+}
+
+func isJustifyAlignment(val interface{}) bool {
+	return isKeyword(
+		"left",
+		"center",
+		"right",
+		"auto",
+	)(val)
+}
+
 func init() {
 	attributeTypes = map[string]isValid{
 		"background-color": isColor,
@@ -290,8 +308,8 @@ func init() {
 		"shield-repeat-distance":   isNumber,
 		"shield-label-position-tolerance": isNumber,
 		"shield-horizontal-alignment": isKeyword("left", "middle", "right", "auto"),
-		"shield-vertical-alignment": isKeyword("top", "middle", "bottom", "auto"),
-		"shield-justify-alignment": isKeyword("left", "center", "right", "auto"),
+		"shield-vertical-alignment": isVerticalAlignment,
+		"shield-justify-alignment": isJustifyAlignment,
 
 		"text-allow-overlap":     isBool,
 		"text-avoid-edges":       isBool,
@@ -300,9 +318,14 @@ func init() {
 		"text-dx":                isNumber,
 		"text-dy":                isNumber,
 		"text-face-name":         isStringOrStrings,
+		"text-font-feature-settings": isString,
 		"text-fill":              isColor,
 		"text-halo-fill":         isColor,
 		"text-halo-radius":       isNumber,
+		"text-halo-opacity":      isNumber,
+		"text-halo-rasterizer":   isRasterizer,
+		"text-halo-transform":    isString,
+		"text-halo-comp-op":      isCompOp,
 		"text-line-spacing":      isNumber,
 		"text-min-distance":      isNumber,
 		"text-min-padding":       isNumber,
@@ -314,10 +337,27 @@ func init() {
 		"text-placements":        isString,
 		"text-size":              isNumber,
 		"text-spacing":           isNumber,
-		"text-transform":         isKeyword("none", "uppercase", "lowercase", "capitalize"),
+		"text-transform":         isKeyword("none", "uppercase", "lowercase", "capitalize", "reverse"),
 		"text-wrap-before":       isBool,
 		"text-wrap-character":    isString,
 		"text-wrap-width":        isNumber,
+		"text-repeat-wrap-characater": isBool,
+		"text-ratio":             isNumber,
+		"text-label-position-tolerance": isNumber,
+		"text-max-char-angle-delta": isNumber,
+		"text-vertical-alignment": isVerticalAlignment,
+		"text-horizontal-alignment": isKeyword("left", "middle", "right", "auto", "adjust"),
+		"text-justify-alignment": isJustifyAlignment,
+		"text-margin":            isNumber,
+		"text-repeat-distance":   isNumber,
+		"text-min-path-length":   isNumber,
+		"text-rotate-displacement": isBool,
+		"text-upgright":          isKeyword("auto", "auto-down", "left", "right", "left-only", "right-only"),
+		"text-simplify":          isNumber,
+		"text-simplify-algorithm": isSimplifyAlgorithm,
+		"text-smooth":            isNumber,
+		"text-comp-op":           isCompOp,
+		"text-largest-bbox-only": isBool,
 
 		"raster-opacity":                 isNumber,
 		"raster-scaling":                 isScaling,
