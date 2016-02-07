@@ -101,13 +101,17 @@ type LineSymbolizer struct {
 	Gamma       *string  `xml:"stroke-gamma,attr"`
 	GammaMethod *string  `xml:"stroke-gamma-method,attr"`
 	Linecap     *string  `xml:"stroke-linecap,attr"`
+	Miterlimit  *string  `xml:"stroke-miterlimit,attr"`
 	Linejoin    *string  `xml:"stroke-linejoin,attr"`
 	Offset      *string  `xml:"offset,attr"`
 	Opacity     *string  `xml:"stroke-opacity,attr"`
 	Rasterizer  *string  `xml:"stroke-rasterizer,attr"`
 	Simplify    *string  `xml:"stroke-simplify,attr"`
+	SimplifyAlgorithm *string `xml:"simplify-algorithm,attr"`
 	Smooth      *string  `xml:"stroke-smooth,attr"`
 	Width       *string  `xml:"stroke-width,attr"`
+	CompOp      *string  `xml:"comp-op,attr"`
+	GeometryTransform   *string  `xml:"geometry-transform,attr"`
 }
 
 type PointSymbolizer struct {

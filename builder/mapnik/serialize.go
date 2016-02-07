@@ -285,12 +285,16 @@ func (m *Map) addLineSymbolizer(result *Rule, r mss.Rule) {
 		symb.Gamma = fmtFloat(r.Properties.GetFloat("line-gamma"))
 		symb.GammaMethod = fmtString(r.Properties.GetString("line-gamma-method"))
 		symb.Linecap = fmtString(r.Properties.GetString("line-cap"))
+		symb.Miterlimit = fmtFloat(r.Properties.GetFloat("line-miterlimit"))
 		symb.Linejoin = fmtString(r.Properties.GetString("line-join"))
 		symb.Offset = fmtFloat(r.Properties.GetFloat("line-offset"))
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("line-opacity"))
 		symb.Rasterizer = fmtString(r.Properties.GetString("line-rasterizer"))
 		symb.Simplify = fmtFloat(r.Properties.GetFloat("line-simplify"))
+		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("line-simplify-algorithm"))
 		symb.Smooth = fmtFloat(r.Properties.GetFloat("line-smooth"))
+		symb.CompOp = fmtString(r.Properties.GetString("line-comp-op"))
+		symb.GeometryTransform = fmtString(r.Properties.GetString("line-geometry-transform"))
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
 }
