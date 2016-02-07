@@ -218,6 +218,16 @@ func init() {
 		"line-comp-op":      isCompOp,
 		"line-geometry-transform": isString,
 
+		"line-pattern-file":     isString,
+		"line-pattern-clip":     isBool,
+		"line-pattern-opacity":  isNumber,
+		"line-pattern-simplify": isNumber,
+		"line-pattern-simplify-algorithm": isSimplifyAlgorithm,
+		"line-pattern-smooth":   isNumber,
+		"line-pattern-offset":   isNumber,
+		"line-pattern-geometry-transform": isString,
+		"line-pattern-comp-op":  isCompOp,
+
 		"marker-allow-overlap": isBool,
 		"marker-file":          isString,
 		"marker-fill":          isColor,

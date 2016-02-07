@@ -299,6 +299,23 @@ func (m *Map) addLineSymbolizer(result *Rule, r mss.Rule) {
 	}
 }
 
+func (m *Map) addLinePatternSymbolizer(result *Rule, r mss.Rule) {
+	if patFile, ok := r.Properties.GetString("line-pattern-file"); ok {
+		symb := LinePatternSymbolizer{}
+		fname := m.locator.Image(patFile)
+		symb.File = &fname
+		symb.Offset = fmtFloat(r.Properties.GetFloat("line-pattern-offset"))
+		symb.Opacity = fmtFloat(r.Properties.GetFloat("line-pattern-opacity"))
+		symb.Clip = fmtBool(r.Properties.GetBool("line-pattern-clip"))
+		symb.Simplify = fmtFloat(r.Properties.GetFloat("line-pattern-simplify"))
+		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("line-pattern-simplify-algorithm"))
+		symb.Smooth = fmtFloat(r.Properties.GetFloat("line-pattern-smooth"))
+		symb.GeometryTransform = fmtString(r.Properties.GetString("line-pattern-geometry-transform"))
+		symb.CompOp = fmtString(r.Properties.GetString("line-pattern-comp-op"))
+		result.Symbolizers = append(result.Symbolizers, &symb)
+	}
+}
+
 func (m *Map) addPolygonSymbolizer(result *Rule, r mss.Rule) {
 	if fill, ok := r.Properties.GetColor("polygon-fill"); ok {
 		symb := PolygonSymbolizer{}

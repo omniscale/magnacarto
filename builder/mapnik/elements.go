@@ -125,6 +125,19 @@ type LineSymbolizer struct {
 	GeometryTransform   *string  `xml:"geometry-transform,attr"`
 }
 
+type LinePatternSymbolizer struct {
+	XMLName     xml.Name `xml:"LinePatternSymbolizer"`
+	File        *string  `xml:"file,attr"`
+	Clip        *string  `xml:"clip,attr"`
+	Opacity     *string  `xml:"opacity,attr"`
+	Simplify    *string  `xml:"simplify,attr"`
+	SimplifyAlgorithm *string `xml:"simplify-algorithm"`
+	Smooth      *string  `xml:"smooth,attr"`
+	Offset      *string  `xml:"offset,attr"`
+	GeometryTransform * string `xml:"geometry-transform,attr"`
+	CompOp      *string  `xml:"comp-op,attr"`
+}
+
 type PointSymbolizer struct {
 	XMLName         xml.Name `xml:"PointSymbolizer"`
 	AllowOverlap    *string  `xml:"allow-overlap,attr"`
