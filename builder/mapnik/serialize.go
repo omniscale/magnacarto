@@ -466,6 +466,8 @@ func (m *Map) addPointSymbolizer(result *Rule, r mss.Rule) {
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("point-opacity"))
 		symb.Transform = fmtString(r.Properties.GetString("point-transform"))
 		symb.IgnorePlacement = fmtBool(r.Properties.GetBool("point-ignore-placement"))
+		symb.Placement = fmtString(r.Properties.GetString("point-placement"))
+		symb.CompOp = fmtString(r.Properties.GetString("point-comp-op"))
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
 }

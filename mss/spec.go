@@ -216,6 +216,8 @@ func init() {
 		"point-opacity":          isNumber,
 		"point-transform":        isString,
 		"point-ignore-placement": isBool,
+		"point-placement":        isKeyword("centroid", "interior"),
+		"point-comp-op":          isCompOp,
 
 		"polygon-fill":              isColor,
 		"polygon-gamma":             isNumber,

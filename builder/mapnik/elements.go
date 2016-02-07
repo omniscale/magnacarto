@@ -121,6 +121,8 @@ type PointSymbolizer struct {
 	Opacity         *string  `xml:"opacity,attr"`
 	Transform       *string  `xml:"transform,attr"`
 	IgnorePlacement *string  `xml:"ignore-placement,attr"`
+	Placement       *string  `xml:"placement,attr"`
+	CompOp          *string  `xml:"comp-op,attr"`
 }
 
 type TextSymbolizer struct {
