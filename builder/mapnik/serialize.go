@@ -554,7 +554,7 @@ func (m *Map) addRasterSymbolizer(result *Rule, r mss.Rule) {
 		}
 	}
 	symb.Opacity = fmtFloat(r.Properties.GetFloat("raster-opacity"))
-	symb.Epsilon = fmtFloat(r.Properties.GetFloat("raster-epsilon"))
+	symb.Epsilon = fmtFloat(r.Properties.GetFloat("raster-colorizer-epsilon"))
 	symb.MeshSize = fmtFloat(r.Properties.GetFloat("raster-mesh-size"))
 	symb.FilterFactor = fmtFloat(r.Properties.GetFloat("raster-filter-factor"))
 	symb.CompOp = fmtString(r.Properties.GetString("raster-comp-op"))

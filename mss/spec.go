@@ -367,7 +367,7 @@ func init() {
 		"raster-comp-op":                 isCompOp,
 		"raster-filter-factor":           isNumber,
 		"raster-mesh-size":               isNumber,
-		"raster-epsilon":                 isNumber,
+		"raster-colorizer-epsilon":       isNumber,
 	}
 }
 
