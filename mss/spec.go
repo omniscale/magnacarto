@@ -163,6 +163,7 @@ func init() {
 		"background-color": isColor,
 
 		"building-fill":   isColor,
+		"building-fill-opacity": isNumber,
 		"building-height": isNumber,
 
 		"line-cap":          isKeyword("round", "butt", "square"),

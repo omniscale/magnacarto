@@ -478,6 +478,7 @@ func (m *Map) addBuildingSymbolizer(result *Rule, r mss.Rule) {
 	if fill, ok := r.Properties.GetColor("building-fill"); ok {
 		symb := BuildingSymbolizer{}
 		symb.Fill = fmtColor(fill, true)
+		symb.FillOpacity = fmtFloat(r.Properties.GetFloat("building-fill-opacity"))
 		symb.Height = fmtFloat(r.Properties.GetFloat("building-height"))
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
