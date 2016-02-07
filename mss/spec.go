@@ -210,6 +210,7 @@ func init() {
 		"line-clip":         isBool,
 		"line-color":        isColor,
 		"line-dasharray":    isNumbers,
+		"line-dash-offset":  isNumbers,
 		"line-gamma":        isNumber,
 		"line-gamma-method": isKeyword("power", "linear", "none", "threshold", "multiply"),
 		"line-join":         isKeyword("miter", "miter-revert", "round", "bevel"),

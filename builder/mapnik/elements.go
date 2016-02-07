@@ -118,6 +118,7 @@ type LineSymbolizer struct {
 	Clip        *string  `xml:"clip,attr"`
 	Color       *string  `xml:"stroke,attr"`
 	Dasharray   *string  `xml:"stroke-dasharray,attr"`
+	DashOffset  *string  `xml:"stroke-dashoffset,attr"`
 	Gamma       *string  `xml:"stroke-gamma,attr"`
 	GammaMethod *string  `xml:"stroke-gamma-method,attr"`
 	Linecap     *string  `xml:"stroke-linecap,attr"`
