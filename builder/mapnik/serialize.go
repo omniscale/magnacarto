@@ -523,6 +523,14 @@ func (m *Map) addPolygonPatternSymbolizer(result *Rule, r mss.Rule) {
 		fname := m.locator.Image(patFile)
 		symb.File = &fname
 		symb.Alignment = fmtString(r.Properties.GetString("polygon-pattern-alignment"))
+		symb.Gamma = fmtFloat(r.Properties.GetFloat("polygon-pattern-gamma"))
+		symb.Opacity = fmtFloat(r.Properties.GetFloat("polygon-pattern-opacity"))
+		symb.Clip = fmtBool(r.Properties.GetBool("polygon-pattern-clip"))
+		symb.Simplify = fmtFloat(r.Properties.GetFloat("polygon-pattern-simplify"))
+		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("polygon-pattern-simplify-algorithm"))
+		symb.Smooth = fmtFloat(r.Properties.GetFloat("polygon-pattern-smooth"))
+		symb.GeometryTransform = fmtString(r.Properties.GetString("polygon-pattern-geometry-transform"))
+		symb.CompOp = fmtString(r.Properties.GetString("polygon-pattern-comp-op"))
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
 }

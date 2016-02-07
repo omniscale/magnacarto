@@ -87,6 +87,14 @@ type PolygonPatternSymbolizer struct {
 	XMLName   xml.Name `xml:"PolygonPatternSymbolizer"`
 	File      *string  `xml:"file,attr"`
 	Alignment *string  `xml:"alignment,attr"`
+	Gamma     *string  `xml:"gamma,attr"`
+	Opacity   *string  `xml:"opacity,attr"`
+	Clip      *string  `xml:"clip,attr"`
+	Simplify  *string  `xml:"simplify,attr"`
+	SimplifyAlgorithm *string  `xml:"simplify-algorithm,attr"`
+	Smooth    *string  `xml:"smooth,attr"`
+	GeometryTransform *string  `xml:"geometry-transform,attr"`
+	CompOp    *string  `xml:"comp-op,attr"`
 }
 
 type BuildingSymbolizer struct {
