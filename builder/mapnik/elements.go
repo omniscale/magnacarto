@@ -104,6 +104,15 @@ type BuildingSymbolizer struct {
 	FillOpacity *string  `xml:"fill-opacity,attr"`
 }
 
+type DotSymbolizer struct {
+	XMLName     xml.Name `xml:"DotSymbolizer"`
+	Fill        *string  `xml:"fill,attr"`
+	Opacity     *string  `xml:"opacity,attr"`
+	Width       *string  `xml:"width,attr"`
+	Height      *string  `xml:"height,attr"`
+	CompOp      *string  `xml:"comp-op,attr"`
+}
+
 type LineSymbolizer struct {
 	XMLName     xml.Name `xml:"LineSymbolizer"`
 	Clip        *string  `xml:"clip,attr"`

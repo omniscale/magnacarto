@@ -200,6 +200,12 @@ func init() {
 		"building-fill-opacity": isNumber,
 		"building-height": isNumber,
 
+		"dot-fill":          isColor,
+		"dot-opacity":       isNumber,
+		"dot-width":         isNumber,
+		"dot-height":        isNumber,
+		"dot-comp-op":       isCompOp,
+
 		"line-cap":          isKeyword("round", "butt", "square"),
 		"line-clip":         isBool,
 		"line-color":        isColor,

@@ -251,6 +251,8 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 		switch p.Name {
 		case "line-":
 			m.addLineSymbolizer(result, r)
+		case "line-pattern-":
+			m.addLinePatternSymbolizer(result, r)
 		case "polygon-":
 			m.addPolygonSymbolizer(result, r)
 		case "polygon-pattern-":
@@ -265,6 +267,8 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 			m.addPointSymbolizer(result, r)
 		case "building-":
 			m.addBuildingSymbolizer(result, r)
+		case "dot-":
+			m.addDotSymbolizer(result, r)
 		case "raster-":
 			m.addRasterSymbolizer(result, r)
 		default:
@@ -558,6 +562,18 @@ func (m *Map) addBuildingSymbolizer(result *Rule, r mss.Rule) {
 		symb.Fill = fmtColor(fill, true)
 		symb.FillOpacity = fmtFloat(r.Properties.GetFloat("building-fill-opacity"))
 		symb.Height = fmtFloat(r.Properties.GetFloat("building-height"))
+		result.Symbolizers = append(result.Symbolizers, &symb)
+	}
+}
+
+func (m *Map) addDotSymbolizer(result *Rule, r mss.Rule) {
+	if fill, ok := r.Properties.GetColor("dot-fill"); ok {
+		symb := DotSymbolizer{}
+		symb.Fill = fmtColor(fill, true)
+		symb.Opacity = fmtFloat(r.Properties.GetFloat("dot-opacity"))
+		symb.Width = fmtFloat(r.Properties.GetFloat("dot-width"))
+		symb.Height = fmtFloat(r.Properties.GetFloat("dot-height"))
+		symb.CompOp = fmtString(r.Properties.GetString("dot-comp-op"))
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
 }
