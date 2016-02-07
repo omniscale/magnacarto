@@ -158,6 +158,15 @@ func isScaling(val interface{}) bool {
 		"blackman",
 	)(val)
 }
+
+func isSimplifyAlgorithm(val interface{}) bool {
+	return isKeyword(
+		"radial-distance",
+		"zhao-saalfeld",
+		"visvalingam-whyatt",
+	)(val)
+}
+
 func init() {
 	attributeTypes = map[string]isValid{
 		"background-color": isColor,
@@ -178,7 +187,7 @@ func init() {
 		"line-opacity":      isNumber,
 		"line-rasterizer":   isKeyword("full", "fast"),
 		"line-simplify":     isNumber,
-		"line-simplify-algorithm": isKeyword("radial-distance", "zhao-saalfeld", "visvalingam-whyatt"),
+		"line-simplify-algorithm": isSimplifyAlgorithm,
 		"line-smooth":       isNumber,
 		"line-width":        isNumber,
 		"line-comp-op":      isCompOp,
@@ -204,7 +213,7 @@ func init() {
 		"marker-max-error":     isNumber,
 		"marker-clip":          isBool,
 		"marker-simplify":      isNumber,
-		"marker-simplify-algorithm": isKeyword("radial-distance", "zhao-saalfeld", "visvalingam-whyatt"),
+		"marker-simplify-algorithm": isSimplifyAlgorithm,
 		"marker-smooth":        isNumber,
 		"marker-geometry-transform": isString,
 		"marker-offset":        isNumber,
@@ -225,6 +234,12 @@ func init() {
 		"polygon-opacity":           isNumber,
 		"polygon-pattern-alignment": isKeyword("global", "local"),
 		"polygon-pattern-file":      isString,
+		"polygon-clip":              isBool,
+		"polygon-simplify":          isNumber,
+		"polygon-simplify-algorithm": isSimplifyAlgorithm,
+		"polygon-smooth":            isNumber,
+		"polygon-geometry-transform": isString,
+		"polygon-comp-op":           isCompOp,
 
 		"shield-allow-overlap":     isBool,
 		"shield-avoid-edges":       isBool,

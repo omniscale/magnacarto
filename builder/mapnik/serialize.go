@@ -306,6 +306,12 @@ func (m *Map) addPolygonSymbolizer(result *Rule, r mss.Rule) {
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("polygon-opacity"))
 		symb.Gamma = fmtFloat(r.Properties.GetFloat("polygon-gamma"))
 		symb.GammaMethod = fmtString(r.Properties.GetString("polygon-gamma-method"))
+		symb.Clip = fmtBool(r.Properties.GetBool("polygon-clip"))
+		symb.Simplify = fmtFloat(r.Properties.GetFloat("polygon-simplify"))
+		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("polygon-simplify-algorithm"))
+		symb.Smooth = fmtFloat(r.Properties.GetFloat("polygon-smooth"))
+		symb.GeometryTransform = fmtString(r.Properties.GetString("polygon-geometry-transform"))
+		symb.CompOp = fmtString(r.Properties.GetString("polygon-comp-op"))
 
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}

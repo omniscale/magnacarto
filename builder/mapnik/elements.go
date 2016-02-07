@@ -77,7 +77,10 @@ type PolygonSymbolizer struct {
 	Opacity     *string  `xml:"fill-opacity,attr"`
 	Rasterizer  *string  `xml:"rasterizer,attr"`
 	Simplify    *string  `xml:"simplify,attr"`
+	SimplifyAlgorithm *string  `xml:"simplify-algorithm,attr"`
 	Smooth      *string  `xml:"smooth,attr"`
+	GeometryTransform   *string  `xml:"geometry-transform,attr"`
+	CompOp      *string  `xml:"comp-op,attr"`
 }
 
 type PolygonPatternSymbolizer struct {
