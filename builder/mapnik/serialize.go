@@ -380,13 +380,21 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 		symb.Size = fmtFloat(r.Properties.GetFloat("shield-size"))
 		symb.Fill = fmtColor(r.Properties.GetColor("shield-fill"))
 		symb.Name = fmtField(r.Properties.GetFieldList("shield-name"))
-		symb.TextOpacity = fmtFloat(r.Properties.GetFloat("shield-opacity"))
+		symb.TextOpacity = fmtFloat(r.Properties.GetFloat("shield-text-opacity"))
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("shield-opacity"))
+		symb.Transform = fmtString(r.Properties.GetString("shield-transform"))
+		symb.Simplify = fmtFloat(r.Properties.GetFloat("shield-simplify"))
+		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("shield-simplify-algorithm"))
+		symb.Smooth = fmtFloat(r.Properties.GetFloat("shield-smooth"))
+		symb.CompOp = fmtString(r.Properties.GetString("shield-comp-op"))
 
 		symb.Placement = fmtString(r.Properties.GetString("shield-placement"))
 		symb.PlacementType = fmtString(r.Properties.GetString("shield-placement-type"))
 		symb.Placements = fmtString(r.Properties.GetString("shield-placements"))
 		symb.UnlockImage = fmtBool(r.Properties.GetBool("shield-unlock-image"))
+		symb.HorizontalAlign = fmtString(r.Properties.GetString("shield-horizontal-alignment"))
+		symb.VerticalAlign = fmtString(r.Properties.GetString("shield-vertical-alignment"))
+		symb.JustifyAlign = fmtString(r.Properties.GetString("shield-justify-alignment"))
 
 		symb.Clip = fmtBool(r.Properties.GetBool("shield-clip"))
 		symb.AllowOverlap = fmtBool(r.Properties.GetBool("shield-allow-overlap"))
@@ -394,6 +402,10 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 
 		symb.HaloFill = fmtColor(r.Properties.GetColor("shield-halo-fill"))
 		symb.HaloRadius = fmtFloat(r.Properties.GetFloat("shield-halo-radius"))
+		symb.HaloRasterizer = fmtString(r.Properties.GetString("shield-halo-rasterizer"))
+		symb.HaloTransform = fmtString(r.Properties.GetString("shield-halo-transform"))
+		symb.HaloCompOp = fmtString(r.Properties.GetString("shield-halo-comp-op"))
+		symb.HaloOpacity = fmtFloat(r.Properties.GetFloat("shield-halo-opacity"))
 
 		symb.CharacterSpacing = fmtFloat(r.Properties.GetFloat("shield-character-spacing"))
 		symb.WrapCharacter = fmtString(r.Properties.GetString("shield-wrap-character"))
@@ -404,10 +416,14 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 		symb.Dy = fmtFloat(r.Properties.GetFloat("shield-dx"))
 		symb.TextDx = fmtFloat(r.Properties.GetFloat("shield-text-dx"))
 		symb.TextDy = fmtFloat(r.Properties.GetFloat("shield-text-dy"))
+		symb.LabelPositionTolerance = fmtFloat(r.Properties.GetFloat("shield-label-position-tolerance"))
+		symb.TextTransform = fmtString(r.Properties.GetString("shield-text-transform"))
 
 		symb.Spacing = fmtFloat(r.Properties.GetFloat("shield-spacing"))
 		symb.MinimumDistance = fmtFloat(r.Properties.GetFloat("shield-min-distance"))
 		symb.MinimumPadding = fmtFloat(r.Properties.GetFloat("shield-min-padding"))
+		symb.Margin = fmtFloat(r.Properties.GetFloat("shield-margin"))
+		symb.RepeatDistance = fmtFloat(r.Properties.GetFloat("shield-repeat-distance"))
 
 		if faceNames, ok := r.Properties.GetStringList("shield-face-name"); ok {
 			symb.FontsetName = m.fontSetName(faceNames)

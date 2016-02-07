@@ -167,6 +167,13 @@ func isSimplifyAlgorithm(val interface{}) bool {
 	)(val)
 }
 
+func isRasterizer(val interface{}) bool {
+	return isKeyword(
+		"full",
+		"fast",
+	)(val)
+}
+
 func init() {
 	attributeTypes = map[string]isValid{
 		"background-color": isColor,
@@ -185,7 +192,7 @@ func init() {
 		"line-miterlimit":   isNumber,
 		"line-offset":       isNumber,
 		"line-opacity":      isNumber,
-		"line-rasterizer":   isKeyword("full", "fast"),
+		"line-rasterizer":   isRasterizer,
 		"line-simplify":     isNumber,
 		"line-simplify-algorithm": isSimplifyAlgorithm,
 		"line-smooth":       isNumber,
@@ -252,6 +259,10 @@ func init() {
 		"shield-fill":              isColor,
 		"shield-halo-fill":         isColor,
 		"shield-halo-radius":       isNumber,
+		"shield-halo-rasterizer":   isRasterizer,
+		"shield-halo-transform":    isString,
+		"shield-halo-comp-op":      isCompOp,
+		"shield-halo-opacity":      isNumber,
 		"shield-line-spacing":      isNumber,
 		"shield-min-distance":      isNumber,
 		"shield-min-padding":       isNumber,
@@ -260,15 +271,27 @@ func init() {
 		"shield-placement":         isKeyword("line", "point", "vertex", "interior"),
 		"shield-placement-type":    isKeyword("dummy", "simple", "list"),
 		"shield-placements":        isString,
+		"shield-transform":         isString,
+		"shield-simplify":          isNumber,
+		"shield-simplify-algorithm": isSimplifyAlgorithm,
+		"shield-smooth":            isNumber,
+		"shield-comp-op":           isCompOp,
 		"shield-size":              isNumber,
 		"shield-spacing":           isNumber,
 		"shield-text-dx":           isNumber,
 		"shield-text-dy":           isNumber,
-		"shield-transform":         isKeyword("none", "uppercase", "lowercase", "capitalize"),
+		"shield-text-opacity":      isNumber,
+		"shield-text-transform":    isKeyword("none", "uppercase", "lowercase", "capitalize", "reverse"),
 		"shield-wrap-before":       isBool,
 		"shield-wrap-character":    isString,
 		"shield-wrap-width":        isNumber,
 		"shield-unlock-image":      isBool,
+		"shield-margin":            isNumber,
+		"shield-repeat-distance":   isNumber,
+		"shield-label-position-tolerance": isNumber,
+		"shield-horizontal-alignment": isKeyword("left", "middle", "right", "auto"),
+		"shield-vertical-alignment": isKeyword("top", "middle", "bottom", "auto"),
+		"shield-justify-alignment": isKeyword("left", "center", "right", "auto"),
 
 		"text-allow-overlap":     isBool,
 		"text-avoid-edges":       isBool,

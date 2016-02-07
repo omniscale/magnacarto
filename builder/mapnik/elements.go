@@ -202,6 +202,10 @@ type ShieldSymbolizer struct {
 	FontsetName      *string  `xml:"fontset-name,attr"`
 	HaloFill         *string  `xml:"halo-fill,attr"`
 	HaloRadius       *string  `xml:"halo-radius,attr"`
+	HaloRasterizer   *string  `xml:"halo-rasterizer,attr"`
+	HaloTransform    *string  `xml:"halo-transform,attr"`
+	HaloCompOp       *string  `xml:"halo-comp-op,attr"`
+	HaloOpacity      *string  `xml:"halo-opacity,attr"`
 	LineSpacing      *string  `xml:"line-spacing,attr"`
 	MinimumDistance  *string  `xml:"minimum-distance,attr"`
 	MinimumPadding   *string  `xml:"minimum-padding,attr"`
@@ -210,6 +214,11 @@ type ShieldSymbolizer struct {
 	Placement        *string  `xml:"placement,attr"`
 	PlacementType    *string  `xml:"placement-type,attr"`
 	Placements       *string  `xml:"placements,attr"`
+	Transform        *string  `xml:"transform,attr"`
+	Simplify         *string  `xml:"simplify,attr"`
+	SimplifyAlgorithm *string  `xml:"simplify-algorithm,attr"`
+	Smooth           *string  `xml:"smooth,attr"`
+	CompOp           *string  `xml:"comp-op,attr"`
 	UnlockImage      *string  `xml:"unlock-image,attr"`
 	Size             *string  `xml:"size,attr"`
 	Spacing          *string  `xml:"spacing,attr"`
@@ -220,6 +229,12 @@ type ShieldSymbolizer struct {
 	WrapBefore       *string  `xml:"wrap-before,attr"`
 	WrapCharacter    *string  `xml:"wrap-character,attr"`
 	WrapWidth        *string  `xml:"wrap-width,attr"`
+	Margin           *string  `xml:"margin,attr"`
+	RepeatDistance   *string  `xml:"repeat-distance,attr"`
+	LabelPositionTolerance *string  `xml:"label-position-tolerance,attr"`
+	HorizontalAlign  *string  `xml:"horizontal-alignment,attr"`
+	VerticalAlign    *string  `xml:"vertical-alignment,attr"`
+	JustifyAlign     *string  `xml:"justify-alignment,attr"`
 }
 
 type RasterSymbolizer struct {
