@@ -158,6 +158,7 @@ type MarkersSymbolizer struct {
 	AllowOverlap *string  `xml:"allow-overlap,attr"`
 	File         *string  `xml:"file,attr"`
 	Fill         *string  `xml:"fill,attr"`
+	FillOpacity  *string  `xml:"fill-opacity,attr"`
 	Height       *string  `xml:"height,attr"`
 	MarkerType   *string  `xml:"marker-type,attr"`
 	Opacity      *string  `xml:"opacity,attr"`
@@ -165,8 +166,21 @@ type MarkersSymbolizer struct {
 	Spacing      *string  `xml:"spacing,attr"`
 	Stroke       *string  `xml:"stroke,attr"`
 	StrokeWidth  *string  `xml:"stroke-width,attr"`
+	StrokeOpacity *string  `xml:"stroke-opacity,attr"`
 	Transform    *string  `xml:"transform,attr"`
+	GeometryTransform    *string  `xml:"geometry-transform,attr"`
 	Width        *string  `xml:"width,attr"`
+	MultiPolicy  *string  `xml:"multi-policy,attr"`
+	AvoidEdges   *string  `xml:"avoid-edges,attr"`
+	IgnorePlacement *string  `xml:"ignore-placement,attr"`
+	MaxError     *string  `xml:"max-error,attr"`
+	Clip         *string  `xml:"clip,attr"`
+	Simplify     *string  `xml:"simplify,attr"`
+	SimplifyAlgorithm *string  `xml:"simplify-algorithm,attr"`
+	Smooth       *string  `xml:"smooth,attr"`
+	Offset       *string  `xml:"offset,attr"`
+	CompOp       *string  `xml:"comp-op,attr"`
+	Direction    *string  `xml:"direction,attr"`
 }
 
 type ShieldSymbolizer struct {

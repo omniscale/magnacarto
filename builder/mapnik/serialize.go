@@ -412,47 +412,49 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 }
 
 func (m *Map) addMarkerSymbolizer(result *Rule, r mss.Rule) {
-	// TODO refactor with marker-type
+	symb := MarkersSymbolizer{}
+	symb.Width = fmtFloat(r.Properties.GetFloat("marker-width"))
+	symb.Height = fmtFloat(r.Properties.GetFloat("marker-height"))
+	symb.Fill = fmtColor(r.Properties.GetColor("marker-fill"))
+	symb.FillOpacity = fmtFloat(r.Properties.GetFloat("marker-fill-opacity"))
+	symb.Opacity = fmtFloat(r.Properties.GetFloat("marker-opacity"))
+	symb.Placement = fmtString(r.Properties.GetString("marker-placement"))
+	symb.Transform = fmtString(r.Properties.GetString("marker-transform"))
+	symb.GeometryTransform = fmtString(r.Properties.GetString("marker-geometry-transform"))
+	symb.Spacing = fmtFloat(r.Properties.GetFloat("marker-spacing"))
+	symb.Stroke = fmtColor(r.Properties.GetColor("marker-line-color"))
+	symb.StrokeOpacity = fmtFloat(r.Properties.GetFloat("marker-line-opacity"))
+	symb.StrokeWidth = fmtFloat(r.Properties.GetFloat("marker-line-width"))
+	symb.AllowOverlap = fmtBool(r.Properties.GetBool("marker-allow-overlap"))
+	symb.MultiPolicy = fmtString(r.Properties.GetString("marker-multi-policy"))
+	symb.AvoidEdges = fmtBool(r.Properties.GetBool("marker-avoid-edges"))
+	symb.IgnorePlacement = fmtBool(r.Properties.GetBool("marker-ignore-placement"))
+	symb.MaxError = fmtFloat(r.Properties.GetFloat("marker-max-error"))
+	symb.Clip = fmtBool(r.Properties.GetBool("marker-clip"))
+	symb.Simplify = fmtFloat(r.Properties.GetFloat("marker-simplify"))
+	symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("marker-simplify-algorithm"))
+	symb.Smooth = fmtFloat(r.Properties.GetFloat("marker-smooth"))
+	symb.Offset = fmtFloat(r.Properties.GetFloat("marker-offset"))
+	symb.CompOp = fmtString(r.Properties.GetString("marker-comp-op"))
+	symb.Direction = fmtString(r.Properties.GetString("marker-direction"))
+
 	if markerFile, ok := r.Properties.GetString("marker-file"); ok {
-		symb := MarkersSymbolizer{}
 		fname := m.locator.Image(markerFile)
 		symb.File = &fname
-		symb.Height = fmtFloat(r.Properties.GetFloat("marker-height"))
-		symb.Width = fmtFloat(r.Properties.GetFloat("marker-width"))
-		symb.Opacity = fmtFloat(r.Properties.GetFloat("marker-opacity"))
-		symb.Fill = fmtColor(r.Properties.GetColor("marker-fill"))
-		symb.Placement = fmtString(r.Properties.GetString("marker-placement"))
-		symb.Transform = fmtString(r.Properties.GetString("marker-transform"))
-		symb.Spacing = fmtFloat(r.Properties.GetFloat("marker-spacing"))
-		result.Symbolizers = append(result.Symbolizers, &symb)
 
 	} else {
 		// carto uses 'ellipse' as default for "marker-type"
 		markerType, ok := r.Properties.GetString("marker-type")
 		if !ok {
 			markerType = "ellipse"
-		}
-		symb := MarkersSymbolizer{}
-		symb.MarkerType = &markerType
-		symb.Width = fmtFloat(r.Properties.GetFloat("marker-width"))
-		symb.Height = fmtFloat(r.Properties.GetFloat("marker-height"))
-		symb.Fill = fmtColor(r.Properties.GetColor("marker-fill"))
-		symb.Opacity = fmtFloat(r.Properties.GetFloat("marker-opacity"))
-		symb.Placement = fmtString(r.Properties.GetString("marker-placement"))
-		symb.Transform = fmtString(r.Properties.GetString("marker-transform"))
-		symb.Spacing = fmtFloat(r.Properties.GetFloat("marker-spacing"))
-		symb.Stroke = fmtColor(r.Properties.GetColor("marker-line-color"))
-		symb.StrokeWidth = fmtFloat(r.Properties.GetFloat("marker-line-width"))
-		symb.AllowOverlap = fmtBool(r.Properties.GetBool("marker-allow-overlap"))
-
-		if !ok {
 			// default marker type requires at least fill, stroke or strokewidth
 			if symb.Fill == nil && symb.Stroke == nil && symb.StrokeWidth == nil {
 				return
 			}
 		}
-		result.Symbolizers = append(result.Symbolizers, &symb)
+		symb.MarkerType = &markerType
 	}
+	result.Symbolizers = append(result.Symbolizers, &symb)
 }
 
 func (m *Map) addPointSymbolizer(result *Rule, r mss.Rule) {
