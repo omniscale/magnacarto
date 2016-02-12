@@ -1,15 +1,10 @@
 {
 	"ImportPath": "github.com/omniscale/magnacarto",
-	"GoVersion": "go1.4.1",
+	"GoVersion": "go1.5",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
-		{
-			"ImportPath": "code.google.com/p/go.net/websocket",
-			"Comment": "null-144",
-			"Rev": "ad01a6fcc8a19d3a4478c836895ffe883bd2ceab"
-		},
 		{
 			"ImportPath": "github.com/BurntSushi/toml",
 			"Comment": "v0.1.0-18-g443a628",
@@ -45,13 +40,17 @@
 			"Rev": "da775f0337260efbac0fce9764cee5bd3e8c85b8"
 		},
 		{
+			"ImportPath": "golang.org/x/net/websocket",
+			"Rev": "8968c61983e8f51a91b8c0ef25bf739278c89634"
+		},
+		{
 			"ImportPath": "gopkg.in/fsnotify.v1",
 			"Comment": "v1.2.0",
 			"Rev": "96c060f6a6b7e0d6f75fddd10efeaca3e5d1bcb0"
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
-			"Rev": "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4"
+			"Rev": "7ad95dd0798a40da1ccdff6dff35fd177b5edf40"
 		}
 	]
 }

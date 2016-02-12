@@ -21,7 +21,7 @@ import (
 
 	"github.com/omniscale/magnacarto/mml"
 
-	"code.google.com/p/go.net/websocket"
+	"golang.org/x/net/websocket"
 
 	"github.com/omniscale/magnacarto"
 	"github.com/omniscale/magnacarto/builder"
