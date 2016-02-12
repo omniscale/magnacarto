@@ -63,29 +63,28 @@ There are binary releases available for Windows, Linux and Mac OS X (Darwin): <h
 
 #### Dependencies
 
-You need [Go][] and [git][].
+You need [Go][]>1.5 and [git][].
 
 [Go]: https://golang.org
 [git]: https://git-scm.com/
 
 #### Compiling
 
-Magnacarto contains a fixed set of the dependencies that are known to work. You need to install Magnacarto with [godep][] to compile with this set. First create a `GOPATH` and install godep:
+First create a `GOPATH` directory for all your Go code, if you don't have one already:
 
-
-    mkdir magnacarto
-    cd magnacarto
+    mkdir -p go
+    cd go
     export GOPATH=`pwd`
-    go get github.com/tools/godep
 
-Then call the following commands:
+Then you need to enable GO15VENDOREXPERIMENT, if you are using Go 1.5. You can skip this if you are using 1.6 or higher:
 
-    cd $GOPATH
-    git clone https://github.com/omniscale/magnacarto src/github.com/omniscale/magnacarto
-    cd src/github.com/omniscale/magnacarto
+    export GO15VENDOREXPERIMENT=1
+
+Next you can fetch the source code and build/install it:
+
+    go get -u github.com/omniscale/magnacarto
+    cd $GOPATH/src/github.com/omniscale/magnacarto
     make install
-
-[godep]: https://github.com/tools/godep
 
 
 #### Render Plugins
