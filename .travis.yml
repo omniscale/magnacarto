@@ -1,18 +1,17 @@
 language: go
 go:
- - 1.4.1
  - 1.5.3
+ - 1.6rc2
  - tip
 
-before_install:
- - go get github.com/axw/gocov/gocov
- - go get github.com/go-playground/overalls
- - go get github.com/mattn/goveralls
- - if ! go get github.com/golang/tools/cmd/cover; then go get golang.org/x/tools/cmd/cover; fi
+matrix:
+  allow_failures:
+  - go: tip
 
 install:
- - go get github.com/tools/godep
+ - if [[ $TRAVIS_GO_VERSION == 1.5* ]]; then go get github.com/axw/gocov/gocov github.com/go-playground/overalls github.com/mattn/goveralls; fi
 
 script:
- - make test-coverage
- - $HOME/gopath/bin/goveralls -coverprofile=overalls.coverprofile -service=travis-ci
+ - make test
+ # only run test-coverage for one go version
+ - if [[ $TRAVIS_GO_VERSION == 1.5* ]]; then make test-coverage; $HOME/gopath/bin/goveralls -coverprofile=overalls.coverprofile -service=travis-ci; fi
