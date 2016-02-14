@@ -62,3 +62,6 @@ test:
 test-full:
 	$(GO) test -i $(FULL_TEST_PACKAGES)
 	export PATH=$(shell pwd):$$PATH; $(GO) test -parallel 4 $(FULL_TEST_PACKAGES)
+
+test-coverage:
+	$(if $(shell go version |grep 'go1.5'), GO15VENDOREXPERIMENT=1,) $(GOPATH)/bin/overalls -project=github.com/omniscale/magnacarto -debug -covermode=count -ignore=.git,Godeps,vendor,app,docs,render,regression
