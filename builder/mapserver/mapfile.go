@@ -985,7 +985,11 @@ func fmtFilters(filters []mss.Filter) string {
 			log.Printf("unknown type of filter value: %s", v)
 			value = ""
 		}
-		parts = append(parts, "("+field+" "+f.CompOp.String()+" "+value+")")
+		if f.CompOp != mss.REGEX {
+			parts = append(parts, "("+field+" "+f.CompOp.String()+" "+value+")")
+		} else {
+			parts = append(parts, "("+field+" ~ "+value+")")
+		}
 	}
 
 	s := strings.Join(parts, " AND ")

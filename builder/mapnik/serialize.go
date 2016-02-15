@@ -613,7 +613,11 @@ func fmtFilters(filters []mss.Filter) string {
 			// strip quotes from field name
 			field = field[1 : len(field)-1]
 		}
-		parts = append(parts, "(["+field+"] "+f.CompOp.String()+" "+value+")")
+		if f.CompOp != mss.REGEX {
+			parts = append(parts, "(["+field+"] "+f.CompOp.String()+" "+value+")")
+		} else {
+			parts = append(parts, "(["+field+"].match("+value+"))")
+		}
 	}
 
 	s := strings.Join(parts, " and ")

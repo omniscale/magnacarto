@@ -195,7 +195,7 @@ var productions = map[tokenType]string{
 	tokenS:            `{wc}+`,
 	tokenComment:      `/\*[^\*]*[\*]+(?:[^/][^\*]*[\*]+)*/`,
 	tokenFunction:     `{ident}\(`,
-	tokenComp:         `>=|<=|>|<|!=|=`,
+	tokenComp:         `>=|<=|>|<|!=|=~|=`,
 	//tokenIncludes:       `~=`,
 	//tokenDashMatch:      `\|=`,
 	//tokenPrefixMatch:    `\^=`,
