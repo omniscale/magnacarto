@@ -376,11 +376,23 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 }
 
 func findAppDir() string {
+	// relative to the binary for our own binary builds
 	binDir := filepath.Dir(os.Args[0])
 	appDir := filepath.Join(binDir, "app")
 	if _, err := os.Stat(appDir); err == nil {
 		return appDir
 	}
+
+	// inside source code for developers (when GOPATH is set)
+	if gopath := os.Getenv("GOPATH"); gopath != "" {
+		appDir := filepath.Join(gopath, "src", "github.com", "omniscale", "magnacarto", "app")
+		log.Println(appDir)
+		if _, err := os.Stat(appDir); err == nil {
+			return appDir
+		}
+	}
+
+	// relative to the working dir
 	here, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
