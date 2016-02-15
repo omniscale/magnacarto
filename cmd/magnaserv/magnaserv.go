@@ -386,7 +386,6 @@ func findAppDir() string {
 	// inside source code for developers (when GOPATH is set)
 	if gopath := os.Getenv("GOPATH"); gopath != "" {
 		appDir := filepath.Join(gopath, "src", "github.com", "omniscale", "magnacarto", "app")
-		log.Println(appDir)
 		if _, err := os.Stat(appDir); err == nil {
 			return appDir
 		}
