@@ -67,7 +67,7 @@ test-full:
 comma:= ,
 empty:=
 space:= $(empty) $(empty)
-COVER_IGNORE:='/vendor|/regression|/render'
+COVER_IGNORE:='/vendor|/regression|/render|/cmd'
 COVER_PACKAGES:= $(shell $(GO) list ./... | grep -Ev $(COVER_IGNORE))
 COVER_PACKAGES_LIST:=$(subst $(space),$(comma),$(COVER_PACKAGES))
 
