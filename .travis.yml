@@ -9,7 +9,7 @@ matrix:
   - go: tip
 
 install:
- - if [[ $TRAVIS_GO_VERSION == 1.5* ]]; then go get github.com/axw/gocov/gocov github.com/go-playground/overalls github.com/mattn/goveralls; fi
+ - if [[ $TRAVIS_GO_VERSION == 1.5* ]]; then go get github.com/axw/gocov/gocov github.com/wadey/gocovmerge github.com/mattn/goveralls; fi
 
 script:
  - make test

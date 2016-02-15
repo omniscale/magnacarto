@@ -1,3 +1,4 @@
+SHELL:=/bin/bash
 .PHONY: test all build install cmds clean dist test test-full
 
 GO_FILES:=$(shell find . -name \*.go)
@@ -9,7 +10,7 @@ BUILD_REV=$(shell git rev-parse --short HEAD)
 BUILD_VERSION=dev-$(BUILD_DATE)-$(BUILD_REV)
 VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.buildVersion=$(BUILD_VERSION)
 
-GO:=$(if $(shell go version |grep 'go1.5'), GO15VENDOREXPERIMENT=1,) go
+GO:=$(if $(shell go version |grep 'go1.5'),GO15VENDOREXPERIMENT=1,) go
 
 uname_S = $(shell sh -c 'uname -s 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
 uname_M = $(shell sh -c 'uname -m 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
@@ -63,5 +64,22 @@ test-full:
 	$(GO) test -i $(FULL_TEST_PACKAGES)
 	export PATH=$(shell pwd):$$PATH; $(GO) test -parallel 4 $(FULL_TEST_PACKAGES)
 
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+COVER_IGNORE:='/vendor|/regression|/render'
+COVER_PACKAGES:= $(shell $(GO) list ./... | grep -Ev $(COVER_IGNORE))
+COVER_PACKAGES_LIST:=$(subst $(space),$(comma),$(COVER_PACKAGES))
+
 test-coverage:
-	$(GOPATH)/bin/overalls -project=github.com/omniscale/magnacarto -debug -covermode=count -ignore=.git,Godeps,app,docs,render,regression
+	mkdir -p .coverprofile
+	rm -f .coverprofile/*
+	$(GO) list -f '{{if gt (len .TestGoFiles) 0}}"$(GO) test -covermode count -coverprofile ./.coverprofile/{{.Name}}-$$$$.coverprofile -coverpkg $(COVER_PACKAGES_LIST) {{.ImportPath}}"{{end}}' ./... \
+		| grep -Ev $(COVER_IGNORE) \
+		| xargs -n 1 bash -c
+	$(GOPATH)/bin/gocovmerge .coverprofile/*.coverprofile > overalls.coverprofile
+	rm -rf .coverprofile
+
+test-coverage-html: test-coverage
+	$(GO) tool cover -html overalls.coverprofile
+
