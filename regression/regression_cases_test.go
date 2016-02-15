@@ -28,3 +28,4 @@ func Test_050_shields_svg(t *testing.T)        { testIt(t, testCase{Name: "050-s
 func Test_060_instances(t *testing.T)          { testIt(t, testCase{Name: "060-instances"}) }
 func Test_061_classes(t *testing.T)            { testIt(t, testCase{Name: "061-classes"}) }
 func Test_062_specifity(t *testing.T)          { testIt(t, testCase{Name: "062-specifity"}) }
+func Test_063_filter(t *testing.T)             { testIt(t, testCase{Name: "063-filter"}) }
