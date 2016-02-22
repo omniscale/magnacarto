@@ -163,7 +163,7 @@ func evaluate(codes []code) ([]code, int, error) {
 					return nil, 0, fmt.Errorf("function mix requires color as first and second argument, got %v and %v", v[0], v[1])
 				}
 				if v[2].T != typeNum && v[2].T != typePercent {
-					return nil, 0, fmt.Errorf("function mix requires number/percent as this argument, got %v", v[2])
+					return nil, 0, fmt.Errorf("function mix requires number/percent as third argument, got %v", v[2])
 				}
 				v = []code{{Value: color.Mix(v[0].Value.(color.Color), v[1].Value.(color.Color), v[2].Value.(float64)/100), T: typeColor}}
 			} else if c.Value.(string) == "-mc-set-hue" {

@@ -1,6 +1,12 @@
 package mss
 
-import "testing"
+import (
+	"reflect"
+
+	"github.com/omniscale/magnacarto/color"
+
+	"testing"
+)
 
 func TestMinPrefixPos(t *testing.T) {
 	p := Properties{}
@@ -49,6 +55,80 @@ func TestCombinedProperties(t *testing.T) {
 	// value from p2
 	if c, _ := p3.GetString("line-color"); c != "white" {
 		t.Error("line-color not from p2", p3)
+	}
+}
+
+func TestSortedPrefix(t *testing.T) {
+	p := &Properties{}
+	p.setPos(key{name: "line-width"}, 2, position{line: 1, filenum: 1, index: 1})
+	p.setPos(key{name: "line-width", instance: "top"}, 1, position{line: 2, filenum: 1, index: 2})
+	p.setPos(key{name: "polygon-fill"}, "red", position{line: 3, filenum: 1, index: 3})
+
+	prefixes := SortedPrefixes(p, []string{"line-", "polygon-"})
+	if !reflect.DeepEqual(prefixes,
+		[]Prefix{{"line-", ""}, {"line-", "top"}, {"polygon-", ""}}) {
+		t.Errorf("unexpected prefixed %q", prefixes)
+	}
+}
+
+func TestPropertiesGet(t *testing.T) {
+	p := &Properties{}
+	p.setPos(key{name: "num"}, 2.0, position{})
+	p.setPos(key{name: "string"}, "foo", position{})
+	p.setPos(key{name: "color"}, color.Color{0, 0, 0, 0, false}, position{})
+	p.setPos(key{name: "floatlist"}, []Value{0.0, 1.1}, position{})
+	p.setPos(key{name: "stringlist"}, []Value{"foo", "bar"}, position{})
+	p.setPos(key{name: "stoplist"}, []Value{Stop{}}, position{})
+
+	if v, ok := p.GetFloat("num"); !ok || v != 2.0 {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetFloat("string"); ok {
+		t.Error(ok, v)
+	}
+
+	if v, ok := p.GetString("string"); !ok || v != "foo" {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetString("num"); ok {
+		t.Error(ok, v)
+	}
+
+	if v, ok := p.GetColor("color"); !ok || v != (color.Color{0, 0, 0, 0, false}) {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetColor("num"); ok {
+		t.Error(ok, v)
+	}
+
+	if v, ok := p.GetFloatList("floatlist"); !ok || !reflect.DeepEqual(v, []float64{0.0, 1.1}) {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetFloatList("num"); ok {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetFloatList("stringlist"); ok {
+		t.Error(ok, v)
+	}
+
+	if v, ok := p.GetStringList("stringlist"); !ok || !reflect.DeepEqual(v, []string{"foo", "bar"}) {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetStringList("num"); ok {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetStringList("floatlist"); ok {
+		t.Error(ok, v)
+	}
+
+	if v, ok := p.GetStopList("stoplist"); !ok || !reflect.DeepEqual(v, []Stop{{}}) {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetStopList("num"); ok {
+		t.Error(ok, v)
+	}
+	if v, ok := p.GetStopList("floatlist"); ok {
+		t.Error(ok, v)
 	}
 
 }

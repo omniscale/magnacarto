@@ -117,19 +117,6 @@ func (p *Properties) clone() *Properties {
 	return &result
 }
 
-func (p *Properties) sameKeys(o *Properties) bool {
-	if len(p.values) != len(o.values) {
-		return false
-	}
-	for k, _ := range p.values {
-		_, ok := o.values[k]
-		if !ok {
-			return false
-		}
-	}
-	return true
-}
-
 func (p *Properties) minPos() int {
 	index := math.MaxInt32
 	for _, v := range p.values {
@@ -263,7 +250,10 @@ func (p *Properties) GetFloatList(property string) ([]float64, bool) {
 	}
 	nums := make([]float64, len(l))
 	for i := range l {
-		nums[i] = l[i].(float64)
+		nums[i], ok = l[i].(float64)
+		if !ok {
+			return nil, false
+		}
 	}
 	return nums, true
 }
@@ -283,7 +273,10 @@ func (p *Properties) GetStringList(property string) ([]string, bool) {
 	}
 	strs := make([]string, len(l))
 	for i := range l {
-		strs[i] = l[i].(string)
+		strs[i], ok = l[i].(string)
+		if !ok {
+			return nil, false
+		}
 	}
 	return strs, true
 }
@@ -319,7 +312,10 @@ func (p *Properties) GetStopList(property string) ([]Stop, bool) {
 	}
 	stops := make([]Stop, len(l))
 	for i := range l {
-		stops[i] = l[i].(Stop)
+		stops[i], ok = l[i].(Stop)
+		if !ok {
+			return nil, false
+		}
 	}
 	return stops, true
 }

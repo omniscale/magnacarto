@@ -130,55 +130,71 @@ func TestParseColor(t *testing.T) {
 }
 
 func TestParseExpression(t *testing.T) {
-	var err error
-	var d *Decoder
-	_, err = decodeString(`@foo: foo(1);`)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "unknown function foo")
+	tests := []struct {
+		expr  string
+		err   string
+		value interface{}
+	}{
 
-	d, err = decodeString(`@foo: __echo__(1);`)
-	assert.NoError(t, err)
-	assert.Equal(t, 1, d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@foo: fadeout(rgba(255, 255, 255, 255), 50%);`)
-	assert.NoError(t, err)
-	assert.Equal(t, color.Color{0.0, 0.0, 1.0, 0.5, false}, d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@foo: fadein(rgba(255, 255, 255, 0), 50%);`)
-	assert.NoError(t, err)
-	assert.Equal(t, color.Color{0.0, 0.0, 1.0, 0.5, false}, d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@foo: 2 + 2 * 3;`)
-	assert.NoError(t, err)
-	assert.Equal(t, float64(8), d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@foo: (2 + 2) * 3;`)
-	assert.NoError(t, err)
-	assert.Equal(t, float64(12), d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@foo: 2 + 2 * 3 - 2 * 2;`)
-	assert.NoError(t, err)
-	assert.Equal(t, float64(4), d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@foo: ((2 + 2) * 3 - 2) * 2;`)
-	assert.NoError(t, err)
-	assert.Equal(t, float64(20), d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@foo: -(-(2 + 2) * 3 - 2) * 2;`)
-	assert.NoError(t, err)
-	assert.Equal(t, float64(28), d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@one: "one";
+		{`@foo: __echo__(1);`, "", 1},
+		{`@foo: fadeout(rgba(255, 255, 255, 255), 50%);`, "", color.Color{0.0, 0.0, 1.0, 0.5, false}},
+		{`@foo: fadein(rgba(255, 255, 255, 0), 50%);`, "", color.Color{0.0, 0.0, 1.0, 0.5, false}},
+		{`@foo: 2 + 2 * 3;`, "", float64(8)},
+		{`@foo: (2 + 2) * 3;`, "", float64(12)},
+		{`@foo: 2 + 2 * 3 - 2 * 2;`, "", float64(4)},
+		{`@foo: ((2 + 2) * 3 - 2) * 2;`, "", float64(20)},
+		{`@foo: -(-(2 + 2) * 3 - 2) * 2;`, "", float64(28)},
+		{`@one: "one";
 		@two: "two";
-		@foo: @one + " + " + @two;`)
-	assert.NoError(t, err)
-	assert.Equal(t, "one + two", d.vars.getKey(key{name: "foo"}))
-
-	d, err = decodeString(`@one: "one";
+		@foo: @one + " + " + @two;`,
+			"", "one + two"},
+		{`@one: "one";
 		@two: [field];
-		@foo: @one + " + " + @two;`)
-	assert.NoError(t, err)
-	assert.Equal(t, "one + [field]", d.vars.getKey(key{name: "foo"}))
+		@foo: @one + " + " + @two;`,
+			"", "one + [field]"},
+
+		{`@foo: lighten(red, 10%);`, "", color.Color{0, 1, 0.6, 1, false}},
+		{`@foo: lighten(red, 10%, 20%);`, "function lighten takes exactly two arguments", nil},
+		{`@foo: lighten(122, 10%);`, "function lighten requires color as first argument", nil},
+		{`@foo: lighten(red, red);`, "function lighten requires number/percent as second argument", nil},
+
+		{`@foo: hue(red);`, "", 0.0},
+		{`@foo: hue(red, red);`, "function hue takes exactly one argument", nil},
+		{`@foo: hue(123);`, "function hue requires color as argument", nil},
+
+		{`@foo: mix(red, blue, 0%);`, "", color.MustParse("blue")},
+		{`@foo: mix(red, blue);`, "function mix takes exactly three arguments", nil},
+		{`@foo: mix(red, blue);`, "function mix takes exactly three arguments", nil},
+		{`@foo: mix(red, blue, red, blue);`, "function mix takes exactly three arguments", nil},
+
+		{`@foo: mix(123, blue, 0%);`, "function mix requires color as first and second argument", nil},
+		{`@foo: mix(red, 123, 0%);`, "function mix requires color as first and second argument", nil},
+		{`@foo: mix(red, blue, red);`, "function mix requires number/percent as third argument", nil},
+
+		{`@foo: rgb(0, 0, 0, 0);`, "rgb takes exactly three arguments", nil},
+		{`@foo: rgba(0, 0, 0);`, "rgba takes exactly four arguments", nil},
+
+		{`@foo: [field1] + " " + [field2] + "!";`, "", []Value{"[field1]", " ", "[field2]", "!"}},
+		{`@foo: [field1] + [field2];`, "", []Value{"[field1]", "[field2]"}},
+		{`@foo: "hello " + [field2];`, "", []Value{"hello ", "[field2]"}},
+
+		{`@foo: red * 0.5;`, "", color.Color{0, 0.5, 0.25, 1, false}},
+		{`@foo: red * blue;`, "unsupported operation", nil},
+	}
+
+	for _, tt := range tests {
+		d, err := decodeString(tt.expr)
+		if tt.err == "" {
+			assert.NoError(t, err, "expr %q returnd error %q", tt.expr, err)
+		} else if err == nil {
+			t.Errorf("expected error %q for %q", tt.err, tt.expr)
+		} else {
+			assert.Contains(t, err.Error(), tt.err)
+		}
+		if tt.value != nil {
+			assert.Equal(t, tt.value, d.vars.getKey(key{name: "foo"}))
+		}
+	}
 }
 
 func TestParserErrors(t *testing.T) {
@@ -221,6 +237,7 @@ func TestParserErrors(t *testing.T) {
 		{`#foo{ a: 1}`, ""},
 
 		// functions
+		{`@foo: bar(red, 10%);`, "unknown function bar"},
 		{`@foo: lighten(red, 10%);`, ""},
 		{`@foo: lighten(red, 10%, );`, "unexpected value RPAREN"},
 		{`@foo: lighten(red, 10%`, "expected end of function or comma, got EOF"},
