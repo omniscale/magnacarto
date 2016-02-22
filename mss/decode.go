@@ -43,13 +43,6 @@ type position struct {
 	index    int
 }
 
-func (a position) Less(b position) bool {
-	if a.filenum != b.filenum {
-		return a.filenum < b.filenum
-	}
-	return a.line < b.line
-}
-
 func (w *warning) String() string {
 	file := w.file
 	if file == "" {
@@ -226,8 +219,12 @@ func (d *Decoder) evaluateProperties(properties *Properties, validate bool) {
 	for _, k := range properties.keys() {
 		if expr, ok := properties.getKey(k).(*expression); ok {
 			v := d.evaluateExpression(expr)
-			if validate && !validProperty(k.name, v) {
-				d.warn(properties.pos(k), "invalid property %v %v", k.name, v)
+			if validate {
+				if validProp, validVal := validProperty(k.name, v); !validProp {
+					d.warn(properties.pos(k), "invalid property %v %v", k.name, v)
+				} else if !validVal {
+					d.warn(properties.pos(k), "invalid property value for %v %v", k.name, v)
+				}
 			}
 			attr := properties.values[k]
 			properties.setPos(k, v, attr.pos)
@@ -279,7 +276,7 @@ func (d *Decoder) block() {
 				d.mss.setInstance(tok.value[:len(tok.value)-1]) // strip /
 				tok = d.next()
 				if tok.t != tokenIdent {
-					d.error(d.pos(tok), "expected IDENT found %v", tok)
+					d.error(d.pos(tok), "expected property name for instance, found %v", tok)
 				}
 				keyword = tok.value
 			}

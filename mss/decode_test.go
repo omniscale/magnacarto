@@ -167,6 +167,97 @@ func TestParseExpression(t *testing.T) {
 	d, err = decodeString(`@foo: -(-(2 + 2) * 3 - 2) * 2;`)
 	assert.NoError(t, err)
 	assert.Equal(t, float64(28), d.vars.getKey(key{name: "foo"}))
+
+	d, err = decodeString(`@one: "one";
+		@two: "two";
+		@foo: @one + " + " + @two;`)
+	assert.NoError(t, err)
+	assert.Equal(t, "one + two", d.vars.getKey(key{name: "foo"}))
+
+	d, err = decodeString(`@one: "one";
+		@two: [field];
+		@foo: @one + " + " + @two;`)
+	assert.NoError(t, err)
+	assert.Equal(t, "one + [field]", d.vars.getKey(key{name: "foo"}))
+}
+
+func TestParserErrors(t *testing.T) {
+	tests := []struct {
+		expr string
+		msg  string
+	}{
+		// selector
+		{`#foo, #bar[zoom=3] {}`, ""},
+		{`#foo, #bar[zoom=3], {}`, ""}, // dangling coma is ok
+		{`#foo, #bar[zoom=3], 123 {}`, "expected layer, attachment, class or filter, got NUMBER"},
+		{`#bar[zoom=3]{}`, ""},
+		{`#bar[zoom 3]{}`, "expected comparsion, got '3'"},
+		{`#bar[zoom=3.1]{}`, "invalid zoom level NUMBER"},
+		{`#bar[zoom=~3]{}`, "regular expressions are not allowed for zoom levels"},
+		{`#bar[zoom="foo"]{}`, "zoom requires num, got STRING"},
+		{`@bar: `, "unexpected value EOF"},
+		{`@bar 123`, "expected COLON found NUMBER"},
+		{`@bar:;`, "unexpected value SEMICOLON"},
+		{`@bar: "Foo`, "unclosed quotation mark"},
+		{`#bar {1}`, "unexpected token NUM"},
+
+		// root
+		{`Map {}`, ""},
+		{`Foo {}`, "only 'Map' identifier expected at top level"},
+		{`123`, "unexpected token at top level"},
+
+		// fields
+		{`@foo: [field];`, ""},
+		{`@foo: [123];`, "expected identifier in field name, got NUMBER"},
+
+		// filter
+		{`[foo="bar"]{}`, ""},
+		{`[foo=null]{}`, ""},
+		{`[foo=bar]{}`, "unexpected value in filter 'bar'"},
+
+		// instances
+		{`#foo{ a/line-width: 1}`, ""},
+		{`#foo{ a/: 1}`, "expected property name for instance, found COLON"},
+		{`#foo{ a: 1}`, ""},
+
+		// functions
+		{`@foo: lighten(red, 10%);`, ""},
+		{`@foo: lighten(red, 10%, );`, "unexpected value RPAREN"},
+		{`@foo: lighten(red, 10%`, "expected end of function or comma, got EOF"},
+		{`@foo: lighten(red, 10% 123)`, "expected end of function or comma, got NUM"},
+	}
+
+	for _, tt := range tests {
+		_, err := decodeString(tt.expr)
+		if tt.msg == "" {
+			assert.NoError(t, err, "expr %q returnd error %q", tt.expr, err)
+		} else if err == nil {
+			t.Errorf("expected error %q for %q", tt.msg, tt.expr)
+		} else {
+			assert.Contains(t, err.Error(), tt.msg)
+		}
+	}
+}
+
+func TestParserWarnings(t *testing.T) {
+	tests := []struct {
+		expr string
+		msg  string
+	}{
+		// selector
+		{`#foo {line-width: "foo"}`, "invalid property value for line-width"},
+		{`#foo {line-wi: "foo"}`, "invalid property line-wi"},
+	}
+
+	for _, tt := range tests {
+		d, err := decodeString(tt.expr)
+		assert.NoError(t, err)
+		if len(d.warnings) == 1 {
+			assert.Contains(t, d.warnings[0].String(), tt.msg)
+		} else {
+			t.Errorf("parsing %q did not return expected warnings: %q", tt.expr, d.warnings)
+		}
+	}
 }
 
 func decodeLayerProperties(t *testing.T, mss string) *Properties {

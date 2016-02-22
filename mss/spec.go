@@ -397,10 +397,11 @@ func init() {
 	}
 }
 
-func validProperty(property string, value interface{}) bool {
+// validProperty returns whether the property and the value is valid.
+func validProperty(property string, value interface{}) (bool, bool) {
 	checkFunc, ok := attributeTypes[property]
 	if !ok {
-		return false
+		return false, false
 	}
-	return checkFunc(value)
+	return true, checkFunc(value)
 }
