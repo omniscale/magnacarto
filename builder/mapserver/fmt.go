@@ -43,10 +43,9 @@ func fmtString(v string, ok bool) *string {
 		return nil
 	}
 	if len(v) > 2 && v[0] == '\'' && v[len(v)-1] == '\'' {
-		// already quoted
-		return &v
+		v = v[1 : len(v)-1]
 	}
-	r := `"` + v + `"`
+	r := "'" + escapeSingleQuote(v) + "'"
 	return &r
 }
 
@@ -82,8 +81,7 @@ func fmtFilters(filters []mss.Filter) string {
 		case nil:
 			value = "null"
 		case string:
-			// TODO quote " in string?!
-			value = `"` + v + `"`
+			value = "'" + escapeSingleQuote(v) + "'"
 			// field needs to be quoted if we compare strings
 			// e.g. ('[field]' = "foo"), but ([field] = 5)
 			field = "'" + field + "'"
