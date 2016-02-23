@@ -218,15 +218,15 @@ func BenchmarkFilterIsSubset(b *testing.B) {
 func TestCombineRule(t *testing.T) {
 	combined := combineRules(Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{{"highway", EQ, "path"}, {"oneway", EQ, "yes"}},
-		Zoom: newZoomRange(LT, 5), Properties: newProperties("width", 1, "cap", "round"),
+		Zoom: newZoomRange(LT, 5), Properties: NewProperties("width", 1, "cap", "round"),
 	}, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{{"bridge", EQ, 1}, {"highway", EQ, "path"}},
-		Zoom: newZoomRange(GT, 3), Properties: newProperties("width", 4, "fill", "red", "end", "butt"),
+		Zoom: newZoomRange(GT, 3), Properties: NewProperties("width", 4, "fill", "red", "end", "butt"),
 	})
 
 	assertRuleEq(t, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{{"bridge", EQ, 1}, {"highway", EQ, "path"}, {"oneway", EQ, "yes"}},
-		Zoom: newZoomRange(EQ, 4), Properties: newProperties("width", 4, "fill", "red", "cap", "round", "end", "butt")},
+		Zoom: newZoomRange(EQ, 4), Properties: NewProperties("width", 4, "fill", "red", "cap", "round", "end", "butt")},
 		combined,
 	)
 }
@@ -235,11 +235,11 @@ func TestSortedRulesNoInfinitiveLoop(t *testing.T) {
 	// check for bug were r.overlaps(o) returns rule identical with o which resulted
 	// in more rules that returned identical rules -> infinite loop
 	rules := []Rule{
-		{Filters: []Filter{{"bar", EQ, "foo"}}, Zoom: AllZoom, Properties: newProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 12), Properties: newProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 13), Properties: newProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 14), Properties: newProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 15), Properties: newProperties("width", 1)},
+		{Filters: []Filter{{"bar", EQ, "foo"}}, Zoom: AllZoom, Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 12), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 13), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 14), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 15), Properties: NewProperties("width", 1)},
 	}
 	sorted := sortedRules(rules, nil, nil)
 	assert.Len(t, sorted, 9)
@@ -247,18 +247,18 @@ func TestSortedRulesNoInfinitiveLoop(t *testing.T) {
 
 func TestSortedRulesCombinationDuplicates(t *testing.T) {
 	rules := []Rule{
-		{Filters: []Filter{{"a", EQ, "1"}}, Properties: newProperties("a", 1)},
-		{Filters: []Filter{{"b", EQ, "1"}}, Properties: newProperties("b", 1)},
-		{Filters: []Filter{{"c", EQ, "1"}}, Properties: newProperties("c", 1)},
+		{Filters: []Filter{{"a", EQ, "1"}}, Properties: NewProperties("a", 1)},
+		{Filters: []Filter{{"b", EQ, "1"}}, Properties: NewProperties("b", 1)},
+		{Filters: []Filter{{"c", EQ, "1"}}, Properties: NewProperties("c", 1)},
 	}
 	sorted := sortedRules(rules, nil, nil)
 	assert.Len(t, sorted, 7)
 
 	rules = []Rule{
-		{Filters: []Filter{{"a", EQ, "1"}}, Properties: newProperties("a", 1)},
-		{Filters: []Filter{{"b", EQ, "1"}}, Properties: newProperties("b", 1)},
-		{Filters: []Filter{{"c", EQ, "1"}}, Properties: newProperties("c", 1)},
-		{Filters: []Filter{{"a", EQ, "1"}, {"b", EQ, "1"}}, Properties: newProperties("b", 2, "a", 2)},
+		{Filters: []Filter{{"a", EQ, "1"}}, Properties: NewProperties("a", 1)},
+		{Filters: []Filter{{"b", EQ, "1"}}, Properties: NewProperties("b", 1)},
+		{Filters: []Filter{{"c", EQ, "1"}}, Properties: NewProperties("c", 1)},
+		{Filters: []Filter{{"a", EQ, "1"}, {"b", EQ, "1"}}, Properties: NewProperties("b", 2, "a", 2)},
 	}
 	sorted = sortedRules(rules, nil, nil)
 	assert.Len(t, sorted, 7)
@@ -268,8 +268,8 @@ func TestSortedRulesMultipleClasses(t *testing.T) {
 	// .A [a=1] { a: 1 }
 	// .B [b=1] { b: 1 }
 	rules := []Rule{
-		{Class: "A", Filters: []Filter{{"a", EQ, 1}}, Properties: newProperties("a", 1)},
-		{Class: "B", Filters: []Filter{{"b", EQ, 1}}, Properties: newProperties("b", 1)},
+		{Class: "A", Filters: []Filter{{"a", EQ, 1}}, Properties: NewProperties("a", 1)},
+		{Class: "B", Filters: []Filter{{"b", EQ, 1}}, Properties: NewProperties("b", 1)},
 	}
 
 	sorted := sortedRules(rules, nil, nil)
@@ -277,19 +277,19 @@ func TestSortedRulesMultipleClasses(t *testing.T) {
 	assertRuleEq(t, Rule{
 		Class:      "A", // TODO A, B
 		Filters:    []Filter{{"a", EQ, 1}, {"b", EQ, 1}},
-		Properties: newProperties("a", 1, "b", 1)},
+		Properties: NewProperties("a", 1, "b", 1)},
 		sorted[0],
 	)
 	assertRuleEq(t, Rule{
 		Class:      "A",
 		Filters:    []Filter{{"a", EQ, 1}},
-		Properties: newProperties("a", 1)},
+		Properties: NewProperties("a", 1)},
 		sorted[1],
 	)
 	assertRuleEq(t, Rule{
 		Class:      "B",
 		Filters:    []Filter{{"b", EQ, 1}},
-		Properties: newProperties("b", 1)},
+		Properties: NewProperties("b", 1)},
 		sorted[2],
 	)
 }
@@ -298,8 +298,8 @@ func TestSortedRulesMultipleClassesInstance(t *testing.T) {
 	// .A::X [a=1] { a: 1}
 	// .B::X [a=1][b=2] { b/b: 1}
 	rules := []Rule{
-		{Class: "A", Attachment: "X", Filters: []Filter{{"a", EQ, 1}}, Properties: newPropertiesInstance("a", "", 1)},
-		{Class: "B", Attachment: "X", Filters: []Filter{{"a", EQ, 1}, {"b", EQ, 2}}, Properties: newPropertiesInstance("b", "b", 1)},
+		{Class: "A", Attachment: "X", Filters: []Filter{{"a", EQ, 1}}, Properties: NewPropertiesInstance("a", "", 1)},
+		{Class: "B", Attachment: "X", Filters: []Filter{{"a", EQ, 1}, {"b", EQ, 2}}, Properties: NewPropertiesInstance("b", "b", 1)},
 	}
 
 	sorted := sortedRules(rules, nil, nil)
@@ -308,14 +308,14 @@ func TestSortedRulesMultipleClassesInstance(t *testing.T) {
 		Class:      "B", // TODO A, B
 		Attachment: "X",
 		Filters:    []Filter{{"a", EQ, 1}, {"b", EQ, 2}},
-		Properties: newPropertiesInstance("a", "", 1, "b", "b", 1)},
+		Properties: NewPropertiesInstance("a", "", 1, "b", "b", 1)},
 		sorted[0],
 	)
 	assertRuleEq(t, Rule{
 		Class:      "A",
 		Attachment: "X",
 		Filters:    []Filter{{"a", EQ, 1}},
-		Properties: newPropertiesInstance("a", "", 1)},
+		Properties: NewPropertiesInstance("a", "", 1)},
 		sorted[1],
 	)
 }
@@ -323,51 +323,51 @@ func TestSortedRulesMultipleClassesInstance(t *testing.T) {
 func TestSortedRulesCombination(t *testing.T) {
 	// disjoint filters will result in combination of all rules
 	rules := []Rule{
-		{Filters: []Filter{{"type", EQ, "road"}}, Properties: newProperties("width", 1)},
-		{Filters: []Filter{{"tunnel", EQ, 1}}, Properties: newProperties("dash-array", 1)},
-		{Filters: []Filter{{"access", EQ, "private"}}, Properties: newProperties("color", "grey")},
+		{Filters: []Filter{{"type", EQ, "road"}}, Properties: NewProperties("width", 1)},
+		{Filters: []Filter{{"tunnel", EQ, 1}}, Properties: NewProperties("dash-array", 1)},
+		{Filters: []Filter{{"access", EQ, "private"}}, Properties: NewProperties("color", "grey")},
 	}
 	sorted := sortedRules(rules, nil, nil)
 	assert.Len(t, sorted, 7)
 
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"access", EQ, "private"}, {"tunnel", EQ, 1}, {"type", EQ, "road"}},
-		Properties: newProperties("width", 1, "dash-array", 1, "color", "grey")},
+		Properties: NewProperties("width", 1, "dash-array", 1, "color", "grey")},
 		sorted[0],
 	)
 
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"tunnel", EQ, 1}, {"type", EQ, "road"}},
-		Properties: newProperties("width", 1, "dash-array", 1)},
+		Properties: NewProperties("width", 1, "dash-array", 1)},
 		sorted[1],
 	)
 
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"access", EQ, "private"}, {"type", EQ, "road"}},
-		Properties: newProperties("width", 1, "color", "grey")},
+		Properties: NewProperties("width", 1, "color", "grey")},
 		sorted[2],
 	)
 
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"type", EQ, "road"}},
-		Properties: newProperties("width", 1)},
+		Properties: NewProperties("width", 1)},
 		sorted[3],
 	)
 
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"access", EQ, "private"}, {"tunnel", EQ, 1}},
-		Properties: newProperties("dash-array", 1, "color", "grey")},
+		Properties: NewProperties("dash-array", 1, "color", "grey")},
 		sorted[4],
 	)
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"tunnel", EQ, 1}},
-		Properties: newProperties("dash-array", 1)},
+		Properties: NewProperties("dash-array", 1)},
 		sorted[5],
 	)
 
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"access", EQ, "private"}},
-		Properties: newProperties("color", "grey")},
+		Properties: NewProperties("color", "grey")},
 		sorted[6],
 	)
 }
@@ -380,35 +380,35 @@ func TestSortedRulesRedundantRuleRemoved(t *testing.T) {
 	//   line-width: 1;
 	// }
 	rules := []Rule{
-		{Filters: []Filter{{"size", GT, 1000}}, Properties: newProperties("width", 1)},
-		{Zoom: newZoomRange(GTE, 17), Properties: newProperties("width", 1)},
-		{Filters: []Filter{{"size", GT, 2000}}, Properties: newProperties("width", 2)},
-		{Zoom: newZoomRange(GTE, 17), Filters: []Filter{{"size", GT, 2000}}, Properties: newProperties("width", 2)},
+		{Filters: []Filter{{"size", GT, 1000}}, Properties: NewProperties("width", 1)},
+		{Zoom: newZoomRange(GTE, 17), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{{"size", GT, 2000}}, Properties: NewProperties("width", 2)},
+		{Zoom: newZoomRange(GTE, 17), Filters: []Filter{{"size", GT, 2000}}, Properties: NewProperties("width", 2)},
 	}
 	sorted := sortedRules(rules, nil, nil)
 	assert.Len(t, sorted, 4)
 
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"size", GT, 1000}},
-		Properties: newProperties("width", 1)},
+		Properties: NewProperties("width", 1)},
 		sorted[0],
 	)
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"size", GT, 2000}},
-		Properties: newProperties("width", 2)},
+		Properties: NewProperties("width", 2)},
 		sorted[1],
 	)
 	// TODO this rule is redundant since it is covered by the rule above
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"size", GT, 2000}},
 		Zoom:       newZoomRange(GTE, 17),
-		Properties: newProperties("width", 2)},
+		Properties: NewProperties("width", 2)},
 		sorted[2],
 	)
 
 	assertRuleEq(t, Rule{
 		Zoom:       newZoomRange(GTE, 17),
-		Properties: newProperties("width", 1)},
+		Properties: NewProperties("width", 1)},
 		sorted[3],
 	)
 }

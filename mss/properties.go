@@ -333,7 +333,7 @@ func combineProperties(a, b *Properties) *Properties {
 
 var propCounter int
 
-func newProperties(kv ...interface{}) *Properties {
+func NewProperties(kv ...interface{}) *Properties {
 	r := &Properties{}
 	r.values = make(map[key]attr)
 	for i := 0; i < (len(kv) - 1); i += 2 {
@@ -346,7 +346,7 @@ func newProperties(kv ...interface{}) *Properties {
 	return r
 }
 
-func newPropertiesInstance(kiv ...interface{}) *Properties {
+func NewPropertiesInstance(kiv ...interface{}) *Properties {
 	r := &Properties{}
 	r.values = make(map[key]attr)
 	for i := 0; i < (len(kiv) - 2); i += 3 {

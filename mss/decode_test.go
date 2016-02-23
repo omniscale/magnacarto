@@ -396,8 +396,8 @@ func TestParseMapBlock(t *testing.T) {
 	assert.NoError(t, err)
 	rules := allRules(d.MSS())
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "foo", Attachment: "", Properties: newProperties("line-width", float64(1)), Zoom: AllZoom, order: 0},
-		Rule{Layer: "bar", Attachment: "", Properties: newProperties("line-width", float64(1)), Zoom: AllZoom, order: 1},
+		Rule{Layer: "foo", Attachment: "", Properties: NewProperties("line-width", float64(1)), Zoom: AllZoom, order: 0},
+		Rule{Layer: "bar", Attachment: "", Properties: NewProperties("line-width", float64(1)), Zoom: AllZoom, order: 1},
 	})
 	assert.Equal(t, color.MustParse("red"), d.MSS().Map().getKey(key{name: "background-color"}))
 }
@@ -490,34 +490,34 @@ func TestDecoderRules(t *testing.T) {
 
 	rules = loadRules(t, "tests/002-declaration.mss", "ALL")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "num", Zoom: AllZoom, Properties: newProperties("line-width", float64(12)), order: 1},
-		Rule{Layer: "hash", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{199.99999999999997, 1.0, 0.7, 1.0, false}), order: 1},
-		Rule{Layer: "hash2", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{240.0, 0.5000000000000001, 0.6000000000000001, 1.0, false}), order: 1},
-		Rule{Layer: "rgb", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{264.0, 1.0, 0.5, 1.0, false}), order: 1},
-		Rule{Layer: "rgbpercent", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{264.0, 1.0, 0.5, 1.0, false}), order: 1},
-		Rule{Layer: "rgba", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
-		Rule{Layer: "rgbacompat", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
-		Rule{Layer: "rgbapercent", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
-		Rule{Layer: "list", Zoom: AllZoom, Properties: newProperties("text-name", "foo", "text-size", float64(12), "text-face-name", []Value{"Foo", "Bar", "Baz"}), order: 1},
-		Rule{Layer: "listnum", Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-dasharray", []Value{float64(2), float64(3), float64(4)}), order: 1},
+		Rule{Layer: "num", Zoom: AllZoom, Properties: NewProperties("line-width", float64(12)), order: 1},
+		Rule{Layer: "hash", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{199.99999999999997, 1.0, 0.7, 1.0, false}), order: 1},
+		Rule{Layer: "hash2", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{240.0, 0.5000000000000001, 0.6000000000000001, 1.0, false}), order: 1},
+		Rule{Layer: "rgb", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{264.0, 1.0, 0.5, 1.0, false}), order: 1},
+		Rule{Layer: "rgbpercent", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{264.0, 1.0, 0.5, 1.0, false}), order: 1},
+		Rule{Layer: "rgba", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
+		Rule{Layer: "rgbacompat", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
+		Rule{Layer: "rgbapercent", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
+		Rule{Layer: "list", Zoom: AllZoom, Properties: NewProperties("text-name", "foo", "text-size", float64(12), "text-face-name", []Value{"Foo", "Bar", "Baz"}), order: 1},
+		Rule{Layer: "listnum", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-dasharray", []Value{float64(2), float64(3), float64(4)}), order: 1},
 	})
 
 	rules = loadRules(t, "tests/040-nested.mss", "roads")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: newZoomRange(EQ, 17), Properties: newProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 0},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: AllZoom, Properties: newProperties("line-width", float64(1), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 1},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "rail"}}, Zoom: newZoomRange(EQ, 17), Properties: newProperties("line-width", float64(5), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 3},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(EQ, 17), Properties: newProperties("line-width", float64(2), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 2},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: newProperties("line-width", float64(1)), order: 2},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: newZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 0},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 1},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "rail"}}, Zoom: newZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 3},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(2), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 2},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(1)), order: 2},
 	})
 
 	rules = loadRules(t, "tests/021-zoom-specific.mss", "roads")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: newZoomRange(EQ, 15), Properties: newProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: newZoomRange(GTE, 14), Properties: newProperties("line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(EQ, 15), Properties: newProperties("line-width", float64(5), "line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(GTE, 14), Properties: newProperties("line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: newProperties("line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: newZoomRange(EQ, 15), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: newZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(EQ, 15), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-join", "bevel")},
 	})
 
 }
@@ -526,7 +526,7 @@ func TestDecoderClasses(t *testing.T) {
 	var rules []Rule
 	rules = loadRules(t, "tests/014-classes.mss", "lakes", "land")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "lakes", Class: "land", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: newProperties("line-width", float64(0.5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "polygon-fill", color.Color{240.0, 1.0, 0.5, 1.0, false})},
+		Rule{Layer: "lakes", Class: "land", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(0.5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "polygon-fill", color.Color{240.0, 1.0, 0.5, 1.0, false})},
 	})
 
 	// basin class is inside water, no match
@@ -535,17 +535,17 @@ func TestDecoderClasses(t *testing.T) {
 
 	rules = loadRules(t, "tests/014-classes.mss", "", "water")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "", Class: "water", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: newProperties("polygon-fill", color.Color{120.0, 1.0, 0.5, 1.0, false}, "line-width", float64(1))},
+		Rule{Layer: "", Class: "water", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("polygon-fill", color.Color{120.0, 1.0, 0.5, 1.0, false}, "line-width", float64(1))},
 	})
 
 	// return .water.basin property regardless of requested class order
 	rules = loadRules(t, "tests/014-classes.mss", "", "basin", "water")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "", Class: "basin", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: newProperties("polygon-fill", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-width", float64(1), "polygon-opacity", float64(0.5))},
+		Rule{Layer: "", Class: "basin", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("polygon-fill", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-width", float64(1), "polygon-opacity", float64(0.5))},
 	})
 	rules = loadRules(t, "tests/014-classes.mss", "", "water", "basin")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "", Class: "water", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: newProperties("polygon-fill", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-width", float64(1), "polygon-opacity", float64(0.5))},
+		Rule{Layer: "", Class: "water", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("polygon-fill", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-width", float64(1), "polygon-opacity", float64(0.5))},
 	})
 
 }
