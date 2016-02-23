@@ -136,7 +136,7 @@ func TestParseExpression(t *testing.T) {
 		value interface{}
 	}{
 
-		{`@foo: __echo__(1);`, "", 1},
+		{`@foo: __echo__(1);`, "", 1.0},
 		{`@foo: fadeout(rgba(255, 255, 255, 255), 50%);`, "", color.Color{0.0, 0.0, 1.0, 0.5, false}},
 		{`@foo: fadein(rgba(255, 255, 255, 0), 50%);`, "", color.Color{0.0, 0.0, 1.0, 0.5, false}},
 		{`@foo: 2 + 2 * 3;`, "", float64(8)},
@@ -174,9 +174,9 @@ func TestParseExpression(t *testing.T) {
 		{`@foo: rgb(0, 0, 0, 0);`, "rgb takes exactly three arguments", nil},
 		{`@foo: rgba(0, 0, 0);`, "rgba takes exactly four arguments", nil},
 
-		{`@foo: [field1] + " " + [field2] + "!";`, "", []Value{"[field1]", " ", "[field2]", "!"}},
-		{`@foo: [field1] + [field2];`, "", []Value{"[field1]", "[field2]"}},
-		{`@foo: "hello " + [field2];`, "", []Value{"hello ", "[field2]"}},
+		{`@foo: [field1] + " " + [field2] + "!";`, "", []Value{Field("[field1]"), " ", Field("[field2]"), "!"}},
+		{`@foo: [field1] + [field2];`, "", []Value{Field("[field1]"), Field("[field2]")}},
+		{`@foo: "hello " + [field2];`, "", []Value{"hello ", Field("[field2]")}},
 
 		{`@foo: red * 0.5;`, "", color.Color{0, 0.5, 0.25, 1, false}},
 		{`@foo: red * blue;`, "unsupported operation", nil},
@@ -292,16 +292,16 @@ func TestParseInstanceProperties(t *testing.T) {
 	var p *Properties
 
 	p = decodeLayerProperties(t, `#foo { a/foo: 2; foo: 1 }`)
-	assert.Equal(t, 2, p.getKey(key{name: "foo", instance: "a"}))
-	assert.Equal(t, 1, p.getKey(key{name: "foo"}))
+	assert.Equal(t, 2.0, p.getKey(key{name: "foo", instance: "a"}))
+	assert.Equal(t, 1.0, p.getKey(key{name: "foo"}))
 	assert.Equal(t, nil, p.getKey(key{name: "foo", instance: "unknown"}))
 
 	// with default instance
 	v, _ := p.get("foo")
-	assert.Equal(t, 1, v)
+	assert.Equal(t, 1.0, v)
 	p.SetDefaultInstance("a")
 	v, _ = p.get("foo")
-	assert.Equal(t, 2, v)
+	assert.Equal(t, 2.0, v)
 }
 
 func TestDeferEval(t *testing.T) {
@@ -367,7 +367,7 @@ func TestParseBoolVar(t *testing.T) {
 func TestParseList(t *testing.T) {
 	d, err := decodeString(`@foo: 1, 2, 3;`)
 	assert.NoError(t, err)
-	assert.Equal(t, []Value{1, 2, 3}, d.vars.getKey(key{name: "foo"}))
+	assert.Equal(t, []Value{1.0, 2.0, 3.0}, d.vars.getKey(key{name: "foo"}))
 }
 
 func TestParseStopList(t *testing.T) {

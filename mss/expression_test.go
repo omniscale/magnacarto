@@ -54,7 +54,7 @@ func TestMultipleExpression(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, 28, v)
+	assert.Equal(t, 28.0, v)
 }
 
 func TestFunctionExpression(t *testing.T) {
@@ -69,7 +69,7 @@ func TestFunctionExpression(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, 14, v)
+	assert.Equal(t, 14.0, v)
 
 	e = expression{}
 	e.addValue("__echo__", typeFunction)
@@ -88,7 +88,7 @@ func TestFunctionExpression(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, 24, v)
+	assert.Equal(t, 24.0, v)
 
 	e = expression{}
 	e.addValue("__echo__", typeFunction)
@@ -103,7 +103,7 @@ func TestFunctionExpression(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, 14, v)
+	assert.Equal(t, 14.0, v)
 }
 
 func TestLightenFunctionExpression(t *testing.T) {
