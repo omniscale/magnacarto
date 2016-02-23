@@ -890,7 +890,7 @@ func (b Block) String() string {
 	if b.Name != "" {
 		lines = append(lines, strings.ToUpper(b.Name))
 		for _, item := range b.items {
-			lines = append(lines, Indent(item.String(), "  "))
+			lines = append(lines, indent(item.String(), "  "))
 		}
 		lines = append(lines, "END")
 	} else {

@@ -159,15 +159,15 @@ func escapeSingleQuote(str string) string {
 	return strings.Replace(str, "'", "\\'", -1)
 }
 
-// Indent inserts prefix at the beginning of each non-empty line of s. The
+// indent inserts prefix at the beginning of each non-empty line of s. The
 // end-of-line marker is NL.
-func Indent(s, prefix string) string {
-	return string(IndentBytes([]byte(s), []byte(prefix)))
+func indent(s, prefix string) string {
+	return string(indentBytes([]byte(s), []byte(prefix)))
 }
 
-// IndentBytes inserts prefix at the beginning of each non-empty line of b.
+// indentBytes inserts prefix at the beginning of each non-empty line of b.
 // The end-of-line marker is NL.
-func IndentBytes(b, prefix []byte) []byte {
+func indentBytes(b, prefix []byte) []byte {
 	var res []byte
 	bol := true
 	for _, c := range b {
