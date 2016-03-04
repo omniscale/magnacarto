@@ -46,10 +46,8 @@ Current status
 
 ### Missing ###
 
-- Regexp filters
 - Not all CartoCSS features are supported by the MapServer builder
 - Improved configuration
-- Support for new Mapnik 3 features
 - ...
 
 Installation
