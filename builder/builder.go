@@ -153,7 +153,7 @@ func BuildMapFromString(m Map, mml *mml.MML, style string) error {
 	for _, l := range mml.Layers {
 		rules := carto.MSS().LayerRules(l.ID, l.Classes...)
 
-		if len(rules) > 0 && l.Active {
+		if len(rules) > 0 {
 			m.AddLayer(l, rules)
 		}
 	}

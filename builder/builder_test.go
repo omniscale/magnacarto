@@ -114,8 +114,7 @@ func TestBuilMapFromString(t *testing.T) {
 	if err := BuildMapFromString(&m, mml, string(mss)); err != nil {
 		t.Fatal(err)
 	}
-	// inactive layer is not included
-	if len(m.layers) != 1 {
+	if len(m.layers) != 2 {
 		t.Fatal(m.layers)
 	}
 }
