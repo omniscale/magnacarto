@@ -629,6 +629,9 @@ func (m *Map) symbolName(symbol mss.Value) *string {
 	}
 
 	shortName := sanitizeSymbolName.ReplaceAllString(str, "-")
+	if strings.HasPrefix(shortName, "-") {
+		shortName = shortName[1:len(shortName)]
+	}
 
 	file := m.locator.Image(str)
 	if m.svgSymbols == nil {
