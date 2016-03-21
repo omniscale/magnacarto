@@ -111,6 +111,7 @@ func newDatasource(params map[string]interface{}) (Datasource, error) {
 			Filename: d["file"],
 			SRID:     d["srid"],
 			Layer:    d["layer"],
+			Query:    d["layer_by_sql"],
 			Extent:   d["extent"],
 		}, nil
 	} else if d["type"] == "gdal" {

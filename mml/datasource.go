@@ -33,6 +33,7 @@ type OGR struct {
 	Filename string
 	SRID     string
 	Layer    string
+	Query    string
 	Extent   string
 }
 

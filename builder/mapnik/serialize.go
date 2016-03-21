@@ -158,6 +158,7 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "srid", Value: ds.SRID},
 			{Name: "extent", Value: ds.Extent},
 			{Name: "layer", Value: ds.Layer},
+			{Name: "layer_by_sql", Value: ds.Query},
 			{Name: "type", Value: "ogr"},
 		}
 	case mml.GDAL:

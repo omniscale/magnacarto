@@ -813,7 +813,11 @@ func (m *Map) addDatasource(block *Block, ds mml.Datasource, rules []mss.Rule) {
 		block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
 	case mml.OGR:
 		block.Add("connection", quote(ds.Filename))
-		// block.Add("data", quote((ds.Query, ds.SRID)))
+		if ds.Query != "" {
+			block.Add("data", quote(ds.Query))
+		} else if ds.Layer != "" {
+			block.Add("data", quote(ds.Layer))
+		}
 		block.Add("connectiontype", "ogr")
 		block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
 
