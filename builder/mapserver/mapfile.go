@@ -664,13 +664,14 @@ func (m *Map) symbolName(symbol mss.Value, options symbolOptions) *string {
 	if str == "" {
 		return nil
 	}
-
 	var shortName string
 	if options.hasAnchor {
 		shortName = fmt.Sprintf("anchor-%v-%v-%v", options.anchorX, options.anchorY, str)
+	} else {
+		shortName = str
 	}
 
-	shortName = sanitizeSymbolName.ReplaceAllString(str, "-")
+	shortName = sanitizeSymbolName.ReplaceAllString(shortName, "-")
 	if strings.HasPrefix(shortName, "-") {
 		shortName = shortName[1:len(shortName)]
 	}
