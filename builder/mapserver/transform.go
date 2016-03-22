@@ -11,7 +11,6 @@ type transformation struct {
 	rotate          float64
 	hasRotateAnchor bool
 	rotateAnchor    [2]float64
-	translate       [2]float64
 }
 
 var svgTransformRe = regexp.MustCompile(`(rotate|scale)\(((-?\d*\.?\d+),? ?(-?\d*\.?\d+)?,? ?(-?\d*\.?\d+)?)\)`)
