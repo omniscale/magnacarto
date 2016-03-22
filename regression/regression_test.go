@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/omniscale/magnacarto/builder"
@@ -316,7 +317,7 @@ func compareImg(t *testing.T, dir, fileA, fileB string, fuzz float64, expected i
 		}
 	}
 
-	diff, err := strconv.ParseInt(string(out), 10, 32)
+	diff, err := strconv.ParseInt(strings.TrimSpace(string(out)), 10, 32)
 	if err != nil {
 		t.Fatal("found no diff output: ", string(out))
 	}
