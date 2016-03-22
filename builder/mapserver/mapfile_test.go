@@ -113,3 +113,23 @@ END`,
 			},
 		}.String())
 }
+
+func TestMarkerTransformWithRotationPoint(t *testing.T) {
+	m := New(&locator)
+	m.SetNoMapBlock(true)
+	m.AddLayer(mml.Layer{ID: "test", SRS: "4326", Type: mml.Point},
+		[]mss.Rule{
+			{Layer: "test", Properties: mss.NewProperties(
+				"marker-file", "/foo/bar.svg",
+				"marker-transform", "translate(0.000000, -10.000000) scale(0.500000) rotate(345.000000, 0.000000, 20.000000)",
+				"marker-width", 40.0,
+				"marker-height", 40.0,
+			)},
+		})
+	result := m.String()
+
+	assert.Contains(t, result, `SYMBOL "foo-bar-svg"`)
+	assert.Contains(t, result, `ANCHORPOINT 0.5 1`)
+	assert.Contains(t, result, `ANGLE -345`)
+	assert.Contains(t, result, `SIZE 20`)
+}

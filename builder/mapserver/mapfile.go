@@ -3,19 +3,18 @@ package mapserver
 
 import (
 	"fmt"
-	"io"
-	"log"
-	"os"
-	"path/filepath"
-	"regexp"
-	"strings"
-
 	"github.com/omniscale/magnacarto/builder"
 	"github.com/omniscale/magnacarto/builder/sql"
 	"github.com/omniscale/magnacarto/color"
 	"github.com/omniscale/magnacarto/config"
 	"github.com/omniscale/magnacarto/mml"
 	"github.com/omniscale/magnacarto/mss"
+	"io"
+	"log"
+	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 type maker struct{}
@@ -26,6 +25,13 @@ func (m maker) New(locator config.Locator) builder.MapWriter {
 	return New(locator)
 }
 
+type symbolOptions struct {
+	fileName  string
+	hasAnchor bool
+	anchorX   float64
+	anchorY   float64
+}
+
 var Maker = maker{}
 
 type Map struct {
@@ -33,7 +39,7 @@ type Map struct {
 	Layers         Block
 	bgColor        *color.Color
 	fonts          map[string]string
-	svgSymbols     map[string]string
+	svgSymbols     map[string]symbolOptions
 	pointSymbols   map[string]struct{}
 	locator        config.Locator
 	autoTypeFilter bool
@@ -103,14 +109,18 @@ func (m *Map) String() string {
 }
 
 func (m *Map) addSymbols() {
-	for fileName, shortName := range m.svgSymbols {
+	for shortName, options := range m.svgSymbols {
 		s := NewBlock("SYMBOL")
 		s.Add("name", shortName)
-		s.Add("image", fileName)
-		if strings.HasSuffix(fileName, "svg") {
+		s.Add("image", options.fileName)
+		if strings.HasSuffix(options.fileName, "svg") {
 			s.Add("type", "svg")
 		} else {
 			s.Add("type", "pixmap")
+		}
+		if options.hasAnchor {
+			anchorString := fmt.Sprintf("%v %v", options.anchorX, options.anchorY)
+			s.Add("anchorpoint", anchorString)
 		}
 		m.Map.Add("", s)
 	}
@@ -376,7 +386,7 @@ func (m *Map) addPolygonSymbolizer(b *Block, r mss.Rule) (styled bool) {
 func (m *Map) addPolygonPatternSymbolizer(b *Block, r mss.Rule) (styled bool) {
 	if file, ok := r.Properties.GetString("polygon-pattern-file"); ok {
 		style := NewBlock("STYLE")
-		style.Add("SYMBOL", *m.symbolName(file))
+		style.Add("SYMBOL", *m.symbolName(file, symbolOptions{}))
 		b.Add("", style)
 		return true
 	}
@@ -472,7 +482,7 @@ func (m *Map) addShieldSymbolizer(b *Block, r mss.Rule) (styled bool) {
 		}
 
 		shield := NewBlock("STYLE")
-		shield.Add("SYMBOL", *m.symbolName(shieldFile))
+		shield.Add("SYMBOL", *m.symbolName(shieldFile, symbolOptions{}))
 
 		style.Add("", shield)
 
@@ -487,7 +497,7 @@ func (m *Map) addPointSymbolizer(b *Block, r mss.Rule) (styled bool) {
 	if pointFile, ok := r.Properties.GetString("point-file"); ok {
 		style := NewBlock("STYLE")
 
-		style.Add("SYMBOL", *m.symbolName(pointFile))
+		style.Add("SYMBOL", *m.symbolName(pointFile, symbolOptions{}))
 		style.AddNonNil("Opacity", fmtFloat(r.Properties.GetFloat("point-opacity")))
 		// style.AddNonNil("Force", fmtBool(r.Properties.GetBool("point-allow-overlap")))
 
@@ -534,14 +544,41 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 	if markerFile, ok := r.Properties.GetString("marker-file"); ok {
 		style := NewBlock("STYLE")
 
-		style.Add("SYMBOL", *m.symbolName(markerFile))
-		style.AddNonNil("Size", fmtFloat(r.Properties.GetFloat("marker-width")))
+		size, sizeOk := r.Properties.GetFloat("marker-height")
 		style.AddNonNil("Opacity", fmtFloat(r.Properties.GetFloat("marker-opacity")))
+
+		symOpts := symbolOptions{}
+
+		if transform, ok := r.Properties.GetString("marker-transform"); ok {
+			width, wOk := r.Properties.GetFloat("marker-width")
+			height, hOk := r.Properties.GetFloat("marker-height")
+			if wOk && hOk {
+				tr, err := parseTransform(transform)
+				if err != nil {
+					log.Println(err)
+				}
+				if tr.rotate != 0.0 {
+					style.AddNonNil("Angle", fmtFloat(tr.rotate, true))
+				}
+				if sizeOk && tr.scale != 0.0 {
+					size *= tr.scale
+				}
+				if tr.hasRotateAnchor {
+					symOpts.hasAnchor = true
+					symOpts.anchorX = (tr.rotateAnchor[0] + width/2) / width
+					symOpts.anchorY = (tr.rotateAnchor[1] + height/2) / height
+				}
+			}
+		}
+		style.AddNonNil("Size", fmtFloat(size, sizeOk))
+		style.Add("SYMBOL", *m.symbolName(markerFile, symOpts))
+
 		// style.AddNonNil("Force", fmtBool(r.Properties.GetBool("marker-allow-overlap")))
 
 		b.Add("", style)
 		return true
 	}
+
 	if markerType, ok := r.Properties.GetString("marker-type"); ok {
 		style := NewBlock("STYLE")
 
@@ -622,22 +659,28 @@ func (m *Map) fontNames(fontFaces []string) *string {
 	return &result
 }
 
-func (m *Map) symbolName(symbol mss.Value) *string {
+func (m *Map) symbolName(symbol mss.Value, options symbolOptions) *string {
 	str := symbol.(string)
 	if str == "" {
 		return nil
 	}
 
-	shortName := sanitizeSymbolName.ReplaceAllString(str, "-")
+	var shortName string
+	if options.hasAnchor {
+		shortName = fmt.Sprintf("anchor-%v-%v-%v", options.anchorX, options.anchorY, str)
+	}
+
+	shortName = sanitizeSymbolName.ReplaceAllString(str, "-")
 	if strings.HasPrefix(shortName, "-") {
 		shortName = shortName[1:len(shortName)]
 	}
 
 	file := m.locator.Image(str)
 	if m.svgSymbols == nil {
-		m.svgSymbols = make(map[string]string)
+		m.svgSymbols = make(map[string]symbolOptions)
 	}
-	m.svgSymbols[file] = shortName
+	options.fileName = file
+	m.svgSymbols[shortName] = options
 	result := quote(shortName)
 	return &result
 }

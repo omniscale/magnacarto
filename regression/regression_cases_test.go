@@ -1,7 +1,7 @@
 package regression
 
 import (
-    "testing"
+	"testing"
 )
 
 func Test_010_linestrings_default(t *testing.T) { testIt(t, testCase{Name: "010-linestrings-default"}) }
@@ -24,8 +24,11 @@ func Test_040_point_svg(t *testing.T)          { testIt(t, testCase{Name: "040-p
 func Test_041_marker_svg(t *testing.T)         { testIt(t, testCase{Name: "041-marker-svg"}) }
 func Test_042_marker_arrow(t *testing.T)       { testIt(t, testCase{Name: "042-marker-arrow"}) }
 func Test_043_marker_ellipse(t *testing.T)     { testIt(t, testCase{Name: "043-marker-ellipse"}) }
-func Test_050_shields_svg(t *testing.T)        { testIt(t, testCase{Name: "050-shields-svg"}) }
-func Test_060_instances(t *testing.T)          { testIt(t, testCase{Name: "060-instances"}) }
-func Test_061_classes(t *testing.T)            { testIt(t, testCase{Name: "061-classes"}) }
-func Test_062_specifity(t *testing.T)          { testIt(t, testCase{Name: "062-specifity"}) }
-func Test_063_filter(t *testing.T)             { testIt(t, testCase{Name: "063-filter"}) }
+func Test_044_marker_svg_transform(t *testing.T) {
+	testIt(t, testCase{Name: "044-marker-svg-transform"})
+}
+func Test_050_shields_svg(t *testing.T) { testIt(t, testCase{Name: "050-shields-svg"}) }
+func Test_060_instances(t *testing.T)   { testIt(t, testCase{Name: "060-instances"}) }
+func Test_061_classes(t *testing.T)     { testIt(t, testCase{Name: "061-classes"}) }
+func Test_062_specifity(t *testing.T)   { testIt(t, testCase{Name: "062-specifity"}) }
+func Test_063_filter(t *testing.T)      { testIt(t, testCase{Name: "063-filter"}) }
