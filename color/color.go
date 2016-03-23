@@ -143,7 +143,7 @@ func (color Color) String() string {
 func (color Color) HexString() string {
 	var r, g, b float64
 	if color.Perceptual {
-		r, g, b = husl.HuslToRGB(color.H, color.S, color.L)
+		r, g, b = husl.HuslToRGB(color.H, color.S*100.0, color.L*100.0)
 	} else {
 		r, g, b = hslToRgb(color.H, color.S, color.L)
 	}
