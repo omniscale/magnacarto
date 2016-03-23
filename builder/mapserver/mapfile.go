@@ -447,7 +447,7 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		if wrapWidth, ok := r.Properties.GetFloat("text-wrap-width"); ok {
 			maxLength := wrapWidth / textSize
 			style.AddNonNil("MaxLength", fmtFloat(maxLength, true))
-			style.AddNonNil("Wrap", fmtString(r.Properties.GetString("text-wrap-character")))
+			style.AddDefault("Wrap", fmtString(r.Properties.GetString("text-wrap-character")), quote(" "))
 			style.Add("Align", "CENTER")
 		}
 		b.Add("", style)
