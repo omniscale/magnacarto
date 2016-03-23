@@ -238,6 +238,10 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 		}
 		l.Add("type", t)
 
+		if layer.PostLabelCache {
+			l.Add("postlabelcache", "true")
+		}
+
 		m.addDatasource(&l, layer.Datasource, rules)
 		for _, c := range style.classes {
 			l.Add("", c)
