@@ -46,6 +46,11 @@ func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
 	q.Set("SRS", fmt.Sprintf("EPSG:%d", mapReq.EPSGCode))
 	q.Set("FORMAT", mapReq.Format)
 
+	if mapReq.ScaleFactor != 0 {
+		// mapserver default resolution is 72 dpi
+		q.Set("MAP.RESOLUTION", fmt.Sprintf("%d", int(72*mapReq.ScaleFactor)))
+	}
+
 	wd := filepath.Dir(mapfile)
 	handler := cgi.Handler{
 		Path: m.bin,

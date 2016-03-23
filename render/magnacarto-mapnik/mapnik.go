@@ -28,6 +28,7 @@ func renderReq(mapfile string, mapReq render.Request) ([]byte, error) {
 
 	renderOpts := mapnik.RenderOpts{}
 	renderOpts.Format = mapReq.Format
+	renderOpts.ScaleFactor = mapReq.ScaleFactor
 
 	b, err := m.Render(renderOpts)
 	if err != nil {
