@@ -128,7 +128,7 @@ func TestMarkerTransformWithRotationPoint(t *testing.T) {
 		})
 	result := m.String()
 
-	assert.Contains(t, result, `SYMBOL "foo-bar-svg"`)
+	assert.Contains(t, result, `SYMBOL "anchor-0-5-1-foo-bar-svg"`)
 	assert.Contains(t, result, `ANCHORPOINT 0.5 1`)
 	assert.Contains(t, result, `ANGLE -345`)
 	assert.Contains(t, result, `SIZE 20`)
