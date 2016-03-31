@@ -3,18 +3,19 @@ package mapserver
 
 import (
 	"fmt"
-	"github.com/omniscale/magnacarto/builder"
-	"github.com/omniscale/magnacarto/builder/sql"
-	"github.com/omniscale/magnacarto/color"
-	"github.com/omniscale/magnacarto/config"
-	"github.com/omniscale/magnacarto/mml"
-	"github.com/omniscale/magnacarto/mss"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/omniscale/magnacarto/builder"
+	"github.com/omniscale/magnacarto/builder/sql"
+	"github.com/omniscale/magnacarto/color"
+	"github.com/omniscale/magnacarto/config"
+	"github.com/omniscale/magnacarto/mml"
+	"github.com/omniscale/magnacarto/mss"
 )
 
 type maker struct{}
