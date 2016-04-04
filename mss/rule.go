@@ -294,6 +294,11 @@ func (m *MSS) Layers() []string {
 
 // LayerRules returns all Rules for this layer.
 func (m *MSS) LayerRules(layer string, classes ...string) []Rule {
+	return m.LayerZoomRules(layer, InvalidZoom, classes...)
+}
+
+// LayerZoomRules returns all Rules for this layer within the specified ZoomRange.
+func (m *MSS) LayerZoomRules(layer string, zoom ZoomRange, classes ...string) []Rule {
 	attachments := make(map[string]int) // store order of first appearance
 	rules := []Rule{}
 	order := 1
@@ -391,7 +396,7 @@ func (m *MSS) LayerRules(layer string, classes ...string) []Rule {
 			}
 		}
 	}
-	collect(&m.root, Rule{})
+	collect(&m.root, Rule{Zoom: zoom})
 	if len(rules) > 0 {
 		rules = sortedRules(rules, attachments, classes)
 	}

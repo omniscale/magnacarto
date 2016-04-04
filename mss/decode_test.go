@@ -402,6 +402,26 @@ func TestParseMapBlock(t *testing.T) {
 	assert.Equal(t, color.MustParse("red"), d.MSS().Map().getKey(key{name: "background-color"}))
 }
 
+func TestLayerZoomRules(t *testing.T) {
+	d := New()
+	err := d.ParseString(`
+		#foo[zoom=13] {
+			line-color: red;
+			line-width: 1;
+		}`)
+	assert.NoError(t, err)
+	err = d.Evaluate()
+	assert.NoError(t, err)
+	r := d.MSS().LayerZoomRules("foo", NewZoomRange(EQ, 13))
+	assert.Len(t, r, 1)
+	c, _ := r[0].Properties.get("line-color")
+	assert.Equal(t, color.MustParse("red"), c)
+
+	assert.Empty(t, d.MSS().LayerZoomRules("foo", NewZoomRange(EQ, 12)))
+	assert.Empty(t, d.MSS().LayerZoomRules("foo", NewZoomRange(GT, 13)))
+	assert.Empty(t, d.MSS().LayerZoomRules("foo", NewZoomRange(LT, 13)))
+}
+
 func allRules(mss *MSS) []Rule {
 	rules := []Rule{}
 	for _, l := range mss.Layers() {
