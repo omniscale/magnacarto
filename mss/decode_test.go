@@ -456,7 +456,8 @@ func _assertRulesEq(t *testing.T, a, b []Rule) {
 	}
 	for i := range a {
 		if !a[i].same(b[i]) {
-			t.Fatalf("rule #%d selector do not match (%s)\n\t%v\n !=\t%v", i+1, callLoc(2), a[i], b[i])
+			t.Errorf("rule #%d selector do not match (%s)\n\t%v\n !=\t%v", i+1, callLoc(2), a[i], b[i])
+			return
 		}
 
 		errs := []string{}
@@ -504,19 +505,19 @@ func TestDecoderRules(t *testing.T) {
 
 	rules = loadRules(t, "tests/040-nested.mss", "roads")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: newZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 0},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: NewZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 0},
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 1},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "rail"}}, Zoom: newZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 3},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(2), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 2},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "rail"}}, Zoom: NewZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 3},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: NewZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(2), "line-color", color.Color{60.0, 1.0, 0.5, 1.0, false}), order: 2},
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(1)), order: 2},
 	})
 
 	rules = loadRules(t, "tests/021-zoom-specific.mss", "roads")
 	assertRulesEq(t, rules, []Rule{
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: newZoomRange(EQ, 15), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: newZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(EQ, 15), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
-		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: newZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: NewZoomRange(EQ, 15), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: NewZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: NewZoomRange(EQ, 15), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
+		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: NewZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-join", "bevel")},
 	})
 

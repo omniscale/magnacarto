@@ -59,7 +59,7 @@ func (m *MSS) addZoom(comp CompOp, level int64) {
 	if s.Zoom != InvalidZoom {
 		s.Zoom = s.Zoom.add(comp, int8(level))
 	} else {
-		s.Zoom = newZoomRange(comp, level)
+		s.Zoom = NewZoomRange(comp, level)
 	}
 }
 

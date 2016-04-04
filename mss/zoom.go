@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func newZoomRange(comp CompOp, zoom int64) ZoomRange {
+func NewZoomRange(comp CompOp, zoom int64) ZoomRange {
 	if zoom < 0 {
 		return InvalidZoom
 	}

@@ -50,9 +50,9 @@ func TestRuleSame(t *testing.T) {
 	assert.False(t, Rule{Layer: "Foo", Attachment: "Bar"}.same(Rule{Layer: "Foo"}))
 	assert.False(t, Rule{Layer: "Foo"}.same(Rule{Layer: "Foo", Attachment: "Bar"}))
 
-	assert.True(t, Rule{Zoom: newZoomRange(EQ, 5)}.same(Rule{Zoom: newZoomRange(EQ, 5)}))
-	assert.True(t, Rule{Zoom: newZoomRange(LT, 5)}.same(Rule{Zoom: newZoomRange(LTE, 4)}))
-	assert.False(t, Rule{Zoom: newZoomRange(LT, 5)}.same(Rule{Zoom: newZoomRange(LTE, 5)}))
+	assert.True(t, Rule{Zoom: NewZoomRange(EQ, 5)}.same(Rule{Zoom: NewZoomRange(EQ, 5)}))
+	assert.True(t, Rule{Zoom: NewZoomRange(LT, 5)}.same(Rule{Zoom: NewZoomRange(LTE, 4)}))
+	assert.False(t, Rule{Zoom: NewZoomRange(LT, 5)}.same(Rule{Zoom: NewZoomRange(LTE, 5)}))
 
 	assert.True(t, Rule{
 		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}},
@@ -61,14 +61,14 @@ func TestRuleSame(t *testing.T) {
 	))
 
 	assert.True(t, Rule{
-		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: newZoomRange(EQ, 4),
+		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: NewZoomRange(EQ, 4),
 	}.childOf(Rule{
-		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: newZoomRange(EQ, 4)},
+		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: NewZoomRange(EQ, 4)},
 	))
 	assert.False(t, Rule{
-		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: newZoomRange(EQ, 4),
+		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: NewZoomRange(EQ, 4),
 	}.childOf(Rule{
-		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: newZoomRange(EQ, 5)},
+		Layer: "Bar", Attachment: "Foo", Filters: []Filter{Filter{"foo", EQ, "foo"}}, Zoom: NewZoomRange(EQ, 5)},
 	))
 
 }
@@ -105,9 +105,9 @@ func TestRuleChildOf(t *testing.T) {
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}}},
 	))
 
-	assert.True(t, Rule{Zoom: newZoomRange(EQ, 4)}.childOf(Rule{Zoom: newZoomRange(LTE, 5)}))
-	assert.True(t, Rule{Zoom: newZoomRange(EQ, 5)}.childOf(Rule{Zoom: newZoomRange(LTE, 5)}))
-	assert.False(t, Rule{Zoom: newZoomRange(EQ, 6)}.childOf(Rule{Zoom: newZoomRange(LTE, 5)}))
+	assert.True(t, Rule{Zoom: NewZoomRange(EQ, 4)}.childOf(Rule{Zoom: NewZoomRange(LTE, 5)}))
+	assert.True(t, Rule{Zoom: NewZoomRange(EQ, 5)}.childOf(Rule{Zoom: NewZoomRange(LTE, 5)}))
+	assert.False(t, Rule{Zoom: NewZoomRange(EQ, 6)}.childOf(Rule{Zoom: NewZoomRange(LTE, 5)}))
 }
 
 func TestRuleAffectedBy(t *testing.T) {
@@ -128,52 +128,52 @@ func TestRuleAffectedBy(t *testing.T) {
 	}.overlaps(Rule{Layer: "roads", Attachment: "inline"}))
 
 	assert.True(t, Rule{
-		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}}, Zoom: newZoomRange(EQ, 5),
+		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}}, Zoom: NewZoomRange(EQ, 5),
 	}.overlaps(Rule{Layer: "roads", Attachment: "inline", Zoom: AllZoom}))
 
 	assert.True(t, Rule{
-		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}}, Zoom: newZoomRange(EQ, 5),
-	}.overlaps(Rule{Layer: "roads", Attachment: "inline", Zoom: newZoomRange(LTE, 5)}))
+		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}}, Zoom: NewZoomRange(EQ, 5),
+	}.overlaps(Rule{Layer: "roads", Attachment: "inline", Zoom: NewZoomRange(LTE, 5)}))
 
 	assert.False(t, Rule{
-		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}}, Zoom: newZoomRange(EQ, 5),
-	}.overlaps(Rule{Layer: "roads", Attachment: "inline", Zoom: newZoomRange(LT, 5)}))
+		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}}, Zoom: NewZoomRange(EQ, 5),
+	}.overlaps(Rule{Layer: "roads", Attachment: "inline", Zoom: NewZoomRange(LT, 5)}))
 
 	assert.True(t, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"oneway", EQ, "yes"}, Filter{"highway", EQ, "path"}},
-		Zoom: newZoomRange(EQ, 4),
+		Zoom: NewZoomRange(EQ, 4),
 	}.overlaps(Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}},
-		Zoom: newZoomRange(GT, 3)},
+		Zoom: NewZoomRange(GT, 3)},
 	))
 	// same with different filter order
 	assert.True(t, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}, Filter{"oneway", EQ, "yes"}},
-		Zoom: newZoomRange(EQ, 4),
+		Zoom: NewZoomRange(EQ, 4),
 	}.overlaps(Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}},
-		Zoom: newZoomRange(GT, 3)},
+		Zoom: NewZoomRange(GT, 3)},
 	))
 
 	assert.False(t, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"oneway", EQ, "yes"}, Filter{"highway", EQ, "path"}},
-		Zoom: newZoomRange(EQ, 4),
+		Zoom: NewZoomRange(EQ, 4),
 	}.overlaps(Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}},
-		Zoom: newZoomRange(LT, 4)},
+		Zoom: NewZoomRange(LT, 4)},
 	))
 	// same with different filter order
 	assert.False(t, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}, Filter{"oneway", EQ, "yes"}},
-		Zoom: newZoomRange(EQ, 4),
+		Zoom: NewZoomRange(EQ, 4),
 	}.overlaps(Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{Filter{"highway", EQ, "path"}},
-		Zoom: newZoomRange(LT, 4)},
+		Zoom: NewZoomRange(LT, 4)},
 	))
 
-	assert.True(t, Rule{Zoom: newZoomRange(EQ, 4)}.overlaps(Rule{Zoom: newZoomRange(LTE, 5)}))
-	assert.True(t, Rule{Zoom: newZoomRange(EQ, 5)}.overlaps(Rule{Zoom: newZoomRange(LTE, 5)}))
-	assert.False(t, Rule{Zoom: newZoomRange(EQ, 6)}.overlaps(Rule{Zoom: newZoomRange(LTE, 5)}))
+	assert.True(t, Rule{Zoom: NewZoomRange(EQ, 4)}.overlaps(Rule{Zoom: NewZoomRange(LTE, 5)}))
+	assert.True(t, Rule{Zoom: NewZoomRange(EQ, 5)}.overlaps(Rule{Zoom: NewZoomRange(LTE, 5)}))
+	assert.False(t, Rule{Zoom: NewZoomRange(EQ, 6)}.overlaps(Rule{Zoom: NewZoomRange(LTE, 5)}))
 }
 
 func TestFilterIsSubset(t *testing.T) {
@@ -218,15 +218,15 @@ func BenchmarkFilterIsSubset(b *testing.B) {
 func TestCombineRule(t *testing.T) {
 	combined := combineRules(Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{{"highway", EQ, "path"}, {"oneway", EQ, "yes"}},
-		Zoom: newZoomRange(LT, 5), Properties: NewProperties("width", 1, "cap", "round"),
+		Zoom: NewZoomRange(LT, 5), Properties: NewProperties("width", 1, "cap", "round"),
 	}, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{{"bridge", EQ, 1}, {"highway", EQ, "path"}},
-		Zoom: newZoomRange(GT, 3), Properties: NewProperties("width", 4, "fill", "red", "end", "butt"),
+		Zoom: NewZoomRange(GT, 3), Properties: NewProperties("width", 4, "fill", "red", "end", "butt"),
 	})
 
 	assertRuleEq(t, Rule{
 		Layer: "roads", Attachment: "inline", Filters: []Filter{{"bridge", EQ, 1}, {"highway", EQ, "path"}, {"oneway", EQ, "yes"}},
-		Zoom: newZoomRange(EQ, 4), Properties: NewProperties("width", 4, "fill", "red", "cap", "round", "end", "butt")},
+		Zoom: NewZoomRange(EQ, 4), Properties: NewProperties("width", 4, "fill", "red", "cap", "round", "end", "butt")},
 		combined,
 	)
 }
@@ -236,10 +236,10 @@ func TestSortedRulesNoInfinitiveLoop(t *testing.T) {
 	// in more rules that returned identical rules -> infinite loop
 	rules := []Rule{
 		{Filters: []Filter{{"bar", EQ, "foo"}}, Zoom: AllZoom, Properties: NewProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 12), Properties: NewProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 13), Properties: NewProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 14), Properties: NewProperties("width", 1)},
-		{Filters: []Filter{}, Zoom: newZoomRange(GTE, 15), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: NewZoomRange(GTE, 12), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: NewZoomRange(GTE, 13), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: NewZoomRange(GTE, 14), Properties: NewProperties("width", 1)},
+		{Filters: []Filter{}, Zoom: NewZoomRange(GTE, 15), Properties: NewProperties("width", 1)},
 	}
 	sorted := sortedRules(rules, nil, nil)
 	assert.Len(t, sorted, 9)
@@ -381,9 +381,9 @@ func TestSortedRulesRedundantRuleRemoved(t *testing.T) {
 	// }
 	rules := []Rule{
 		{Filters: []Filter{{"size", GT, 1000}}, Properties: NewProperties("width", 1)},
-		{Zoom: newZoomRange(GTE, 17), Properties: NewProperties("width", 1)},
+		{Zoom: NewZoomRange(GTE, 17), Properties: NewProperties("width", 1)},
 		{Filters: []Filter{{"size", GT, 2000}}, Properties: NewProperties("width", 2)},
-		{Zoom: newZoomRange(GTE, 17), Filters: []Filter{{"size", GT, 2000}}, Properties: NewProperties("width", 2)},
+		{Zoom: NewZoomRange(GTE, 17), Filters: []Filter{{"size", GT, 2000}}, Properties: NewProperties("width", 2)},
 	}
 	sorted := sortedRules(rules, nil, nil)
 	assert.Len(t, sorted, 4)
@@ -401,13 +401,13 @@ func TestSortedRulesRedundantRuleRemoved(t *testing.T) {
 	// TODO this rule is redundant since it is covered by the rule above
 	assertRuleEq(t, Rule{
 		Filters:    []Filter{{"size", GT, 2000}},
-		Zoom:       newZoomRange(GTE, 17),
+		Zoom:       NewZoomRange(GTE, 17),
 		Properties: NewProperties("width", 2)},
 		sorted[2],
 	)
 
 	assertRuleEq(t, Rule{
-		Zoom:       newZoomRange(GTE, 17),
+		Zoom:       NewZoomRange(GTE, 17),
 		Properties: NewProperties("width", 1)},
 		sorted[3],
 	)
