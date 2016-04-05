@@ -97,10 +97,8 @@ func (m *Map) SetNoMapBlock(enable bool) {
 
 func (m *Map) String() string {
 	if m.noMapBlock {
+		// erase default MAP block
 		m.Map = NewBlock("")
-		m.Map.Add("", m.Layers)
-		m.addSymbols()
-		return m.Map.String()
 	}
 	if m.bgColor != nil {
 		m.Map.AddNonNil("ImageColor", fmtColor(*m.bgColor, true))
