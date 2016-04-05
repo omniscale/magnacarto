@@ -41,7 +41,7 @@ type Map struct {
 	bgColor        *color.Color
 	fonts          map[string]string
 	svgSymbols     map[string]symbolOptions
-	pointSymbols   map[string]struct{}
+	pointSymbols   map[string]Block
 	locator        config.Locator
 	autoTypeFilter bool
 	noMapBlock     bool
@@ -63,6 +63,7 @@ func New(locator config.Locator) *Map {
 		Item{"Imagemode", "RGBA"},
 		Item{"Extension", quote("png")},
 		Item{"Formatoption", quote("GAMMA=0.75")},
+		Item{"Formatoption", quote("COMPRESSION=0")},
 	))
 	web := NewBlock("Web")
 	web.Add("", NewBlock("Metadata",
@@ -123,6 +124,10 @@ func (m *Map) addSymbols() {
 			anchorString := fmt.Sprintf("%v %v", options.anchorX, options.anchorY)
 			s.Add("anchorpoint", anchorString)
 		}
+		m.Map.Add("", s)
+	}
+
+	for _, s := range m.pointSymbols {
 		m.Map.Add("", s)
 	}
 }
@@ -693,11 +698,10 @@ func (m *Map) arrowSymbol() *string {
 	name := "arrow"
 
 	if m.pointSymbols == nil {
-		m.pointSymbols = make(map[string]struct{})
+		m.pointSymbols = make(map[string]Block)
 	}
 
 	if _, ok := m.pointSymbols[name]; !ok {
-		m.pointSymbols[name] = struct{}{}
 		s := NewBlock("SYMBOL")
 		s.Add("type", "vector")
 		s.Add("name", quote(name))
@@ -711,7 +715,7 @@ func (m *Map) arrowSymbol() *string {
 			20 7
 			0 7
 			`}))
-		m.Map.Add("", s)
+		m.pointSymbols[name] = s
 	}
 	result := quote(name)
 	return &result
@@ -721,11 +725,10 @@ func (m *Map) ellipseSymbol() *string {
 	name := "ellipse"
 
 	if m.pointSymbols == nil {
-		m.pointSymbols = make(map[string]struct{})
+		m.pointSymbols = make(map[string]Block)
 	}
 
 	if _, ok := m.pointSymbols[name]; !ok {
-		m.pointSymbols[name] = struct{}{}
 		s := NewBlock("SYMBOL")
 		s.Add("type", "ellipse")
 		s.Add("name", quote(name))
@@ -733,7 +736,7 @@ func (m *Map) ellipseSymbol() *string {
 		s.Add("", NewBlock("points", Item{"", `
 			10 10
 			`}))
-		m.Map.Add("", s)
+		m.pointSymbols[name] = s
 	}
 
 	result := quote(name)
