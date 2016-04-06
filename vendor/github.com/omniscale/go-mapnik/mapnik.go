@@ -54,7 +54,6 @@ type version struct {
 	Major   int
 	Minor   int
 	Patch   int
-	Release bool
 	String  string
 }
 
@@ -65,7 +64,6 @@ func init() {
 	Version.Major = int(C.mapnik_version_major)
 	Version.Minor = int(C.mapnik_version_minor)
 	Version.Patch = int(C.mapnik_version_patch)
-	Version.Release = int(C.mapnik_version_release) != 0
 	Version.String = C.GoString(C.mapnik_version_string)
 }
 
