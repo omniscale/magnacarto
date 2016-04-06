@@ -475,6 +475,10 @@ func (m *Map) addShieldSymbolizer(b *Block, r mss.Rule) (styled bool) {
 			style.AddNonNil("RepeatDistance", fmtFloat(r.Properties.GetFloat("shield-spacing")))
 			style.AddNonNil("Buffer", fmtFloat(r.Properties.GetFloat("shield-min-padding")))
 
+			if avoidEdges, ok := r.Properties.GetBool("shield-avoid-edges"); ok {
+				style.AddNonNil("Partials", fmtBool(!avoidEdges, true))
+			}
+
 			if color, ok := r.Properties.GetColor("shield-halo-fill"); ok {
 				style.AddNonNil("OutlineColor", fmtColor(color, true))
 				style.AddNonNil("OutlineWidth", fmtFloat(r.Properties.GetFloat("shield-halo-radius")))
@@ -554,6 +558,9 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 
 		size, sizeOk := r.Properties.GetFloat("marker-height")
 		style.AddNonNil("Opacity", fmtFloat(r.Properties.GetFloat("marker-opacity")))
+		if avoidEdges, ok := r.Properties.GetBool("marker-avoid-edges"); ok {
+			style.AddNonNil("Partials", fmtBool(!avoidEdges, true))
+		}
 
 		symOpts := symbolOptions{}
 
