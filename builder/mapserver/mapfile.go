@@ -447,6 +447,7 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		style.Add("Type", "truetype")
 		if isLine {
 			style.Add("Angle", "FOLLOW")
+			style.Add("MinFeatureSize", "AUTO")
 		}
 		if wrapWidth, ok := r.Properties.GetFloat("text-wrap-width"); ok {
 			maxLength := wrapWidth / textSize
