@@ -1,7 +1,9 @@
 package render
 
 import (
+	"bytes"
 	"errors"
+	"io"
 	"net/rpc"
 	"os"
 	"os/exec"
@@ -58,14 +60,18 @@ func (m *Mapnik) RegisterFonts(fontDir string) error {
 	return err
 }
 
-func (m *Mapnik) Render(mapfile string, mapReq Request) ([]byte, error) {
+func (m *Mapnik) Render(mapfile string, dst io.Writer, mapReq Request) error {
 	if m.client == nil {
-		return nil, errors.New("mapnik plugin not initialized")
+		return errors.New("mapnik plugin not initialized")
 	}
 	var buf []byte
 	err := m.client.Call("Mapnik.Render", struct {
 		Mapfile string
 		Req     Request
 	}{mapfile, mapReq}, &buf)
-	return buf, err
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(dst, bytes.NewBuffer(buf))
+	return err
 }

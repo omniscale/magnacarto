@@ -1,8 +1,8 @@
 package render
 
 import (
-	"bytes"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/cgi"
 	"net/url"
@@ -24,7 +24,7 @@ func NewMapServer() (*MapServer, error) {
 	return &MapServer{bin: bin}, nil
 }
 
-func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
+func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) error {
 	if !filepath.IsAbs(mapfile) {
 		if wd, err := os.Getwd(); err == nil {
 			mapfile = filepath.Join(wd, mapfile)
@@ -58,23 +58,23 @@ func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
 	}
 
 	w := &responseRecorder{
-		Body: &bytes.Buffer{},
+		Body: dst,
 	}
 
 	req, err := http.NewRequest("GET", "/?"+q.Encode(), nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	handler.ServeHTTP(w, req)
 
 	if w.Code != 200 {
-		return nil, fmt.Errorf("error while calling mapserv CGI (status %d): %v", w.Code, string(w.Body.Bytes()))
+		return fmt.Errorf("error while calling mapserv CGI (status %d)", w.Code)
 	}
 	if ct := w.Header().Get("Content-type"); ct != "" && !strings.HasPrefix(ct, "image") {
-		return nil, fmt.Errorf(" mapserv CGI did not return image (%v)\n%v", w.Header(), string(w.Body.Bytes()))
+		return fmt.Errorf(" mapserv CGI did not return image (%v)", w.Header())
 	}
-	return w.Body.Bytes(), nil
+	return nil
 }
 
 // responseRecorder from net/http/httptest
@@ -83,9 +83,9 @@ func (m *MapServer) Render(mapfile string, mapReq Request) ([]byte, error) {
 // responseRecorder is an implementation of http.ResponseWriter that
 // records its mutations for later inspection in tests.
 type responseRecorder struct {
-	Code      int           // the HTTP response code from WriteHeader
-	HeaderMap http.Header   // the HTTP response headers
-	Body      *bytes.Buffer // if non-nil, the bytes.Buffer to append written data to
+	Code      int         // the HTTP response code from WriteHeader
+	HeaderMap http.Header // the HTTP response headers
+	Body      io.Writer   // if non-nil, the io.Writer to append written data to
 	Flushed   bool
 
 	wroteHeader bool

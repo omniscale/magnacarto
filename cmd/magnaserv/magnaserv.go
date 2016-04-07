@@ -106,29 +106,26 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	var b []byte
+	w.Header().Add("Content-Type", "image/png")
 	if renderer == "mapserver" {
 		mapReq.Format = mapReq.Query.Get("FORMAT") // use requested format, not internal mapnik format
 		if s.mapserverRenderer == nil {
 			err = errors.New("mapserver not initialized")
 		}
-		b, err = s.mapserverRenderer.Render(styleFile, renderReq(mapReq))
+		err = s.mapserverRenderer.Render(styleFile, w, renderReq(mapReq))
 	} else {
 		if s.mapnikRenderer == nil {
 			err = errors.New("mapnik not initialized")
 		} else {
-			b, err = s.mapnikRenderer.Render(styleFile, renderReq(mapReq))
+			err = s.mapnikRenderer.Render(styleFile, w, renderReq(mapReq))
 		}
 	}
+	s.internalError(w, r, errors.New("text"))
+
 	if err != nil {
 		s.internalError(w, r, err)
 		return
 	}
-
-	w.Header().Add("Content-Type", "image/png")
-	w.Header().Add("Content-Length", strconv.FormatUint(uint64(len(b)), 10))
-
-	io.Copy(w, bytes.NewBuffer(b))
 }
 
 func (s *magnaserv) projects(w http.ResponseWriter, r *http.Request) {
@@ -229,6 +226,7 @@ func writeCheckedJSON(r io.ReadCloser, fileName string) error {
 
 func (s *magnaserv) internalError(w http.ResponseWriter, r *http.Request, err error) {
 	log.Print(err)
+	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusInternalServerError)
 	w.Write([]byte("internal error"))
 }

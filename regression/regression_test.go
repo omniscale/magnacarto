@@ -225,11 +225,14 @@ func renderMapnik(t *testing.T, c testCase, name string) {
 	if mapnikRenderer == nil {
 		t.Skip("mapnik not initialized")
 	}
-	buf, err := mapnikRenderer.Render(filepath.Join(caseBuildDir, name+".xml"), mapReq)
+
+	f, err := os.Create(filepath.Join(caseBuildDir, "render-"+name+".png"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := ioutil.WriteFile(filepath.Join(caseBuildDir, "render-"+name+".png"), buf, 0644); err != nil {
+	defer f.Close()
+	err = mapnikRenderer.Render(filepath.Join(caseBuildDir, name+".xml"), f, mapReq)
+	if err != nil {
 		t.Fatal(err)
 	}
 }
@@ -247,11 +250,14 @@ func renderMapserver(t *testing.T, c testCase) {
 	if mapserverRenderer == nil {
 		t.Skip("mapserver not initialized")
 	}
-	buf, err := mapserverRenderer.Render(filepath.Join(caseBuildDir, "magnacarto.map"), mapReq)
+
+	f, err := os.Create(filepath.Join(caseBuildDir, "render-magnacarto-ms.png"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := ioutil.WriteFile(filepath.Join(caseBuildDir, "render-magnacarto-ms.png"), buf, 0644); err != nil {
+	defer f.Close()
+	err = mapserverRenderer.Render(filepath.Join(caseBuildDir, "magnacarto.map"), f, mapReq)
+	if err != nil {
 		t.Fatal(err)
 	}
 }
