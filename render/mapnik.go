@@ -45,7 +45,7 @@ func (m *Mapnik) Is3() (bool, error) {
 		return false, errors.New("mapnik plugin not initialized")
 	}
 	var is3 bool
-	err := m.client.Call("Mapnik.Is3", false /* not used */, &is3)
+	err := m.client.Call("Mapnik.Is3", struct{}{} /* not used */, &is3)
 	return is3, err
 }
 

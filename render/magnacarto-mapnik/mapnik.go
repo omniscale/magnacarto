@@ -51,11 +51,11 @@ func (api) Render(args *Args, response *[]byte) error {
 	return err
 }
 
-func (api) Is3(args interface{}, response *bool) error {
+func (api) Is3(args struct{}, response *bool) error {
 	if mapnik.Version.Major == 3 {
-		*response = false
-	} else {
 		*response = true
+	} else {
+		*response = false
 	}
 	return nil
 }
