@@ -645,6 +645,8 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 		if isLine {
 			if spacing, ok := r.Properties.GetFloat("marker-spacing"); ok {
 				style.AddNonNil("Gap", fmtFloat(-spacing, true))
+				style.AddNonNil("InitialGap", fmtFloat(spacing*0.2, true))
+
 			} else {
 				style.AddNonNil("Gap", fmtFloat(-100, true)) // mapnik default
 			}
