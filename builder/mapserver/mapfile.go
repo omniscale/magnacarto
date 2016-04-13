@@ -943,6 +943,10 @@ func (b *Block) AddDefault(name string, value *string, def string) {
 	}
 }
 
+func (b *Block) Len() int {
+	return len(b.items)
+}
+
 func NewBlock(name string, items ...Item) Block {
 	return Block{name, items}
 }
