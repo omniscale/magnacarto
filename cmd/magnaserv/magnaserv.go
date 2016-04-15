@@ -120,7 +120,6 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 			err = s.mapnikRenderer.Render(styleFile, w, renderReq(mapReq))
 		}
 	}
-	s.internalError(w, r, errors.New("text"))
 
 	if err != nil {
 		s.internalError(w, r, err)
