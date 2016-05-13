@@ -18,4 +18,5 @@ type Layer struct {
 	Active         bool
 	GroupBy        string
 	PostLabelCache bool
+	ScaleFactor    float64
 }

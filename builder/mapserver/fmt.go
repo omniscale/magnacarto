@@ -30,6 +30,16 @@ func fmtKeyword(v mss.Value, ok bool) *string {
 	}
 }
 
+// fmtFloatProp formats a scaled float property. Returns nil if property is not set or ont a float.
+func fmtFloatProp(p *mss.Properties, name string, scale float64) *string {
+	v, ok := p.GetFloat(name)
+	if !ok {
+		return nil
+	}
+	r := strconv.FormatFloat(v*scale, 'f', -1, 64)
+	return &r
+}
+
 func fmtFloat(v float64, ok bool) *string {
 	if !ok {
 		return nil
@@ -105,13 +115,13 @@ func fmtFilters(filters []mss.Filter) string {
 	return s
 }
 
-func fmtPattern(v []float64, ok bool) *Block {
+func fmtPattern(v []float64, scale float64, ok bool) *Block {
 	if !ok {
 		return nil
 	}
 	b := NewBlock("PATTERN")
 	for i := range v {
-		b.Add("", *fmtFloat(v[i]*LineWidthFactor, true))
+		b.Add("", *fmtFloat(v[i]*LineWidthFactor*scale, true))
 	}
 	return &b
 }

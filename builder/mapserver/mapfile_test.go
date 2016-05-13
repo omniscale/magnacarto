@@ -41,6 +41,38 @@ func TestLineStringLayer(t *testing.T) {
 	assert.Regexp(t, `PATTERN\s+3\s+5\s+END`, result)
 }
 
+func TestScaledLineStringLayer(t *testing.T) {
+	m := New(&locator)
+	m.SetNoMapBlock(true)
+
+	m.AddLayer(mml.Layer{ID: "test", SRS: "4326", Type: mml.LineString, ScaleFactor: 2.0},
+		[]mss.Rule{
+			{Layer: "test", Properties: mss.NewProperties(
+				"line-width", 3.0,
+				"line-opacity", 0.2,
+				"line-dasharray", []mss.Value{2.0, 7.0},
+			)},
+		})
+	m.AddLayer(mml.Layer{ID: "test", SRS: "4326", Type: mml.LineString},
+		[]mss.Rule{
+			{Layer: "test", Properties: mss.NewProperties(
+				"line-width", 1.0,
+				"line-color", color.MustParse("red"),
+				"line-opacity", 0.5,
+				"line-dasharray", []mss.Value{3.0, 5.0},
+			)},
+		})
+	result := m.String()
+	assert.Contains(t, result, "WIDTH 6\n")
+	assert.Contains(t, result, "OPACITY 20\n")
+	assert.Regexp(t, `PATTERN\s+4\s+14\s+END`, result)
+
+	assert.Contains(t, result, "WIDTH 1\n")
+	assert.Contains(t, result, "COLOR \"#ff0000\"\n")
+	assert.Contains(t, result, "OPACITY 50\n")
+	assert.Regexp(t, `PATTERN\s+3\s+5\s+END`, result)
+}
+
 func TestPolygonLayer(t *testing.T) {
 	m := New(&locator)
 	m.SetNoMapBlock(true)

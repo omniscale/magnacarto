@@ -45,6 +45,7 @@ type Map struct {
 	locator        config.Locator
 	autoTypeFilter bool
 	noMapBlock     bool
+	scaleFactor    float64
 }
 
 func New(locator config.Locator) *Map {
@@ -78,8 +79,9 @@ func New(locator config.Locator) *Map {
 	mapBlock.Add("", NewBlock("projection", Item{"", "'init=epsg:3857'"}))
 
 	return &Map{
-		Map:     mapBlock,
-		locator: locator,
+		Map:         mapBlock,
+		locator:     locator,
+		scaleFactor: 1.0,
 	}
 }
 
@@ -180,6 +182,12 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 		return
 	}
 
+	if layer.ScaleFactor != 0.0 {
+		prevScaleFactor := m.scaleFactor
+		defer func() { m.scaleFactor = prevScaleFactor }()
+		m.scaleFactor = layer.ScaleFactor
+	}
+
 	styles := []classGroup{}
 	style := classGroup{}
 
@@ -232,7 +240,7 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 		}
 
 		if style.opacity != 0 {
-			l.AddNonNil("Opacity", fmtFloat(style.opacity, true))
+			l.AddNonNil("Opacity", fmtFloat(style.opacity*m.scaleFactor, true))
 		}
 
 		if layer.Active {
@@ -336,13 +344,13 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
 		style := NewBlock("STYLE")
-		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor, true))
+		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor*m.scaleFactor, true))
 		if width*LineWidthFactor > 32 {
 			// MaxWidth defaults to 32, override for wider lines
-			style.AddNonNil("MaxWidth", fmtFloat(width*LineWidthFactor, true))
+			style.AddNonNil("MaxWidth", fmtFloat(width*LineWidthFactor*m.scaleFactor, true))
 		}
-		if pat := fmtPattern(r.Properties.GetFloatList("line-dasharray")); pat != nil {
-			style.Add("", pat)
+		if v, ok := r.Properties.GetFloatList("line-dasharray"); ok {
+			style.Add("", fmtPattern(v, m.scaleFactor, true))
 		}
 
 		style.AddDefault("Color", fmtColor(r.Properties.GetColor("line-color")), "0 0 0")
@@ -360,15 +368,15 @@ func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 func (m *Map) addPolygonOutlineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
 		style := NewBlock("STYLE")
-		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor, true))
+		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor*m.scaleFactor, true))
 		if c, ok := r.Properties.GetColor("line-color"); ok {
 			if opacity, ok := r.Properties.GetFloat("line-opacity"); ok {
 				c = color.FadeOut(c, 1-opacity)
 			}
 			style.AddNonNil("OutlineColor", fmtColor(c, true))
 		}
-		if pat := fmtPattern(r.Properties.GetFloatList("line-dasharray")); pat != nil {
-			style.Add("", pat)
+		if v, ok := r.Properties.GetFloatList("line-dasharray"); ok {
+			style.Add("", fmtPattern(v, m.scaleFactor, true))
 		}
 		style.AddDefault("Linecap", fmtKeyword(r.Properties.GetString("line-cap")), "BUTT")
 		style.AddDefault("Linejoin", fmtKeyword(r.Properties.GetString("line-join")), "MITER")
@@ -404,7 +412,7 @@ func (m *Map) addPolygonPatternSymbolizer(b *Block, r mss.Rule) (styled bool) {
 func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool) {
 	if textSize, ok := r.Properties.GetFloat("text-size"); ok {
 		style := NewBlock("LABEL")
-		style.AddNonNil("Size", fmtFloat(textSize*FontFactor-0.5, true))
+		style.AddNonNil("Size", fmtFloat(textSize*FontFactor*m.scaleFactor-0.5, true))
 		style.AddNonNil("Color", fmtColor(r.Properties.GetColor("text-fill")))
 		style.AddNonNil("Text", fmtFieldString(r.Properties.GetFieldList("text-name")))
 
@@ -421,8 +429,8 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		}
 
 		// TODO http://mapserver.org/development/rfc/ms-rfc-57.html
-		style.AddNonNil("MinDistance", fmtFloat(r.Properties.GetFloat("text-spacing")))
-		style.AddNonNil("RepeatDistance", fmtFloat(r.Properties.GetFloat("text-spacing")))
+		style.AddNonNil("MinDistance", fmtFloatProp(r.Properties, "text-spacing", m.scaleFactor))
+		style.AddNonNil("RepeatDistance", fmtFloatProp(r.Properties, "text-spacing", m.scaleFactor))
 		// text-min-padding -> padding to map edge
 
 		// TODO min-distance to other label, does not work in _mapnik_ with placement-line!
@@ -433,7 +441,7 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		if fill, ok := r.Properties.GetColor("text-halo-fill"); ok {
 			style.AddNonNil("OutlineColor", fmtColor(fill, true))
 			if radius, ok := r.Properties.GetFloat("text-halo-radius"); ok {
-				style.AddNonNil("OutlineWidth", fmtFloat(radius*HaloWidthFactor, true))
+				style.AddNonNil("OutlineWidth", fmtFloat(radius*HaloWidthFactor*m.scaleFactor, true))
 			}
 		}
 
@@ -451,7 +459,7 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		}
 		if wrapWidth, ok := r.Properties.GetFloat("text-wrap-width"); ok {
 			maxLength := wrapWidth / textSize
-			style.AddNonNil("MaxLength", fmtFloat(maxLength, true))
+			style.AddNonNil("MaxLength", fmtFloat(maxLength*m.scaleFactor, true))
 			style.AddDefault("Wrap", fmtString(r.Properties.GetString("text-wrap-character")), quote(" "))
 			style.Add("Align", "CENTER")
 		}
@@ -466,15 +474,15 @@ func (m *Map) addShieldSymbolizer(b *Block, r mss.Rule) (styled bool) {
 		style := NewBlock("LABEL")
 
 		if shieldSize, ok := r.Properties.GetFloat("shield-size"); ok {
-			style.AddNonNil("Size", fmtFloat(shieldSize*FontFactor-0.5, true))
+			style.AddNonNil("Size", fmtFloat(shieldSize*FontFactor-0.5*m.scaleFactor, true))
 			style.AddNonNil("Color", fmtColor(r.Properties.GetColor("shield-fill")))
 			style.AddNonNil("Text", fmtFieldString(r.Properties.GetFieldList("shield-name")))
 
 			style.AddNonNil("Force", fmtBool(r.Properties.GetBool("shield-allow-overlap")))
 
-			style.AddNonNil("MinDistance", fmtFloat(r.Properties.GetFloat("shield-min-distance")))
-			style.AddNonNil("RepeatDistance", fmtFloat(r.Properties.GetFloat("shield-spacing")))
-			style.AddNonNil("Buffer", fmtFloat(r.Properties.GetFloat("shield-min-padding")))
+			style.AddNonNil("MinDistance", fmtFloatProp(r.Properties, "shield-min-distance", m.scaleFactor))
+			style.AddNonNil("RepeatDistance", fmtFloatProp(r.Properties, "shield-spacing", m.scaleFactor))
+			style.AddNonNil("Buffer", fmtFloatProp(r.Properties, "shield-min-padding", m.scaleFactor))
 
 			if avoidEdges, ok := r.Properties.GetBool("shield-avoid-edges"); ok {
 				style.AddNonNil("Partials", fmtBool(!avoidEdges, true))
@@ -482,7 +490,7 @@ func (m *Map) addShieldSymbolizer(b *Block, r mss.Rule) (styled bool) {
 
 			if color, ok := r.Properties.GetColor("shield-halo-fill"); ok {
 				style.AddNonNil("OutlineColor", fmtColor(color, true))
-				style.AddNonNil("OutlineWidth", fmtFloat(r.Properties.GetFloat("shield-halo-radius")))
+				style.AddNonNil("OutlineWidth", fmtFloatProp(r.Properties, "shield-halo-radius", m.scaleFactor))
 			}
 
 			if faceNames, ok := r.Properties.GetStringList("shield-face-name"); ok {
@@ -569,6 +577,8 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 			width, wOk := r.Properties.GetFloat("marker-width")
 			height, hOk := r.Properties.GetFloat("marker-height")
 			if wOk && hOk {
+				width *= m.scaleFactor
+				height *= m.scaleFactor
 				tr, err := parseTransform(transform)
 				if err != nil {
 					log.Println(err)
@@ -581,12 +591,12 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 				}
 				if tr.hasRotateAnchor {
 					symOpts.hasAnchor = true
-					symOpts.anchorX = (tr.rotateAnchor[0] + width/2) / width
-					symOpts.anchorY = (tr.rotateAnchor[1] + height/2) / height
+					symOpts.anchorX = (tr.rotateAnchor[0]*m.scaleFactor + width/2) / width
+					symOpts.anchorY = (tr.rotateAnchor[1]*m.scaleFactor + height/2) / height
 				}
 			}
 		}
-		style.AddNonNil("Size", fmtFloat(size, sizeOk))
+		style.AddNonNil("Size", fmtFloat(size*m.scaleFactor, sizeOk))
 		style.Add("SYMBOL", *m.symbolName(markerFile, symOpts))
 
 		// style.AddNonNil("Force", fmtBool(r.Properties.GetBool("marker-allow-overlap")))
@@ -640,15 +650,15 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 				size *= tr.scale
 			}
 		}
-		style.AddNonNil("Size", fmtFloat(size, true))
+		style.AddNonNil("Size", fmtFloat(size*m.scaleFactor, true))
 
 		if isLine {
 			if spacing, ok := r.Properties.GetFloat("marker-spacing"); ok {
-				style.AddNonNil("Gap", fmtFloat(-spacing, true))
-				style.AddNonNil("InitialGap", fmtFloat(spacing*0.2, true))
+				style.AddNonNil("Gap", fmtFloat(-spacing*m.scaleFactor, true))
+				style.AddNonNil("InitialGap", fmtFloat(spacing*0.5*m.scaleFactor, true))
 
 			} else {
-				style.AddNonNil("Gap", fmtFloat(-100, true)) // mapnik default
+				style.AddNonNil("Gap", fmtFloat(-100*m.scaleFactor, true)) // mapnik default
 			}
 		}
 

@@ -22,6 +22,7 @@ type Map struct {
 	fontSets       map[string]string
 	XML            *XMLMap
 	locator        config.Locator
+	scaleFactor    float64
 	autoTypeFilter bool
 	mapnik2        bool
 }
@@ -45,9 +46,10 @@ var Maker3 = maker{}
 
 func New(locator config.Locator) *Map {
 	return &Map{
-		fontSets: make(map[string]string),
-		XML:      &XMLMap{SRS: "+init=epsg:3857"},
-		locator:  locator,
+		fontSets:    make(map[string]string),
+		XML:         &XMLMap{SRS: "+init=epsg:3857"},
+		locator:     locator,
+		scaleFactor: 1.0,
 	}
 }
 
@@ -64,6 +66,11 @@ func (m *Map) SetMapnik2(enable bool) {
 }
 
 func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
+	if l.ScaleFactor != 0.0 {
+		prevScaleFactor := m.scaleFactor
+		defer func() { m.scaleFactor = prevScaleFactor }()
+		m.scaleFactor = l.ScaleFactor
+	}
 	styles := m.newStyles(rules)
 	m.XML.Styles = append(m.XML.Styles, styles...)
 
@@ -283,17 +290,21 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 func (m *Map) addLineSymbolizer(result *Rule, r mss.Rule) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
 		symb := LineSymbolizer{}
-		symb.Width = fmtFloat(width, true)
+		symb.Width = fmtFloat(width*m.scaleFactor, true)
 		symb.Clip = fmtBool(r.Properties.GetBool("line-clip"))
 		symb.Color = fmtColor(r.Properties.GetColor("line-color"))
-		symb.Dasharray = fmtPattern(r.Properties.GetFloatList("line-dasharray"))
-		symb.DashOffset = fmtPattern(r.Properties.GetFloatList("line-dash-offset"))
+		if v, ok := r.Properties.GetFloatList("line-dasharray"); ok {
+			symb.Dasharray = fmtPattern(v, m.scaleFactor, true)
+		}
+		if v, ok := r.Properties.GetFloatList("line-dash-offset"); ok {
+			symb.DashOffset = fmtPattern(v, m.scaleFactor, true)
+		}
 		symb.Gamma = fmtFloat(r.Properties.GetFloat("line-gamma"))
 		symb.GammaMethod = fmtString(r.Properties.GetString("line-gamma-method"))
 		symb.Linecap = fmtString(r.Properties.GetString("line-cap"))
-		symb.Miterlimit = fmtFloat(r.Properties.GetFloat("line-miterlimit"))
+		symb.Miterlimit = fmtFloatProp(r.Properties, "line-miterlimit", m.scaleFactor)
 		symb.Linejoin = fmtString(r.Properties.GetString("line-join"))
-		symb.Offset = fmtFloat(r.Properties.GetFloat("line-offset"))
+		symb.Offset = fmtFloatProp(r.Properties, "line-offset", m.scaleFactor)
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("line-opacity"))
 		symb.Rasterizer = fmtString(r.Properties.GetString("line-rasterizer"))
 		symb.Simplify = fmtFloat(r.Properties.GetFloat("line-simplify"))
@@ -310,7 +321,7 @@ func (m *Map) addLinePatternSymbolizer(result *Rule, r mss.Rule) {
 		symb := LinePatternSymbolizer{}
 		fname := m.locator.Image(patFile)
 		symb.File = &fname
-		symb.Offset = fmtFloat(r.Properties.GetFloat("line-pattern-offset"))
+		symb.Offset = fmtFloatProp(r.Properties, "line-pattern-offset", m.scaleFactor)
 		symb.Clip = fmtBool(r.Properties.GetBool("line-pattern-clip"))
 		symb.Simplify = fmtFloat(r.Properties.GetFloat("line-pattern-simplify"))
 		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("line-pattern-simplify-algorithm"))
@@ -347,31 +358,31 @@ func (m *Map) addPolygonSymbolizer(result *Rule, r mss.Rule) {
 func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 	if size, ok := r.Properties.GetFloat("text-size"); ok {
 		symb := TextSymbolizer{}
-		symb.Size = fmtFloat(size, true)
+		symb.Size = fmtFloat(size*m.scaleFactor, true)
 		symb.Fill = fmtColor(r.Properties.GetColor("text-fill"))
 		symb.Name = fmtField(r.Properties.GetFieldList("text-name"))
 		symb.AvoidEdges = fmtBool(r.Properties.GetBool("text-avoid-edges"))
 		symb.HaloFill = fmtColor(r.Properties.GetColor("text-halo-fill"))
-		symb.HaloRadius = fmtFloat(r.Properties.GetFloat("text-halo-radius"))
+		symb.HaloRadius = fmtFloatProp(r.Properties, "text-halo-radius", m.scaleFactor)
 		symb.HaloRasterizer = fmtString(r.Properties.GetString("text-halo-rasterizer"))
 		symb.Opacity = fmtFloat(r.Properties.GetFloat("text-opacity"))
 		symb.WrapCharacter = fmtString(r.Properties.GetString("text-wrap-character"))
 		symb.WrapBefore = fmtString(r.Properties.GetString("text-wrap-before"))
-		symb.WrapWidth = fmtFloat(r.Properties.GetFloat("text-wrap-width"))
+		symb.WrapWidth = fmtFloatProp(r.Properties, "text-wrap-width", m.scaleFactor)
 		symb.Ratio = fmtFloat(r.Properties.GetFloat("text-ratio"))
 		symb.MaxCharAngleDelta = fmtFloat(r.Properties.GetFloat("text-max-char-angle-delta"))
 
 		symb.Placement = fmtString(r.Properties.GetString("text-placement"))
 		symb.PlacementType = fmtString(r.Properties.GetString("text-placement-type"))
 		symb.Placements = fmtString(r.Properties.GetString("text-placements"))
-		symb.LabelPositionTolerance = fmtFloat(r.Properties.GetFloat("text-label-position-tolerance"))
+		symb.LabelPositionTolerance = fmtFloatProp(r.Properties, "text-label-position-tolerance", m.scaleFactor)
 		symb.VerticalAlign = fmtString(r.Properties.GetString("text-vertical-alignment"))
 		symb.HorizontalAlign = fmtString(r.Properties.GetString("text-horizontal-alignment"))
 		symb.JustifyAlign = fmtString(r.Properties.GetString("text-justify-alignment"))
 		symb.CompOp = fmtString(r.Properties.GetString("text-comp-op"))
 
-		symb.Dx = fmtFloat(r.Properties.GetFloat("text-dx"))
-		symb.Dy = fmtFloat(r.Properties.GetFloat("text-dy"))
+		symb.Dx = fmtFloatProp(r.Properties, "text-dx", m.scaleFactor)
+		symb.Dy = fmtFloatProp(r.Properties, "text-dy", m.scaleFactor)
 
 		if v, ok := r.Properties.GetFloat("text-orientation"); ok {
 			symb.Orientation = fmtFloat(v, true)
@@ -379,20 +390,20 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 			symb.Orientation = fmtField(v, true)
 		}
 
-		symb.CharacterSpacing = fmtFloat(r.Properties.GetFloat("text-character-spacing"))
-		symb.LineSpacing = fmtFloat(r.Properties.GetFloat("text-line-spacing"))
+		symb.CharacterSpacing = fmtFloatProp(r.Properties, "text-character-spacing", m.scaleFactor)
+		symb.LineSpacing = fmtFloatProp(r.Properties, "text-line-spacing", m.scaleFactor)
 
 		symb.AllowOverlap = fmtBool(r.Properties.GetBool("text-allow-overlap"))
 
 		// TODO see for issue/upcoming fixes with 3.0 https://github.com/mapnik/mapnik/issues/2362
 
 		// spacing between repeated labels
-		symb.Spacing = fmtFloat(r.Properties.GetFloat("text-spacing"))
+		symb.Spacing = fmtFloatProp(r.Properties, "text-spacing", m.scaleFactor)
 		// min-distance to other label, does not work with placement-line
-		symb.MinimumDistance = fmtFloat(r.Properties.GetFloat("text-min-distance"))
+		symb.MinimumDistance = fmtFloatProp(r.Properties, "text-min-distance", m.scaleFactor)
 		// min-padding to map edge
-		symb.MinimumPadding = fmtFloat(r.Properties.GetFloat("text-min-padding"))
-		symb.MinPathLength = fmtFloat(r.Properties.GetFloat("text-min-path-length"))
+		symb.MinimumPadding = fmtFloatProp(r.Properties, "text-min-padding", m.scaleFactor)
+		symb.MinPathLength = fmtFloatProp(r.Properties, "text-min-path-length", m.scaleFactor)
 
 		symb.Clip = fmtBool(r.Properties.GetBool("text-clip"))
 		symb.TextTransform = fmtString(r.Properties.GetString("text-transform"))
@@ -406,7 +417,7 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 			symb.HaloTransform = fmtString(r.Properties.GetString("text-halo-transform"))
 			symb.HaloCompOp = fmtString(r.Properties.GetString("text-halo-comp-op"))
 			symb.RepeatWrapCharacter = fmtBool(r.Properties.GetBool("text-repeat-wrap-characater"))
-			symb.Margin = fmtFloat(r.Properties.GetFloat("text-margin"))
+			symb.Margin = fmtFloatProp(r.Properties, "text-margin", m.scaleFactor)
 			symb.Simplify = fmtFloat(r.Properties.GetFloat("text-simplify"))
 			symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("text-simplify-algorithm"))
 			symb.Smooth = fmtFloat(r.Properties.GetFloat("text-smooth"))
@@ -414,7 +425,7 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 			symb.Upright = fmtString(r.Properties.GetString("text-upgright"))
 			symb.FontFeatureSettings = fmtString(r.Properties.GetString("font-feature-settings"))
 			symb.LargestBboxOnly = fmtBool(r.Properties.GetBool("text-largest-bbox-only"))
-			symb.RepeatDistance = fmtFloat(r.Properties.GetFloat("text-repeat-distance"))
+			symb.RepeatDistance = fmtFloatProp(r.Properties, "text-repeat-distance", m.scaleFactor)
 		}
 
 		if symb.Name != nil && *symb.Name != "" {
@@ -430,7 +441,7 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 		fname := m.locator.Image(shieldFile)
 		symb.File = &fname
 
-		symb.Size = fmtFloat(r.Properties.GetFloat("shield-size"))
+		symb.Size = fmtFloatProp(r.Properties, "shield-size", m.scaleFactor)
 		symb.Fill = fmtColor(r.Properties.GetColor("shield-fill"))
 		symb.Name = fmtField(r.Properties.GetFieldList("shield-name"))
 		symb.TextOpacity = fmtFloat(r.Properties.GetFloat("shield-text-opacity"))
@@ -451,23 +462,23 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 		symb.AvoidEdges = fmtBool(r.Properties.GetBool("shield-avoid-edges"))
 
 		symb.HaloFill = fmtColor(r.Properties.GetColor("shield-halo-fill"))
-		symb.HaloRadius = fmtFloat(r.Properties.GetFloat("shield-halo-radius"))
+		symb.HaloRadius = fmtFloatProp(r.Properties, "shield-halo-radius", m.scaleFactor)
 		symb.HaloRasterizer = fmtString(r.Properties.GetString("shield-halo-rasterizer"))
 
-		symb.CharacterSpacing = fmtFloat(r.Properties.GetFloat("shield-character-spacing"))
+		symb.CharacterSpacing = fmtFloatProp(r.Properties, "shield-character-spacing", m.scaleFactor)
 		symb.WrapCharacter = fmtString(r.Properties.GetString("shield-wrap-character"))
 		symb.WrapBefore = fmtBool(r.Properties.GetBool("shield-wrap-before"))
-		symb.WrapWidth = fmtFloat(r.Properties.GetFloat("shield-wrap-width"))
-		symb.LineSpacing = fmtFloat(r.Properties.GetFloat("shield-line-spacing"))
-		symb.Dx = fmtFloat(r.Properties.GetFloat("shield-dx"))
-		symb.Dy = fmtFloat(r.Properties.GetFloat("shield-dx"))
-		symb.TextDx = fmtFloat(r.Properties.GetFloat("shield-text-dx"))
-		symb.TextDy = fmtFloat(r.Properties.GetFloat("shield-text-dy"))
+		symb.WrapWidth = fmtFloatProp(r.Properties, "shield-wrap-width", m.scaleFactor)
+		symb.LineSpacing = fmtFloatProp(r.Properties, "shield-line-spacing", m.scaleFactor)
+		symb.Dx = fmtFloatProp(r.Properties, "shield-dx", m.scaleFactor)
+		symb.Dy = fmtFloatProp(r.Properties, "shield-dx", m.scaleFactor)
+		symb.TextDx = fmtFloatProp(r.Properties, "shield-text-dx", m.scaleFactor)
+		symb.TextDy = fmtFloatProp(r.Properties, "shield-text-dy", m.scaleFactor)
 		symb.TextTransform = fmtString(r.Properties.GetString("shield-text-transform"))
 
-		symb.Spacing = fmtFloat(r.Properties.GetFloat("shield-spacing"))
-		symb.MinimumDistance = fmtFloat(r.Properties.GetFloat("shield-min-distance"))
-		symb.MinimumPadding = fmtFloat(r.Properties.GetFloat("shield-min-padding"))
+		symb.Spacing = fmtFloatProp(r.Properties, "shield-spacing", m.scaleFactor)
+		symb.MinimumDistance = fmtFloatProp(r.Properties, "shield-min-distance", m.scaleFactor)
+		symb.MinimumPadding = fmtFloatProp(r.Properties, "shield-min-padding", m.scaleFactor)
 
 		if faceNames, ok := r.Properties.GetStringList("shield-face-name"); ok {
 			symb.FontsetName = m.fontSetName(faceNames)
@@ -477,9 +488,9 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 			symb.HaloTransform = fmtString(r.Properties.GetString("shield-halo-transform"))
 			symb.HaloCompOp = fmtString(r.Properties.GetString("shield-halo-comp-op"))
 			symb.HaloOpacity = fmtFloat(r.Properties.GetFloat("shield-halo-opacity"))
-			symb.LabelPositionTolerance = fmtFloat(r.Properties.GetFloat("shield-label-position-tolerance"))
-			symb.Margin = fmtFloat(r.Properties.GetFloat("shield-margin"))
-			symb.RepeatDistance = fmtFloat(r.Properties.GetFloat("shield-repeat-distance"))
+			symb.LabelPositionTolerance = fmtFloatProp(r.Properties, "shield-label-position-tolerance", m.scaleFactor)
+			symb.Margin = fmtFloatProp(r.Properties, "shield-margin", m.scaleFactor)
+			symb.RepeatDistance = fmtFloatProp(r.Properties, "shield-repeat-distance", m.scaleFactor)
 			symb.Simplify = fmtFloat(r.Properties.GetFloat("shield-simplify"))
 			symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("shield-simplify-algorithm"))
 			symb.Smooth = fmtFloat(r.Properties.GetFloat("shield-smooth"))
@@ -491,22 +502,22 @@ func (m *Map) addShieldSymbolizer(result *Rule, r mss.Rule) {
 
 func (m *Map) addMarkerSymbolizer(result *Rule, r mss.Rule) {
 	symb := MarkersSymbolizer{}
-	symb.Width = fmtFloat(r.Properties.GetFloat("marker-width"))
-	symb.Height = fmtFloat(r.Properties.GetFloat("marker-height"))
+	symb.Width = fmtFloatProp(r.Properties, "marker-width", m.scaleFactor)
+	symb.Height = fmtFloatProp(r.Properties, "marker-height", m.scaleFactor)
 	symb.Fill = fmtColor(r.Properties.GetColor("marker-fill"))
 	symb.FillOpacity = fmtFloat(r.Properties.GetFloat("marker-fill-opacity"))
 	symb.Opacity = fmtFloat(r.Properties.GetFloat("marker-opacity"))
 	symb.Placement = fmtString(r.Properties.GetString("marker-placement"))
 	symb.Transform = fmtString(r.Properties.GetString("marker-transform"))
 	symb.GeometryTransform = fmtString(r.Properties.GetString("marker-geometry-transform"))
-	symb.Spacing = fmtFloat(r.Properties.GetFloat("marker-spacing"))
+	symb.Spacing = fmtFloatProp(r.Properties, "marker-spacing", m.scaleFactor)
 	symb.Stroke = fmtColor(r.Properties.GetColor("marker-line-color"))
 	symb.StrokeOpacity = fmtFloat(r.Properties.GetFloat("marker-line-opacity"))
-	symb.StrokeWidth = fmtFloat(r.Properties.GetFloat("marker-line-width"))
+	symb.StrokeWidth = fmtFloatProp(r.Properties, "marker-line-width", m.scaleFactor)
 	symb.AllowOverlap = fmtBool(r.Properties.GetBool("marker-allow-overlap"))
 	symb.MultiPolicy = fmtString(r.Properties.GetString("marker-multi-policy"))
 	symb.IgnorePlacement = fmtBool(r.Properties.GetBool("marker-ignore-placement"))
-	symb.MaxError = fmtFloat(r.Properties.GetFloat("marker-max-error"))
+	symb.MaxError = fmtFloatProp(r.Properties, "marker-max-error", m.scaleFactor)
 	symb.Clip = fmtBool(r.Properties.GetBool("marker-clip"))
 	symb.Smooth = fmtFloat(r.Properties.GetFloat("marker-smooth"))
 	symb.CompOp = fmtString(r.Properties.GetString("marker-comp-op"))
@@ -532,7 +543,7 @@ func (m *Map) addMarkerSymbolizer(result *Rule, r mss.Rule) {
 		symb.AvoidEdges = fmtBool(r.Properties.GetBool("marker-avoid-edges"))
 		symb.Simplify = fmtFloat(r.Properties.GetFloat("marker-simplify"))
 		symb.SimplifyAlgorithm = fmtString(r.Properties.GetString("marker-simplify-algorithm"))
-		symb.Offset = fmtFloat(r.Properties.GetFloat("marker-offset"))
+		symb.Offset = fmtFloatProp(r.Properties, "marker-offset", m.scaleFactor)
 		symb.Direction = fmtString(r.Properties.GetString("marker-direction"))
 	}
 
@@ -577,7 +588,7 @@ func (m *Map) addBuildingSymbolizer(result *Rule, r mss.Rule) {
 		symb := BuildingSymbolizer{}
 		symb.Fill = fmtColor(fill, true)
 		symb.FillOpacity = fmtFloat(r.Properties.GetFloat("building-fill-opacity"))
-		symb.Height = fmtFloat(r.Properties.GetFloat("building-height"))
+		symb.Height = fmtFloatProp(r.Properties, "building-height", m.scaleFactor)
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
 }
@@ -588,8 +599,8 @@ func (m *Map) addDotSymbolizer(result *Rule, r mss.Rule) {
 			symb := DotSymbolizer{}
 			symb.Fill = fmtColor(fill, true)
 			symb.Opacity = fmtFloat(r.Properties.GetFloat("dot-opacity"))
-			symb.Width = fmtFloat(r.Properties.GetFloat("dot-width"))
-			symb.Height = fmtFloat(r.Properties.GetFloat("dot-height"))
+			symb.Width = fmtFloatProp(r.Properties, "dot-width", m.scaleFactor)
+			symb.Height = fmtFloatProp(r.Properties, "dot-height", m.scaleFactor)
 			symb.CompOp = fmtString(r.Properties.GetString("dot-comp-op"))
 			result.Symbolizers = append(result.Symbolizers, &symb)
 		}
@@ -656,16 +667,25 @@ func fmtField(vals []interface{}, ok bool) *string {
 	return &r
 }
 
-func fmtPattern(v []float64, ok bool) *string {
+func fmtPattern(v []float64, scale float64, ok bool) *string {
 	if !ok {
 		return nil
 	}
 	parts := make([]string, 0, len(v))
 	for i := range v {
-		parts = append(parts, strconv.FormatFloat(v[i], 'f', -1, 64))
+		parts = append(parts, strconv.FormatFloat(v[i]*scale, 'f', -1, 64))
 
 	}
 	r := strings.Join(parts, ", ")
+	return &r
+}
+
+func fmtFloatProp(p *mss.Properties, name string, scale float64) *string {
+	v, ok := p.GetFloat(name)
+	if !ok {
+		return nil
+	}
+	r := strconv.FormatFloat(v*scale, 'f', -1, 64)
 	return &r
 }
 
