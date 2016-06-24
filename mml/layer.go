@@ -10,13 +10,14 @@ const (
 )
 
 type Layer struct {
-	ID             string
-	Classes        []string
-	SRS            string
-	Datasource     Datasource
-	Type           GeometryType
-	Active         bool
-	GroupBy        string
-	PostLabelCache bool
-	ScaleFactor    float64
+	ID              string
+	Classes         []string
+	SRS             string
+	Datasource      Datasource
+	Type            GeometryType
+	Active          bool
+	GroupBy         string
+	ClearLabelCache bool
+	PostLabelCache  bool
+	ScaleFactor     float64
 }

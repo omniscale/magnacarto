@@ -83,6 +83,11 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	if l.GroupBy != "" {
 		layer.GroupBy = l.GroupBy
 	}
+
+	if l.ClearLabelCache {
+		layer.ClearLabelCache = "on"
+	}
+
 	z := mss.RulesZoom(rules)
 	if z != mss.AllZoom {
 		if l := z.First(); l > 0 {

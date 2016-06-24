@@ -46,14 +46,16 @@ func newLayer(l auxLayer) (*Layer, error) {
 
 	classes := strings.Split(l.Class, " ")
 	groupBy, _ := l.Properties["group-by"].(string)
+	clearLabelCache, _ := l.Properties["clear-label-cache"].(string)
 	return &Layer{
-		ID:         l.ID,
-		Classes:    classes,
-		Datasource: ds,
-		SRS:        l.SRS,
-		Type:       parseGeometryType(l.Geometry),
-		Active:     isActive,
-		GroupBy:    groupBy,
+		ID:              l.ID,
+		Classes:         classes,
+		Datasource:      ds,
+		SRS:             l.SRS,
+		Type:            parseGeometryType(l.Geometry),
+		Active:          isActive,
+		GroupBy:         groupBy,
+		ClearLabelCache: clearLabelCache == "on",
 	}, nil
 }
 
