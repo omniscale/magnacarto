@@ -218,7 +218,7 @@ func evaluate(codes []code) ([]code, int, error) {
 						c[i] = 255
 					}
 				}
-				v = []code{{Value: color.FromRgba(c[0], c[1], c[2], c[3]), T: typeColor}}
+				v = []code{{Value: color.FromRgba(c[0], c[1], c[2], c[3], false), T: typeColor}}
 			} else if c.Value.(string) == "hsl" || c.Value.(string) == "hsla" {
 				if c.Value.(string) == "hsl" && len(v) != 3 {
 					return nil, 0, fmt.Errorf("hsl takes exactly three arguments, got %d", len(v))
