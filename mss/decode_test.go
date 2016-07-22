@@ -178,7 +178,7 @@ func TestParseExpression(t *testing.T) {
 		{`@foo: [field1] + [field2];`, "", []Value{Field("[field1]"), Field("[field2]")}},
 		{`@foo: "hello " + [field2];`, "", []Value{"hello ", Field("[field2]")}},
 
-		{`@foo: red * 0.5;`, "", color.Color{0, 0.5, 0.25, 1, false}},
+		{`@foo: red * 0.5;`, "", color.Color{0, 1.0, 0.25, 1, false}},
 		{`@foo: red * blue;`, "unsupported operation", nil},
 	}
 

@@ -18,8 +18,13 @@ type Color struct {
 
 var hexRe = regexp.MustCompile(`[a-fA-F0-9]{6,6}`)
 
-func FromRgba(r, g, b, a float64) Color {
-	h, s, l := rgbToHsl(r, g, b)
+func FromRgba(r, g, b, a float64, perceptual bool) Color {
+	var h, s, l float64
+	if perceptual {
+		h, s, l = husl.HuslFromRGB(r, g, b)
+		return Color{h, s / 100, l / 100, a, true}
+	}
+	h, s, l = rgbToHsl(r, g, b)
 	return Color{h, s, l, a, false}
 }
 
@@ -153,6 +158,13 @@ func (color Color) HexString() string {
 	} else {
 		return fmt.Sprintf("#%02x%02x%02x%02x", round(r*255), round(g*255), round(b*255), round(color.A*255))
 	}
+}
+
+func (color Color) ToRgb() (float64, float64, float64) {
+	if color.Perceptual {
+		return husl.HuslToRGB(color.H, color.S*100.0, color.L*100.0)
+	}
+	return hslToRgb(color.H, color.S, color.L)
 }
 
 func rgbToHsl(r, g, b float64) (float64, float64, float64) {

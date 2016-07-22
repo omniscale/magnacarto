@@ -129,10 +129,12 @@ func Alpha(c Color) float64 {
 }
 
 func Multiply(c Color, v float64) Color {
-	c.H = math.Max(math.Min(c.H*v, 360.0), 0.0)
-	c.S = clamp(c.S * v)
-	c.L = clamp(c.L * v)
-	return c
+	// for compatibility Multiply must operate on RGB channels
+	r, g, b := c.ToRgb();
+	r = clamp(r * v)
+	g = clamp(g * v)
+	b = clamp(b * v)
+	return FromRgba(r, g, b, c.A, c.Perceptual)
 }
 
 func Mix(c1, c2 Color, weight float64) Color {
@@ -146,6 +148,10 @@ func Mix(c1, c2 Color, weight float64) Color {
 		c1 = c1.ToPerceptual()
 	}
 
+	// for compatibility Mix must operate on RGB channels
+	r1, g1, b1 := c1.ToRgb()
+	r2, g2, b2 := c2.ToRgb()
+
 	var w1 float64
 
 	if w*a == -1 {
@@ -155,13 +161,12 @@ func Mix(c1, c2 Color, weight float64) Color {
 	}
 	w2 := 1 - w1
 
-	return Color{
-		H:          c1.H*w1 + c2.H*w2,
-		S:          c1.S*w1 + c2.S*w2,
-		L:          c1.L*w1 + c2.L*w2,
-		A:          c1.A*weight + c2.A*(1-weight),
-		Perceptual: perceptual,
-	}
+	return FromRgba(
+		r1*w1 + r2*w2,
+		g1*w1 + g2*w2,
+		b1*w1 + b2*w2,
+		c1.A*weight + c2.A*(1-weight),
+		perceptual)
 }
 
 func SetHue(c, hue Color) Color {

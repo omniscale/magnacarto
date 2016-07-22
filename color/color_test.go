@@ -83,7 +83,15 @@ func TestFunctionsColor(t *testing.T) {
 	assert.Equal(t, Color{125.0, 0.85, 0.45, 1.0, false}, Spin(Color{5.0, 0.85, 0.45, 1.0, false}, 120))
 	assert.Equal(t, Color{133.30970672271738, 0.9581840942803506, 0.4590338151746395, 1.0, true}, SpinP(Color{5.0, 0.85, 0.45, 1.0, false}, 120))
 
-	assert.Equal(t, Color{2.5, 0.425, 0.225, 1.0, false}, Multiply(Color{5.0, 0.85, 0.45, 1.0, false}, 0.5))
+	assert.Equal(t, Color{30.000000000000135, 0.05341979522184286, 0.7656000000000001, 1.0, false}, Multiply(Color{30, 0.364, 0.957, 1.0, false}, 0.8))
+
+	assert.Equal(t, Color{124.22907488986785, 0.6387701928087549, 0.65458, 1.0, false}, Mix(Color{209, 0.81, 0.64, 1.0, false}, Color{109, 0.81, 0.64, 1.0, false}, 0.2))
+	assert.Equal(t, Color{203.38217261830283, 0.6419437751004016, 0.498, 1.0, false}, Mix(Color{180, 0.281, 0.496, 1.0, false}, Color{209.9, 1.0, 0.5, 1.0, false}, 0.5))
+	assert.Equal(t, Color{120, 1.0, 0.5, 1.0, false}, Mix(Color{0, 1.0, 0.5, 1.0, false}, Color{120, 1.0, 0.5, 1.0, false}, 0.0))
+	assert.Equal(t, Color{0, 1.0, 0.5, 1.0, false}, Mix(Color{0, 1.0, 0.5, 1.0, false}, Color{120, 1.0, 0.5, 1.0, false}, 1.0))
+	assert.Equal(t, Color{116.25, 1.0, 0.47058823529411764, 0.6800000000000002, false}, Mix(Color{0, 1.0, 0.5, 0.2, false}, Color{120, 1.0, 0.5, 0.8, false}, 0.2))
+	assert.Equal(t, Color{172.7974659092182, 0.7779747710280247, 0.6790756211469354, 1.0, true}, Mix(Color{109, 0.81, 0.64, 1.0, false}, Color{209, 0.81, 0.64, 1.0, true}, 0.2))
+	assert.Equal(t, Color{181.64356399470265, 0.7306791956543964, 0.6363175050747654, 1.0, true}, Mix(Color{109, 0.81, 0.64, 1.0, true}, Color{209, 0.81, 0.64, 1.0, true}, 0.2))
 
 	assert.Equal(t, Color{5.0, 0, 0.45, 1.0, false}, Greyscale(Color{5.0, 0.85, 0.45, 1.0, false}))
 	assert.Equal(t, Color{13.309706722717369, 0, 0.4590338151746395, 1.0, true}, GreyscaleP(Color{5.0, 0.85, 0.45, 1.0, false}))
