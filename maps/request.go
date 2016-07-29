@@ -13,13 +13,14 @@ type BBOX struct {
 }
 
 type Request struct {
-	HTTP     *http.Request
-	Query    url.Values
-	Width    int
-	Height   int
-	BBOX     BBOX
-	EPSGCode int
-	Format   string
+	HTTP        *http.Request
+	Query       url.Values
+	Width       int
+	Height      int
+	BBOX        BBOX
+	EPSGCode    int
+	Format      string
+	ScaleFactor float64
 }
 
 type MissingParamError struct {
@@ -80,6 +81,10 @@ func ParseMapRequest(r *http.Request) (*Request, error) {
 		return nil, err
 	}
 
+	req.ScaleFactor, err = parseScaleFactor(req.Query)
+	if err != nil {
+		return nil, err
+	}
 	return req, nil
 }
 
@@ -158,4 +163,17 @@ func parseFormat(q url.Values) (string, error) {
 	} else {
 		return "png256", &InvalidParamError{"FORMAT", format}
 	}
+}
+
+func parseScaleFactor(q url.Values) (float64, error) {
+	v := q.Get("SCALE_FACTOR")
+	if v == "" {
+		return 1.0, nil
+	}
+	scalef, err := strconv.ParseFloat(v, 64)
+	if err != nil || scalef <= 0.1 || scalef >= 20.0 {
+		return 1.0, &InvalidParamError{"SCALE_FACTOR", v}
+	}
+
+	return scalef, nil
 }

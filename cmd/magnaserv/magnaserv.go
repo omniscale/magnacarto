@@ -271,6 +271,7 @@ func renderReq(r *maps.Request) render.Request {
 	result.Height = r.Height
 	result.EPSGCode = r.EPSGCode
 	result.Format = r.Format
+	result.ScaleFactor = r.ScaleFactor
 	return result
 }
 
