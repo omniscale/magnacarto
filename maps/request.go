@@ -171,7 +171,7 @@ func parseScaleFactor(q url.Values) (float64, error) {
 		return 1.0, nil
 	}
 	scalef, err := strconv.ParseFloat(v, 64)
-	if err != nil || scalef <= 0.1 || scalef >= 20.0 {
+	if err != nil || scalef <= 0.01 || scalef >= 100.0 {
 		return 1.0, &InvalidParamError{"SCALE_FACTOR", v}
 	}
 
