@@ -16,13 +16,12 @@ func renderReq(mapfile string, mapReq render.Request) ([]byte, error) {
 	style := filepath.Base(mapfile)
 	style = style[:len(style)-len(filepath.Ext(style))] // wihout suffix
 
-	m := mapnik.New()
+	m := mapnik.NewSized(mapReq.Width, mapReq.Height)
 	err := m.Load(mapfile)
 	if err != nil {
 		return nil, err
 	}
 
-	m.Resize(mapReq.Width, mapReq.Height)
 	m.SetSRS(fmt.Sprintf("+init=epsg:%d", mapReq.EPSGCode))
 	m.ZoomTo(mapReq.BBOX[0], mapReq.BBOX[1], mapReq.BBOX[2], mapReq.BBOX[3])
 

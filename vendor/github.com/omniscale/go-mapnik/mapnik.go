@@ -84,6 +84,15 @@ func New() *Map {
 	}
 }
 
+// NewSized initializes a new Map with the given size.
+func NewSized(width, height int) *Map {
+	return &Map{
+		m:      C.mapnik_map(C.uint(width), C.uint(height)),
+		width:  width,
+		height: height,
+	}
+}
+
 func (m *Map) lastError() error {
 	return errors.New("mapnik: " + C.GoString(C.mapnik_map_last_error(m.m)))
 }
@@ -99,6 +108,8 @@ func (m *Map) Load(stylesheet string) error {
 }
 
 // Resize changes the map size in pixel.
+// Sizes larger than 16k pixels are ignored by Mapnik. Use NewSized
+// to initialize larger maps.
 func (m *Map) Resize(width, height int) {
 	C.mapnik_map_resize(m.m, C.uint(width), C.uint(height))
 	m.width = width
