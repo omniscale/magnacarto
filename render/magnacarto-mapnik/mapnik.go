@@ -17,6 +17,7 @@ func renderReq(mapfile string, mapReq render.Request) ([]byte, error) {
 	style = style[:len(style)-len(filepath.Ext(style))] // wihout suffix
 
 	m := mapnik.NewSized(mapReq.Width, mapReq.Height)
+	defer m.Free()
 	err := m.Load(mapfile)
 	if err != nil {
 		return nil, err
