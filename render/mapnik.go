@@ -60,6 +60,13 @@ func (m *Mapnik) RegisterFonts(fontDir string) error {
 	return err
 }
 
+func (m *Mapnik) Close() error {
+	if m.client == nil {
+		return errors.New("mapnik plugin not initialized")
+	}
+	return m.client.Close()
+}
+
 func (m *Mapnik) Render(mapfile string, dst io.Writer, mapReq Request) error {
 	if m.client == nil {
 		return errors.New("mapnik plugin not initialized")
