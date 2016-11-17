@@ -19,5 +19,6 @@ type Layer struct {
 	GroupBy         string
 	ClearLabelCache bool
 	PostLabelCache  bool
+	CacheFeatures   bool
 	ScaleFactor     float64
 }

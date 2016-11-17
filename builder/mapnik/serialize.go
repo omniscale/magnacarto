@@ -87,6 +87,9 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	if l.ClearLabelCache {
 		layer.ClearLabelCache = "on"
 	}
+	if l.CacheFeatures {
+		layer.CacheFeatures = "true"
+	}
 
 	z := mss.RulesZoom(rules)
 	if z != mss.AllZoom {

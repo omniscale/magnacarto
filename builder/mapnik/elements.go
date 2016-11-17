@@ -65,6 +65,7 @@ type Layer struct {
 	MinScaleDenom   int64        `xml:"minimum-scale-denominator,attr,omitempty"`
 	GroupBy         string       `xml:"group-by,attr,omitempty"`
 	ClearLabelCache string       `xml:"clear-label-cache,attr,omitempty"`
+	CacheFeatures   string       `xml:"cache-features,attr,omitempty"`
 	StyleNames      []string     `xml:"StyleName"`
 	Datasource      *[]Parameter `xml:"Datasource>Parameter"` // as pointer to prevent empty Datasource tag for layers without datasource
 }
