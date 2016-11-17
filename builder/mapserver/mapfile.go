@@ -312,7 +312,7 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 			if layerType == "POLYGON" {
 				prefixStyled = m.addPolygonOutlineSymbolizer(b, r)
 			} else if layerType == "LINE" {
-				prefixStyled = m.addLineSymbolizer(b, r)
+				prefixStyled = m.addLineSymbolizer(b, r, p)
 			}
 		case "polygon-":
 			if layerType == "POLYGON" {
@@ -341,7 +341,7 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 	return
 
 }
-func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled bool) {
+func (m *Map) addLineSymbolizer(b *Block, r mss.Rule, p mss.Prefix) (styled bool) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
 		style := NewBlock("STYLE")
 		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor*m.scaleFactor, true))
@@ -361,6 +361,9 @@ func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 		style.AddDefault("Linejoin", fmtKeyword(r.Properties.GetString("line-join")), "MITER")
 		b.Add("", style)
 		return true
+	} else if p.Instance != "" {
+		style := NewBlock("STYLE")
+		b.Add("", style)
 	}
 	return false
 }
