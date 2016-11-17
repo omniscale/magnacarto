@@ -422,9 +422,9 @@ func combineRules(a, b Rule) Rule {
 	r.Properties = combineProperties(a.Properties, b.Properties)
 
 	if debugRules >= 1 {
-		fmt.Fprintln(os.Stderr, " ++", a)
-		fmt.Fprintln(os.Stderr, " ++", b)
-		fmt.Fprintln(os.Stderr, " ==", r)
+		fmt.Fprintln(os.Stderr, "        a", a)
+		fmt.Fprintln(os.Stderr, "      + b", b)
+		fmt.Fprintln(os.Stderr, "      ===", r)
 	}
 
 	return r
@@ -464,7 +464,7 @@ func fillProperties(r Rule, subRules []Rule) []Rule {
 	newRules := []Rule{}
 	for _, o := range subRules {
 		if debugRules >= 2 {
-			fmt.Fprintln(os.Stderr, " ??", r, o)
+			fmt.Fprintln(os.Stderr, " compare ", r, o)
 		}
 
 		if r.same(o) {
@@ -473,13 +473,13 @@ func fillProperties(r Rule, subRules []Rule) []Rule {
 		} else if r.childOf(o) {
 			// e.g. {a=1, b=1}.chilldOf{b=1} -> add missing properties
 			if debugRules >= 1 {
-				fmt.Fprintln(os.Stderr, " -->", r, o)
+				fmt.Fprintln(os.Stderr, " child of", r, o)
 			}
 			r.Properties.updateMissing(o.Properties)
 		} else if r.overlaps(o) {
 			// {a=1, b=1}.overlaps{c=1} -> create new combined rule
 			if debugRules >= 1 {
-				fmt.Fprintln(os.Stderr, " <>", r, o)
+				fmt.Fprintln(os.Stderr, " overlaps", r, o)
 			}
 			newRule := combineRules(r, o)
 			if o.same(newRule) {
@@ -525,7 +525,7 @@ func sortedRules(rules []Rule, attachments map[string]int, classes []string) []R
 		for _, rr := range rules {
 			fmt.Fprintln(os.Stderr, "  ", rr)
 		}
-		fmt.Fprintln(os.Stderr, "filling rules")
+		fmt.Fprintln(os.Stderr, "\nfilling rules")
 	}
 	// add properties of more generic rules (parent) to specific rules (child)
 
@@ -533,18 +533,27 @@ func sortedRules(rules []Rule, attachments map[string]int, classes []string) []R
 	for pos := 0; pos < len(rules); {
 		// fmt.Fprintln(os.Stderr, pos, len(rules))
 		if debugRules >= 1 {
-			fmt.Fprintln(os.Stderr, "step", pos)
-			for _, rr := range rules {
-				fmt.Fprintln(os.Stderr, "  ", rr)
+			fmt.Fprintln(os.Stderr, "pre-extend")
+			for i, rr := range rules {
+				if i == pos {
+					fmt.Fprintln(os.Stderr, "* ", rr)
+				} else {
+					fmt.Fprintln(os.Stderr, "  ", rr)
+				}
 			}
 		}
 		added, rules = extendRule(rules[pos], rules, pos)
 		pos += added
 		if debugRules >= 1 {
-			fmt.Fprintln(os.Stderr, "astep", pos)
-			for _, rr := range rules {
-				fmt.Fprintln(os.Stderr, "  ", rr)
+			fmt.Fprintln(os.Stderr, "post-extend")
+			for i, rr := range rules {
+				if i == pos {
+					fmt.Fprintln(os.Stderr, "* ", rr)
+				} else {
+					fmt.Fprintln(os.Stderr, "  ", rr)
+				}
 			}
+			fmt.Fprintln(os.Stderr)
 		}
 		pos++
 	}
