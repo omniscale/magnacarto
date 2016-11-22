@@ -655,7 +655,12 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 				size *= tr.scale
 			}
 		}
-		style.AddNonNil("Size", fmtFloat(size*m.scaleFactor, true))
+
+		if width, ok := r.Properties.GetFloat("marker-width"); ok {
+			style.AddNonNil("Size", fmtFloat(width*m.scaleFactor, true))
+		} else {
+			style.AddNonNil("Size", fmtFloat(size*m.scaleFactor, true))
+		}
 
 		if isLine {
 			if spacing, ok := r.Properties.GetFloat("marker-spacing"); ok {
