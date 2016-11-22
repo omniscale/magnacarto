@@ -639,7 +639,9 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 			}
 		}
 
-		style.AddNonNil("Width", fmtColor(r.Properties.GetColor("marker-line-width")))
+		if lineWidth, ok := r.Properties.GetFloat("marker-line-width"); ok {
+			style.AddNonNil("Width", fmtFloat(lineWidth, true))
+		}
 
 		if transform, ok := r.Properties.GetString("marker-transform"); ok {
 			tr, err := parseTransform(transform)
