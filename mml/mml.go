@@ -47,6 +47,8 @@ func newLayer(l auxLayer) (*Layer, error) {
 	classes := strings.Split(l.Class, " ")
 	groupBy, _ := l.Properties["group-by"].(string)
 	clearLabelCache, _ := l.Properties["clear-label-cache"].(string)
+	cacheFeatures, _ := l.Properties["cache-features"].(string)
+
 	return &Layer{
 		ID:              l.ID,
 		Classes:         classes,
@@ -56,6 +58,7 @@ func newLayer(l auxLayer) (*Layer, error) {
 		Active:          isActive,
 		GroupBy:         groupBy,
 		ClearLabelCache: clearLabelCache == "on",
+		CacheFeatures:   cacheFeatures == "on",
 	}, nil
 }
 

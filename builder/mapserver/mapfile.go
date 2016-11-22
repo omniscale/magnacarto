@@ -306,13 +306,14 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 
 	for _, p := range prefixes {
 		prefixStyled := false
+		hidden := false
 		r.Properties.SetDefaultInstance(p.Instance)
 		switch p.Name {
 		case "line-":
 			if layerType == "POLYGON" {
-				prefixStyled = m.addPolygonOutlineSymbolizer(b, r)
+				prefixStyled, hidden = m.addPolygonOutlineSymbolizer(b, r)
 			} else if layerType == "LINE" {
-				prefixStyled = m.addLineSymbolizer(b, r, p)
+				prefixStyled, hidden = m.addLineSymbolizer(b, r)
 			}
 		case "polygon-":
 			if layerType == "POLYGON" {
@@ -336,13 +337,20 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 		if prefixStyled {
 			styled = true
 		}
+		if hidden {
+			b.Add("", NewBlock("STYLE"))
+		}
+
 		r.Properties.SetDefaultInstance("")
 	}
 	return
-
 }
-func (m *Map) addLineSymbolizer(b *Block, r mss.Rule, p mss.Prefix) (styled bool) {
+
+func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled, hidden bool) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
+		if width == 0.0 {
+			return true, true
+		}
 		style := NewBlock("STYLE")
 		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor*m.scaleFactor, true))
 		if width*LineWidthFactor > 32 {
@@ -360,16 +368,16 @@ func (m *Map) addLineSymbolizer(b *Block, r mss.Rule, p mss.Prefix) (styled bool
 		style.AddDefault("Linecap", fmtKeyword(r.Properties.GetString("line-cap")), "BUTT")
 		style.AddDefault("Linejoin", fmtKeyword(r.Properties.GetString("line-join")), "MITER")
 		b.Add("", style)
-		return true
-	} else if p.Instance != "" {
-		style := NewBlock("STYLE")
-		b.Add("", style)
+		return true, false
 	}
-	return false
+	return false, false
 }
 
-func (m *Map) addPolygonOutlineSymbolizer(b *Block, r mss.Rule) (styled bool) {
+func (m *Map) addPolygonOutlineSymbolizer(b *Block, r mss.Rule) (styled, hidden bool) {
 	if width, ok := r.Properties.GetFloat("line-width"); ok {
+		if width == 0.0 {
+			return true, true
+		}
 		style := NewBlock("STYLE")
 		style.AddNonNil("Width", fmtFloat(width*LineWidthFactor*m.scaleFactor, true))
 		if c, ok := r.Properties.GetColor("line-color"); ok {
@@ -384,9 +392,9 @@ func (m *Map) addPolygonOutlineSymbolizer(b *Block, r mss.Rule) (styled bool) {
 		style.AddDefault("Linecap", fmtKeyword(r.Properties.GetString("line-cap")), "BUTT")
 		style.AddDefault("Linejoin", fmtKeyword(r.Properties.GetString("line-join")), "MITER")
 		b.Add("", style)
-		return true
+		return true, false
 	}
-	return false
+	return false, false
 }
 
 func (m *Map) addPolygonSymbolizer(b *Block, r mss.Rule) (styled bool) {

@@ -100,6 +100,24 @@ func TestPolygonLayer(t *testing.T) {
 	assert.Regexp(t, `TEXT 'name'`, result)
 }
 
+func TestEmptyStyle(t *testing.T) {
+	// check that instance with line-width produces empty STYLE block
+	m := New(&locator)
+	m.SetNoMapBlock(true)
+
+	m.AddLayer(mml.Layer{ID: "test", SRS: "4326", Type: mml.Polygon},
+		[]mss.Rule{
+			{Layer: "test", Properties: mss.NewPropertiesInstance(
+				"line-width", "a", 0.0,
+				"line-color", "a", color.MustParse("red"),
+				"line-width", "b", 1.0,
+				"line-color", "b", color.MustParse("blue"),
+			)},
+		})
+	result := m.String()
+	assert.Regexp(t, `STYLE\s+END\s+STYLE\n`, result)
+}
+
 func TestItem(t *testing.T) {
 	assert.Equal(t, `KEY "str"`, Item{"key", quote("str")}.String())
 	assert.Equal(t, `"str"`, Item{"", quote("str")}.String())

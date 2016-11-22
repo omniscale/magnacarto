@@ -87,6 +87,9 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	if l.ClearLabelCache {
 		layer.ClearLabelCache = "on"
 	}
+	if l.CacheFeatures {
+		layer.CacheFeatures = "true"
+	}
 
 	z := mss.RulesZoom(rules)
 	if z != mss.AllZoom {
@@ -293,7 +296,7 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 }
 
 func (m *Map) addLineSymbolizer(result *Rule, r mss.Rule) {
-	if width, ok := r.Properties.GetFloat("line-width"); ok {
+	if width, ok := r.Properties.GetFloat("line-width"); ok && width != 0.0 {
 		symb := LineSymbolizer{}
 		symb.Width = fmtFloat(width*m.scaleFactor, true)
 		symb.Clip = fmtBool(r.Properties.GetBool("line-clip"))
