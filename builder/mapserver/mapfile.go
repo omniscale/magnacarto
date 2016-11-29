@@ -582,6 +582,12 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 			style.AddNonNil("Partials", fmtBool(!avoidEdges, true))
 		}
 
+		if placement, ok := r.Properties.GetString("marker-placement"); ok {
+			if placement == "point" {
+				style.Add("Geomtransform", "centroid")
+			}
+		}
+
 		symOpts := symbolOptions{}
 
 		if transform, ok := r.Properties.GetString("marker-transform"); ok {
@@ -677,6 +683,12 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 
 			} else {
 				style.AddNonNil("Gap", fmtFloat(-100*m.scaleFactor, true)) // mapnik default
+			}
+		}
+
+		if placement, ok := r.Properties.GetString("marker-placement"); ok {
+			if placement == "point" {
+				style.Add("Geomtransform", "centroid")
 			}
 		}
 
