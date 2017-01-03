@@ -1,3 +1,8 @@
 <div form-group>
   <input name="file" type="text" ng-model="layer.Datasource.file" placeholder="Shape file location" required/>
 </div>
+<div form-group>
+  <div input-dropdown="sridSuggestions" ng-model="layer.Datasource.srid">
+    <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
+  </div>
+</div>
