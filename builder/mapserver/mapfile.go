@@ -439,15 +439,21 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 			style.AddNonNil("Angle", fmtField(v, true))
 		}
 
-		// TODO http://mapserver.org/development/rfc/ms-rfc-57.html
+		// see http://mapserver.org/development/rfc/ms-rfc-57.html
+
+		// distance between same label (even if from different geometry)
+		// however: MINDISTANCE does not regard label bounds, but only center point (see MP #5369)
 		style.AddNonNil("MinDistance", fmtFloatProp(r.Properties, "text-spacing", m.scaleFactor))
-		style.AddNonNil("RepeatDistance", fmtFloatProp(r.Properties, "text-spacing", m.scaleFactor))
+
+		// distance between repeated label from same (multi)geometry
+		style.AddNonNil("RepeatDistance", fmtFloatProp(r.Properties, "text-repeat-distance", m.scaleFactor))
 		// text-min-padding -> padding to map edge
 
-		// TODO min-distance to other label, does not work in _mapnik_ with placement-line!
-		// if dist, ok := r.Properties.GetFloat("text-min-distance"); ok {
-		// 	style.AddNonNil("Buffer", fmtFloat(dist/2, true))
-		// }
+		// distance (buffer) to any label
+		// only compatible with mapnik 3 for line-styles (no support in mapnik 2)
+		if dist, ok := r.Properties.GetFloat("text-min-distance"); ok {
+			style.AddNonNil("Buffer", fmtFloat(dist/2, true))
+		}
 
 		if fill, ok := r.Properties.GetColor("text-halo-fill"); ok {
 			style.AddNonNil("OutlineColor", fmtColor(fill, true))
