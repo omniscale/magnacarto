@@ -128,7 +128,8 @@ angular.module('magna-app')
         case 'shape':
           return  {
             'type': datasource.type,
-            'file': datasource.file
+            'file': datasource.file,
+            'srid': datasource.srid
           };
         case 'gdal':
           return {
