@@ -45,4 +45,9 @@ type GDAL struct {
 	Band     string
 }
 
+type GeoJson struct {
+	Id       string
+	Filename string
+}
+
 type Datasource interface{}

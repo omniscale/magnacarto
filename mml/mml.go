@@ -126,6 +126,10 @@ func newDatasource(params map[string]interface{}) (Datasource, error) {
 			Extent:   d["extent"],
 			Band:     d["band"],
 		}, nil
+	} else if d["type"] == "geojson" {
+		return GeoJson{
+			Filename: d["file"],
+		}, nil
 	} else if d["type"] == "" {
 		return nil, nil
 	} else {

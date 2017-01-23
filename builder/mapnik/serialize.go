@@ -184,6 +184,11 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "band", Value: ds.Band},
 			{Name: "type", Value: "gdal"},
 		}
+	case mml.GeoJson:
+		params = []Parameter{
+			{Name: "file", Value: ds.Filename},
+			{Name: "type", Value: "geojson"},
+		}
 	case nil:
 		// datasource might be nil for exports withour mml
 	default:
