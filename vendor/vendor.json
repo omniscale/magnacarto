@@ -1,0 +1,14 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"checksumSHA1": "lTNZzyb2LcD6TqeJKtJTaAonA+w=",
+			"origin": "github.com/omniscale/magnacarto/vendor/github.com/omniscale/go-mapnik",
+			"path": "github.com/omniscale/go-mapnik",
+			"revision": "e9cc7e773e2cb8da8875c62d5ed3c814368441ce",
+			"revisionTime": "2017-01-26T14:12:57Z"
+		}
+	],
+	"rootPath": "github.com/omniscale/magnacarto"
+}

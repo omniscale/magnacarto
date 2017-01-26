@@ -2,6 +2,8 @@
 #ifndef MAPNIK_C_API_H
 #define MAPNIK_C_API_H
 
+#include <mapnik/version.hpp>
+
 #if defined(WIN32) || defined(WINDOWS) || defined(_WIN32) || defined(_WINDOWS)
 #  define MAPNIKCAPICALL __declspec(dllexport)
 #else
@@ -13,11 +15,10 @@ extern "C"
 {
 #endif
 
-extern const int mapnik_version;
-extern const char *mapnik_version_string;
-extern const int mapnik_version_major;
-extern const int mapnik_version_minor;
-extern const int mapnik_version_patch;
+const int mapnik_version = MAPNIK_VERSION;
+const int mapnik_version_major = MAPNIK_MAJOR_VERSION;
+const int mapnik_version_minor = MAPNIK_MINOR_VERSION;
+const int mapnik_version_patch = MAPNIK_PATCH_VERSION;
 
 MAPNIKCAPICALL int mapnik_register_datasources(const char* path);
 MAPNIKCAPICALL int mapnik_register_fonts(const char* path);
