@@ -58,6 +58,7 @@ int mapnik_register_datasources(const char* path) {
         register_err = new std::string(ex.what());
         return 0;
     }
+    return 1;
 }
 
 int mapnik_register_fonts(const char* path) {

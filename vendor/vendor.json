@@ -3,11 +3,10 @@
 	"ignore": "",
 	"package": [
 		{
-			"checksumSHA1": "lTNZzyb2LcD6TqeJKtJTaAonA+w=",
-			"origin": "github.com/omniscale/magnacarto/vendor/github.com/omniscale/go-mapnik",
+			"checksumSHA1": "n6w2krPUAM5qlQLPB15wBBlFhys=",
 			"path": "github.com/omniscale/go-mapnik",
-			"revision": "e9cc7e773e2cb8da8875c62d5ed3c814368441ce",
-			"revisionTime": "2017-01-26T14:12:57Z"
+			"revision": "42167aed6f62fb7bedde41069920de9cbcf23f86",
+			"revisionTime": "2017-02-01T16:41:40Z"
 		}
 	],
 	"rootPath": "github.com/omniscale/magnacarto"
