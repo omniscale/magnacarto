@@ -50,9 +50,9 @@ int mapnik_register_datasources(const char* path) {
     mapnik_register_reset_last_error();
     try {
 #if MAPNIK_VERSION >= 200200
-        return mapnik::datasource_cache::instance().register_datasources(path);
+        mapnik::datasource_cache::instance().register_datasources(path);
 #else
-        return mapnik::datasource_cache::instance()->register_datasources(path);
+        mapnik::datasource_cache::instance()->register_datasources(path);
 #endif
     } catch (std::exception const& ex) {
         register_err = new std::string(ex.what());
