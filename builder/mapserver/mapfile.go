@@ -885,6 +885,9 @@ func pqConnectionString(pg mml.PostGIS) string {
 	return strings.Join(parts, " ")
 }
 
+// whether a string is a connection (PG:xxx) or filename
+var isOgrConnection = regexp.MustCompile(`^[a-zA-Z]{2,}:`)
+
 func (m *Map) addDatasource(block *Block, ds mml.Datasource, rules []mss.Rule) {
 	switch ds := ds.(type) {
 	case mml.PostGIS:
@@ -919,7 +922,12 @@ func (m *Map) addDatasource(block *Block, ds mml.Datasource, rules []mss.Rule) {
 		block.Add("connectiontype", "ogr")
 		block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
 	case mml.OGR:
-		block.Add("connection", quote(ds.Filename))
+		if isOgrConnection.MatchString(ds.Filename) {
+			block.Add("connection", quote(ds.Filename))
+		} else {
+			fname := m.locator.Shape(ds.Filename)
+			block.Add("connection", quote(fname))
+		}
 		if ds.Query != "" {
 			block.Add("data", quote(ds.Query))
 		} else if ds.Layer != "" {
