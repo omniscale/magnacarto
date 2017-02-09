@@ -185,8 +185,9 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "type", Value: "gdal"},
 		}
 	case mml.GeoJson:
+		fname := m.locator.Shape(ds.Filename)
 		params = []Parameter{
-			{Name: "file", Value: ds.Filename},
+			{Name: "file", Value: fname},
 			{Name: "type", Value: "geojson"},
 		}
 	case nil:
