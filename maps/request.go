@@ -34,10 +34,11 @@ func (e *MissingParamError) Error() string {
 type InvalidParamError struct {
 	Param string
 	Value string
+	Msg   string
 }
 
 func (e *InvalidParamError) Error() string {
-	return fmt.Sprintf("Invalid parameter '%s=%s'", e.Param, e.Value)
+	return fmt.Sprintf("Invalid parameter '%s=%s' %v", e.Param, e.Value, e.Msg)
 }
 
 func parseQueryUpper(q string) (url.Values, error) {
@@ -102,12 +103,12 @@ func parseSize(q url.Values) (width, height int, err error) {
 	var tmp uint64
 	tmp, err = strconv.ParseUint(w, 10, 32)
 	if err != nil || tmp == 0 {
-		return width, height, &InvalidParamError{"WIDTH", w}
+		return width, height, &InvalidParamError{Param: "WIDTH", Value: w}
 	}
 	width = int(tmp)
 	tmp, err = strconv.ParseUint(h, 10, 32)
 	if err != nil || tmp == 0 {
-		return width, height, &InvalidParamError{"HEIGHT", h}
+		return width, height, &InvalidParamError{Param: "HEIGHT", Value: h}
 	}
 	height = int(tmp)
 	return width, height, nil
@@ -124,24 +125,24 @@ func parseBBOX(q url.Values) (BBOX, error) {
 
 	bboxParts := strings.Split(bboxStr, ",")
 	if len(bboxParts) != 4 {
-		return bbox, &InvalidParamError{"BBOX", bboxStr}
+		return bbox, &InvalidParamError{Param: "BBOX", Value: bboxStr}
 	}
 
 	bbox.MinX, err = strconv.ParseFloat(bboxParts[0], 64)
 	if err != nil {
-		return bbox, &InvalidParamError{"BBOX", bboxStr}
+		return bbox, &InvalidParamError{Param: "BBOX", Value: bboxStr}
 	}
 	bbox.MinY, err = strconv.ParseFloat(bboxParts[1], 64)
 	if err != nil {
-		return bbox, &InvalidParamError{"BBOX", bboxStr}
+		return bbox, &InvalidParamError{Param: "BBOX", Value: bboxStr}
 	}
 	bbox.MaxX, err = strconv.ParseFloat(bboxParts[2], 64)
 	if err != nil {
-		return bbox, &InvalidParamError{"BBOX", bboxStr}
+		return bbox, &InvalidParamError{Param: "BBOX", Value: bboxStr}
 	}
 	bbox.MaxY, err = strconv.ParseFloat(bboxParts[3], 64)
 	if err != nil {
-		return bbox, &InvalidParamError{"BBOX", bboxStr}
+		return bbox, &InvalidParamError{Param: "BBOX", Value: bboxStr}
 	}
 
 	return bbox, nil
@@ -161,7 +162,7 @@ func parseFormat(q url.Values) (string, error) {
 	} else if strings.HasPrefix(format, "image/jpeg") {
 		return "jpeg", nil
 	} else {
-		return "png256", &InvalidParamError{"FORMAT", format}
+		return "png256", &InvalidParamError{Param: "FORMAT", Value: format}
 	}
 }
 
@@ -172,7 +173,7 @@ func parseScaleFactor(q url.Values) (float64, error) {
 	}
 	scalef, err := strconv.ParseFloat(v, 64)
 	if err != nil || scalef <= 0.01 || scalef >= 100.0 {
-		return 1.0, &InvalidParamError{"SCALE_FACTOR", v}
+		return 1.0, &InvalidParamError{Param: "SCALE_FACTOR", Value: v}
 	}
 
 	return scalef, nil
