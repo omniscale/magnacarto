@@ -251,10 +251,11 @@ func writeCheckedFile(r io.ReadCloser, fileName string, checker fileChecker) err
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 	if err := checker(f); err != nil {
+		f.Close()
 		return err
 	}
+	f.Close()
 	if err := os.Rename(tmpFile, fileName); err != nil {
 		return err
 	}
