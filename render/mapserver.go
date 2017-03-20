@@ -55,6 +55,12 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) error 
 	handler := cgi.Handler{
 		Path: m.bin,
 		Dir:  wd,
+		InheritEnv: []string{
+			"GDAL_DATA",
+			"GDAL_DRIVER_PATH",
+			"PROJ_LIB",
+			"CURL_CA_BUNDLE",
+		},
 	}
 
 	w := &responseRecorder{
