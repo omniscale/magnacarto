@@ -318,6 +318,14 @@ div.as-sortable-dragging label {
   content: 'Q';
 }
 
+.mca-icon.icon-ogr:before {
+  content: 'O';
+}
+
+.mca-icon.icon-geojson:before {
+  content: 'J';
+}
+
 .mca-icon.icon-point:before {
   content: 'Pt';
 }
