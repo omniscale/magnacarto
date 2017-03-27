@@ -1,0 +1,19 @@
+<div form-group>
+  <div ui-ace="{{ aceOptions }}" name="query" ng-model="layer.Datasource.layer_by_sql" style="height: {{ tableInputHeight }}px;"></div>
+</div>
+<div form-group>
+  <input name="file" type="text" ng-model="layer.Datasource.file" placeholder="OGR file location" required />
+</div>
+<div form-group>
+  <div input-dropdown="extentSuggestions" ng-model="layer.Datasource.extent">
+    <input name="extent" type="text" ng-model="layer.Datasource.extent" />
+  </div>
+</div>
+<div form-group>
+  <div input-dropdown="sridSuggestions" ng-model="layer.Datasource.srid">
+    <input name="srid" title="SRID" type="text" ng-model="layer.Datasource.srid" />
+  </div>
+</div>
+<div form-group>
+  <input name="layer" type="text" ng-model="layer.Datasource.layer" placeholder="layer" required />
+</div>

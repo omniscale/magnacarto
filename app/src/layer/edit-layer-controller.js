@@ -63,10 +63,12 @@ angular.module('magna-app')
     $scope.isNewLayer = LayerService.isDefaultLayer(layer);
 
     $scope.datasourceTemplates = {
-      'gdal': 'src/layer/datasource-gdal-template.html',
-      'sqlite': 'src/layer/datasource-sqlite-template.html',
       'postgis': 'src/layer/datasource-postgis-template.html',
-      'shape': 'src/layer/datasource-shape-template.html'
+      'shape': 'src/layer/datasource-shape-template.html',
+      'sqlite': 'src/layer/datasource-sqlite-template.html',
+      'ogr': 'src/layer/datasource-ogr-template.html',
+      'gdal': 'src/layer/datasource-gdal-template.html',
+      'geojson': 'src/layer/datasource-geojson-template.html'
     };
 
     $scope.aceOptions = {
@@ -136,6 +138,20 @@ angular.module('magna-app')
             'type': datasource.type,
             'file': datasource.file,
             'band': datasource.band
+          };
+        case 'ogr':
+          return {
+            'type': datasource.type,
+            'file': datasource.file,
+            'srid': datasource.srid,
+            'layer': datasource.layer,
+            'layer_by_sql': datasource.layer_by_sql,
+            'extent': datasource.extent
+          };
+        case 'geojson':
+          return {
+            'type': datasource.type,
+            'file': datasource.file
           };
         default:
           return datasource;
