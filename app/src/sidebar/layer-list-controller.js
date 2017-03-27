@@ -14,6 +14,12 @@ angular.module('magna-app')
       layer.status = layer.status === 'off' ? '' : 'off';
     };
 
+    $scope.showOnly = function(layer) {
+      angular.forEach($scope.layers, function(_layer) {
+        _layer.status = _layer === layer ? '' : 'off';
+      });
+    };
+
     $scope.openEditLayerModal = function(layer) {
       LayerService.editLayer(layer);
     };
