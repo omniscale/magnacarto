@@ -83,6 +83,25 @@ angular.module('magna-app')
               displayZoomLevel.text(view.getZoom());
             });
             scope.olMap.addControl(showZoomLevelControl);
+
+            var displayRenderTime = angular.element('<span></span>');
+            var renderTimeContainer = angular.element('<div></div>');
+            renderTimeContainer.addClass('ol-control');
+            renderTimeContainer.addClass('display-render-time');
+            renderTimeContainer.append('Render time:');
+            renderTimeContainer.append(displayRenderTime);
+            renderTimeContainer.append('ms');
+
+            var showRenderTimeControl = new ol.control.Control({element: renderTimeContainer[0]});
+
+            var _loadImageStartTime = 0;
+            scope.olSource.on('imageloadstart', function() {
+              _loadImageStartTime = Date.now();
+            });
+            scope.olSource.on('imageloadend', function() {
+              displayRenderTime.text(Date.now() - _loadImageStartTime);
+            });
+            scope.olMap.addControl(showRenderTimeControl);
           }
 
           scope.socket.$on('$message', function (resp) {

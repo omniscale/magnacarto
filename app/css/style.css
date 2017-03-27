@@ -479,17 +479,27 @@ div.as-sortable-dragging label {
   box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 }
 
-.ol-control.display-zoom-level {
+.ol-control.display-zoom-level,
+.ol-control.display-render-time {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 2px;
-    bottom: 10px;
     padding: 0 5px;
     position: absolute;
+}
+
+.ol-control.display-zoom-level span,
+.ol-control.display-render-time span {
+  margin-left: 5px;
+}
+
+.ol-control.display-zoom-level {
+    bottom: 35px;
     right: 10px;
 }
 
-.ol-control.display-zoom-level span {
-  margin-left: 5px;
+.ol-control.display-render-time {
+    bottom: 10px;
+    right: 10px;
 }
 
 
