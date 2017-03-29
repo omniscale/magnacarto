@@ -244,6 +244,7 @@ html, body {
 .style-list-item,
 .layer-list-item {
   margin-left: 15px;
+  cursor: default;
 }
 
 .layer-list label,
