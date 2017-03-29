@@ -4,6 +4,7 @@ angular.module('magna-app')
   function($scope, LayerService, SideNavService) {
     $scope.collapsed = SideNavService.hideLayers();
     $scope.layers = LayerService.layers;
+    $scope.showOnlyLayerId = undefined;
 
     $scope.toggleCollapsed = function() {
       $scope.collapsed = $scope.selectedNavItem === 'projects' ? true : !$scope.collapsed;
@@ -14,10 +15,18 @@ angular.module('magna-app')
       layer.status = layer.status === 'off' ? '' : 'off';
     };
 
-    $scope.showOnly = function(layer) {
+    $scope.toggleShowOnly = function(layer) {
+      if($scope.showOnlyLayerId !== undefined && $scope.showOnlyLayerId === layer.id) {
+        angular.forEach($scope.layers, function(_layer) {
+          _layer.status = '';
+        });
+        $scope.showOnlyLayerId = undefined;
+        return;
+      }
       angular.forEach($scope.layers, function(_layer) {
         _layer.status = _layer === layer ? '' : 'off';
       });
+      $scope.showOnlyLayerId = layer.id;
     };
 
     $scope.openEditLayerModal = function(layer) {

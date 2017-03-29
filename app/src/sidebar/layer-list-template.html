@@ -10,7 +10,7 @@
       <div ng-model="layers" as-sortable>
         <div ng-repeat="layer in layers" as-sortable-item class="layer-list-item">
           <i class="glyphicon cursor-pointer" ng-class="{'glyphicon-eye-close': layer.status === 'off', 'glyphicon-eye-open': layer.status !== 'off'}" ng-click="toggle(layer)"></i>
-          <i class="glyphicon glyphicon-sunglasses" ng-click="showOnly(layer)"></i>
+          <i class="glyphicon glyphicon-sunglasses cursor-pointer" ng-click="toggleShowOnly(layer)"></i>
           <i class="glyphicon glyphicon-edit cursor-pointer" ng-click="openEditLayerModal(layer)"></i>
           <label title="{{ layer.name }}" as-sortable-item-handle>{{ layer.name }}</label>
           <i class="mca-icon"
