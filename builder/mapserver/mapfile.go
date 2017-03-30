@@ -114,7 +114,7 @@ func (m *Map) addSymbols() {
 	for shortName, options := range m.svgSymbols {
 		s := NewBlock("SYMBOL")
 		s.Add("name", shortName)
-		s.Add("image", options.fileName)
+		s.Add("image", quote(options.fileName))
 		if strings.HasSuffix(options.fileName, "svg") {
 			s.Add("type", "svg")
 		} else {
