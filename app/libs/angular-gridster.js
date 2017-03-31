@@ -963,7 +963,8 @@
             if (this.gridster.isMobile && !this.gridster.saveGridItemCalculatedHeightInMobile) {
                 this.$element.css('height', '');
             } else {
-                this.$element.css('height', (this.sizeY * this.gridster.curRowHeight - this.gridster.margins[0]) + 'px');
+                // Allow only whole numbers for grid item elements. Prevents diffuse OpenLayers maps in firefox
+                this.$element.css('height', Math.round(this.sizeY * this.gridster.curRowHeight - this.gridster.margins[0]) + 'px');
             }
         };
 
@@ -974,7 +975,8 @@
             if (this.gridster.isMobile) {
                 this.$element.css('width', '');
             } else {
-                this.$element.css('width', (this.sizeX * this.gridster.curColWidth - this.gridster.margins[1]) + 'px');
+                // Allow only whole numbers for grid item elements. Prevents diffuse OpenLayers maps in firefox
+                this.$element.css('width', Math.round(this.sizeX * this.gridster.curColWidth - this.gridster.margins[1]) + 'px');
             }
         };
 
