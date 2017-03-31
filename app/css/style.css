@@ -22,13 +22,13 @@ html, body {
 }
 
 #wrapper #sidebar-wrapper.active {
-  left: 250px;
+  left: 275px;
 }
 
 #sidebar-wrapper {
-  margin-left: -250px;
+  margin-left: -275px;
   left: 50px;
-  width: 250px;
+  width: 275px;
   background: #4c4a49;
   position: fixed;
   height: 100%;
@@ -41,13 +41,13 @@ html, body {
 }
 
 #sidebar-wrapper.active + #content-wrapper {
-  padding-left: 250px;
+  padding-left: 275px;
 }
 
 .sidebar-nav {
   display: block;
   float: left;
-  width: 250px;
+  width: 275px;
   list-style: none;
   margin: 0;
   padding: 0;
