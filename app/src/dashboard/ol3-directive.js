@@ -80,7 +80,7 @@ angular.module('magna-app')
             var showZoomLevelControl = new ol.control.Control({element: zoomLevelContainer[0]});
             var view = scope.olMap.getView();
             view.on('change:resolution', function(e) {
-              displayZoomLevel.text(view.getZoom());
+              displayZoomLevel.text(Math.round(view.getZoom()));
             });
             scope.olMap.addControl(showZoomLevelControl);
 
