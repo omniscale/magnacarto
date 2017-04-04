@@ -32,8 +32,20 @@ angular.module('magna-app')
           scope.staticMap = scope.staticMap === 'true' ? true : false;
 
           // intialize with default values
-          scope.olControls = scope.staticMap ? [] : ol.control.defaults();
-          scope.olInteractions = scope.staticMap ? [] : ol.interaction.defaults();
+          scope.olControls = [];
+          scope.olInteractions = [];
+          if(scope.staticMap === false) {
+            scope.olControls = ol.control.defaults();
+            scope.olInteractions = ol.interaction.defaults({
+              pinchZoom: false
+            });
+            scope.olInteractions.extend([
+              new ol.interaction.PinchZoom({
+                constrainResolution: true
+              })
+            ]);
+          }
+
           scope.params = {
             LAYERS: magnaConfig.mapnikLayers,
             TRANSPARENT: false,
