@@ -367,6 +367,11 @@ func (m *Map) addLineSymbolizer(b *Block, r mss.Rule) (styled, hidden bool) {
 		}
 		style.AddDefault("Linecap", fmtKeyword(r.Properties.GetString("line-cap")), "BUTT")
 		style.AddDefault("Linejoin", fmtKeyword(r.Properties.GetString("line-join")), "MITER")
+
+		if lineOffset, ok := r.Properties.GetFloat("line-offset"); ok {
+			style.Add("OFFSET", fmt.Sprintf("%.0f -99", lineOffset))
+		}
+
 		b.Add("", style)
 		return true, false
 	}
