@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/omniscale/magnacarto/color"
 	"github.com/omniscale/magnacarto/config"
@@ -21,6 +22,7 @@ type Builder struct {
 	locator         config.Locator
 	dumpRules       io.Writer
 	includeInactive bool
+	benchmark       bool
 }
 
 // New returns a Builder
@@ -43,6 +45,11 @@ func (b *Builder) SetDumpRulesDest(w io.Writer) {
 	b.dumpRules = w
 }
 
+// SetBenchmark enables benchmarking output
+func (b *Builder) SetBenchmark(enable bool) {
+	b.benchmark = enable
+}
+
 // SetIncludeInactive set whether status=off layers should be included in output.
 func (b *Builder) SetIncludeInactive(includeInactive bool) {
 	b.includeInactive = includeInactive
@@ -59,9 +66,13 @@ func (b *Builder) Build() error {
 			return err
 		}
 		defer r.Close()
+		start := time.Now()
 		mml, err := mml.Parse(r)
 		if err != nil {
 			return err
+		}
+		if (b.benchmark) {
+			fmt.Println("MML parse time:", time.Since(start))
 		}
 		if len(b.mss) == 0 {
 			for _, s := range mml.Stylesheets {
@@ -77,15 +88,30 @@ func (b *Builder) Build() error {
 
 	carto := mss.New()
 
+	if (b.benchmark) {
+		fmt.Println("")
+	}
+
 	for _, mss := range b.mss {
+		start := time.Now()
 		err := carto.ParseFile(mss)
 		if err != nil {
 			return err
 		}
+		if (b.benchmark) {
+			fmt.Println("Layer", filepath.Base(mss), "parse time:", time.Since(start))
+		}
 	}
+
+	start := time.Now()
 
 	if err := carto.Evaluate(); err != nil {
 		return err
+	}
+
+	if (b.benchmark) {
+		fmt.Println("")
+		fmt.Println("Evaluation time:", time.Since(start))
 	}
 
 	if b.mml == "" {
@@ -98,7 +124,13 @@ func (b *Builder) Build() error {
 		}
 	}
 
+	if (b.benchmark) {
+		fmt.Println("")
+	}
+
 	for _, l := range layers {
+		start := time.Now()
+
 		rules := carto.MSS().LayerRules(l.ID, l.Classes...)
 
 		if b.dumpRules != nil {
@@ -108,6 +140,10 @@ func (b *Builder) Build() error {
 		}
 		if len(rules) > 0 && (l.Active || b.includeInactive) {
 			b.dstMap.AddLayer(l, rules)
+		}
+
+		if (b.benchmark) {
+			fmt.Println("Layer", l.ID, "rules build time:", time.Since(start))
 		}
 	}
 
