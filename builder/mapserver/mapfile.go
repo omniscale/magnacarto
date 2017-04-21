@@ -842,27 +842,39 @@ func addOffsetPosition(style *Block, properties *mss.Properties) {
 	style.Add("Position", position)
 }
 
-var sqlComments = regexp.MustCompile("-- .*?\\n")
-
 func pqSelectString(query, srid string, rules []mss.Rule, autoTypeFilter bool) string {
 	/*
 	   (select * from osm_landusages where type in ('forest', 'woods')) as landusages
 	   ->
 	   geometry from (select *, NULL as nullid from (select * from osm_landusages where type in ('forest', 'woods')) as landusages) as nullidq using unique nullid using srid=900913
 	*/
-	query = sqlComments.ReplaceAllString(query, " ")
-	query = strings.Replace(query, "\n", " ", -1)
+	query = strings.Replace(query, "\r\n", "\n", -1)
 	query = strings.Replace(query, `"`, `\"`, -1)
 	query = strings.Replace(query, `!bbox!`, `!BOX!`, -1)
+	query = strings.TrimRight(query, "\n ")
 
 	if autoTypeFilter {
 		filter := sql.FilterString(rules)
 		query = sql.WrapWhere(query, filter)
 	}
 
-	splitedQuery := strings.Split(strings.TrimRight(query, " "), " ")
-	if len(splitedQuery) > 2 && strings.ToLower(splitedQuery[len(splitedQuery)-2]) == "as" {
-		return "geometry from (select *, NULL as nullid from " + query + ") as nullidq using unique nullid using srid=" + srid
+	// check if last non-blank/non-comment line contains "AS"" (like in ") as subquery")
+	queryLines := strings.Split(query, "\n")
+	isSubselect := false
+	for i := len(queryLines) - 1; i >= 0; i-- {
+		if strings.TrimSpace(queryLines[i]) == "" {
+			continue
+		}
+		if strings.HasPrefix(strings.TrimLeft(queryLines[i], " "), "-- ") {
+			continue
+		}
+		if strings.Contains(strings.ToLower(queryLines[i]), " as ") {
+			isSubselect = true
+		}
+		break
+	}
+	if isSubselect {
+		return "geometry from (select *, NULL as nullid from \n" + query + "\n) as nullidq using unique nullid using srid=" + srid
 	}
 	return "geometry from " + query
 }
