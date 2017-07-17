@@ -240,7 +240,7 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 		}
 
 		if style.opacity != 0 {
-			l.AddNonNil("Opacity", fmtFloat(style.opacity*m.scaleFactor, true))
+			l.AddNonNil("Opacity", fmtFloat(style.opacity*100, true))
 		}
 
 		if layer.Active {
