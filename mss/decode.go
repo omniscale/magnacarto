@@ -62,6 +62,12 @@ func (d *Decoder) MSS() *MSS {
 	return d.mss
 }
 
+// Vars returns the current set of all variables.
+// Call Evaluate first to resolve expressions, functions and variables.
+func (d *Decoder) Vars() *Properties {
+	return d.vars
+}
+
 func (d *Decoder) next() *token {
 	if d.nextTok != nil {
 		tok := d.nextTok
