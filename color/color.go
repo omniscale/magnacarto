@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/husl-colors/husl-go"
+	hsluv "github.com/hsluv/hsluv-go"
 )
 
 type Color struct {
@@ -21,7 +21,7 @@ var hexRe = regexp.MustCompile(`[a-fA-F0-9]{6,6}`)
 func FromRgba(r, g, b, a float64, perceptual bool) Color {
 	var h, s, l float64
 	if perceptual {
-		h, s, l = husl.HuslFromRGB(r, g, b)
+		h, s, l = hsluv.HsluvFromRGB(r, g, b)
 		return Color{h, s / 100, l / 100, a, true}
 	}
 	h, s, l = rgbToHsl(r, g, b)
@@ -109,7 +109,7 @@ func (color Color) ToPerceptual() Color {
 		// transition via RGB, because HSL values cannot be directly
 		// transformed into HUSL values easily
 		r, g, b := hslToRgb(color.H, color.S, color.L)
-		color.H, color.S, color.L = husl.HuslFromRGB(r, g, b)
+		color.H, color.S, color.L = hsluv.HsluvFromRGB(r, g, b)
 		color.S /= 100
 		color.L /= 100
 		color.Perceptual = true
@@ -123,7 +123,7 @@ func (color Color) ToStandard() Color {
 	} else {
 		// transition via RGB, because HUSL values cannot be directly
 		// transformed into HSL values easily
-		r, g, b := husl.HuslToRGB(color.H, color.S, color.L)
+		r, g, b := hsluv.HsluvToRGB(color.H, color.S, color.L)
 		color.H, color.S, color.L = rgbToHsl(r, g, b)
 		color.Perceptual = false
 		return color
@@ -133,7 +133,7 @@ func (color Color) ToStandard() Color {
 func (color Color) String() string {
 	var r, g, b float64
 	if color.Perceptual {
-		r, g, b = husl.HuslToRGB(color.H, color.S*100.0, color.L*100.0)
+		r, g, b = hsluv.HsluvToRGB(color.H, color.S*100.0, color.L*100.0)
 	} else {
 		r, g, b = hslToRgb(color.H, color.S, color.L)
 	}
@@ -148,7 +148,7 @@ func (color Color) String() string {
 func (color Color) HexString() string {
 	var r, g, b float64
 	if color.Perceptual {
-		r, g, b = husl.HuslToRGB(color.H, color.S*100.0, color.L*100.0)
+		r, g, b = hsluv.HsluvToRGB(color.H, color.S*100.0, color.L*100.0)
 	} else {
 		r, g, b = hslToRgb(color.H, color.S, color.L)
 	}
@@ -162,7 +162,7 @@ func (color Color) HexString() string {
 
 func (color Color) ToRgb() (float64, float64, float64) {
 	if color.Perceptual {
-		return husl.HuslToRGB(color.H, color.S*100.0, color.L*100.0)
+		return hsluv.HsluvToRGB(color.H, color.S*100.0, color.L*100.0)
 	}
 	return hslToRgb(color.H, color.S, color.L)
 }
