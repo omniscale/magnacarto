@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"image"
 	"image/color"
+	"image/color/palette"
 	"image/png"
 	"io/ioutil"
 	"math"
@@ -195,7 +196,10 @@ func TestLayerStatus(t *testing.T) {
 		return Default
 	}}
 
-	m.SelectLayers(&ts)
+	if selected := m.SelectLayers(&ts); !selected {
+		t.Error("unexpected SelectedLayers result", selected)
+	}
+
 	if !reflect.DeepEqual(m.layerStatus, []bool{true, true, true, false}) {
 		t.Error("unexpected layer status", m.layerStatus)
 	}
@@ -273,6 +277,81 @@ func TestEncodeInvalidFormat(t *testing.T) {
 
 	if _, err := Encode(img, "invalid"); err == nil {
 		t.Fatal("invalid format did not return an error")
+	}
+}
+
+func TestToNRGBA_FromNRGBA(t *testing.T) {
+	// toNRGBA returns argument if it is already an NRGBA image
+	img := image.NewNRGBA(image.Rect(0, 0, 20, 1))
+	nrgba := toNRGBA(img)
+
+	if nrgba != img {
+		t.Error("toNRGBA did not return NRGBA argument")
+	}
+}
+
+func TestToNRGBA_FromRGBA(t *testing.T) {
+	// color information gets lots when converting from RGBA to NRGBA,
+	// especially for colors with low opacity
+	img := image.NewRGBA(image.Rect(0, 0, 20, 1))
+	colors := []struct {
+		input    color.NRGBA
+		expected color.NRGBA
+	}{
+		{color.NRGBA{0, 0, 0, 0}, color.NRGBA{0, 0, 0, 0}},
+		{color.NRGBA{255, 0, 0, 0}, color.NRGBA{0, 0, 0, 0}},     // always transparent
+		{color.NRGBA{255, 255, 255, 0}, color.NRGBA{0, 0, 0, 0}}, // always transparent
+		{color.NRGBA{255, 0, 255, 255}, color.NRGBA{255, 0, 255, 255}},
+		{color.NRGBA{255, 255, 0, 255}, color.NRGBA{255, 255, 0, 255}},
+		{color.NRGBA{0, 255, 255, 255}, color.NRGBA{0, 255, 255, 255}},
+		{color.NRGBA{120, 50, 100, 10}, color.NRGBA{102, 25, 76, 10}},
+		{color.NRGBA{120, 50, 100, 50}, color.NRGBA{117, 46, 97, 50}},
+		{color.NRGBA{120, 50, 100, 120}, color.NRGBA{119, 49, 100, 120}},
+		{color.NRGBA{120, 50, 100, 200}, color.NRGBA{120, 49, 99, 200}},
+		{color.NRGBA{120, 50, 100, 250}, color.NRGBA{120, 50, 100, 250}},
+	}
+	for i, c := range colors {
+		img.Set(i, 0, c.input)
+	}
+
+	nrgba := toNRGBA(img)
+	for i, c := range colors {
+		actual := nrgba.At(i, 0).(color.NRGBA)
+		if c.expected != actual {
+			t.Error("unexpected color", i, c, actual)
+		}
+	}
+}
+
+func TestToNRGBA_FromPaletted(t *testing.T) {
+	// other color modes are supported by calling draw.Draw
+	img := image.NewPaletted(image.Rect(0, 0, 20, 1), palette.WebSafe)
+	colors := []struct {
+		input    color.NRGBA
+		expected color.NRGBA
+	}{
+		{color.NRGBA{0, 0, 0, 0}, color.NRGBA{0, 0, 0, 255}},
+		{color.NRGBA{255, 0, 0, 0}, color.NRGBA{0, 0, 0, 255}},
+		{color.NRGBA{255, 255, 255, 0}, color.NRGBA{0, 0, 0, 255}},
+		{color.NRGBA{255, 0, 255, 255}, color.NRGBA{255, 0, 255, 255}},
+		{color.NRGBA{255, 255, 0, 255}, color.NRGBA{255, 255, 0, 255}},
+		{color.NRGBA{0, 255, 255, 255}, color.NRGBA{0, 255, 255, 255}},
+		{color.NRGBA{120, 50, 100, 10}, color.NRGBA{0, 0, 0, 255}},
+		{color.NRGBA{120, 50, 100, 50}, color.NRGBA{0, 0, 0, 255}},
+		{color.NRGBA{120, 50, 100, 120}, color.NRGBA{51, 0, 51, 255}},
+		{color.NRGBA{120, 50, 100, 200}, color.NRGBA{102, 51, 102, 255}},
+		{color.NRGBA{120, 50, 100, 250}, color.NRGBA{102, 51, 102, 255}},
+	}
+	for i, c := range colors {
+		img.Set(i, 0, c.input)
+	}
+
+	nrgba := toNRGBA(img)
+	for i, c := range colors {
+		actual := nrgba.At(i, 0).(color.NRGBA)
+		if c.expected != actual {
+			t.Error("unexpected color", i, c, actual)
+		}
 	}
 }
 

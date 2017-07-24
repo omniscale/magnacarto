@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/draw"
 	"os"
 	"unsafe"
 )
@@ -253,19 +254,24 @@ func (f SelectorFunc) Select(layername string) Status {
 }
 
 // SelectLayers enables/disables single layers. LayerSelector or SelectorFunc gets called for each layer.
-func (m *Map) SelectLayers(selector LayerSelector) {
+// Returns true if at least one layer was included (or set to default).
+func (m *Map) SelectLayers(selector LayerSelector) bool {
 	m.storeLayerStatus()
+	selected := false
 	n := C.mapnik_map_layer_count(m.m)
 	for i := 0; i < int(n); i++ {
 		layerName := C.GoString(C.mapnik_map_layer_name(m.m, C.size_t(i)))
 		switch selector.Select(layerName) {
 		case Include:
+			selected = true
 			C.mapnik_map_layer_set_active(m.m, C.size_t(i), 1)
 		case Exclude:
 			C.mapnik_map_layer_set_active(m.m, C.size_t(i), 0)
 		case Default:
+			selected = true
 		}
 	}
+	return selected
 }
 
 // ResetLayer resets all layers to the initial status.
@@ -371,28 +377,14 @@ func (m *Map) SetBufferSize(s int) {
 }
 
 // Encode image.Image with Mapniks image encoder.
+// This is optimized for *image.NRGBA or *image.RGBA.
 func Encode(img image.Image, format string) ([]byte, error) {
-	var i *C.mapnik_image_t
-	switch img := img.(type) {
-	// XXX does mapnik expect NRGBA or RGBA? this might stop working
-	//as expected if we start encoding images with full alpha channel
-	case *image.NRGBA:
-		i = C.mapnik_image_from_raw(
-			(*C.uint8_t)(unsafe.Pointer(&img.Pix[0])),
-			C.int(img.Bounds().Dx()),
-			C.int(img.Bounds().Dy()),
-		)
-	case *image.RGBA:
-		i = C.mapnik_image_from_raw(
-			(*C.uint8_t)(unsafe.Pointer(&img.Pix[0])),
-			C.int(img.Bounds().Dx()),
-			C.int(img.Bounds().Dy()),
-		)
-	}
-
-	if i == nil {
-		return nil, errors.New("unable to create image from raw")
-	}
+	tmp := toNRGBA(img)
+	i := C.mapnik_image_from_raw(
+		(*C.uint8_t)(unsafe.Pointer(&tmp.Pix[0])),
+		C.int(tmp.Bounds().Dx()),
+		C.int(tmp.Bounds().Dy()),
+	)
 	defer C.mapnik_image_free(i)
 
 	cformat := C.CString(format)
@@ -403,4 +395,56 @@ func Encode(img image.Image, format string) ([]byte, error) {
 	C.free(unsafe.Pointer(cformat))
 	defer C.mapnik_image_blob_free(b)
 	return C.GoBytes(unsafe.Pointer(b.ptr), C.int(b.len)), nil
+}
+
+func toNRGBA(src image.Image) *image.NRGBA {
+	switch src := src.(type) {
+	case *image.NRGBA:
+		return src
+	case *image.RGBA:
+		result := image.NewNRGBA(src.Bounds())
+		drawRGBAOver(result, result.Bounds(), src, image.ZP)
+		return result
+	default:
+		result := image.NewNRGBA(src.Bounds())
+		draw.Draw(result, result.Bounds(), src, image.ZP, draw.Over)
+		return result
+	}
+}
+
+func drawRGBAOver(dst *image.NRGBA, r image.Rectangle, src *image.RGBA, sp image.Point) {
+	i0 := (r.Min.X - dst.Rect.Min.X) * 4
+	i1 := (r.Max.X - dst.Rect.Min.X) * 4
+	si0 := (sp.X - src.Rect.Min.X) * 4
+	yMax := r.Max.Y - dst.Rect.Min.Y
+
+	y := r.Min.Y - dst.Rect.Min.Y
+	sy := sp.Y - src.Rect.Min.Y
+	for ; y != yMax; y, sy = y+1, sy+1 {
+		dpix := dst.Pix[y*dst.Stride:]
+		spix := src.Pix[sy*src.Stride:]
+
+		for i, si := i0, si0; i < i1; i, si = i+4, si+4 {
+			sr := spix[si+0]
+			sg := spix[si+1]
+			sb := spix[si+2]
+			sa := spix[si+3]
+
+			// reverse pre-multiplication adapted from color.NRGBAModel
+			if sa == 0xff {
+				dpix[i+0] = sr
+				dpix[i+1] = sg
+				dpix[i+2] = sb
+			} else if sa == 0x00 {
+				dpix[i+0] = 0
+				dpix[i+1] = 0
+				dpix[i+2] = 0
+			} else {
+				dpix[i+0] = uint8(((uint32(sr) * 0xffff) / uint32(sa)) >> 8)
+				dpix[i+1] = uint8(((uint32(sg) * 0xffff) / uint32(sa)) >> 8)
+				dpix[i+2] = uint8(((uint32(sb) * 0xffff) / uint32(sa)) >> 8)
+			}
+			dpix[i+3] = sa
+		}
+	}
 }
