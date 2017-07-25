@@ -46,6 +46,7 @@ type Map struct {
 	autoTypeFilter bool
 	noMapBlock     bool
 	scaleFactor    float64
+	zoomScales     []int
 }
 
 func New(locator config.Locator) *Map {
@@ -82,6 +83,7 @@ func New(locator config.Locator) *Map {
 		Map:         mapBlock,
 		locator:     locator,
 		scaleFactor: 1.0,
+		zoomScales:  webmercZoomScales,
 	}
 }
 
@@ -95,6 +97,10 @@ func (m *Map) SetAutoTypeFilter(enable bool) {
 
 func (m *Map) SetNoMapBlock(enable bool) {
 	m.noMapBlock = enable
+}
+
+func (m *Map) SetZoomScales(zoomScales []int) {
+	m.zoomScales = zoomScales
 }
 
 func (m *Map) String() string {
@@ -233,10 +239,10 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 
 		z := mss.RulesZoom(rules)
 		if z := z.First(); z > 0 {
-			l.Add("MaxScaleDenom", zoomRanges[z])
+			l.Add("MaxScaleDenom", m.zoomScales[z])
 		}
-		if z := z.Last(); z < 22 {
-			l.Add("MinScaleDenom", zoomRanges[z+1])
+		if z := z.Last(); z <= len(m.zoomScales)-2 {
+			l.Add("MinScaleDenom", m.zoomScales[z+1])
 		}
 
 		if style.opacity != 0 {
@@ -292,10 +298,10 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 		b.Add("", "# "+r.Zoom.String())
 	}
 	if l := r.Zoom.First(); l > 0 {
-		b.Add("MaxScaleDenom", zoomRanges[l])
+		b.Add("MaxScaleDenom", m.zoomScales[l])
 	}
-	if l := r.Zoom.Last(); l < 22 {
-		b.Add("MinScaleDenom", zoomRanges[l+1])
+	if l := r.Zoom.Last(); l <= len(m.zoomScales)-2 {
+		b.Add("MinScaleDenom", m.zoomScales[l+1])
 	}
 	filter := fmtFilters(r.Filters)
 	if filter != "" {
@@ -1048,7 +1054,7 @@ func (b Block) String() string {
 	return strings.Join(lines, "\n")
 }
 
-var zoomRanges = []int64{
+var webmercZoomScales = []int{
 	1000000000,
 	500000000,
 	200000000,

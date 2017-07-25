@@ -38,8 +38,8 @@ type Style struct {
 
 type Rule struct {
 	Zoom          string `xml:",comment"`
-	MaxScaleDenom int64  `xml:"MaxScaleDenominator,omitempty"`
-	MinScaleDenom int64  `xml:"MinScaleDenominator,omitempty"`
+	MaxScaleDenom int    `xml:"MaxScaleDenominator,omitempty"`
+	MinScaleDenom int    `xml:"MinScaleDenominator,omitempty"`
 	Filter        string `xml:"Filter,omitempty"`
 	Symbolizers   []interface{}
 }
@@ -59,10 +59,10 @@ type Layer struct {
 	Name            string       `xml:"name,attr"`
 	SRS             *string      `xml:"srs,attr"`
 	Status          string       `xml:"status,attr,omitempty"`
-	MaxZoom         int64        `xml:"maxzoom,attr,omitempty"`
-	MinZoom         int64        `xml:"minzoom,attr,omitempty"`
-	MaxScaleDenom   int64        `xml:"maximum-scale-denominator,attr,omitempty"`
-	MinScaleDenom   int64        `xml:"minimum-scale-denominator,attr,omitempty"`
+	MaxZoom         int          `xml:"maxzoom,attr,omitempty"`
+	MinZoom         int          `xml:"minzoom,attr,omitempty"`
+	MaxScaleDenom   int          `xml:"maximum-scale-denominator,attr,omitempty"`
+	MinScaleDenom   int          `xml:"minimum-scale-denominator,attr,omitempty"`
 	GroupBy         string       `xml:"group-by,attr,omitempty"`
 	ClearLabelCache string       `xml:"clear-label-cache,attr,omitempty"`
 	CacheFeatures   string       `xml:"cache-features,attr,omitempty"`

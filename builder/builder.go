@@ -53,23 +53,24 @@ func (b *Builder) Build() error {
 	layerIDs := []string{}
 	layers := []mml.Layer{}
 
+	var mmlObj *mml.MML
 	if b.mml != "" {
 		r, err := os.Open(b.mml)
 		if err != nil {
 			return err
 		}
 		defer r.Close()
-		mml, err := mml.Parse(r)
+		mmlObj, err = mml.Parse(r)
 		if err != nil {
 			return err
 		}
 		if len(b.mss) == 0 {
-			for _, s := range mml.Stylesheets {
+			for _, s := range mmlObj.Stylesheets {
 				b.mss = append(b.mss, filepath.Join(filepath.Dir(b.mml), s))
 			}
 		}
 
-		for _, l := range mml.Layers {
+		for _, l := range mmlObj.Layers {
 			layers = append(layers, l)
 			layerIDs = append(layerIDs, l.ID)
 		}
@@ -86,6 +87,14 @@ func (b *Builder) Build() error {
 
 	if err := carto.Evaluate(); err != nil {
 		return err
+	}
+
+	if m, ok := b.dstMap.(MapZoomScaleSetter); ok {
+		if mmlObj != nil && mmlObj.Map.ZoomScales != nil {
+			m.SetZoomScales(mmlObj.Map.ZoomScales)
+		} else {
+			m.SetZoomScales(webmercZoomScales)
+		}
 	}
 
 	if b.mml == "" {
@@ -123,6 +132,10 @@ type MapOptionsSetter interface {
 	SetBackgroundColor(color.Color)
 }
 
+type MapZoomScaleSetter interface {
+	SetZoomScales([]int)
+}
+
 type Writer interface {
 	Write(io.Writer) error
 	WriteFiles(basename string) error
@@ -150,6 +163,14 @@ func BuildMapFromString(m Map, mml *mml.MML, style string) error {
 		return err
 	}
 
+	if m, ok := m.(MapZoomScaleSetter); ok {
+		if mml.Map.ZoomScales != nil {
+			m.SetZoomScales(mml.Map.ZoomScales)
+		} else {
+			m.SetZoomScales(webmercZoomScales)
+		}
+	}
+
 	for _, l := range mml.Layers {
 		rules := carto.MSS().LayerRules(l.ID, l.Classes...)
 
@@ -164,4 +185,31 @@ func BuildMapFromString(m Map, mml *mml.MML, style string) error {
 		}
 	}
 	return nil
+}
+
+var webmercZoomScales = []int{
+	1000000000,
+	500000000,
+	200000000,
+	100000000,
+	50000000,
+	25000000,
+	12500000,
+	6500000,
+	3000000,
+	1500000,
+	750000,
+	400000,
+	200000,
+	100000,
+	50000,
+	25000,
+	12500,
+	5000,
+	2500,
+	1500,
+	750,
+	500,
+	250,
+	100,
 }

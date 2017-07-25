@@ -21,6 +21,50 @@ func TestNoLayers(t *testing.T) {
 	assert.Empty(t, m.String())
 }
 
+func TestZoomScales(t *testing.T) {
+	m := New(&locator)
+	m.SetNoMapBlock(true)
+
+	m.AddLayer(mml.Layer{ID: "test_lte2", SRS: "4326", Type: mml.LineString},
+		[]mss.Rule{
+			{Zoom: mss.NewZoomRange(mss.LTE, 2), Layer: "test_lte2", Properties: mss.NewProperties("line-width", 1.0)},
+		})
+	m.AddLayer(mml.Layer{ID: "test_3_4_5", SRS: "4326", Type: mml.LineString},
+		[]mss.Rule{
+			{Zoom: mss.NewZoomRange(mss.GT, 2) & mss.NewZoomRange(mss.LTE, 5), Layer: "test_3_4_5", Properties: mss.NewProperties("line-width", 1.0)},
+		})
+
+	result := m.String()
+	assert.Regexp(t, `NAME test_lte2\s+MINSCALEDENOM 100000000\s+STATUS`, result)
+	assert.Regexp(t, `NAME test_3_4_5\s+MAXSCALEDENOM 100000000\s+MINSCALEDENOM 12500000\s`, result)
+
+	// test with custom zoom scales
+	m = New(&locator)
+	m.SetZoomScales([]int{
+		1000000,
+		500000,
+		250000,
+		100000,
+		50000,
+		25000,
+	})
+	m.SetNoMapBlock(true)
+
+	m.AddLayer(mml.Layer{ID: "test_lte2", SRS: "4326", Type: mml.LineString},
+		[]mss.Rule{
+			{Zoom: mss.NewZoomRange(mss.LTE, 2), Layer: "test_lte2", Properties: mss.NewProperties("line-width", 1.0)},
+		})
+	m.AddLayer(mml.Layer{ID: "test_3_4_5", SRS: "4326", Type: mml.LineString},
+		[]mss.Rule{
+			{Zoom: mss.NewZoomRange(mss.GT, 2) & mss.NewZoomRange(mss.LTE, 5), Layer: "test_3_4_5", Properties: mss.NewProperties("line-width", 1.0)},
+		})
+
+	result = m.String()
+	assert.Regexp(t, `NAME test_lte2\s+MINSCALEDENOM 100000\s+STATUS`, result)
+	assert.Regexp(t, `NAME test_3_4_5\s+MAXSCALEDENOM 100000\s+STATUS\s`, result) // 5 is last zoom level, no MINSCALEDENOM
+
+}
+
 func TestLineStringLayer(t *testing.T) {
 	m := New(&locator)
 	m.SetNoMapBlock(true)

@@ -14,12 +14,14 @@ type MML struct {
 	Name        string
 	Layers      []Layer
 	Stylesheets []string
+	Map         Map
 }
 
 type auxMML struct {
 	Name        string
 	Stylesheets []string   `yaml:"Stylesheet"`
 	Layers      []auxLayer `yaml:"Layer"`
+	Map         Map        `yaml:"Map"`
 }
 
 type auxLayer struct {
@@ -161,6 +163,7 @@ func Parse(r io.Reader) (*MML, error) {
 		Name:        aux.Name,
 		Layers:      layers,
 		Stylesheets: aux.Stylesheets,
+		Map:         aux.Map,
 	}
 
 	return &m, nil

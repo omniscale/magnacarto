@@ -25,6 +25,7 @@ type Map struct {
 	scaleFactor    float64
 	autoTypeFilter bool
 	mapnik2        bool
+	zoomScales     []int
 }
 
 type maker struct {
@@ -38,6 +39,7 @@ func (m maker) New(locator config.Locator) builder.MapWriter {
 	if m.mapnik2 {
 		mm.SetMapnik2(true)
 	}
+	mm.zoomScales = webmercZoomScales
 	return mm
 }
 
@@ -63,6 +65,10 @@ func (m *Map) SetBackgroundColor(c color.Color) {
 
 func (m *Map) SetMapnik2(enable bool) {
 	m.mapnik2 = enable
+}
+
+func (m *Map) SetZoomScales(zoomScales []int) {
+	m.zoomScales = zoomScales
 }
 
 func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
@@ -95,16 +101,16 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	if z != mss.AllZoom {
 		if l := z.First(); l > 0 {
 			if m.mapnik2 {
-				layer.MaxZoom = zoomRanges[l]
+				layer.MaxZoom = m.zoomScales[l]
 			} else {
-				layer.MaxScaleDenom = zoomRanges[l]
+				layer.MaxScaleDenom = m.zoomScales[l]
 			}
 		}
-		if l := z.Last(); l < 22 {
+		if l := z.Last(); l <= len(m.zoomScales)-2 {
 			if m.mapnik2 {
-				layer.MinZoom = zoomRanges[l+1]
+				layer.MinZoom = m.zoomScales[l+1]
 			} else {
-				layer.MinScaleDenom = zoomRanges[l+1]
+				layer.MinScaleDenom = m.zoomScales[l+1]
 			}
 		}
 	}
@@ -259,10 +265,10 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 		result.Zoom = r.Zoom.String()
 	}
 	if l := r.Zoom.First(); l > 0 {
-		result.MaxScaleDenom = zoomRanges[l]
+		result.MaxScaleDenom = m.zoomScales[l]
 	}
-	if l := r.Zoom.Last(); l < 22 {
-		result.MinScaleDenom = zoomRanges[l+1]
+	if l := r.Zoom.Last(); l <= len(m.zoomScales)-2 {
+		result.MinScaleDenom = m.zoomScales[l+1]
 	}
 
 	result.Filter = fmtFilters(r.Filters)
@@ -774,7 +780,7 @@ func fmtFilters(filters []mss.Filter) string {
 	return s
 }
 
-var zoomRanges = []int64{
+var webmercZoomScales = []int{
 	1000000000,
 	500000000,
 	200000000,
