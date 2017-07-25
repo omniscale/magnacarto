@@ -1,4 +1,4 @@
-# pie [![GoDoc](https://godoc.org/github.com/natefinch/pie?status.svg)](https://godoc.org/github.com/natefinch/pie) [![Build Status](https://drone.io/github.com/natefinch/pie/status.png)](https://drone.io/github.com/natefinch/pie/latest) [![Join the chat at https://gitter.im/natefinch/pie](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/natefinch/pie?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# pie [![GoDoc](https://godoc.org/github.com/natefinch/pie?status.svg)](https://godoc.org/github.com/natefinch/pie) [ ![Codeship Status for natefinch/pie](https://app.codeship.com/projects/ea82a1c0-4bae-0135-2de1-02fedcef81c5/status?branch=master)](https://app.codeship.com/projects/232834)
 
     import "github.com/natefinch/pie"
 
@@ -48,7 +48,7 @@ JSON-RPC API for your application to use.
 Included in this repo are some simple examples of a master process and a
 plugin process, to see how the library can be used.  An example of the
 standard plugin that provides an API the master process consumes is in the
-exmaples/provider directory.  master\_provider expects plugin\_provider to be
+examples/provider directory.  master\_provider expects plugin\_provider to be
 in the same directory or in your $PATH.  You can just go install both of
 them, and it'll work correctly.
 

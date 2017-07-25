@@ -26,8 +26,12 @@
   version = "v0.3.0"
 
 [[constraint]]
-  branch = "master"
   name = "github.com/gorilla/mux"
+  version = "v1.4.0"
+
+[[constraint]]
+  name = "github.com/gorilla/handlers"
+  version = "v1.2.1"
 
 [[constraint]]
   name = "github.com/hsluv/hsluv-go"
@@ -42,8 +46,16 @@
   version = "v1.1.4"
 
 [[constraint]]
-  branch = "master"
+  branch = "release-branch.go1.8"
   name = "golang.org/x/net"
+
+[[constraint]]
+  branch = "v2"
+  name = "gopkg.in/yaml.v2"
+
+[[constraint]]
+  name = "github.com/natefinch/pie"
+  version = "v1.0"
 
 [[constraint]]
   name = "gopkg.in/fsnotify.v1"

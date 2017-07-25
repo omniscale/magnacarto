@@ -73,6 +73,30 @@ func TestMethodHandler(t *testing.T) {
 	}
 }
 
+func TestMakeLogger(t *testing.T) {
+	rec := httptest.NewRecorder()
+	logger := makeLogger(rec)
+	// initial status
+	if logger.Status() != http.StatusOK {
+		t.Fatalf("wrong status, got %d want %d", logger.Status(), http.StatusOK)
+	}
+	// WriteHeader
+	logger.WriteHeader(http.StatusInternalServerError)
+	if logger.Status() != http.StatusInternalServerError {
+		t.Fatalf("wrong status, got %d want %d", logger.Status(), http.StatusInternalServerError)
+	}
+	// Write
+	logger.Write([]byte(ok))
+	if logger.Size() != len(ok) {
+		t.Fatalf("wrong size, got %d want %d", logger.Size(), len(ok))
+	}
+	// Header
+	logger.Header().Set("key", "value")
+	if val := logger.Header().Get("key"); val != "value" {
+		t.Fatalf("wrong header, got %s want %s", val, "value")
+	}
+}
+
 func TestWriteLog(t *testing.T) {
 	loc, err := time.LoadLocation("Europe/Warsaw")
 	if err != nil {
@@ -89,6 +113,26 @@ func TestWriteLog(t *testing.T) {
 	log := buf.String()
 
 	expected := "192.168.100.5 - - [26/May/1983:03:30:45 +0200] \"GET / HTTP/1.1\" 200 100\n"
+	if log != expected {
+		t.Fatalf("wrong log, got %q want %q", log, expected)
+	}
+
+	// CONNECT request over http/2.0
+	req = &http.Request{
+		Method:     "CONNECT",
+		Proto:      "HTTP/2.0",
+		ProtoMajor: 2,
+		ProtoMinor: 0,
+		URL:        &url.URL{Host: "www.example.com:443"},
+		Host:       "www.example.com:443",
+		RemoteAddr: "192.168.100.5",
+	}
+
+	buf = new(bytes.Buffer)
+	writeLog(buf, req, *req.URL, ts, http.StatusOK, 100)
+	log = buf.String()
+
+	expected = "192.168.100.5 - - [26/May/1983:03:30:45 +0200] \"CONNECT www.example.com:443 HTTP/2.0\" 200 100\n"
 	if log != expected {
 		t.Fatalf("wrong log, got %q want %q", log, expected)
 	}
@@ -143,6 +187,35 @@ func TestWriteCombinedLog(t *testing.T) {
 	log := buf.String()
 
 	expected := "192.168.100.5 - - [26/May/1983:03:30:45 +0200] \"GET / HTTP/1.1\" 200 100 \"http://example.com\" " +
+		"\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) " +
+		"AppleWebKit/537.33 (KHTML, like Gecko) Chrome/27.0.1430.0 Safari/537.33\"\n"
+	if log != expected {
+		t.Fatalf("wrong log, got %q want %q", log, expected)
+	}
+
+	// CONNECT request over http/2.0
+	req1 := &http.Request{
+		Method:     "CONNECT",
+		Host:       "www.example.com:443",
+		Proto:      "HTTP/2.0",
+		ProtoMajor: 2,
+		ProtoMinor: 0,
+		RemoteAddr: "192.168.100.5",
+		Header:     http.Header{},
+		URL:        &url.URL{Host: "www.example.com:443"},
+	}
+	req1.Header.Set("Referer", "http://example.com")
+	req1.Header.Set(
+		"User-Agent",
+		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.33 "+
+			"(KHTML, like Gecko) Chrome/27.0.1430.0 Safari/537.33",
+	)
+
+	buf = new(bytes.Buffer)
+	writeCombinedLog(buf, req1, *req1.URL, ts, http.StatusOK, 100)
+	log = buf.String()
+
+	expected = "192.168.100.5 - - [26/May/1983:03:30:45 +0200] \"CONNECT www.example.com:443 HTTP/2.0\" 200 100 \"http://example.com\" " +
 		"\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) " +
 		"AppleWebKit/537.33 (KHTML, like Gecko) Chrome/27.0.1430.0 Safari/537.33\"\n"
 	if log != expected {

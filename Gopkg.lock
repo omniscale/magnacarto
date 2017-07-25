@@ -21,13 +21,14 @@
 [[projects]]
   name = "github.com/gorilla/handlers"
   packages = ["."]
-  revision = "60c7bfde3e33c201519a200a4507a158cc03a17b"
+  revision = "a4043c62cc2329bacda331d33fc908ab11ef0ec3"
+  version = "v1.2.1"
 
 [[projects]]
-  branch = "master"
   name = "github.com/gorilla/mux"
   packages = ["."]
-  revision = "ac112f7d75a0714af1bd86ab17749b31f7809640"
+  revision = "bcd8bc72b08df0f70df986b97f95590779502d31"
+  version = "v1.4.0"
 
 [[projects]]
   name = "github.com/hsluv/hsluv-go"
@@ -38,7 +39,8 @@
 [[projects]]
   name = "github.com/natefinch/pie"
   packages = ["."]
-  revision = "83bfd1821ee0ba96a47d98cbed424313fb60f57a"
+  revision = "9a0d7201400759b777f38c0c2d7b0be4e3e8b5c9"
+  version = "v1.0"
 
 [[projects]]
   branch = "master"
@@ -59,10 +61,10 @@
   version = "v1.1.4"
 
 [[projects]]
-  branch = "master"
+  branch = "release-branch.go1.8"
   name = "golang.org/x/net"
   packages = ["websocket"]
-  revision = "ab5485076ff3407ad2d02db054635913f017b0ed"
+  revision = "186fd3fc8194a5e9980a82230d69c1ff7134229f"
 
 [[projects]]
   name = "gopkg.in/fsnotify.v1"
@@ -71,13 +73,14 @@
   version = "v1.2.0"
 
 [[projects]]
+  branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "7ad95dd0798a40da1ccdff6dff35fd177b5edf40"
+  revision = "25c4ec802a7d637f88d584ab26798e94ad14c13b"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f2ba4589704fa5d6de5dfd773fa921ae9405f179901f8110fcb9f28da53db414"
+  inputs-digest = "ec25135325fea9446b98640a63819e08954a26b647d0cc148f71cc10ac885502"
   solver-name = "gps-cdcl"
   solver-version = 1
