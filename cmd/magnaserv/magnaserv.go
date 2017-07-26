@@ -137,7 +137,9 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	s.sendFeedback(wsID, err, warnings, mml, mss)
+	if err != nil || warnings != nil {
+		s.sendFeedback(wsID, err, warnings, mml, mss)
+	}
 
 	if err != nil {
 		s.internalError(w, r, err)
