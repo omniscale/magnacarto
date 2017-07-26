@@ -1,6 +1,7 @@
 package render
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net/http"
@@ -24,7 +25,7 @@ func NewMapServer() (*MapServer, error) {
 	return &MapServer{bin: bin}, nil
 }
 
-func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) error {
+func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) ([]string, error) {
 	if !filepath.IsAbs(mapfile) {
 		if wd, err := os.Getwd(); err == nil {
 			mapfile = filepath.Join(wd, mapfile)
@@ -52,6 +53,9 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) error 
 	}
 
 	wd := filepath.Dir(mapfile)
+	buf := bytes.Buffer{}
+	stderr := io.MultiWriter(os.Stderr, &buf)
+
 	handler := cgi.Handler{
 		Path: m.bin,
 		Dir:  wd,
@@ -61,6 +65,7 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) error 
 			"PROJ_LIB",
 			"CURL_CA_BUNDLE",
 		},
+		Stderr: stderr,
 	}
 
 	w := &responseRecorder{
@@ -69,18 +74,19 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) error 
 
 	req, err := http.NewRequest("GET", "/?"+q.Encode(), nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	handler.ServeHTTP(w, req)
 
+	warnings := strings.Split(buf.String(), "\n")
 	if w.Code != 200 {
-		return fmt.Errorf("error while calling mapserv CGI (status %d)", w.Code)
+		return warnings, fmt.Errorf("error while calling mapserv CGI (status %d)", w.Code)
 	}
 	if ct := w.Header().Get("Content-type"); ct != "" && !strings.HasPrefix(ct, "image") {
-		return fmt.Errorf(" mapserv CGI did not return image (%v)", w.Header())
+		return warnings, fmt.Errorf(" mapserv CGI did not return image (%v)", w.Header())
 	}
-	return nil
+	return warnings, nil
 }
 
 // responseRecorder from net/http/httptest
