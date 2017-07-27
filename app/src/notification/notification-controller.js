@@ -26,6 +26,10 @@ angular.module('magna-app')
 
         if (resp.warnings !== undefined) {
           type = 'warning';
+          if (resp.error !== '') {
+            type = 'error';
+            msg.push('Error: ' + resp.error);
+          }
           angular.forEach(resp.warnings, function(warning) {
             if (warning) {
               msg.push(warning);
