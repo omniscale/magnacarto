@@ -63,16 +63,21 @@ func ParseMapRequest(r *http.Request) (*Request, error) {
 	}
 
 	req := &Request{
-		HTTP:     r,
-		Query:    query,
-		EPSGCode: 3857,
+		HTTP:  r,
+		Query: query,
 	}
 
 	req.Width, req.Height, err = parseSize(req.Query)
 	if err != nil {
 		return nil, err
 	}
+
 	req.BBOX, err = parseBBOX(req.Query)
+	if err != nil {
+		return nil, err
+	}
+
+	req.EPSGCode, err = parseEPSGCode(req.Query)
 	if err != nil {
 		return nil, err
 	}
@@ -146,6 +151,37 @@ func parseBBOX(q url.Values) (BBOX, error) {
 	}
 
 	return bbox, nil
+}
+
+func parseEPSGCode(q url.Values) (int, error) {
+	srsStr := q.Get("SRS")
+	if srsStr == "" {
+		return 0, &MissingParamError{"SRS"}
+	}
+
+	if srsStr == "CRS:84" {
+		return 4326, nil
+	}
+
+	srsParts := strings.Split(srsStr, ":")
+	if len(srsParts) != 2 {
+		return 0, &InvalidParamError{Param: "SRS", Value: srsStr}
+	}
+
+	if !strings.HasPrefix(strings.ToUpper(srsStr), "EPSG") {
+		return 0, &InvalidParamError{Param: "SRS", Value: srsStr}
+	}
+
+	epsgCode, err := strconv.ParseUint(srsParts[1], 10, 32)
+	if err != nil {
+		return 0, &InvalidParamError{Param: "SRS", Value: srsStr}
+	}
+
+	if epsgCode == 900913 {
+		epsgCode = 3857
+	}
+
+	return int(epsgCode), nil
 }
 
 func parseFormat(q url.Values) (string, error) {
