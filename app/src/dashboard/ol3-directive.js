@@ -25,7 +25,12 @@ angular.module('magna-app')
           scope.updateSource = function() {
             scope.params.mss = createMMLString();
             scope.params.t = Date.now();
+            scope.params.wsid = scope.wsid;
             scope.olSource.updateParams(scope.params);
+
+            if (scope.layer.source === undefined) {
+              scope.layer.setSource(scope.olSource);
+            }
           };
 
           scope.socket = ProjectService.getSocket();
@@ -45,7 +50,6 @@ angular.module('magna-app')
               })
             ]);
           }
-
           scope.params = {
             LAYERS: magnaConfig.mapnikLayers,
             TRANSPARENT: false,
@@ -53,6 +57,7 @@ angular.module('magna-app')
             mml: ProjectService.project.mml,
             mss: createMMLString,
             base: ProjectService.project.base,
+            wsid: ProjectService.project.wsid,
             t: Date.now()
           };
 
@@ -68,16 +73,19 @@ angular.module('magna-app')
               scope.settings.coords, 'EPSG:4326', 'EPSG:3857');
           }
 
-          // init ol3 source
+          // init openlayers source
           scope.olSource = new ol.source.ImageWMS({
             url: magnaConfig.mapnikUrl,
             ratio: 1,
             params: scope.params
           });
 
+          // init openlayers layer without source - add the source if we have wsid or we have a static map
+          scope.layer = new ol.layer.Image({});
+
           // init map
           scope.olMap = new ol.Map({
-            layers: [],
+            layers: [scope.layer],
             interactions: scope.olInteractions,
             controls: scope.olControls,
             logo: false,
@@ -91,12 +99,12 @@ angular.module('magna-app')
           });
         },
         post: function(scope, element) {
-          scope.olMap.addLayer(new ol.layer.Image({
-            source: scope.olSource
-          }));
           scope.lastUpdate = new Date();
 
-          if(!scope.staticMap) {
+          if (scope.staticMap) {
+            // add source for static map because in this case we don't have a message with wsid
+            scope.layer.setSource(scope.olSource);
+          } else {
             var displayZoomLevel = angular.element('<span>' + scope.settings.zoom + '</span>');
             var zoomLevelContainer = angular.element('<div></div>');
             zoomLevelContainer.addClass('ol-control');
@@ -132,6 +140,13 @@ angular.module('magna-app')
           }
 
           scope.socket.$on('$message', function (resp) {
+            if (resp.wsid) {
+              scope.wsid = resp.wsid;
+              scope.updateSource();
+              scope.lastUpdate = updatedAt;
+              return;
+            }
+
             // without updated_at do nothing
             if(resp.updated_at === undefined) {
               return;

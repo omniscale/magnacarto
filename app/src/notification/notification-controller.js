@@ -23,7 +23,20 @@ angular.module('magna-app')
       } else if(resp.error !== undefined) {
         type = 'error';
         msg = [];
-        if (resp.filename !== undefined) {
+
+        if (resp.warnings !== undefined) {
+          type = 'warning';
+          angular.forEach(resp.warnings, function(warning) {
+            if (warning) {
+              msg.push(warning);
+            }
+          });
+
+          if (msg.length === 0) {
+            return;
+          }
+
+        } else if (resp.filename !== undefined) {
           msg.push('Error in ' + resp.filename + ':');
           msg.push(resp.error);
         } else {

@@ -33,8 +33,8 @@ angular.module('magna-app')
     link: function(scope) {
       scope.notification.close = scope.close;
 
-      if(scope.notification.type !== 'error') {
-        scope.notification.close(2000);
+      if(scope.notification.type !== 'error' && scope.notification.type !== 'warning') {
+        scope.notification.close(3000);
       }
     }
   };
