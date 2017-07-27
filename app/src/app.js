@@ -8,8 +8,6 @@ angular.module('magna-app').constant('magnaConfig', {
   mapnikUrl: '/api/v1/map?',
   mapnikLayers: 'osm',
   mapnikImageFormat: 'image/png',
-  defaultCenter: [8, 53],
-  defaultZoom: 12,
   version: '0.1',
   defaultSuggestions: {
     srs: [

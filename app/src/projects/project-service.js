@@ -14,6 +14,7 @@ angular.module('magna-app')
         this.mcpLoadPromise = undefined;
         this.projectLoadedPromise = undefined;
         this.mcpSaveTimeout = undefined;
+        this.mapOptions = undefined;
       };
 
       ProjectServiceInstance.prototype.loadProject = function(project) {
@@ -64,10 +65,63 @@ angular.module('magna-app')
           self.mmlData = response;
         }
 
+        self.handleMapOptions(self.mmlData.Map);
+
         StyleService.setStyles(self.project.available_mss);
         StyleService.setProjectStyles(self.mmlData.Stylesheet);
 
         LayerService.setLayers(self.mmlData.Layer);
+      };
+
+      ProjectServiceInstance.prototype.handleMapOptions = function(mapOptions) {
+        var self = this;
+        if (mapOptions === undefined) {
+          mapOptions = {
+            'SRS': 'EPSG:3857',
+            'BBOX': [-20026376.39,-20048966.10, 20026376.39, 20048966.10],
+            'Resolutions': undefined,
+            'ZoomScales': undefined
+          };
+        }
+
+        // calculate resolution for map
+        function getResolutionForScale(scale) {
+          var dpi = 25.4 / 0.28;
+          var inchesPerMeter = 100 / 2.54;
+          return parseFloat(scale) / (inchesPerMeter * dpi);
+        }
+
+        if (mapOptions.ZoomScales !== undefined) {
+          mapOptions.Resolutions = [];
+          angular.forEach(mapOptions.ZoomScales, function(scale, key) {
+            var resolution;
+            if (key === 0) {
+              resolution = getResolutionForScale(scale);
+              resolution = resolution / Math.sqrt(2);
+            } else {
+              var scaleAverage = (scale + mapOptions.ZoomScales[key-1]) /2;
+              resolution = getResolutionForScale(scaleAverage);
+            }
+            mapOptions.Resolutions.push(resolution);
+          });
+        }
+
+        if (mapOptions.SRS === undefined) {
+          mapOptions.SRS = 'EPSG:3857';
+        }
+        if (mapOptions.DefaultCenter === undefined) {
+          mapOptions.DefaultCenter = [
+            mapOptions.BBOX[0] + (mapOptions.BBOX[2] - mapOptions.BBOX[0]),
+            mapOptions.BBOX[1] + (mapOptions.BBOX[3] - mapOptions.BBOX[1])
+          ];
+        }
+
+        if (mapOptions.DefaultZoom === undefined) {
+          mapOptions.DefaultZoom = 2;
+        }
+
+        self.mapOptions = mapOptions;
+        DashboardService.mapOptions = mapOptions;
       };
 
       ProjectServiceInstance.prototype.handleMCPResponse = function(response) {

@@ -1,17 +1,19 @@
 angular.module('magna-app')
 
 .provider('DashboardService', [function() {
-  this.$get = ['magnaConfig',
-    function(magnaConfig) {
+  this.$get = [
+    function() {
       var DashboardServiceInstance = function() {
         var self = this;
+        self.mapOptions = undefined;
         self.maps = [];
       };
 
       DashboardServiceInstance.prototype.addMap = function(map) {
         var self = this;
-        var coords = magnaConfig.defaultCenter;
-        var zoom = magnaConfig.defaultZoom;
+
+        var coords = self.mapOptions.DefaultCenter;
+        var zoom = self.mapOptions.DefaultZoom;
 
         if(map !== undefined) {
           coords = map.coords;

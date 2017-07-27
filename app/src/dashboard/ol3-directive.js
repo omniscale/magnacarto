@@ -56,6 +56,18 @@ angular.module('magna-app')
             t: Date.now()
           };
 
+          var projection = new ol.proj.Projection({
+            code: ProjectService.mapOptions.SRS,
+            extent: ProjectService.mapOptions.BBOX,
+          });
+
+          // transform coords from old project.mcp where we save it in 4326
+          if ( (scope.settings.coords[0] >= -180 && scope.settings.coords[0] <= 180) &&
+              ProjectService.mapOptions.SRS !== 'EPSG:4326') {
+            scope.settings.coords = ol.proj.transform(
+              scope.settings.coords, 'EPSG:4326', 'EPSG:3857');
+          }
+
           // init ol3 source
           scope.olSource = new ol.source.ImageWMS({
             url: magnaConfig.mapnikUrl,
@@ -70,7 +82,10 @@ angular.module('magna-app')
             controls: scope.olControls,
             logo: false,
             view: new ol.View({
-              center: ol.proj.transform(scope.settings.coords, 'EPSG:4326', 'EPSG:3857'),
+              projection: projection,
+              center: scope.settings.coords,
+              extent: ProjectService.mapOptions.BBOX,
+              resolutions: ProjectService.mapOptions.resolutions,
               zoom: scope.settings.zoom
             })
           });
@@ -91,7 +106,7 @@ angular.module('magna-app')
 
             var showZoomLevelControl = new ol.control.Control({element: zoomLevelContainer[0]});
             var view = scope.olMap.getView();
-            view.on('change:resolution', function(e) {
+            view.on('change:resolution', function() {
               displayZoomLevel.text(Math.round(view.getZoom()));
             });
             scope.olMap.addControl(showZoomLevelControl);
@@ -133,7 +148,6 @@ angular.module('magna-app')
           // update zoom and coords after map move ends
           scope.olMap.on('moveend', function() {
             var center = scope.olMap.getView().getCenter();
-            center = ol.proj.transform(center, 'EPSG:3857', 'EPSG:4326');
             scope.$apply(function() {
               scope.settings.coords = center;
               scope.settings.zoom = scope.olMap.getView().getZoom();
