@@ -1,7 +1,7 @@
 package mml
 
 type Map struct {
-	ZoomScales []int
-	SRS        string
-	BBOX       []int
+	ZoomScales []int  `yaml:"ZoomScales"`
+	SRS        string `yaml:"SRS"`
+	BBOX       []int  `yaml:"BBOX"`
 }
