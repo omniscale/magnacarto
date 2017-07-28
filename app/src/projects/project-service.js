@@ -86,7 +86,8 @@ angular.module('magna-app')
 
         // calculate resolution for map
         function getResolutionForScale(scale) {
-          var dpi = 25.4 / 0.28;
+          // TODO use 72 dpi for mapserver
+          var dpi = 72;
           var inchesPerMeter = 100 / 2.54;
           return parseFloat(scale) / (inchesPerMeter * dpi);
         }
@@ -97,9 +98,9 @@ angular.module('magna-app')
             var resolution;
             if (key === 0) {
               resolution = getResolutionForScale(scale);
-              resolution = resolution / Math.sqrt(2);
+              resolution = resolution * Math.sqrt(2);
             } else {
-              var scaleAverage = (scale + mapOptions.ZoomScales[key-1]) /2;
+              var scaleAverage = (scale + mapOptions.ZoomScales[key-1]) / 2;
               resolution = getResolutionForScale(scaleAverage);
             }
             mapOptions.Resolutions.push(resolution);
@@ -119,7 +120,6 @@ angular.module('magna-app')
         if (mapOptions.DefaultZoom === undefined) {
           mapOptions.DefaultZoom = 2;
         }
-
         self.mapOptions = mapOptions;
         DashboardService.mapOptions = mapOptions;
       };

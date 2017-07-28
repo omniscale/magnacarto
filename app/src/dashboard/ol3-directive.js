@@ -93,7 +93,7 @@ angular.module('magna-app')
               projection: projection,
               center: scope.settings.coords,
               extent: ProjectService.mapOptions.BBOX,
-              resolutions: ProjectService.mapOptions.resolutions,
+              resolutions: ProjectService.mapOptions.Resolutions,
               zoom: scope.settings.zoom
             })
           });
