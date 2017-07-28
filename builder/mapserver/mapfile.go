@@ -239,10 +239,10 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 
 		z := mss.RulesZoom(rules)
 		if z := z.First(); z > 0 {
-			l.Add("MaxScaleDenom", m.zoomScales[z])
+			l.Add("MaxScaleDenom", m.zoomScales[z-1])
 		}
-		if z := z.Last(); z <= len(m.zoomScales)-2 {
-			l.Add("MinScaleDenom", m.zoomScales[z+1])
+		if z := z.Last(); z < len(m.zoomScales) {
+			l.Add("MinScaleDenom", m.zoomScales[z])
 		}
 
 		if style.opacity != 0 {
@@ -298,10 +298,10 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 		b.Add("", "# "+r.Zoom.String())
 	}
 	if l := r.Zoom.First(); l > 0 {
-		b.Add("MaxScaleDenom", m.zoomScales[l])
+		b.Add("MaxScaleDenom", m.zoomScales[l-1])
 	}
-	if l := r.Zoom.Last(); l <= len(m.zoomScales)-2 {
-		b.Add("MinScaleDenom", m.zoomScales[l+1])
+	if l := r.Zoom.Last(); l < len(m.zoomScales) {
+		b.Add("MinScaleDenom", m.zoomScales[l])
 	}
 	filter := fmtFilters(r.Filters)
 	if filter != "" {
@@ -1055,7 +1055,6 @@ func (b Block) String() string {
 }
 
 var webmercZoomScales = []int{
-	1000000000,
 	500000000,
 	200000000,
 	100000000,

@@ -41,12 +41,19 @@ func TestZoomScales(t *testing.T) {
 	// test with custom zoom scales
 	m = New(&locator)
 	m.SetZoomScales([]int{
+		// 0
 		1000000,
+		// 1
 		500000,
+		// 2
 		250000,
+		// 3
 		100000,
+		// 4
 		50000,
+		// 5
 		25000,
+		// 6
 	})
 	m.SetNoMapBlock(true)
 
@@ -54,14 +61,19 @@ func TestZoomScales(t *testing.T) {
 		[]mss.Rule{
 			{Zoom: mss.NewZoomRange(mss.LTE, 2), Layer: "test_lte2", Properties: mss.NewProperties("line-width", 1.0)},
 		})
-	m.AddLayer(mml.Layer{ID: "test_3_4_5", SRS: "4326", Type: mml.LineString},
+	m.AddLayer(mml.Layer{ID: "test_3_4", SRS: "4326", Type: mml.LineString},
 		[]mss.Rule{
-			{Zoom: mss.NewZoomRange(mss.GT, 2) & mss.NewZoomRange(mss.LTE, 5), Layer: "test_3_4_5", Properties: mss.NewProperties("line-width", 1.0)},
+			{Zoom: mss.NewZoomRange(mss.GT, 2) & mss.NewZoomRange(mss.LT, 5), Layer: "test_3_4", Properties: mss.NewProperties("line-width", 1.0)},
+		})
+	m.AddLayer(mml.Layer{ID: "test_4_5_6", SRS: "4326", Type: mml.LineString},
+		[]mss.Rule{
+			{Zoom: mss.NewZoomRange(mss.GTE, 4) & mss.NewZoomRange(mss.LTE, 6), Layer: "test_4_5_6", Properties: mss.NewProperties("line-width", 1.0)},
 		})
 
 	result = m.String()
-	assert.Regexp(t, `NAME test_lte2\s+MINSCALEDENOM 100000\s+STATUS`, result)
-	assert.Regexp(t, `NAME test_3_4_5\s+MAXSCALEDENOM 100000\s+STATUS\s`, result) // 5 is last zoom level, no MINSCALEDENOM
+	assert.Regexp(t, `NAME test_lte2\s+MINSCALEDENOM 250000\s+STATUS`, result)
+	assert.Regexp(t, `NAME test_3_4\s+MAXSCALEDENOM 250000\s+MINSCALEDENOM 50000\s+STATUS\s`, result)
+	assert.Regexp(t, `NAME test_4_5_6\s+MAXSCALEDENOM 100000\s+STATUS\s`, result) // 6 is last zoom level, no MINSCALEDENOM
 
 }
 

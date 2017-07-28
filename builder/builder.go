@@ -92,8 +92,6 @@ func (b *Builder) Build() error {
 	if m, ok := b.dstMap.(MapZoomScaleSetter); ok {
 		if mmlObj != nil && mmlObj.Map.ZoomScales != nil {
 			m.SetZoomScales(mmlObj.Map.ZoomScales)
-		} else {
-			m.SetZoomScales(webmercZoomScales)
 		}
 	}
 
@@ -166,8 +164,6 @@ func BuildMapFromString(m Map, mml *mml.MML, style string) error {
 	if m, ok := m.(MapZoomScaleSetter); ok {
 		if mml.Map.ZoomScales != nil {
 			m.SetZoomScales(mml.Map.ZoomScales)
-		} else {
-			m.SetZoomScales(webmercZoomScales)
 		}
 	}
 
@@ -185,31 +181,4 @@ func BuildMapFromString(m Map, mml *mml.MML, style string) error {
 		}
 	}
 	return nil
-}
-
-var webmercZoomScales = []int{
-	1000000000,
-	500000000,
-	200000000,
-	100000000,
-	50000000,
-	25000000,
-	12500000,
-	6500000,
-	3000000,
-	1500000,
-	750000,
-	400000,
-	200000,
-	100000,
-	50000,
-	25000,
-	12500,
-	5000,
-	2500,
-	1500,
-	750,
-	500,
-	250,
-	100,
 }

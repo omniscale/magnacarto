@@ -101,16 +101,16 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	if z != mss.AllZoom {
 		if l := z.First(); l > 0 {
 			if m.mapnik2 {
-				layer.MaxZoom = m.zoomScales[l]
+				layer.MaxZoom = m.zoomScales[l-1]
 			} else {
-				layer.MaxScaleDenom = m.zoomScales[l]
+				layer.MaxScaleDenom = m.zoomScales[l-1]
 			}
 		}
-		if l := z.Last(); l <= len(m.zoomScales)-2 {
+		if l := z.Last(); l < len(m.zoomScales) {
 			if m.mapnik2 {
-				layer.MinZoom = m.zoomScales[l+1]
+				layer.MinZoom = m.zoomScales[l]
 			} else {
-				layer.MinScaleDenom = m.zoomScales[l+1]
+				layer.MinScaleDenom = m.zoomScales[l]
 			}
 		}
 	}
@@ -265,10 +265,10 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 		result.Zoom = r.Zoom.String()
 	}
 	if l := r.Zoom.First(); l > 0 {
-		result.MaxScaleDenom = m.zoomScales[l]
+		result.MaxScaleDenom = m.zoomScales[l-1]
 	}
-	if l := r.Zoom.Last(); l <= len(m.zoomScales)-2 {
-		result.MinScaleDenom = m.zoomScales[l+1]
+	if l := r.Zoom.Last(); l < len(m.zoomScales) {
+		result.MinScaleDenom = m.zoomScales[l]
 	}
 
 	result.Filter = fmtFilters(r.Filters)
@@ -781,7 +781,6 @@ func fmtFilters(filters []mss.Filter) string {
 }
 
 var webmercZoomScales = []int{
-	1000000000,
 	500000000,
 	200000000,
 	100000000,
