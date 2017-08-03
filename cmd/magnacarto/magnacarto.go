@@ -37,6 +37,7 @@ func main() {
 	shapeDir := flag.String("shape-dir", "", "shapefile directory")
 	imageDir := flag.String("image-dir", "", "image/marker directory")
 	fontDir := flag.String("font-dir", "", "fonts directory")
+	dataDir := flag.String("data-dir", "", "data directory for OGR/GDAL files, also fallback for sqlite/shape/image/font-dir")
 	dumpRules := flag.Bool("dumprules", false, "print calculated rules to stderr")
 	builderType := flag.String("builder", "mapnik2", "builder type {mapnik2,mapnik3,mapserver}")
 	outFile := flag.String("out", "", "out file")
@@ -72,16 +73,19 @@ func main() {
 
 	// overwrite config with command line args
 	if *sqliteDir != "" {
-		conf.Datasources.SQLiteDirs = []string{*sqliteDir}
+		conf.Datasources.SQLiteDirs = filepath.SplitList(*sqliteDir)
 	}
 	if *fontDir != "" {
-		conf.Mapnik.FontDirs = []string{*fontDir}
+		conf.Mapnik.FontDirs = filepath.SplitList(*fontDir)
 	}
 	if *shapeDir != "" {
-		conf.Datasources.ShapefileDirs = []string{*shapeDir}
+		conf.Datasources.ShapefileDirs = filepath.SplitList(*shapeDir)
 	}
 	if *imageDir != "" {
-		conf.Datasources.ImageDirs = []string{*imageDir}
+		conf.Datasources.ImageDirs = filepath.SplitList(*imageDir)
+	}
+	if *dataDir != "" {
+		conf.Datasources.DataDirs = filepath.SplitList(*dataDir)
 	}
 
 	locator := conf.Locator()
