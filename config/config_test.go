@@ -79,6 +79,8 @@ func TestLookupLocator_RelPaths(t *testing.T) {
 
 		// l.Data looks only in DataDir
 		existing(l.Data("data.geojson"), filepath.Join(relPrefix, "data", "data.geojson"))
+		existing(l.Data("./../data/data.geojson"), filepath.Join(relPrefix, "data", "data.geojson"))
+		existing(l.Data("../shp/file.shp"), filepath.Join(relPrefix, "shp", "file.shp"))
 		missing(l.Data("file.shp"), "file.shp", "file.shp")
 
 		missing(l.Image("test2.png"), "test2.png", "test2.png")
@@ -157,6 +159,8 @@ func TestLookupLocator_AbsPaths(t *testing.T) {
 
 		// l.Data looks only in DataDir
 		existing(l.Data("data.geojson"), filepath.Join(d.dir, "data", "data.geojson"))
+		existing(l.Data("./../data/data.geojson"), filepath.Join(d.dir, "data", "data.geojson"))
+		existing(l.Data("../shp/file.shp"), filepath.Join(d.dir, "shp", "file.shp"))
 		missing(l.Data("file.shp"), filepath.Join("/tmp", "file.shp"), "file.shp")
 
 		// missing files return abs path based on outDir

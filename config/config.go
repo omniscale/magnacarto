@@ -103,6 +103,13 @@ func (m *Magnacarto) Locator() Locator {
 		}
 		locator.AddShapeDir(dir)
 	}
+	for _, dir := range m.Datasources.DataDirs {
+		if !filepath.IsAbs(dir) {
+			dir = filepath.Join(m.BaseDir, dir)
+		}
+		locator.AddDataDir(dir)
+	}
+
 	fontDirs := append([]string{}, m.Mapnik.FontDirs...)
 	fontDirs = append(fontDirs, m.Datasources.FontDirs...)
 	for _, dir := range fontDirs {
