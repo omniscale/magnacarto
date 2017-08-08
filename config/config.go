@@ -29,6 +29,8 @@ type Datasource struct {
 	ShapefileDirs []string `toml:"shapefile_dirs"`
 	SQLiteDirs    []string `toml:"sqlite_dirs"`
 	ImageDirs     []string `toml:"image_dirs"`
+	DataDirs      []string `toml:"data_dirs"`
+	FontDirs      []string `toml:"font_dirs"`
 }
 
 type PostGIS struct {
@@ -45,6 +47,7 @@ type Locator interface {
 	SQLite(string) string
 	Shape(string) string
 	Image(string) string
+	Data(string) string
 	PostGIS(mml.PostGIS) mml.PostGIS
 	SetBaseDir(string)
 	SetOutDir(string)
@@ -68,6 +71,7 @@ func Load(fileName string) (*Magnacarto, error) {
 	if !filepath.IsAbs(config.OutDir) {
 		config.OutDir = filepath.Join(config.BaseDir, config.OutDir)
 	}
+
 	return &config, nil
 }
 
@@ -99,7 +103,16 @@ func (m *Magnacarto) Locator() Locator {
 		}
 		locator.AddShapeDir(dir)
 	}
-	for _, dir := range m.Mapnik.FontDirs {
+	for _, dir := range m.Datasources.DataDirs {
+		if !filepath.IsAbs(dir) {
+			dir = filepath.Join(m.BaseDir, dir)
+		}
+		locator.AddDataDir(dir)
+	}
+
+	fontDirs := append([]string{}, m.Mapnik.FontDirs...)
+	fontDirs = append(fontDirs, m.Datasources.FontDirs...)
+	for _, dir := range fontDirs {
 		if !filepath.IsAbs(dir) {
 			dir = filepath.Join(m.BaseDir, dir)
 		}
@@ -114,6 +127,7 @@ type LookupLocator struct {
 	sqliteDirs []string
 	shapeDirs  []string
 	imageDirs  []string
+	dataDirs   []string
 	pgConfig   *PostGIS
 	baseDir    string
 	outDir     string
@@ -133,33 +147,8 @@ func (l *LookupLocator) UseRelPaths(rel bool) {
 	l.relative = rel
 }
 
-func (l *LookupLocator) find(basename string, dirs []string) (fname string, ok bool) {
-	defer func() {
-		if fname == "" {
-			if l.missing == nil {
-				l.missing = make(map[string]struct{})
-			}
-			l.missing[basename] = struct{}{}
-			fname = basename
-		} else {
-			absfname, err := filepath.Abs(fname)
-			if err == nil {
-				fname = absfname
-			}
-		}
-
-		if l.relative {
-			relfname, err := filepath.Rel(l.outDir, fname)
-			if err == nil {
-				fname = relfname
-			}
-		} else {
-			if !filepath.IsAbs(fname) { // for missing files
-				fname = filepath.Join(l.outDir, fname)
-			}
-		}
-	}()
-
+func (l *LookupLocator) find(basename string, dirs []string) (string, bool) {
+	// helper func: check if basename exists in dir
 	check := func(dir string) string {
 		fname := filepath.Join(dir, basename)
 		if _, err := os.Stat(fname); err == nil {
@@ -168,22 +157,63 @@ func (l *LookupLocator) find(basename string, dirs []string) (fname string, ok b
 		return ""
 	}
 
-	if filepath.IsAbs(basename) {
-		if fname := check(""); fname != "" {
+	// check for file in different dirs, uses closure so that
+	// we can return if we found the file
+	fname, ok := func() (string, bool) {
+		// check without any dir if it's an absolute path
+		if filepath.IsAbs(basename) {
+			if fname := check(""); fname != "" {
+				return fname, true
+			}
+		}
+
+		// check passed dirs
+		for _, d := range dirs {
+			if fname := check(d); fname != "" {
+				return fname, true
+			}
+		}
+		// check data dirs
+		for _, d := range l.dataDirs {
+			if fname := check(d); fname != "" {
+				return fname, true
+			}
+		}
+
+		// at last check with basedir
+		if fname := check(l.baseDir); fname != "" {
 			return fname, true
+		}
+
+		return "", false
+	}()
+
+	if !ok {
+		// register as missing file
+		if l.missing == nil {
+			l.missing = make(map[string]struct{})
+		}
+		l.missing[basename] = struct{}{}
+		fname = basename
+	} else {
+		absfname, err := filepath.Abs(fname)
+		if err == nil {
+			fname = absfname
 		}
 	}
 
-	for _, d := range dirs {
-		if fname := check(d); fname != "" {
-			return fname, true
+	if l.relative {
+		relfname, err := filepath.Rel(l.outDir, fname)
+		if err == nil {
+			fname = relfname
+		}
+	} else {
+		if !filepath.IsAbs(fname) { // for missing files
+			fname = filepath.Join(l.outDir, fname)
 		}
 	}
-	if fname := check(l.baseDir); fname != "" {
-		return fname, true
-	}
+	return fname, ok
 
-	return "", false
 }
 
 func (l *LookupLocator) AddFontDir(dir string) {
@@ -197,6 +227,9 @@ func (l *LookupLocator) AddShapeDir(dir string) {
 }
 func (l *LookupLocator) AddImageDir(dir string) {
 	l.imageDirs = append(l.imageDirs, dir)
+}
+func (l *LookupLocator) AddDataDir(dir string) {
+	l.dataDirs = append(l.dataDirs, dir)
 }
 func (l *LookupLocator) SetPGConfig(pgConfig PostGIS) {
 	l.pgConfig = &pgConfig
@@ -227,6 +260,11 @@ func (l *LookupLocator) Image(basename string) string {
 	fname, _ := l.find(basename, l.imageDirs)
 	return fname
 }
+func (l *LookupLocator) Data(basename string) string {
+	fname, _ := l.find(basename, nil) // dataDir is already searched by l.find
+	return fname
+}
+
 func (l *LookupLocator) PostGIS(ds mml.PostGIS) mml.PostGIS {
 	if l.pgConfig == nil {
 		return ds

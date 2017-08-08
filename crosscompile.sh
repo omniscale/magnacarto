@@ -4,11 +4,6 @@
 
 set -e
 
-if [ ! -z $GO15 ]; then
-    export PATH=${GO15}/bin:$PATH
-    export GOROOT=${GO15}
-fi
-
 BUILD_DATE=`date +%Y%m%d`
 BUILD_REF=`git rev-parse --short HEAD`
 BUILD_VERSION=dev-$BUILD_DATE-$BUILD_REF
@@ -23,8 +18,8 @@ function build() {
     mkdir -p $build_name
     echo building $build_name
     cd $build_name
-    env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
-    env GOOS=$os GOARCH=$arch godep go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnaserv
+    env GOOS=$os GOARCH=$arch go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
+    env GOOS=$os GOARCH=$arch go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnaserv
     # use git archive to only include checked-in files
     (cd ../../../ && git archive --format tar HEAD app README.md LICENSE) | tar -x -
     (cd ../../../docs && git archive --format tar HEAD examples/) | tar -x -

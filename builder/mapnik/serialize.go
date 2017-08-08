@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -140,6 +141,9 @@ func (m *Map) WriteFiles(basename string) error {
 	return m.Write(f)
 }
 
+// whether a string is a connection (PG:xxx) or filename
+var isOgrConnection = regexp.MustCompile(`^[a-zA-Z]{2,}:`)
+
 func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 	var params []Parameter
 	switch ds := ds.(type) {
@@ -174,8 +178,12 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "type", Value: "sqlite"},
 		}
 	case mml.OGR:
+		file := ds.Filename
+		if !isOgrConnection.MatchString(ds.Filename) {
+			file = m.locator.Data(ds.Filename)
+		}
 		params = []Parameter{
-			{Name: "file", Value: ds.Filename},
+			{Name: "file", Value: file},
 			{Name: "srid", Value: ds.SRID},
 			{Name: "extent", Value: ds.Extent},
 			{Name: "layer", Value: ds.Layer},
@@ -184,7 +192,7 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 		}
 	case mml.GDAL:
 		params = []Parameter{
-			{Name: "file", Value: ds.Filename},
+			{Name: "file", Value: m.locator.Data(ds.Filename)},
 			{Name: "srid", Value: ds.SRID},
 			{Name: "extent", Value: ds.Extent},
 			{Name: "band", Value: ds.Band},
@@ -197,7 +205,7 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "type", Value: "geojson"},
 		}
 	case nil:
-		// datasource might be nil for exports withour mml
+		// datasource might be nil for exports without mml
 	default:
 		panic(fmt.Sprintf("datasource not supported by Mapnik: %v", ds))
 	}
