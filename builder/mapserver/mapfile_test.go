@@ -70,10 +70,16 @@ func TestZoomScales(t *testing.T) {
 			{Zoom: mss.NewZoomRange(mss.GTE, 4) & mss.NewZoomRange(mss.LTE, 6), Layer: "test_4_5_6", Properties: mss.NewProperties("line-width", 1.0)},
 		})
 
+	m.AddLayer(mml.Layer{ID: "test_7", SRS: "4326", Type: mml.LineString},
+		[]mss.Rule{
+			{Zoom: mss.NewZoomRange(mss.GT, 6), Layer: "test_7", Properties: mss.NewProperties("line-width", 1.0)},
+		})
+
 	result = m.String()
 	assert.Regexp(t, `NAME test_lte2\s+MINSCALEDENOM 250000\s+STATUS`, result)
 	assert.Regexp(t, `NAME test_3_4\s+MAXSCALEDENOM 250000\s+MINSCALEDENOM 50000\s+STATUS\s`, result)
 	assert.Regexp(t, `NAME test_4_5_6\s+MAXSCALEDENOM 100000\s+STATUS\s`, result) // 6 is last zoom level, no MINSCALEDENOM
+	assert.Regexp(t, `NAME test_7\s+MAXSCALEDENOM 25000\s+STATUS\s`, result)      // 7 is not configured, use last scale
 
 }
 

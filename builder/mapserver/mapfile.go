@@ -239,6 +239,9 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 
 		z := mss.RulesZoom(rules)
 		if z := z.First(); z > 0 {
+			if z > len(m.zoomScales) {
+				z = len(m.zoomScales)
+			}
 			l.Add("MaxScaleDenom", m.zoomScales[z-1])
 		}
 		if z := z.Last(); z < len(m.zoomScales) {
@@ -298,6 +301,9 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 		b.Add("", "# "+r.Zoom.String())
 	}
 	if l := r.Zoom.First(); l > 0 {
+		if l > len(m.zoomScales) {
+			l = len(m.zoomScales)
+		}
 		b.Add("MaxScaleDenom", m.zoomScales[l-1])
 	}
 	if l := r.Zoom.Last(); l < len(m.zoomScales) {

@@ -101,6 +101,9 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	z := mss.RulesZoom(rules)
 	if z != mss.AllZoom {
 		if l := z.First(); l > 0 {
+			if l > len(m.zoomScales) {
+				l = len(m.zoomScales)
+			}
 			if m.mapnik2 {
 				layer.MaxZoom = m.zoomScales[l-1]
 			} else {
@@ -273,6 +276,9 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 		result.Zoom = r.Zoom.String()
 	}
 	if l := r.Zoom.First(); l > 0 {
+		if l > len(m.zoomScales) {
+			l = len(m.zoomScales)
+		}
 		result.MaxScaleDenom = m.zoomScales[l-1]
 	}
 	if l := r.Zoom.Last(); l < len(m.zoomScales) {
