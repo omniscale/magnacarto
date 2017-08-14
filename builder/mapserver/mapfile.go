@@ -466,6 +466,8 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 			style.AddNonNil("Buffer", fmtFloat(dist/2, true))
 		}
 
+		style.AddNonNil("MAXOVERLAPANGLE", fmtFloat(r.Properties.GetFloat("text-max-char-angle-delta")))
+
 		if fill, ok := r.Properties.GetColor("text-halo-fill"); ok {
 			style.AddNonNil("OutlineColor", fmtColor(fill, true))
 			if radius, ok := r.Properties.GetFloat("text-halo-radius"); ok {
