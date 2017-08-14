@@ -1,7 +1,7 @@
 package regression
 
 import (
-	"testing"
+    "testing"
 )
 
 func Test_010_linestrings_default(t *testing.T) { testIt(t, testCase{Name: "010-linestrings-default"}) }
@@ -10,6 +10,9 @@ func Test_012_linestrings_dasharray(t *testing.T) {
 	testIt(t, testCase{Name: "012-linestrings-dasharray"})
 }
 func Test_013_linestrings_labels(t *testing.T) { testIt(t, testCase{Name: "013-linestrings-labels"}) }
+func Test_014_linestrings_labels_angle(t *testing.T) {
+	testIt(t, testCase{Name: "014-linestrings-labels-angle"})
+}
 func Test_020_polygons_default(t *testing.T)   { testIt(t, testCase{Name: "020-polygons-default"}) }
 func Test_021_polygons(t *testing.T)           { testIt(t, testCase{Name: "021-polygons"}) }
 func Test_022_polygon_patterns(t *testing.T)   { testIt(t, testCase{Name: "022-polygon-patterns"}) }
