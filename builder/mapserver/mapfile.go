@@ -65,7 +65,6 @@ func New(locator config.Locator) *Map {
 		Item{"Imagemode", "RGBA"},
 		Item{"Extension", quote("png")},
 		Item{"Formatoption", quote("GAMMA=0.75")},
-		Item{"Formatoption", quote("COMPRESSION=0")},
 	))
 	web := NewBlock("Web")
 	web.Add("", NewBlock("Metadata",
