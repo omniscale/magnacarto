@@ -487,6 +487,16 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 			style.AddNonNil("Font", fontNames)
 		}
 
+		var minFeatureSizeSet bool
+		if _, ok := r.Properties.GetString("text-min-path-length"); ok {
+			minFeatureSizeSet = true
+			style.Add("MinFeatureSize", "AUTO")
+		}
+		if minLength, ok := r.Properties.GetFloat("text-min-path-length"); ok {
+			minFeatureSizeSet = true
+			style.Add("MinFeatureSize", minLength)
+		}
+
 		style.Add("Type", "truetype")
 		if isLine {
 			angle, ok := r.Properties.GetString("text-placement")
@@ -497,7 +507,9 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 				style.Add("Angle", "FOLLOW")
 			}
 
-			style.Add("MinFeatureSize", "AUTO")
+			if !minFeatureSizeSet {
+				style.Add("MinFeatureSize", "AUTO")
+			}
 		}
 		if wrapWidth, ok := r.Properties.GetFloat("text-wrap-width"); ok {
 			maxLength := wrapWidth / textSize

@@ -83,6 +83,15 @@ func isKeyword(keywords ...string) isValid {
 	}
 }
 
+func isKeywordOr(other isValid, keywords ...string) isValid {
+	return func(val interface{}) bool {
+		if other(val) {
+			return true
+		}
+		return isKeyword(keywords...)(val)
+	}
+}
+
 func isStops(val interface{}) bool {
 	vals, ok := val.([]Value)
 	if !ok {
@@ -376,7 +385,7 @@ func init() {
 		"text-justify-alignment":        isJustifyAlignment,
 		"text-margin":                   isNumber,
 		"text-repeat-distance":          isNumber,
-		"text-min-path-length":          isNumber,
+		"text-min-path-length":          isKeywordOr(isNumber, "auto"),
 		"text-rotate-displacement":      isBool,
 		"text-upgright":                 isKeyword("auto", "auto-down", "left", "right", "left-only", "right-only"),
 		"text-simplify":                 isNumber,
