@@ -256,7 +256,7 @@ func renderMapserver(t *testing.T, c testCase) {
 		t.Fatal(err)
 	}
 	defer f.Close()
-	err = mapserverRenderer.Render(filepath.Join(caseBuildDir, "magnacarto.map"), f, mapReq)
+	_, err = mapserverRenderer.Render(filepath.Join(caseBuildDir, "magnacarto.map"), f, mapReq)
 	if err != nil {
 		t.Fatal(err)
 	}
