@@ -522,9 +522,11 @@ func (m *Map) addShieldSymbolizer(b *Block, r mss.Rule) (styled bool) {
 
 			style.AddNonNil("Force", fmtBool(r.Properties.GetBool("shield-allow-overlap")))
 
-			style.AddNonNil("MinDistance", fmtFloatProp(r.Properties, "shield-min-distance", m.scaleFactor))
-			style.AddNonNil("RepeatDistance", fmtFloatProp(r.Properties, "shield-spacing", m.scaleFactor))
-			style.AddNonNil("Buffer", fmtFloatProp(r.Properties, "shield-min-padding", m.scaleFactor))
+			style.AddNonNil("MinDistance", fmtFloatProp(r.Properties, "shield-spacing", m.scaleFactor))
+			style.AddNonNil("RepeatDistance", fmtFloatProp(r.Properties, "shield-repeat-distance", m.scaleFactor))
+			if dist, ok := r.Properties.GetFloat("shield-min-distance"); ok {
+				style.AddNonNil("Buffer", fmtFloat(dist/2, true))
+			}
 
 			if avoidEdges, ok := r.Properties.GetBool("shield-avoid-edges"); ok {
 				style.AddNonNil("Partials", fmtBool(!avoidEdges, true))
