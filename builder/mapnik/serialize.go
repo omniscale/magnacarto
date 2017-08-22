@@ -40,7 +40,6 @@ func (m maker) New(locator config.Locator) builder.MapWriter {
 	if m.mapnik2 {
 		mm.SetMapnik2(true)
 	}
-	mm.zoomScales = webmercZoomScales
 	return mm
 }
 
@@ -53,6 +52,7 @@ func New(locator config.Locator) *Map {
 		XML:         &XMLMap{SRS: "+init=epsg:3857"},
 		locator:     locator,
 		scaleFactor: 1.0,
+		zoomScales:  webmercZoomScales,
 	}
 }
 
