@@ -203,6 +203,8 @@ func (m *Map) AddLayer(layer mml.Layer, rules []mss.Rule) {
 		t = "POLYGON"
 	} else if layer.Type == mml.Point {
 		t = "POINT"
+	} else if layer.Type == mml.Raster {
+		t = "RASTER"
 	} else {
 		log.Println("unknown geometry type for layer", layer.ID)
 		return
@@ -313,7 +315,7 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 		b.Add("Expression", filter)
 	}
 
-	prefixes := mss.SortedPrefixes(r.Properties, []string{"line-", "polygon-", "polygon-pattern-", "text-", "shield-", "marker-", "point-", "building-"})
+	prefixes := mss.SortedPrefixes(r.Properties, []string{"line-", "polygon-", "polygon-pattern-", "text-", "shield-", "marker-", "point-", "building-", "raster-"})
 
 	for _, p := range prefixes {
 		prefixStyled := false
@@ -342,6 +344,8 @@ func (m *Map) newClass(r mss.Rule, layerType string) (b *Block, styled bool) {
 			prefixStyled = m.addPointSymbolizer(b, r)
 		case "building-":
 			prefixStyled = m.addBuildingSymbolizer(b, r)
+		case "raster-":
+			prefixStyled = m.addRasterSymbolizer(b, r)
 		default:
 			log.Println("invalid prefix", p)
 		}
@@ -744,6 +748,10 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 	return false
 }
 
+func (m *Map) addRasterSymbolizer(b *Block, r mss.Rule) (styled bool) {
+	return true
+}
+
 var sanitizeFontName = regexp.MustCompile("[^-a-zA-Z0-9]")
 var sanitizeSymbolName = regexp.MustCompile("[^-a-zA-Z0-9]")
 
@@ -986,7 +994,13 @@ func (m *Map) addDatasource(block *Block, ds mml.Datasource, rules []mss.Rule) {
 		}
 		block.Add("connectiontype", "ogr")
 		block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
-
+	case mml.GDAL:
+		fname := m.locator.Data(ds.Filename)
+		block.Add("data", quote(fname))
+		block.Add("", NewBlock("projection", Item{"", quote("init=epsg:" + ds.SRID)}))
+		for _, processing := range ds.Processing {
+			block.Add("processing", quote(processing))
+		}
 	// 	return []Parameter{
 	// 		// {Name: "file", Value: "/Users/olt/dev/osm_data/sqlites/" + ds.Filename},
 	// 		{Name: "file", Value: "/tmp/" + ds.Filename},

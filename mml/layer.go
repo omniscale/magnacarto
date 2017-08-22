@@ -7,6 +7,7 @@ const (
 	LineString GeometryType = "LineString"
 	Polygon    GeometryType = "Polygon"
 	Point      GeometryType = "Point"
+	Raster     GeometryType = "Raster"
 )
 
 type Layer struct {

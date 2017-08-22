@@ -72,6 +72,8 @@ func parseGeometryType(t string) GeometryType {
 		return LineString
 	case "point":
 		return Point
+	case "raster":
+		return Raster
 	default:
 		return Unknown
 	}
@@ -122,11 +124,13 @@ func newDatasource(params map[string]interface{}) (Datasource, error) {
 			Extent:   d["extent"],
 		}, nil
 	} else if d["type"] == "gdal" {
+		processing := asStrings(params["processing"])
 		return GDAL{
-			Filename: d["file"],
-			SRID:     d["srid"],
-			Extent:   d["extent"],
-			Band:     d["band"],
+			Filename:   d["file"],
+			SRID:       d["srid"],
+			Extent:     d["extent"],
+			Band:       d["band"],
+			Processing: processing,
 		}, nil
 	} else if d["type"] == "geojson" {
 		return GeoJson{
@@ -137,6 +141,22 @@ func newDatasource(params map[string]interface{}) (Datasource, error) {
 	} else {
 		return nil, fmt.Errorf("unsupported datasource type %s in %v", d["type"], d)
 	}
+}
+
+func asStrings(v interface{}) []string {
+	slice, ok := v.([]interface{})
+	if !ok {
+		return nil
+	}
+	var result []string
+	for i := range slice {
+		s, ok := slice[i].(string)
+		if !ok {
+			return nil
+		}
+		result = append(result, s)
+	}
+	return result
 }
 
 func Parse(r io.Reader) (*MML, error) {

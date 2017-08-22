@@ -38,11 +38,12 @@ type OGR struct {
 }
 
 type GDAL struct {
-	Id       string
-	Filename string
-	SRID     string
-	Extent   string
-	Band     string
+	Id         string
+	Filename   string
+	SRID       string
+	Extent     string
+	Band       string
+	Processing []string
 }
 
 type GeoJson struct {
