@@ -289,7 +289,7 @@ So we keep using 72 DPI and scale the fonts accordingly.
 // LineWidthFactor is used to adjust differences of line width and pattern sizes between Mapnik and Mapserver.
 const LineWidthFactor = 1 // 1 for DEFRESOLUTION 72, 1.25 (90.7/72) for DEFRESOLUTION 90.7
 
-// HaoWidthFactor is used to adjust differences of halo outline/radius sizes between Mapnik and Mapserver.
+// HaloWidthFactor is used to adjust differences of halo outline/radius sizes between Mapnik and Mapserver.
 const HaloWidthFactor = 2 * 72 / 90.7 // twice the radius
 
 // FontFactor is used to adjust differences of font sized between Mapnik and Mapserver.
