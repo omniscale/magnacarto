@@ -67,10 +67,16 @@
   revision = "186fd3fc8194a5e9980a82230d69c1ff7134229f"
 
 [[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "2d6f6f883a06fc0d5f4b14a81e4c28705ea64c15"
+
+[[projects]]
   name = "gopkg.in/fsnotify.v1"
   packages = ["."]
-  revision = "96c060f6a6b7e0d6f75fddd10efeaca3e5d1bcb0"
-  version = "v1.2.0"
+  revision = "629574ca2a5df945712d3079857300b5e4da0236"
+  version = "v1.4.2"
 
 [[projects]]
   branch = "v2"
@@ -81,6 +87,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ec25135325fea9446b98640a63819e08954a26b647d0cc148f71cc10ac885502"
+  inputs-digest = "d865baa4c468e8e75700f206a724bedcd9eea0d5c5dc2d8e9d69fc0a93b30ea9"
   solver-name = "gps-cdcl"
   solver-version = 1

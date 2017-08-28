@@ -183,18 +183,16 @@ func (c *Cache) Notify(mm MapMaker, mml string, mss []string, done <-chan struct
 		for {
 			select {
 			case evt := <-watcher.Events:
-				if evt.Op&fsnotify.Remove == fsnotify.Remove {
-					// atomic save of some editors will trigger remove event,
-					// which will remove the file from the watcher. add back again
-					watcher.Add(evt.Name)
-				}
+				style, err := c.style(mm, mml, mss)
 				if evt.Name == mml && len(mss) == 0 {
 					// update mms files to watch if mml changed and mss files were not set
 					if err := watchMSSFromMML(watcher, mml); err != nil {
 						updatec <- Update{Err: err}
 					}
 				}
-				style, err := c.style(mm, mml, mss)
+				// atomic save of some editors will trigger remove event,
+				// which will remove the file from the watcher. add back again
+				watcher.Add(evt.Name)
 
 				if err != nil {
 					updatec <- Update{Err: err}
