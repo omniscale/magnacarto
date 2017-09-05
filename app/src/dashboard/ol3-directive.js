@@ -12,7 +12,7 @@ angular.module('magna-app')
       },
       link: {
         pre: function(scope) {
-          var createMMLString = function() {
+          var createMSSString = function() {
             var styles = [];
             angular.forEach(scope.styles, function(styleObj) {
               if(styleObj.active) {
@@ -23,7 +23,7 @@ angular.module('magna-app')
           };
 
           scope.updateSource = function() {
-            scope.params.mss = createMMLString();
+            scope.params.mss = createMSSString();
             scope.params.t = Date.now();
             scope.params.wsid = scope.wsid;
             scope.olSource.updateParams(scope.params);
@@ -55,7 +55,7 @@ angular.module('magna-app')
             TRANSPARENT: false,
             VERSION: '1.1.1',
             mml: ProjectService.project.mml,
-            mss: createMMLString,
+            mss: createMSSString(),
             base: ProjectService.project.base,
             wsid: ProjectService.project.wsid,
             t: Date.now()
