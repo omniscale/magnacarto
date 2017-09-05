@@ -191,7 +191,7 @@ angular.module('magna-app')
 
         self.projectLoadedPromise = self.projectLoadedPromise.then(function() {
           self.socket.$on('$message', function (resp) {
-            if(resp.updated_mml === true) {
+            if(resp.updated_mml === true && LayerService.editModalOpen === false) {
               self.mmlLoadPromise = self.loadMML();
               self.projectLoadedPromise = $q.all([self.mmlLoadPromise, self.mcpLoadPromise]).then(function(data) {
                 self.handleMMLResponse(data[0].data);
