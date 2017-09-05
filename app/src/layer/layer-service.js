@@ -14,6 +14,7 @@ angular.module('magna-app')
       var LayerServiceInstance = function() {
         var self = this;
         self.layers = [];
+        self.editModalOpen = false;
       };
 
       LayerServiceInstance.prototype.setLayers = function(layers) {
@@ -29,6 +30,7 @@ angular.module('magna-app')
 
       LayerServiceInstance.prototype.editLayer = function(layer) {
         var self = this;
+        self.editModalOpen = true;
         var modalInstance = $modal.open({
           templateUrl: 'src/layer/edit-layer-template.html',
           controller: 'EditLayerCtrl',
@@ -53,6 +55,9 @@ angular.module('magna-app')
           } else {
             self.layers[layerIdx] = item;
           }
+          self.editModalOpen = false;
+        }, function() {
+          self.editModalOpen = false;
         });
       };
 
