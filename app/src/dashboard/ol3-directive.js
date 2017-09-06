@@ -132,6 +132,7 @@ angular.module('magna-app')
             var _loadImageStartTime = 0;
             scope.olSource.on('imageloadstart', function() {
               _loadImageStartTime = Date.now();
+              displayRenderTime.text('-');
             });
             scope.olSource.on('imageloadend', function() {
               displayRenderTime.text(Date.now() - _loadImageStartTime);
