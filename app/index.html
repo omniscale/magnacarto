@@ -15,8 +15,9 @@
   <body ng-app="magna-app">
     <div id="wrapper">
       <div id="sidebar-wrapper" class="active" ng-class="{active: active}" ng-controller="SideNavCtrl" ng-include="'src/sidebar/side-nav-template.html'"></div>
-      <div id="content-wrapper" ng-view></div>
+      <div id="content-wrapper"><div ng-view></div></div>
     </div>
+    <div id="sidebar-resizer" resizer resizer-width="6" resizer-left-id="sidebar-wrapper" resizer-right-id="content-wrapper" resizer-max="400" resizer-min="200"></div>
     <div class="alert-box" ng-controller="NotificationCtrl">
       <notification item="notification" ng-model="notifications" ng-repeat="notification in notifications"></notification>
     </div>

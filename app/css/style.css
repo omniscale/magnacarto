@@ -33,7 +33,6 @@ html, body {
   position: fixed;
   height: 100%;
   z-index: 1000;
-  transition: all .3s ease 0s;
 }
 
 #sidebar-wrapper + #content-wrapper {
@@ -44,10 +43,26 @@ html, body {
   padding-left: 275px;
 }
 
+#sidebar-resizer {
+  background-color: #666;
+  position: fixed;
+  top: 0px;
+  bottom: 0;
+  left: 270px;
+  width: 5px;
+  cursor: ew-resize;
+  z-index: 1000;
+}
+
+#sidebar-resizer:hover,
+#sidebar-resizer.active {
+  background-color: #AAA;
+}
+
 .sidebar-nav {
   display: block;
   float: left;
-  width: 275px;
+  width: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -247,12 +262,19 @@ html, body {
   cursor: default;
 }
 
+.layer-list-item i {
+  width: 16px;
+}
+
+.layer-list label {
+  line-height: 22px;
+}
+
 .layer-list label,
 div.as-sortable-dragging .layer-list-item label {
-  width: 140px;
+  width: 100%;
   overflow: hidden;
   vertical-align: top;
-  margin-right: 10px;
 }
 
 .style-list .glyphicon,
@@ -288,7 +310,7 @@ div.as-sortable-dragging label {
   font-weight: normal;
 }
 
-.mca-icon {
+i.mca-icon {
   display: inline-block;
   font-style: normal;
   font-weight: bold;
@@ -303,43 +325,43 @@ div.as-sortable-dragging label {
   cursor: default;
 }
 
-.mca-icon.icon-postgis:before {
+i.mca-icon.icon-postgis:before {
   content: 'P';
 }
 
-.mca-icon.icon-gdal:before {
+i.mca-icon.icon-gdal:before {
   content: 'G';
 }
 
-.mca-icon.icon-shape:before {
+i.mca-icon.icon-shape:before {
   content: 'S';
 }
 
-.mca-icon.icon-sqlite:before {
+i.mca-icon.icon-sqlite:before {
   content: 'Q';
 }
 
-.mca-icon.icon-ogr:before {
+i.mca-icon.icon-ogr:before {
   content: 'O';
 }
 
-.mca-icon.icon-geojson:before {
+i.mca-icon.icon-geojson:before {
   content: 'J';
 }
 
-.mca-icon.icon-point:before {
+i.mca-icon.icon-point:before {
   content: 'Pt';
 }
 
-.mca-icon.icon-linestring:before {
+i.mca-icon.icon-linestring:before {
   content: 'Ls';
 }
 
-.mca-icon.icon-polygon:before {
+i.mca-icon.icon-polygon:before {
   content: 'Po';
 }
 
-.mca-icon.icon-raster:before {
+i.mca-icon.icon-raster:before {
   content: 'Ra';
 }
 
@@ -550,4 +572,8 @@ div.as-sortable-dragging label {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.margin-r-16 {
+  margin-right: 16px;
 }
