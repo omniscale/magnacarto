@@ -197,6 +197,16 @@ html, body {
   margin: 0;
 }
 
+#logging-wrapper table tbody tr td:first-of-type {
+  padding-left: 5px;
+  padding-right: 5px;
+  white-space: nowrap;
+}
+
+#logging-wrapper table tbody tr td:last-of-type {
+  width: 100%;
+}
+
 #logging-wrapper table tbody tr td ul {
   margin: 0;
 }
