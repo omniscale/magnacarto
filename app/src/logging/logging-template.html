@@ -1,0 +1,14 @@
+<table class="table">
+    <tbody>
+        <tr ng-repeat="message in messages" ng-class="message.type">
+            <td class="col-xs-3 col-sm-2 col-md-1 col-lg-1">{{ message.time | date:'HH:mm:ss.sss' }}</td>
+            <td class="col-xs-9 col-sm-10 col-md-11 col-lg-11">
+                <ul class="list-unstyled">
+                    <li ng-repeat="msg in message.msg">
+                        {{ msg }}
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>

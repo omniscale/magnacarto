@@ -161,9 +161,9 @@ html, body {
 #logging-wrapper {
   position: fixed;
   bottom: 0;
-  background-color: red;
   width: 100%;
   height: 0;
+  overflow: auto;
 }
 
 #logging-wrapper.active {
@@ -177,6 +177,14 @@ html, body {
 
 #logging-wrapper.active ~ #content-wrapper {
   height: 80%;
+}
+
+#logging-wrapper table {
+  margin: 0;
+}
+
+#logging-wrapper table tbody tr td ul {
+  margin: 0;
 }
 
 /* Map-grid used in Dashboard and on Bookmaprs */

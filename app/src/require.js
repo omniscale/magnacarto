@@ -32,6 +32,7 @@ require('src/helper/float-directive.js');
 require('src/helper/resizer.js');
 require('src/helper/title-case-filter.js');
 require('src/logging/logging-service.js');
+require('src/logging/logging-controller.js');
 require('src/notification/notification-directive.js');
 require('src/notification/notification-controller.js');
 require('src/layer/layer-service.js');

@@ -24,15 +24,16 @@ angular.module('magna-app')
         this.newMessageCallbacks.push(callback);
     };
 
-    LoggingInstance.prototype.appendMessage = function(type, msg) {
+    LoggingInstance.prototype.appendMessage = function(type, msg, receivedAt) {
         var newMsg = {
           type: type,
-          msg: msg
+          msg: msg,
+          time: new Date()
         };
+        this.messages.unshift(newMsg);
         angular.forEach(this.newMessageCallbacks, function(callback) {
             callback(newMsg);
         });
-        this.messages.push(newMsg);
     };
 
     LoggingInstance.prototype.handleMessage = function(resp) {
@@ -40,13 +41,13 @@ angular.module('magna-app')
         if(resp === undefined) {
             return;
         } else if(resp.error !== undefined) {
-            type = 'error';
+            type = 'danger';
             msg = [];
 
             if (resp.warnings !== undefined) {
                 type = 'warning';
                 if (resp.error !== '') {
-                    type = 'error';
+                    type = 'danger';
                     msg.push('Error: ' + resp.error);
                 }
                 angular.forEach(resp.warnings, function(warning) {
