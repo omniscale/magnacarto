@@ -35,30 +35,52 @@ html, body {
   z-index: 1000;
 }
 
+#content-wrapper {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 80px;
+  overflow: auto;
+}
+
 #sidebar-wrapper ~ #content-wrapper,
 #sidebar-wrapper ~ #logging-wrapper {
-  padding-left: 50px;
+  left: 50px;
 }
 
 #sidebar-wrapper.active ~ #content-wrapper,
 #sidebar-wrapper.active ~ #logging-wrapper {
-  padding-left: 275px;
+  left: 275px;
+}
+
+#sidebar-resizer,
+#logging-resizer {
+  background-color: #666;
+  position: fixed;
+  z-index: 1000;
 }
 
 #sidebar-resizer {
-  background-color: #666;
-  position: fixed;
-  top: 0px;
+  top: 0;
   bottom: 0;
   left: 270px;
   width: 5px;
   cursor: ew-resize;
-  z-index: 1000;
+}
+
+#logging-resizer {
+  left: 275px;
+  right: 0;
+  bottom: 75px;
+  height: 5px;
+  cursor: ns-resize;
 }
 
 #sidebar-resizer:hover,
-#sidebar-resizer.active {
-  background-color: #AAA;
+#sidebar-resizer.active,
+#logging-resizer:hover,
+#logging-resizer.active {
+  background-color: #aaa;
 }
 
 .sidebar-nav {
@@ -161,23 +183,14 @@ html, body {
 #logging-wrapper {
   position: fixed;
   bottom: 0;
-  width: 100%;
   height: 0;
   overflow: auto;
-  border-top: 5px solid #666;
+  right: 0;
 }
 
 #logging-wrapper.active {
-  height: 20%;
-}
-
-#logging-wrapper ~ #content-wrapper {
-  height: auto;
-  overflow: auto;
-}
-
-#logging-wrapper.active ~ #content-wrapper {
-  height: 80%;
+  height: 80px;
+  padding-top: 5px;
 }
 
 #logging-wrapper table {

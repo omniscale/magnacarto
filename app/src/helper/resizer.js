@@ -5,9 +5,12 @@ angular.module('magna-app')
     var resizerMax = parseInt($attrs.resizerMax);
     var resizerMin = parseInt($attrs.resizerMin);
     var resizerWidth = parseInt($attrs.resizerWidth);
-    var leftElements, rightElements;
+    var leftElements, rightElements, bottomElements, topElements;
     var disabled = false;
-    var storedX;
+    var storedX, storedY;
+
+    var horizontal = $attrs.resizer === 'horizontal';
+
 
     var findElements = function(idsString) {
       var elements = [];
@@ -21,7 +24,7 @@ angular.module('magna-app')
       return angular.element(elements);
     };
 
-    var updateElements = function(x) {
+    var _updateElementsVertical = function(x) {
       if (resizerMax && x > resizerMax) {
         x = resizerMax;
       } else if (resizerMin && x < resizerMin) {
@@ -39,15 +42,41 @@ angular.module('magna-app')
       });
 
       rightElements.css({
-        paddingLeft: (x + resizerWidth) + 'px'
+        left: (x + resizerWidth) + 'px'
       });
 
       storedX = x;
     };
 
-    var mousemove = function(event) {
+    var _updateElementsHorizontal = function(y) {
+      if (resizerMax && y > resizerMax) {
+        y = resizerMax;
+      } else if (resizerMin && y < resizerMin) {
+        y = resizerMin;
+      }
+
+      $element.css({
+        bottom: (y - resizerWidth) + 'px'
+      });
+      topElements.css({
+        bottom: y + 'px'
+      });
+      bottomElements.css({
+        height: y + 'px'
+      });
+    };
+
+    var updateElements = horizontal ? _updateElementsHorizontal : _updateElementsVertical;
+
+    var _mousemoveVertical = function(event) {
       updateElements(event.pageX);
     };
+
+    var _mousemoveHorizontal = function(event) {
+      updateElements(window.innerHeight - event.pageY);
+    };
+
+    var mousemove = horizontal ? _mousemoveHorizontal : _mousemoveVertical;
 
     var mouseup = function() {
       $element.removeClass('active');
@@ -65,7 +94,7 @@ angular.module('magna-app')
       $element.addClass('active');
     });
 
-    var enableResizer = function() {
+    var _enableResizerHorizontal = function() {
       $element.removeClass('hide');
       if(angular.isDefined(storedX)) {
         updateElements(storedX);
@@ -73,7 +102,17 @@ angular.module('magna-app')
       disabled = false;
     };
 
-    var disableResizer = function() {
+    var _enableResizerVertical = function() {
+      $element.removeClass('hide');
+      if(angular.isDefined(storedY)) {
+        updateElements(storedY);
+      }
+      disabled = false;
+    };
+
+    var enableResizer = horizontal ? _enableResizerHorizontal : _enableResizerVertical;
+
+    var _disableResizerHorizontal = function() {
       $element.addClass('hide');
       leftElements.css({
         width: '',
@@ -86,6 +125,19 @@ angular.module('magna-app')
       disabled = true;
     };
 
+    var _disableResizerVertical = function() {
+      $element.addClass('hide');
+      leftElements.css({
+        bottom: ''
+      });
+      rightElements.css({
+        height: ''
+      });
+      disabled = true;
+    };
+
+    var disableResizer = horizontal ? _disableResizerHorizontal : _disableResizerVertical;
+
     $attrs.$observe('resizerDisabled', function(n, o) {
       if(n === 'false' && disabled) {
         enableResizer();
@@ -97,10 +149,20 @@ angular.module('magna-app')
       }
     });
 
-    // get left-/rightElements after dom rendered
+    // get elements after dom rendered
     $timeout(function() {
-      leftElements = findElements($attrs.resizerLeftIds);
-      rightElements = findElements($attrs.resizerRightIds);
+      if(angular.isDefined($attrs.resizerLeftIds)) {
+        leftElements = findElements($attrs.resizerLeftIds);
+      }
+      if(angular.isDefined($attrs.resizerRightIds)) {
+        rightElements = findElements($attrs.resizerRightIds);
+      }
+      if(angular.isDefined($attrs.resizerBottomIds)) {
+        bottomElements = findElements($attrs.resizerBottomIds);
+      }
+      if(angular.isDefined($attrs.resizerTopIds)) {
+        topElements = findElements($attrs.resizerTopIds);
+      }
     });
   };
 }]);
