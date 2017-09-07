@@ -5,13 +5,25 @@ angular.module('magna-app')
     var resizerMax = parseInt($attrs.resizerMax);
     var resizerMin = parseInt($attrs.resizerMin);
     var resizerWidth = parseInt($attrs.resizerWidth);
-    var leftElement, rightElement;
+    var leftElements, rightElements;
+
+    var findElements = function(idsString) {
+      var elements = [];
+      var elementIds = idsString.split(',');
+      angular.forEach(elementIds, function(id) {
+        var domElement = document.getElementById(id);
+        if(domElement !== null) {
+          elements.push(domElement);
+        }
+      });
+      return angular.element(elements);
+    };
 
     $element.on('mousedown', function(event) {
       event.preventDefault();
 
-      leftElement = angular.element(document.getElementById($attrs.resizerLeftId));
-      rightElement = angular.element(document.getElementById($attrs.resizerRightId));
+      leftElements = findElements($attrs.resizerLeftIds);
+      rightElements = findElements($attrs.resizerRightIds);
 
       $document.on('mousemove', mousemove);
       $document.on('mouseup', mouseup);
@@ -31,13 +43,13 @@ angular.module('magna-app')
         left: x + 'px'
       });
 
-      leftElement.css({
+      leftElements.css({
         width: x + 'px',
         marginLeft: (-x) + 'px',
         left: x + 'px'
       });
 
-      rightElement.css({
+      rightElements.css({
         paddingLeft: (x + resizerWidth) + 'px'
       });
     }
@@ -50,8 +62,8 @@ angular.module('magna-app')
       $document.unbind('mousemove', mousemove);
       $document.unbind('mouseup', mouseup);
 
-      leftElement = undefined;
-      rightElement = undefined;
+      leftElements = undefined;
+      rightElements = undefined;
     }
   };
 }]);
