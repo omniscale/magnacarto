@@ -57,8 +57,6 @@ angular.module('magna-app')
     function mouseup() {
       $element.removeClass('active');
 
-      angular.element($window).triggerHandler('resize');
-
       $document.unbind('mousemove', mousemove);
       $document.unbind('mouseup', mouseup);
 

@@ -15,6 +15,7 @@ function require(jspath) {
     }
     document.write('<script type="text/javascript" src="'+ l + jspath+'"><\/script>');
 }
+require('libs/detect-element-resize.js');
 require('libs/ol.js');
 require('libs/ace.js');
 require('libs/ace-mode-sql.js');
