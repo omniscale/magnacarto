@@ -1,8 +1,11 @@
 <table class="table">
     <tbody>
-        <tr ng-repeat="message in messages" ng-class="message.type">
-            <td class="col-xs-3 col-sm-2 col-md-1 col-lg-1">{{ message.time | date:'HH:mm:ss.sss' }}</td>
-            <td class="col-xs-9 col-sm-10 col-md-11 col-lg-11">
+        <tr ng-repeat="message in messages" ng-class="messageClass($index, message)">
+            <td class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
+                <i class="glyphicon" ng-class="iconClass($index, message)"></i>
+                {{ message.time | date:'HH:mm:ss.sss' }}
+            </td>
+            <td class="col-xs-8 col-sm-9 col-md-10 col-lg-10">
                 <ul class="list-unstyled">
                     <li ng-repeat="msg in message.msg">
                         {{ msg }}

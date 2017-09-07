@@ -188,6 +188,11 @@ html, body {
   margin: 0;
 }
 
+.table > tbody > tr.outdated > td {
+  background-color: #eee;
+  color: #aaa;
+}
+
 /* Map-grid used in Dashboard and on Bookmaprs */
 .grid-map {
   border: 1px solid #ccc;
