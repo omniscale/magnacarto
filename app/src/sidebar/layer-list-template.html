@@ -5,7 +5,7 @@
       <span class="menu-icon glyphicon glyphicon-globe"></span>
     </a>
   </li>
-  <div collapse="(collapsed || !active || selectedNavItem === 'projects')">
+  <div collapse="(collapsed || sidebarCollapsed || selectedNavItem === 'projects')">
     <div class="layer-list disable-select">
       <div ng-model="layers" as-sortable>
         <div ng-repeat="layer in layers" as-sortable-item class="layer-list-item">
