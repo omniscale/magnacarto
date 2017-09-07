@@ -5,7 +5,7 @@ angular.module('magna-app')
     $scope.messages = LoggingService.messages;
 
     $scope.messageClass = function(idx, message) {
-      if(idx <= LoggingService.lastSuccessfulUpdateIdx) {
+      if(LoggingService.lastSuccessfulUpdateIdx == -1 || idx <= LoggingService.lastSuccessfulUpdateIdx) {
         return message.type;
       }
       return 'outdated';
@@ -24,7 +24,7 @@ angular.module('magna-app')
           classes.push('glyphicon-ok-sign');
           break;
       }
-      if(idx > LoggingService.lastSuccessfulUpdateIdx) {
+      if(LoggingService.lastSuccessfulUpdateIdx > -1 && idx > LoggingService.lastSuccessfulUpdateIdx) {
         return classes;
       }
       classes.push('text-' + message.type);
