@@ -80,7 +80,9 @@ angular.module('magna-app').constant('magnaConfig', {
 })
 
 .controller('AppCtrl', ['$scope', function($scope) {
-  $scope.sidebarCollapsed = false;
+  $scope.sidebar = {
+    collapsed: false
+  };
 }])
 
 .run(function(ProjectsService) {
