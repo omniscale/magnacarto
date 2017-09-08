@@ -345,7 +345,6 @@ div.as-sortable-dragging .layer-list-item label {
   padding-right: 2px;
 }
 
-
 .as-sortable-placeholder {
   border-radius: 4px;
   background-color: #333;
@@ -374,7 +373,6 @@ i.mca-icon {
   font-style: normal;
   font-weight: bold;
   line-height: 20px;
-  position: relative;
   text-align: center;
   top: 1px;
   height: 20px;
