@@ -7,7 +7,6 @@ angular.module('magna-app')
         this.messages = [];
         this.lastSuccessfulUpdate = undefined;
         this.lastSuccessfulUpdateIdx = undefined;
-        this.newMessageCallbacks = [];
         // Add messages handler when socket changes
         $rootScope.$watch(function() {
           return ProjectService.getSocket();
@@ -22,10 +21,6 @@ angular.module('magna-app')
         });
     };
 
-    LoggingInstance.prototype.addNewMessageCallback = function(callback) {
-        this.newMessageCallbacks.push(callback);
-    };
-
     LoggingInstance.prototype.appendMessage = function(type, msg) {
         var newMsg = {
           type: type,
@@ -37,9 +32,6 @@ angular.module('magna-app')
         }
         this.messages.unshift(newMsg);
         this.lastSuccessfulUpdateIdx = this.messages.indexOf(this.lastSuccessfulUpdate);
-        angular.forEach(this.newMessageCallbacks, function(callback) {
-            callback(newMsg);
-        });
     };
 
     LoggingInstance.prototype.handleMessage = function(resp) {
