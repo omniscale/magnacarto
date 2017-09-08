@@ -25,7 +25,9 @@
          resizer-right-ids="content-wrapper,logging-wrapper,logging-resizer"
          resizer-max="400"
          resizer-min="200"
-         resizer-disabled="{{ sidebar.collapsed }}">
+         resizer-disabled="{{ sidebar.collapsed }}"
+         resizer-actual-size="appSettings.sidebarWidth"
+         >
     </div>
     <div id="logging-resizer"
          resizer="horizontal"
@@ -33,7 +35,9 @@
          resizer-top-ids="content-wrapper"
          resizer-bottom-ids="logging-wrapper"
          resizer-min="80"
-         resizer-max="400">
+         resizer-max="400"
+         resizer-actual-size="appSettings.loggingHeight"
+         >
     </div>
     <script src="src/require.js"></script>
   </body>

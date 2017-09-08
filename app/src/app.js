@@ -79,10 +79,18 @@ angular.module('magna-app').constant('magnaConfig', {
     });
 })
 
-.controller('AppCtrl', ['$scope', function($scope) {
+.controller('AppCtrl', ['$scope', 'ProjectService', function($scope, ProjectService) {
   $scope.sidebar = {
     collapsed: false
   };
+
+  $scope.appSettings = ProjectService.appSettings;
+
+  $scope.$watch(function() {
+    return ProjectService.appSettings;
+  }, function() {
+    $scope.appSettings = ProjectService.appSettings;
+  });
 }])
 
 .run(function(ProjectsService) {

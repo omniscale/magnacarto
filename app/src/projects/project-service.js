@@ -8,6 +8,7 @@ angular.module('magna-app')
         this.mmlData = undefined;
         this.dashboardMaps = [];
         this.bookmarkedMaps = [];
+        this.appSettings = {};
         this.socketUrl = undefined;
         this.socket = undefined;
         this.mmlLoadPromise = undefined;
@@ -128,11 +129,13 @@ angular.module('magna-app')
         var self = this;
         response.dashboardMaps = response.dashboardMaps || [];
         response.bookmarkedMaps = response.bookmarkedMaps || [];
+        response.appSettings = response.appSettings || {};
         self.mcpData = response;
 
         // assign to object property for easy access from outside;
         self.bookmarkedMaps = self.mcpData.bookmarkedMaps;
         DashboardService.maps = self.mcpData.dashboardMaps;
+        self.appSettings = self.mcpData.appSettings;
       };
 
       ProjectServiceInstance.prototype.unloadProject = function() {
@@ -150,6 +153,7 @@ angular.module('magna-app')
         self.mmlData = undefined;
         self.dashboardMaps = [];
         self.bookmarkedMaps = [];
+        self.appSettings = {};
         self.socketUrl = undefined;
         self.socket = undefined;
         self.mmlLoadPromise = undefined;
@@ -231,6 +235,13 @@ angular.module('magna-app')
           self.saveMCP();
         }, true);
 
+        self.appSettingsWatcher = $rootScope.$watch(function() {
+          return self.appSettings;
+        }, function(n, o) {
+          if(angular.equals(n, o)) return;
+          self.saveMCP();
+        }, true);
+
         self.stylesWatcher = $rootScope.$watch(function() {
           return self.mmlData.Stylesheet;
         }, function(n, o) {
@@ -256,6 +267,11 @@ angular.module('magna-app')
         if(self.bookmarkedMapsWatcher !== undefined) {
           self.bookmarkedMapsWatcher();
           self.bookmarkedMapsWatcher = undefined;
+        }
+
+        if(self.appSettingsWatcher !== undefined) {
+          self.appSettingsWatcher();
+          self.appSettingsWatcher = undefined;
         }
 
         if(self.stylesWatcher !== undefined) {
