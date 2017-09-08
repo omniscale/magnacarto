@@ -17,27 +17,27 @@
       <div id="sidebar-wrapper" class="active" ng-class="{active: !sidebar.collapsed}" ng-controller="SideNavCtrl" ng-include="'src/sidebar/side-nav-template.html'"></div>
       <div id="logging-wrapper" class="active" ng-controller="LoggingCtrl" ng-include="'src/logging/logging-template.html'"></div>
       <div id="content-wrapper"><div ng-view></div></div>
-    </div>
-    <div id="sidebar-resizer"
-         resizer="vertical"
-         resizer-width="5"
-         resizer-left-ids="sidebar-wrapper"
-         resizer-right-ids="content-wrapper,logging-wrapper,logging-resizer"
-         resizer-max="400"
-         resizer-min="200"
-         resizer-disabled="{{ sidebar.collapsed }}"
-         resizer-actual-size="appSettings.sidebarWidth"
-         >
-    </div>
-    <div id="logging-resizer"
-         resizer="horizontal"
-         resizer-width="5"
-         resizer-top-ids="content-wrapper"
-         resizer-bottom-ids="logging-wrapper"
-         resizer-min="80"
-         resizer-max="400"
-         resizer-actual-size="appSettings.loggingHeight"
-         >
+      <div id="sidebar-resizer"
+           resizer="vertical"
+           resizer-width="5"
+           resizer-left-ids="sidebar-wrapper"
+           resizer-right-ids="content-wrapper,logging-wrapper,logging-resizer"
+           resizer-max="400"
+           resizer-min="200"
+           resizer-disabled="{{ sidebar.collapsed }}"
+           resizer-actual-size="appSettings.sidebarWidth"
+           >
+      </div>
+      <div id="logging-resizer"
+           resizer="horizontal"
+           resizer-width="5"
+           resizer-top-ids="content-wrapper"
+           resizer-bottom-ids="logging-wrapper"
+           resizer-min="80"
+           resizer-max="400"
+           resizer-actual-size="appSettings.loggingHeight"
+           >
+      </div>
     </div>
     <script src="src/require.js"></script>
   </body>

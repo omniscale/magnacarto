@@ -44,12 +44,14 @@ html, body {
 }
 
 #sidebar-wrapper ~ #content-wrapper,
-#sidebar-wrapper ~ #logging-wrapper {
+#sidebar-wrapper ~ #logging-wrapper,
+#sidebar-wrapper ~ #logging-resizer {
   left: 50px;
 }
 
 #sidebar-wrapper.active ~ #content-wrapper,
-#sidebar-wrapper.active ~ #logging-wrapper {
+#sidebar-wrapper.active ~ #logging-wrapper,
+#sidebar-wrapper.active ~ #logging-resizer {
   left: 275px;
 }
 
