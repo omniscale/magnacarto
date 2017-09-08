@@ -14,7 +14,7 @@
   </head>
   <body ng-app="magna-app" ng-controller="AppCtrl">
     <div id="wrapper">
-      <div id="sidebar-wrapper" class="active" ng-class="{active: !sidebar.collapsed}" ng-controller="SideNavCtrl" ng-include="'src/sidebar/side-nav-template.html'"></div>
+      <div id="sidebar-wrapper" class="active" ng-class="{active: !appSettings.sidebarCollapsed}" ng-controller="SideNavCtrl" ng-include="'src/sidebar/side-nav-template.html'"></div>
       <div id="logging-wrapper" class="active" ng-controller="LoggingCtrl" ng-include="'src/logging/logging-template.html'"></div>
       <div id="content-wrapper"><div ng-view></div></div>
       <div id="sidebar-resizer"
@@ -24,7 +24,7 @@
            resizer-right-ids="content-wrapper,logging-wrapper,logging-resizer"
            resizer-max="400"
            resizer-min="200"
-           resizer-disabled="{{ sidebar.collapsed }}"
+           resizer-disabled="{{ appSettings.sidebarCollapsed }}"
            resizer-actual-size="appSettings.sidebarWidth"
            >
       </div>

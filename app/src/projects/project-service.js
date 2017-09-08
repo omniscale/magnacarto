@@ -134,6 +134,7 @@ angular.module('magna-app')
         // -1 is matched to default value by resizer
         response.appSettings.sidebarWidth = response.appSettings.sidebarWidth || -1;
         response.appSettings.loggingHeight = response.appSettings.loggingHeight || -1;
+        response.appSettings.sidebarCollapsed = response.appSettings.sidebarCollapsed || false;
         self.mcpData = response;
 
         // assign to object property for easy access from outside;

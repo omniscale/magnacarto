@@ -160,6 +160,9 @@ angular.module('magna-app')
       });
 
       $scope.$watch('resizerActualSize', function(n, o) {
+        if(disabled === true) {
+          return;
+        }
         if(angular.isUndefined(o) && angular.isDefined(n) && n > -1) {
           updateElements(n);
         }

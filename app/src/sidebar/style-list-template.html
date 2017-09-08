@@ -5,7 +5,7 @@
       <span class="menu-icon glyphicon glyphicon-file"></span>
     </a>
   </li>
-  <div collapse="(collapsed || sidebar.collapsed || selectedNavItem === 'projects')">
+  <div collapse="(collapsed || appSettings.sidebarCollapsed || selectedNavItem === 'projects')">
     <div class="style-list disable-select">
       <div class="active-styles style-list-item" ng-model="activeStyles" as-sortable>
         <div class="as-sortable-item" ng-repeat="styleObj in activeStyles" as-sortable-item>
