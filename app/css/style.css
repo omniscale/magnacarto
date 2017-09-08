@@ -345,10 +345,6 @@ div.as-sortable-dragging .layer-list-item label {
   padding-right: 2px;
 }
 
-.style-list .as-sortable-item,
-.layer-list .as-sortable-item {
-  white-space: nowrap;
-}
 
 .as-sortable-placeholder {
   border-radius: 4px;
