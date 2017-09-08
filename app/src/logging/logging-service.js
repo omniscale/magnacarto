@@ -32,6 +32,7 @@ angular.module('magna-app')
         }
         this.messages.unshift(newMsg);
         this.lastSuccessfulUpdateIdx = this.messages.indexOf(this.lastSuccessfulUpdate);
+        $rootScope.$apply();
     };
 
     LoggingInstance.prototype.handleMessage = function(resp) {
