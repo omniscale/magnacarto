@@ -14,7 +14,6 @@ angular.module('magna-app')
 
       var horizontal = $attrs.resizer === 'horizontal';
 
-
       var findElements = function(idsString) {
         var elements = [];
         var elementIds = idsString.split(',');
@@ -157,6 +156,12 @@ angular.module('magna-app')
         }
         if(angular.isDefined($attrs.resizerTopIds)) {
           topElements = findElements($attrs.resizerTopIds);
+        }
+      });
+
+      $scope.$watch('resizerActualSize', function(n, o) {
+        if(angular.isUndefined(o) && angular.isDefined(n) && n > -1) {
+          updateElements(n);
         }
       });
     }

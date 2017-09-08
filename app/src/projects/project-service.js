@@ -130,6 +130,10 @@ angular.module('magna-app')
         response.dashboardMaps = response.dashboardMaps || [];
         response.bookmarkedMaps = response.bookmarkedMaps || [];
         response.appSettings = response.appSettings || {};
+        // set to default -1 because resizer needs a defined value in order to update initial size.
+        // -1 is matched to default value by resizer
+        response.appSettings.sidebarWidth = response.appSettings.sidebarWidth || -1;
+        response.appSettings.loggingHeight = response.appSettings.loggingHeight || -1;
         self.mcpData = response;
 
         // assign to object property for easy access from outside;
@@ -176,7 +180,14 @@ angular.module('magna-app')
         }
         // prevent too often safe. mostly triggered by gridster when resize or dragging a map
         self.mcpSaveTimeout = $timeout(function() {
-          $http.post(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mcp, angular.toJson(self.mcpData, true));
+          var sendMcpData = angular.copy(self.mcpData);
+          if(sendMcpData.appSettings.sidebarWidth === -1) {
+            delete sendMcpData.appSettings.sidebarWidth;
+          }
+          if(sendMcpData.appSettings.loggingHeight === -1) {
+            delete sendMcpData.appSettings.loggingHeight;
+          }
+          $http.post(magnaConfig.projectBaseUrl + self.project.base + '/' + self.project.mcp, angular.toJson(sendMcpData, true));
           self.mcpSaveTimeout = undefined;
         }, 1000);
       };
