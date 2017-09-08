@@ -89,6 +89,15 @@ angular.module('magna-app').constant('magnaConfig', {
   });
 }])
 
-.run(function(ProjectsService) {
-  ProjectsService.load();
+.run(function($q, $templateRequest, ProjectsService) {
+  // fill template cache before load projects
+  // needed because resizer otherwise might not find all elements
+  $q.all([
+    $templateRequest('src/sidebar/layer-list-template.html'),
+    $templateRequest('src/sidebar/style-list-template.html'),
+    $templateRequest('src/logging/logging-template.html'),
+    $templateRequest('src/sidebar/side-nav-template.html')
+  ]).then(function() {
+    ProjectsService.load();
+  });
 });

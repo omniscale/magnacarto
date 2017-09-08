@@ -1,6 +1,6 @@
 // inspirited by https://stackoverflow.com/a/22253161
 angular.module('magna-app')
-.directive('resizer', ['$document', '$timeout', function($document, $timeout) {
+.directive('resizer', ['$document', 'ProjectsService', function($document, ProjectsService) {
   return {
     scope: {
       resizerActualSize: '='
@@ -143,8 +143,7 @@ angular.module('magna-app')
         }
       });
 
-      // get elements after dom rendered
-      $timeout(function() {
+      var locateElements = function() {
         if(angular.isDefined($attrs.resizerLeftIds)) {
           leftElements = findElements($attrs.resizerLeftIds);
         }
@@ -157,16 +156,10 @@ angular.module('magna-app')
         if(angular.isDefined($attrs.resizerTopIds)) {
           topElements = findElements($attrs.resizerTopIds);
         }
-      });
+      };
 
-      $scope.$watch('resizerActualSize', function(n, o) {
-        if(disabled === true) {
-          return;
-        }
-        if(angular.isUndefined(o) && angular.isDefined(n) && n > -1) {
-          updateElements(n);
-        }
-      });
+      // locate elements after projects are loaded
+      ProjectsService.loaded().then(locateElements);
     }
   };
 }]);

@@ -11,7 +11,7 @@ angular.module('magna-app')
 
     EditLayerFormStatusService.reset();
 
-    ProjectsService.loaded().success(function() {
+    ProjectsService.loaded().then(function() {
       $scope.projects = ProjectsService.projectsList;
     });
 
