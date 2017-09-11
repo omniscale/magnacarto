@@ -7,7 +7,7 @@
             </td>
             <td>
                 <ul class="list-unstyled">
-                    <li ng-repeat="msg in message.msg">
+                    <li ng-repeat="msg in message.msg track by $index">
                         {{ msg }}
                     </li>
                 </ul>
