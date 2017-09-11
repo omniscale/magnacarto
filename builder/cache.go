@@ -192,8 +192,9 @@ func (c *Cache) Notify(mm MapMaker, mml string, mss []string, done <-chan struct
 				}
 				// atomic save of some editors will trigger remove event,
 				// which will remove the file from the watcher. add back again
-				watcher.Add(evt.Name)
-
+				if evt.Name != "" {
+					watcher.Add(evt.Name)
+				}
 				if err != nil {
 					updatec <- Update{Err: err}
 				} else {
