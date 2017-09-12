@@ -23,6 +23,9 @@ angular.module('magna-app')
         case 'success':
           classes.push('glyphicon-ok-sign');
           break;
+        case 'warning':
+          classes.push('glyphicon-warning-sign');
+          break;
       }
       if(LoggingService.lastSuccessfulUpdateIdx > -1 && idx > LoggingService.lastSuccessfulUpdateIdx) {
         return classes;
