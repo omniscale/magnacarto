@@ -877,21 +877,10 @@ func addOffsetPosition(style *Block, properties *mss.Properties) {
 	style.Add("Position", position)
 }
 
-func pqSelectString(query, srid string, rules []mss.Rule, autoTypeFilter bool) string {
-	/*
-	   (select * from osm_landusages where type in ('forest', 'woods')) as landusages
-	   ->
-	   geometry from (select *, NULL as nullid from (select * from osm_landusages where type in ('forest', 'woods')) as landusages) as nullidq using unique nullid using srid=900913
-	*/
+func cleanupQuery(query string) (string, bool) {
 	query = strings.Replace(query, "\r\n", "\n", -1)
 	query = strings.Replace(query, `"`, `\"`, -1)
-	query = strings.Replace(query, `!bbox!`, `!BOX!`, -1)
 	query = strings.TrimRight(query, "\n ")
-
-	if autoTypeFilter {
-		filter := sql.FilterString(rules)
-		query = sql.WrapWhere(query, filter)
-	}
 
 	// check if last non-blank/non-comment line contains "AS"" (like in ") as subquery")
 	queryLines := strings.Split(query, "\n")
@@ -908,6 +897,24 @@ func pqSelectString(query, srid string, rules []mss.Rule, autoTypeFilter bool) s
 		}
 		break
 	}
+
+	return query, isSubselect
+}
+
+func pqSelectString(query, srid string, rules []mss.Rule, autoTypeFilter bool) string {
+	/*
+	   (select * from osm_landusages where type in ('forest', 'woods')) as landusages
+	   ->
+	   geometry from (select *, NULL as nullid from (select * from osm_landusages where type in ('forest', 'woods')) as landusages) as nullidq using unique nullid using srid=900913
+	*/
+	query, isSubselect := cleanupQuery(query)
+	query = strings.Replace(query, `!bbox!`, `!BOX!`, -1)
+
+	if autoTypeFilter {
+		filter := sql.FilterString(rules)
+		query = sql.WrapWhere(query, filter)
+	}
+
 	if isSubselect {
 		return "geometry from (select *, NULL as nullid from \n" + query + "\n) as nullidq using unique nullid using srid=" + srid
 	}
@@ -915,6 +922,11 @@ func pqSelectString(query, srid string, rules []mss.Rule, autoTypeFilter bool) s
 }
 
 func sqliteSelectString(query, srid string) string {
+	query, isSubselect := cleanupQuery(query)
+	if isSubselect {
+		return "select geometry, * from \n" + query + "\n"
+	}
+
 	return "select type, geometry from " + query
 }
 
