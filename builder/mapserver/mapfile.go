@@ -484,7 +484,14 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 			}
 		}
 
-		addOffsetPosition(&style, r.Properties)
+		if isLine {
+			dy, ok := r.Properties.GetFloat("text-dy")
+			if ok {
+				style.Add("OFFSET", fmt.Sprintf("%.0f 99", -dy))
+			}
+		} else {
+			addOffsetPosition(&style, r.Properties)
+		}
 
 		if faceNames, ok := r.Properties.GetStringList("text-face-name"); ok {
 			fontNames := m.fontNames(faceNames)
