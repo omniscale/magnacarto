@@ -1,5 +1,7 @@
 package render
 
+import "image/color"
+
 type Request struct {
 	Width       int
 	Height      int
@@ -7,4 +9,5 @@ type Request struct {
 	EPSGCode    int
 	Format      string
 	ScaleFactor float64
+	BGColor     *color.RGBA
 }

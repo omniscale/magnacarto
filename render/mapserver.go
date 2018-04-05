@@ -46,6 +46,7 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) ([]str
 	q.Set("HEIGHT", fmt.Sprintf("%d", mapReq.Height))
 	q.Set("SRS", fmt.Sprintf("EPSG:%d", mapReq.EPSGCode))
 	q.Set("FORMAT", mapReq.Format)
+	// TODO: pass mapReq.BGColor to mapserver
 
 	if mapReq.ScaleFactor != 0 {
 		// mapserver default resolution is 72 dpi

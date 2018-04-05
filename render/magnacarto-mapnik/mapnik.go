@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"image"
+	"image/draw"
 	"log"
 
 	"github.com/natefinch/pie"
@@ -30,7 +32,26 @@ func renderReq(mapfile string, mapReq render.Request) ([]byte, error) {
 	renderOpts.Format = mapReq.Format
 	renderOpts.ScaleFactor = mapReq.ScaleFactor
 
-	b, err := m.Render(renderOpts)
+	if mapReq.BGColor == nil {
+		b, err := m.Render(renderOpts)
+		if err != nil {
+			return nil, err
+		}
+		return b, nil
+	}
+
+	// draw image on requested bgcolor
+	img, err := m.RenderImage(renderOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	result := image.NewNRGBA(img.Bounds())
+	bg := image.NewUniform(mapReq.BGColor)
+	draw.Draw(result, img.Bounds(), bg, image.ZP, draw.Src)
+	draw.Draw(result, img.Bounds(), img, image.ZP, draw.Over)
+
+	b, err := mapnik.Encode(result, mapReq.Format)
 	if err != nil {
 		return nil, err
 	}
