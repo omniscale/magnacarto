@@ -184,26 +184,58 @@ func TestFilterIsSubset(t *testing.T) {
 	assert.False(t, filterIsSubset([]Filter{Filter{"foo", EQ, "barbaz"}}, []Filter{Filter{"baz", EQ, "bar"}, Filter{"foo", EQ, "bar"}}))
 }
 
-func TestFilterIsSubset_TODO(t *testing.T) {
-	t.Skip("TODO: implement filterIsSubset for numerical comparsions")
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GTE, 5}}, []Filter{Filter{"foo", EQ, 5}}))
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GT, 4}}, []Filter{Filter{"foo", EQ, 5}}))
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LTE, 5}}, []Filter{Filter{"foo", EQ, 5}}))
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LT, 6}}, []Filter{Filter{"foo", EQ, 5}}))
+func TestFilterIsSubset_NumericalComparison(t *testing.T) {
+	for _, tt := range []struct {
+		opA      CompOp
+		a        float64
+		opB      CompOp
+		b        float64
+		isSubset bool
+	}{
 
-	assert.False(t, filterIsSubset([]Filter{Filter{"foo", GTE, 6}}, []Filter{Filter{"foo", EQ, 5}}))
-	assert.False(t, filterIsSubset([]Filter{Filter{"foo", GT, 5}}, []Filter{Filter{"foo", EQ, 5}}))
-	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LTE, 4}}, []Filter{Filter{"foo", EQ, 5}}))
-	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LT, 5}}, []Filter{Filter{"foo", EQ, 5}}))
+		{GTE, 5, EQ, 5, true},
+		{GTE, 5, EQ, 4, false},
+		{GT, 5, EQ, 5, false},
+		{GT, 4, EQ, 5, true},
+		{LTE, 5, EQ, 5, true},
+		{LTE, 5, EQ, 6, false},
+		{LT, 5, EQ, 5, false},
+		{LT, 6, EQ, 5, true},
 
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GTE, 5}}, []Filter{Filter{"foo", GT, 5}}))
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", GT, 4}}, []Filter{Filter{"foo", GT, 5}}))
-	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LT, 10}}, []Filter{Filter{"foo", GT, 5}}))
-	assert.False(t, filterIsSubset([]Filter{Filter{"foo", LTE, 10}}, []Filter{Filter{"foo", GT, 5}}))
-	assert.False(t, filterIsSubset([]Filter{Filter{"foo", EQ, 6}}, []Filter{Filter{"foo", GT, 5}}))
+		{GTE, 5, GT, 5, true},
+		{GT, 4, GT, 5, true},
+		{LT, 10, GT, 5, false},
+		{LTE, 10, GT, 5, false},
+		{EQ, 6, GT, 5, false},
 
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LTE, 5}}, []Filter{Filter{"foo", LT, 5}}))
-	assert.True(t, filterIsSubset([]Filter{Filter{"foo", LT, 5}}, []Filter{Filter{"foo", LT, 5}}))
+		{LTE, 5, LT, 5, true},
+		{LT, 5, LT, 5, true},
+	} {
+		if isSubset := filterIsSubset(
+			[]Filter{Filter{"foo", tt.opA, tt.a}},
+			[]Filter{Filter{"foo", tt.opB, tt.b}},
+		); isSubset != tt.isSubset {
+			t.Errorf("unexpected subset to %v", tt)
+		}
+		if isSubset := filterIsSubset(
+			[]Filter{Filter{"foo", tt.opA, int(tt.a)}},
+			[]Filter{Filter{"foo", tt.opB, tt.b}},
+		); isSubset != tt.isSubset {
+			t.Errorf("unexpected subset to %v", tt)
+		}
+		if isSubset := filterIsSubset(
+			[]Filter{Filter{"foo", tt.opA, int(tt.a)}},
+			[]Filter{Filter{"foo", tt.opB, int(tt.b)}},
+		); isSubset != tt.isSubset {
+			t.Errorf("unexpected subset to %v", tt)
+		}
+		if isSubset := filterIsSubset(
+			[]Filter{Filter{"foo", tt.opA, tt.a}},
+			[]Filter{Filter{"foo", tt.opB, int(tt.b)}},
+		); isSubset != tt.isSubset {
+			t.Errorf("unexpected subset to %v", tt)
+		}
+	}
 }
 
 func BenchmarkFilterIsSubset(b *testing.B) {

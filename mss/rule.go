@@ -119,20 +119,99 @@ func filterIsSubset(a, b []Filter) bool {
 				// field not in b
 				return false
 			}
-			// TODO: handle subfilter like <=6 =5, >=6 >8, etc.
-			if a[ia].CompOp != b[ib].CompOp || a[ia].Value != b[ib].Value {
-				return false
-			} else {
-				// filter is equal
+
+			if a[ia].CompOp == b[ib].CompOp && a[ia].Value == b[ib].Value {
 				found = true
 				break
 			}
+			if filterContains(a[ia], b[ib]) {
+				found = true
+				break
+			}
+			return false
 		}
 		if !found {
 			return false
 		}
 	}
 	return true
+}
+
+func filterContains(a, b Filter) bool {
+	var av, bv float64
+	var ok bool
+
+	av, ok = a.Value.(float64)
+	if !ok {
+		tmp, ok := a.Value.(int)
+		if !ok {
+			return false
+		}
+		av = float64(tmp)
+	}
+	bv, ok = b.Value.(float64)
+	if !ok {
+		tmp, ok := b.Value.(int)
+		if !ok {
+			return false
+		}
+		bv = float64(tmp)
+	}
+	switch a.CompOp {
+	case GT:
+		// >6 -> =7, =8, ...
+		if b.CompOp == EQ && bv > av {
+			return true
+		}
+		// >6 -> >6, >7, ...
+		if b.CompOp == GT && bv >= av {
+			return true
+		}
+		// >=6 -> >=6, >=7, ...
+		if b.CompOp == GTE && bv >= av {
+			return true
+		}
+	case GTE:
+		// >=6 -> =6, =7, ...
+		if b.CompOp == EQ && bv >= av {
+			return true
+		}
+		// >=6 -> >6, >7, ...
+		if b.CompOp == GT && bv >= av {
+			return true
+		}
+		// >=6 -> >=6, >=7, ...
+		if b.CompOp == GTE && bv >= av {
+			return true
+		}
+	case LT:
+		// <6 -> =5, =4, ...
+		if b.CompOp == EQ && bv < av {
+			return true
+		}
+		// <6 -> <6, <5, ...
+		if b.CompOp == LT && bv <= av {
+			return true
+		}
+		// <=6 -> <=6, <=5, ...
+		if b.CompOp == LTE && bv <= av {
+			return true
+		}
+	case LTE:
+		// <=6 -> =6, =5, ...
+		if b.CompOp == EQ && bv <= av {
+			return true
+		}
+		// <=6 -> <6, <5, ...
+		if b.CompOp == LT && bv <= av {
+			return true
+		}
+		// <=6 -> <=6, <=5, ...
+		if b.CompOp == LTE && bv <= av {
+			return true
+		}
+	}
+	return false
 }
 
 // filterOverlap returns true if a does not contain any filters that conflicts with filters of b
