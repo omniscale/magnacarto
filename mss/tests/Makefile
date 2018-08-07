@@ -20,14 +20,14 @@ $(MARGNACARTO_BIN):
 	../../magnacarto -mss $< > $@
 
 %.result.map: %.mss $(MARGNACARTO_BIN)
-	../../magnacarto -mss $< -mapfile > $@
+	../../magnacarto -mss $< -builder mapserver -ms-no-map-block > $@
 
 
-%.cmp.xml: %.result.xml %.expected.xml
-	diff $^
+%.cmp.xml: %.expected.xml %.result.xml
+	diff -wu $^
 
-%.cmp.map: %.result.map %.expected.map
-	diff $^
+%.cmp.map: %.expected.map %.result.map
+	diff -wu $^
 
 refresh-expected: $(EXPECTED_XML) $(EXPECTED_MAP)
 
@@ -35,6 +35,6 @@ refresh-expected: $(EXPECTED_XML) $(EXPECTED_MAP)
 	../../magnacarto -mss $< > $@
 
 %.expected.map: %.mss $(MARGNACARTO_BIN)
-	../../magnacarto -mss $< -mapfile > $@
+	../../magnacarto -mss $< -builder mapserver -ms-no-map-block > $@
 
 # clean:

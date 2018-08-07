@@ -5,7 +5,7 @@
         "file": "data.geojson",
         "srs": "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
         "srid": "4326",
-        "layer": "OGRGeoJSON",
+        "layer": "data",
         "type": "ogr"
       },
       "advanced": {},

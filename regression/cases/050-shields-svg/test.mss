@@ -16,8 +16,8 @@ Map { background-color: white; }
     // shield-min-padding: 50;
     // [id=1] { marker-opacity: .5; }
 
-    [id=2] { shield-spacing: 20; }
-    [id=3] { shield-spacing: 30; }
-    [id=4] { shield-spacing: 40; }
+    [id=2] { shield-repeat-distance: 20; shield-spacing: 20; }
+    [id=3] { shield-repeat-distance: 30; shield-spacing: 30; }
+    [id=4] { shield-repeat-distance: 40; shield-spacing: 40; }
 
 }
