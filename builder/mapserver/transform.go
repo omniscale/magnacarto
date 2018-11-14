@@ -2,6 +2,7 @@ package mapserver
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 )
@@ -32,7 +33,8 @@ func parseTransform(transform string) (transformation, error) {
 		case "scale":
 			tr.scale, _ = strconv.ParseFloat(match[2], 64)
 		default:
-			return tr, fmt.Errorf("unsupported transform function %q in %q", match[1], transform)
+			// TODO proper error handling
+			log.Println(fmt.Errorf("unsupported transform function %q in %q", match[1], transform))
 		}
 	}
 	return tr, nil
