@@ -667,6 +667,8 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 					symOpts.anchorX = (tr.rotateAnchor[0]*m.scaleFactor + width/2) / width
 					symOpts.anchorY = (tr.rotateAnchor[1]*m.scaleFactor + height/2) / height
 				}
+			} else {
+				log.Println("marker-transform requires marker-width and marker-height")
 			}
 		}
 		style.AddNonNil("Size", fmtFloat(size*m.scaleFactor, sizeOk))

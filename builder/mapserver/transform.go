@@ -13,7 +13,7 @@ type transformation struct {
 	rotateAnchor    [2]float64
 }
 
-var svgTransformRe = regexp.MustCompile(`(rotate|scale)\(((-?\d*\.?\d+),? ?(-?\d*\.?\d+)?,? ?(-?\d*\.?\d+)?)\)`)
+var svgTransformRe = regexp.MustCompile(`(\w+)\s*\(((-?\d*\.?\d+),? ?(-?\d*\.?\d+)?,? ?(-?\d*\.?\d+)?)\)`)
 
 func parseTransform(transform string) (transformation, error) {
 	tr := transformation{}
@@ -32,7 +32,7 @@ func parseTransform(transform string) (transformation, error) {
 		case "scale":
 			tr.scale, _ = strconv.ParseFloat(match[2], 64)
 		default:
-			return tr, fmt.Errorf("unsupported transform function %s in %s", match[1], transform)
+			return tr, fmt.Errorf("unsupported transform function %q in %q", match[1], transform)
 		}
 	}
 	return tr, nil
