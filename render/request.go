@@ -9,5 +9,5 @@ type Request struct {
 	EPSGCode    int
 	Format      string
 	ScaleFactor float64
-	BGColor     *color.RGBA
+	BGColor     *color.NRGBA
 }
