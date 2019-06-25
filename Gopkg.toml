@@ -38,8 +38,8 @@
   version = "v2.0.0"
 
 [[constraint]]
-  branch = "master"
   name = "github.com/omniscale/go-mapnik"
+  version = "v1.0.0"
 
 [[constraint]]
   name = "github.com/stretchr/testify"

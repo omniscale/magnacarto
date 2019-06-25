@@ -43,10 +43,10 @@
   version = "v1.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/omniscale/go-mapnik"
   packages = ["."]
-  revision = "710dfcc5e486e5760d0a5c46be909d91968e1ffb"
+  revision = "bfeb8e0a7546e9c096dc986d95b0285af74ccaed"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
@@ -87,6 +87,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d865baa4c468e8e75700f206a724bedcd9eea0d5c5dc2d8e9d69fc0a93b30ea9"
+  inputs-digest = "6becb66681a3ac0fe7767ac7848cb46d7cb55580fe6a525f66049575664b722b"
   solver-name = "gps-cdcl"
   solver-version = 1

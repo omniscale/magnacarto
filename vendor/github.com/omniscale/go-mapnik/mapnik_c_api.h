@@ -20,8 +20,8 @@ const int mapnik_version_major = MAPNIK_MAJOR_VERSION;
 const int mapnik_version_minor = MAPNIK_MINOR_VERSION;
 const int mapnik_version_patch = MAPNIK_PATCH_VERSION;
 
-MAPNIKCAPICALL int mapnik_register_datasources(const char* path);
-MAPNIKCAPICALL int mapnik_register_fonts(const char* path);
+MAPNIKCAPICALL int mapnik_register_datasource(const char* path);
+MAPNIKCAPICALL int mapnik_register_font(const char* path);
 
 const int MAPNIK_NONE = 0;
 const int MAPNIK_DEBUG = 1;

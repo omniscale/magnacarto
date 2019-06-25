@@ -13,7 +13,9 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"unsafe"
 )
 
@@ -27,7 +29,7 @@ var (
 )
 
 func init() {
-	// register default datasources path and fonts path like the python bindings do
+	// Register default datasources path and fonts path like the Python bindings do.
 	if err := RegisterDatasources(pluginPath); err != nil {
 		fmt.Fprintf(os.Stderr, "MAPNIK: %s\n", err)
 	}
@@ -36,30 +38,48 @@ func init() {
 	}
 }
 
-// RegisterDatasources adds path to the Mapnik plugin search path.
+// RegisterDatasources registers all input plugins found in the given path.
 func RegisterDatasources(path string) error {
-	cs := C.CString(path)
-	defer C.free(unsafe.Pointer(cs))
-	if C.mapnik_register_datasources(cs) == 0 {
-		e := C.GoString(C.mapnik_register_last_error())
-		if e != "" {
-			return errors.New("registering datasources: " + e)
+	fileInfos, err := ioutil.ReadDir(path)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range fileInfos {
+		cs := C.CString(filepath.Join(path, file.Name()))
+		defer C.free(unsafe.Pointer(cs))
+		// Register datasources one-by-one to avoid recursive_mutex assertion
+		// errors in register_datasources, triggered at least on MacOS 10.13
+		// with Mapnik 3.0.22
+		if C.mapnik_register_datasource(cs) == 0 {
+			e := C.GoString(C.mapnik_register_last_error())
+			if e != "" {
+				return errors.New("registering datasources: " + e)
+			}
+			return errors.New("error while registering datasources")
 		}
-		return errors.New("error while registering datasources")
 	}
 	return nil
 }
 
-// RegisterDatasources adds path to the Mapnik fonts search path.
+// RegisterDatasources registers all fonts found in the given path.
 func RegisterFonts(path string) error {
-	cs := C.CString(path)
-	defer C.free(unsafe.Pointer(cs))
-	if C.mapnik_register_fonts(cs) == 0 {
-		e := C.GoString(C.mapnik_register_last_error())
-		if e != "" {
-			return errors.New("registering fonts: " + e)
+	fileInfos, err := ioutil.ReadDir(path)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range fileInfos {
+		cs := C.CString(filepath.Join(path, file.Name()))
+		defer C.free(unsafe.Pointer(cs))
+		// Register fonts one-by-one. See comment in RegisterDatasources.
+		if C.mapnik_register_font(cs) == 0 {
+			e := C.GoString(C.mapnik_register_last_error())
+			if e != "" {
+				return errors.New("registering fonts: " + e)
+			}
+			return errors.New("error while registering fonts")
 		}
-		return errors.New("error while registering fonts")
 	}
 	return nil
 }
