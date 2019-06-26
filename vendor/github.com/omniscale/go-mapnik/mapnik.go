@@ -16,6 +16,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"unsafe"
 )
 
@@ -70,11 +71,17 @@ func RegisterFonts(path string) error {
 	}
 
 	for _, file := range fileInfos {
-		cs := C.CString(filepath.Join(path, file.Name()))
+		fullPath := filepath.Join(path, file.Name())
+		if !isFontFile(fullPath) {
+			continue
+		}
+		cs := C.CString(fullPath)
 		defer C.free(unsafe.Pointer(cs))
 		// Register fonts one-by-one. See comment in RegisterDatasources.
 		if C.mapnik_register_font(cs) == 0 {
 			e := C.GoString(C.mapnik_register_last_error())
+			fmt.Fprintln(os.Stderr)
+			fmt.Fprintln(os.Stderr, path, file, e)
 			if e != "" {
 				return errors.New("registering fonts: " + e)
 			}
@@ -82,6 +89,17 @@ func RegisterFonts(path string) error {
 		}
 	}
 	return nil
+}
+
+func isFontFile(path string) bool {
+	ext := strings.ToLower(filepath.Ext(path))
+	return (ext == ".ttf" ||
+		ext == ".otf" ||
+		ext == ".woff" ||
+		ext == ".ttc" ||
+		ext == ".pfa" ||
+		ext == ".pfb" ||
+		ext == ".dfont")
 }
 
 // LogSeverity sets the global log level for Mapnik. Requires a Mapnik build with logging enabled.
