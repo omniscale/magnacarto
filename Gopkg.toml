@@ -23,15 +23,15 @@
 
 [[constraint]]
   name = "github.com/BurntSushi/toml"
-  version = "v0.3.0"
+  version = "v0.3.1"
 
 [[constraint]]
   name = "github.com/gorilla/mux"
-  version = "v1.4.0"
+  version = "v1.7.3"
 
 [[constraint]]
   name = "github.com/gorilla/handlers"
-  version = "v1.2.1"
+  version = "v1.4.0"
 
 [[constraint]]
   name = "github.com/hsluv/hsluv-go"
@@ -46,12 +46,12 @@
   version = "v1.1.4"
 
 [[constraint]]
-  branch = "release-branch.go1.8"
+  branch = "release-branch.go1.12"
   name = "golang.org/x/net"
 
 [[constraint]]
-  branch = "v2"
   name = "gopkg.in/yaml.v2"
+  version = "v2.2.2"
 
 [[constraint]]
   name = "github.com/natefinch/pie"
@@ -59,4 +59,5 @@
 
 [[constraint]]
   name = "gopkg.in/fsnotify.v1"
-  version = "1.4.2"
+  version = "1.4.7"
+  source = "https://github.com/fsnotify/fsnotify.git"

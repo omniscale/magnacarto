@@ -2,91 +2,124 @@
 
 
 [[projects]]
+  digest = "1:e4b30804a381d7603b8a344009987c1ba351c26043501b23b8c7ce21f0b67474"
   name = "github.com/BurntSushi/toml"
   packages = ["."]
-  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
-  version = "v0.3.0"
+  pruneopts = ""
+  revision = "3012a1dbe2e4bd1391d42b32f0577cb7bbc7f005"
+  version = "v0.3.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:2bfd4727529542c58d78c1ef0b92e92c492bb9b43d9f913aac4ff84eb54ce6ac"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
+  pruneopts = ""
   revision = "3fdaf5cea8d23107b993d363e98992fa529dd713"
 
 [[projects]]
-  name = "github.com/gorilla/context"
-  packages = ["."]
-  revision = "215affda49addc4c8ef7e2534915df2c8c35c6cd"
-
-[[projects]]
+  digest = "1:66d63ec7b6035984dced87ad37066e5f4ad277c60234a9d9925537248e983200"
   name = "github.com/gorilla/handlers"
   packages = ["."]
-  revision = "a4043c62cc2329bacda331d33fc908ab11ef0ec3"
-  version = "v1.2.1"
-
-[[projects]]
-  name = "github.com/gorilla/mux"
-  packages = ["."]
-  revision = "bcd8bc72b08df0f70df986b97f95590779502d31"
+  pruneopts = ""
+  revision = "7e0847f9db758cdebd26c149d0ae9d5d0b9c98ce"
   version = "v1.4.0"
 
 [[projects]]
+  digest = "1:883e2fdbdd0e577187bd8106fec775b1176059af267a7f40eba5308955c67d52"
+  name = "github.com/gorilla/mux"
+  packages = ["."]
+  pruneopts = ""
+  revision = "00bdffe0f3c77e27d2cf6f5c70232a2d3e4d9c15"
+  version = "v1.7.3"
+
+[[projects]]
+  digest = "1:09120e9c26ef1f11642518b6e9a83aeec7132436412db78112a1b379290bc38a"
   name = "github.com/hsluv/hsluv-go"
   packages = ["."]
+  pruneopts = ""
   revision = "a29f6990a3be79fefb4470f2a0b9a4d076949577"
   version = "v2.0.0"
 
 [[projects]]
+  digest = "1:84c9929c96824382e9e2ee3ee2a6bac2a39b68a4b4045b8bd8929910faf68542"
   name = "github.com/natefinch/pie"
   packages = ["."]
+  pruneopts = ""
   revision = "9a0d7201400759b777f38c0c2d7b0be4e3e8b5c9"
   version = "v1.0"
 
 [[projects]]
+  digest = "1:756cfefa6dbf2cef978d289647ee6db7ef42a472db8aa1a984466ba14412f324"
   name = "github.com/omniscale/go-mapnik"
   packages = ["."]
+  pruneopts = ""
   revision = "32ee48bb8d0885398830f8de90b53b8c73b2f85d"
   version = "v1.0.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:256484dbbcd271f9ecebc6795b2df8cad4c458dd0f5fd82a8c2fa0c29f233411"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
+  pruneopts = ""
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
 
 [[projects]]
+  digest = "1:3926a4ec9a4ff1a072458451aa2d9b98acd059a45b38f7335d31e06c3d6a0159"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
+  pruneopts = ""
   revision = "69483b4bd14f5845b5a1e55bca19e954e827f1d0"
   version = "v1.1.4"
 
 [[projects]]
-  branch = "release-branch.go1.8"
+  branch = "release-branch.go1.12"
+  digest = "1:1d52dac9bdc355f83ad9916bc657baa7d8735a108ae749da8e8d3513a1b15f28"
   name = "golang.org/x/net"
   packages = ["websocket"]
-  revision = "186fd3fc8194a5e9980a82230d69c1ff7134229f"
+  pruneopts = ""
+  revision = "65e2d4e15006aab9813ff8769e768bbf4bb667a0"
 
 [[projects]]
   branch = "master"
+  digest = "1:522724159654c64eacfb6641984f3bd61ae5e281a8cab59a4593bb3f601531e3"
   name = "golang.org/x/sys"
   packages = ["unix"]
+  pruneopts = ""
   revision = "2d6f6f883a06fc0d5f4b14a81e4c28705ea64c15"
 
 [[projects]]
+  digest = "1:eb53021a8aa3f599d29c7102e65026242bdedce998a54837dc67f14b6a97c5fd"
   name = "gopkg.in/fsnotify.v1"
   packages = ["."]
-  revision = "629574ca2a5df945712d3079857300b5e4da0236"
-  version = "v1.4.2"
+  pruneopts = ""
+  revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
+  source = "https://github.com/fsnotify/fsnotify.git"
+  version = "v1.4.7"
 
 [[projects]]
-  branch = "v2"
+  digest = "1:cedccf16b71e86db87a24f8d4c70b0a855872eb967cb906a66b95de56aefbd0d"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "25c4ec802a7d637f88d584ab26798e94ad14c13b"
+  pruneopts = ""
+  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
+  version = "v2.2.2"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "76527050834f7097897f25e22abb93734933a9b8d4dceb61ac3e856808127169"
+  input-imports = [
+    "github.com/BurntSushi/toml",
+    "github.com/gorilla/handlers",
+    "github.com/gorilla/mux",
+    "github.com/hsluv/hsluv-go",
+    "github.com/natefinch/pie",
+    "github.com/omniscale/go-mapnik",
+    "github.com/stretchr/testify/assert",
+    "golang.org/x/net/websocket",
+    "gopkg.in/fsnotify.v1",
+    "gopkg.in/yaml.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
