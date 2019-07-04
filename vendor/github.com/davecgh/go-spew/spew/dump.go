@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Dave Collins <dave@davec.name>
+ * Copyright (c) 2013-2016 Dave Collins <dave@davec.name>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -35,16 +35,16 @@ var (
 
 	// cCharRE is a regular expression that matches a cgo char.
 	// It is used to detect character arrays to hexdump them.
-	cCharRE = regexp.MustCompile("^.*\\._Ctype_char$")
+	cCharRE = regexp.MustCompile(`^.*\._Ctype_char$`)
 
 	// cUnsignedCharRE is a regular expression that matches a cgo unsigned
 	// char.  It is used to detect unsigned character arrays to hexdump
 	// them.
-	cUnsignedCharRE = regexp.MustCompile("^.*\\._Ctype_unsignedchar$")
+	cUnsignedCharRE = regexp.MustCompile(`^.*\._Ctype_unsignedchar$`)
 
 	// cUint8tCharRE is a regular expression that matches a cgo uint8_t.
 	// It is used to detect uint8_t arrays to hexdump them.
-	cUint8tCharRE = regexp.MustCompile("^.*\\._Ctype_uint8_t$")
+	cUint8tCharRE = regexp.MustCompile(`^.*\._Ctype_uint8_t$`)
 )
 
 // dumpState contains information about the state of a dump operation.
@@ -129,7 +129,7 @@ func (d *dumpState) dumpPtr(v reflect.Value) {
 	d.w.Write(closeParenBytes)
 
 	// Display pointer information.
-	if len(pointerChain) > 0 {
+	if !d.cs.DisablePointerAddresses && len(pointerChain) > 0 {
 		d.w.Write(openParenBytes)
 		for i, addr := range pointerChain {
 			if i > 0 {
@@ -143,10 +143,10 @@ func (d *dumpState) dumpPtr(v reflect.Value) {
 	// Display dereferenced value.
 	d.w.Write(openParenBytes)
 	switch {
-	case nilFound == true:
+	case nilFound:
 		d.w.Write(nilAngleBytes)
 
-	case cycleFound == true:
+	case cycleFound:
 		d.w.Write(circularBytes)
 
 	default:
@@ -181,25 +181,28 @@ func (d *dumpState) dumpSlice(v reflect.Value) {
 		// Try to use existing uint8 slices and fall back to converting
 		// and copying if that fails.
 		case vt.Kind() == reflect.Uint8:
-			// We need an addressable interface to convert the type back
-			// into a byte slice.  However, the reflect package won't give
-			// us an interface on certain things like unexported struct
-			// fields in order to enforce visibility rules.  We use unsafe
-			// to bypass these restrictions since this package does not
+			// We need an addressable interface to convert the type
+			// to a byte slice.  However, the reflect package won't
+			// give us an interface on certain things like
+			// unexported struct fields in order to enforce
+			// visibility rules.  We use unsafe, when available, to
+			// bypass these restrictions since this package does not
 			// mutate the values.
 			vs := v
 			if !vs.CanInterface() || !vs.CanAddr() {
 				vs = unsafeReflectValue(vs)
 			}
-			vs = vs.Slice(0, numEntries)
+			if !UnsafeDisabled {
+				vs = vs.Slice(0, numEntries)
 
-			// Use the existing uint8 slice if it can be type
-			// asserted.
-			iface := vs.Interface()
-			if slice, ok := iface.([]uint8); ok {
-				buf = slice
-				doHexDump = true
-				break
+				// Use the existing uint8 slice if it can be
+				// type asserted.
+				iface := vs.Interface()
+				if slice, ok := iface.([]uint8); ok {
+					buf = slice
+					doHexDump = true
+					break
+				}
 			}
 
 			// The underlying data needs to be converted if it can't
@@ -279,13 +282,13 @@ func (d *dumpState) dump(v reflect.Value) {
 	case reflect.Map, reflect.String:
 		valueLen = v.Len()
 	}
-	if valueLen != 0 || valueCap != 0 {
+	if valueLen != 0 || !d.cs.DisableCapacities && valueCap != 0 {
 		d.w.Write(openParenBytes)
 		if valueLen != 0 {
 			d.w.Write(lenEqualsBytes)
 			printInt(d.w, int64(valueLen), 10)
 		}
-		if valueCap != 0 {
+		if !d.cs.DisableCapacities && valueCap != 0 {
 			if valueLen != 0 {
 				d.w.Write(spaceBytes)
 			}
@@ -367,6 +370,12 @@ func (d *dumpState) dump(v reflect.Value) {
 		// been handled above.
 
 	case reflect.Map:
+		// nil maps should be indicated as different than empty maps
+		if v.IsNil() {
+			d.w.Write(nilAngleBytes)
+			break
+		}
+
 		d.w.Write(openBraceNewlineBytes)
 		d.depth++
 		if (d.cs.MaxDepth != 0) && (d.depth > d.cs.MaxDepth) {
@@ -376,7 +385,7 @@ func (d *dumpState) dump(v reflect.Value) {
 			numEntries := v.Len()
 			keys := v.MapKeys()
 			if d.cs.SortKeys {
-				sortValues(keys)
+				sortValues(keys, d.cs)
 			}
 			for i, key := range keys {
 				d.dump(d.unpackValue(key))

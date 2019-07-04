@@ -16,14 +16,12 @@ Features:
 Installation
 ------------
 
-This package can be installed with the go get command. The following steps need to be performed in order. `go generate` will setup your environment and needs to be run prior to installing the package:
-
-    go get -d github.com/omniscale/go-mapnik
-    go generate github.com/omniscale/go-mapnik
-    go install github.com/omniscale/go-mapnik
-
-This package requires [Mapnik](http://mapnik.org/) (`libmapnik-dev` on Ubuntu/Debian, `mapnik --with-postgresql` in Homebrew).
+This package requires [Mapnik](http://mapnik.org/) (`libmapnik-dev` on Ubuntu/Debian, `mapnik` in Homebrew).
 Make sure `mapnik-config` is in your `PATH`.
+
+You need to set the `CGO_LDFLAGS` and `CGO_CXXFLAGS` environment variables for successful compilation and linking with Mapnik.
+Refer to the Makefile how `mapnik-config` can be used to extract the required `CGO_LDFLAGS` and `CGO_CXXFLAGS` values. Use `-ldflags` to overwrite the default location of the input plugins and default fonts.
+
 
 Documentation
 -------------

@@ -1,8 +1,6 @@
 // Package mapnik renders beautiful maps with Mapnik.
 package mapnik
 
-//go:generate bash ./configure.bash
-
 // #include <stdlib.h>
 // #include "mapnik_c_api.h"
 import "C"
@@ -27,6 +25,13 @@ var (
 	Debug = LogLevel(C.MAPNIK_DEBUG)
 	Warn  = LogLevel(C.MAPNIK_WARN)
 	Error = LogLevel(C.MAPNIK_ERROR)
+)
+
+const (
+	// You can overwrite defaults at compile time, eg:
+	// go build -ldflags "-X github.com/omniscale/go-mapnik.fontPath $(mapnik-config -fonts)"
+	fontPath   = "/usr/local/lib/mapnik/fonts"
+	pluginPath = "/usr/local/lib/mapnik/input"
 )
 
 func init() {

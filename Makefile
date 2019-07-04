@@ -1,9 +1,7 @@
 SHELL:=/bin/bash
 .PHONY: test all build install cmds clean dist test test-full
 
-GO_FILES:=$(shell find . -name \*.go)
-GOMAPNIK_CONFIG:=vendor/github.com/omniscale/go-mapnik/mapnik_config.go
-DEPS:=$(GO_FILES) $(GOMAPNIK_CONFIG)
+DEPS:=$(shell find . -name \*.go)
 
 BUILD_DATE=$(shell date +%Y%m%d)
 BUILD_REV=$(shell git rev-parse --short HEAD)
@@ -17,6 +15,11 @@ else
 endif
 
 VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.Version=$(BUILD_VERSION)
+MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik.fontPath=$(shell mapnik-config --fonts)
+	-X github.com/omniscale/go-mapnik.pluginPath=$(shell mapnik-config --plugins)
+
+MAPNIK_CGO_LDFLAGS = $(shell mapnik-config --libs) -lboost_system
+MAPNIK_CGO_CXXFLAGS = $(shell mapnik-config --cxxflags --includes --dep-includes | tr '\n' ' ')
 
 GO:=$(if $(shell go version |grep 'go1.5'),GO15VENDOREXPERIMENT=1,) go
 
@@ -27,9 +30,6 @@ all: build test
 
 CMDS=magnacarto magnaserv magnacarto-mapnik
 
-$(GOMAPNIK_CONFIG):
-	$(GO) generate ./vendor/github.com/omniscale/go-mapnik
-
 build: $(DEPS)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" -v ./...
 
@@ -39,12 +39,16 @@ magnacarto: $(DEPS)
 magnaserv: $(DEPS)
 	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnaserv
 
+magnacarto-mapnik: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
+magnacarto-mapnik: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 magnacarto-mapnik: $(DEPS)
-	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
+	$(GO) build -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
+install: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
+install: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 install: $(DEPS)
 	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./cmd/...
-	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
+	$(GO) install -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
 cmds: build $(CMDS)
 
