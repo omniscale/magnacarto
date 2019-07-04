@@ -7,8 +7,16 @@ DEPS:=$(GO_FILES) $(GOMAPNIK_CONFIG)
 
 BUILD_DATE=$(shell date +%Y%m%d)
 BUILD_REV=$(shell git rev-parse --short HEAD)
-BUILD_VERSION=dev-$(BUILD_DATE)-$(BUILD_REV)
-VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.buildVersion=$(BUILD_VERSION)
+BUILD_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+TAG=$(shell git name-rev --tags --name-only $(BUILD_REV))
+ifeq ($(TAG),undefined)
+	BUILD_VERSION=$(BUILD_BRANCH)-$(BUILD_DATE)-$(BUILD_REV)
+else
+	# use TAG but strip v of v1.2.3
+	BUILD_VERSION=$(TAG:v%=%)
+endif
+
+VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.Version=$(BUILD_VERSION)
 
 GO:=$(if $(shell go version |grep 'go1.5'),GO15VENDOREXPERIMENT=1,) go
 
@@ -43,8 +51,7 @@ cmds: build $(CMDS)
 clean:
 	rm -f $(CMDS)
 
-VERSION = $(shell ./$(firstword $(CMDS)) -version)
-BIN_VERSION = $(VERSION)$(DISTRIBUTION)-$(uname_S)-$(uname_M)
+BIN_VERSION = $(BUILD_VERSION)$(DISTRIBUTION)-$(uname_S)-$(uname_M)
 
 dist: cmds
 	mkdir -p dist/
