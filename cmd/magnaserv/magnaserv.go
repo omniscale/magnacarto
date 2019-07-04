@@ -358,7 +358,8 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 	}
 
 	closeNotify := make(chan struct{})
-	updatec, errc := s.builderCache.Notify(maker, mml, mss, closeNotify)
+
+	updatec, errc := notifier(s.builderCache.StyleFile, maker, mml, mss, closeNotify)
 
 	// Read and discard anything from client. Signal close on any error.
 	closeWs := make(chan struct{})
