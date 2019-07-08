@@ -15,13 +15,11 @@ else
 endif
 
 VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.Version=$(BUILD_VERSION)
-MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik.fontPath=$(shell mapnik-config --fonts)
-	-X github.com/omniscale/go-mapnik.pluginPath=$(shell mapnik-config --plugins)
+MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik.fontPath=$(shell mapnik-config --fonts) \
+	-X github.com/omniscale/go-mapnik.pluginPath=$(shell mapnik-config --input-plugins)
 
 MAPNIK_CGO_LDFLAGS = $(shell mapnik-config --libs) -lboost_system
 MAPNIK_CGO_CXXFLAGS = $(shell mapnik-config --cxxflags --includes --dep-includes | tr '\n' ' ')
-
-GO:=$(if $(shell go version |grep 'go1.5'),GO15VENDOREXPERIMENT=1,) go
 
 uname_S = $(shell sh -c 'uname -s 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
 uname_M = $(shell sh -c 'uname -m 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
@@ -30,25 +28,24 @@ all: build test
 
 CMDS=magnacarto magnaserv magnacarto-mapnik
 
-build: $(DEPS)
-	$(GO) build -ldflags "$(VERSION_LDFLAGS)" -v ./...
+build: $(CMDS)
 
 magnacarto: $(DEPS)
-	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnacarto
+	go build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnacarto
 
 magnaserv: $(DEPS)
-	$(GO) build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnaserv
+	go build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnaserv
 
 magnacarto-mapnik: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
 magnacarto-mapnik: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 magnacarto-mapnik: $(DEPS)
-	$(GO) build -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
+	go build -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
 install: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
 install: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 install: $(DEPS)
-	$(GO) install -ldflags "$(VERSION_LDFLAGS)" ./cmd/...
-	$(GO) install -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
+	go install -ldflags "$(VERSION_LDFLAGS)" ./cmd/...
+	go install -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
 cmds: build $(CMDS)
 
@@ -64,33 +61,21 @@ dist: cmds
 	cp magnacarto-mapnik dist/magnacarto-mapnik-$(BIN_VERSION)
 
 # exclude render and regression packages in non-full tests
-SHORT_TEST_PACKAGES=$(shell $(GO) list ./... | grep -Ev '/render|/regression|/vendor')
-FULL_TEST_PACKAGES=$(shell $(GO) list ./... | grep -Ev '/vendor')
+SHORT_TEST_PACKAGES=$(shell go list ./... | grep -Ev '/render|/regression|/vendor')
+FULL_TEST_PACKAGES=$(shell go list ./... | grep -Ev '/vendor')
 
 test:
-	$(GO) test -i $(SHORT_TEST_PACKAGES)
-	$(GO) test -test.short -parallel 4 $(SHORT_TEST_PACKAGES)
+	go test -i $(SHORT_TEST_PACKAGES)
+	go test -test.short -parallel 4 $(SHORT_TEST_PACKAGES)
 
+test-full: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
+test-full: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 test-full:
-	$(GO) test -i $(FULL_TEST_PACKAGES)
-	export PATH=$(shell pwd):$$PATH; $(GO) test -parallel 4 $(FULL_TEST_PACKAGES)
-
-comma:= ,
-empty:=
-space:= $(empty) $(empty)
-COVER_IGNORE:='/vendor|/regression|/render|/cmd'
-COVER_PACKAGES:= $(shell $(GO) list ./... | grep -Ev $(COVER_IGNORE))
-COVER_PACKAGES_LIST:=$(subst $(space),$(comma),$(COVER_PACKAGES))
+	go test -i $(FULL_TEST_PACKAGES)
+	export PATH=$(shell pwd):$$PATH; go test -parallel 4 $(FULL_TEST_PACKAGES)
 
 test-coverage:
-	mkdir -p .coverprofile
-	rm -f .coverprofile/*
-	$(GO) list -f '{{if gt (len .TestGoFiles) 0}}"$(GO) test -covermode count -coverprofile ./.coverprofile/{{.Name}}-$$$$.coverprofile -coverpkg $(COVER_PACKAGES_LIST) {{.ImportPath}}"{{end}}' ./... \
-		| grep -Ev $(COVER_IGNORE) \
-		| xargs -n 1 bash -c
-	$(GOPATH)/bin/gocovmerge .coverprofile/*.coverprofile > overalls.coverprofile
-	rm -rf .coverprofile
-
+	go test -coverprofile magnacarto.coverprofile -coverpkg ./... -covermode count ./...
 test-coverage-html: test-coverage
-	$(GO) tool cover -html overalls.coverprofile
+	go tool cover -html magnacarto.coverprofile
 
