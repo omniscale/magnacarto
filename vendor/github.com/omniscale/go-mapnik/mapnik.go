@@ -27,7 +27,7 @@ var (
 	Error = LogLevel(C.MAPNIK_ERROR)
 )
 
-const (
+var (
 	// You can overwrite defaults at compile time, eg:
 	// go build -ldflags "-X github.com/omniscale/go-mapnik.fontPath $(mapnik-config -fonts)"
 	fontPath   = "/usr/local/lib/mapnik/fonts"
