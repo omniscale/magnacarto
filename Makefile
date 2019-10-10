@@ -15,8 +15,8 @@ else
 endif
 
 VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.Version=$(BUILD_VERSION)
-MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik.fontPath=$(shell mapnik-config --fonts) \
-	-X github.com/omniscale/go-mapnik.pluginPath=$(shell mapnik-config --input-plugins)
+MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik/v2.fontPath=$(shell mapnik-config --fonts) \
+	-X github.com/omniscale/go-mapnik/v2.pluginPath=$(shell mapnik-config --input-plugins)
 
 MAPNIK_CGO_LDFLAGS = $(shell mapnik-config --libs) -lboost_system
 MAPNIK_CGO_CXXFLAGS = $(shell mapnik-config --cxxflags --includes --dep-includes | tr '\n' ' ')

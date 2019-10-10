@@ -10,7 +10,7 @@ import (
 
 	"path/filepath"
 
-	"github.com/omniscale/go-mapnik"
+	"github.com/omniscale/go-mapnik/v2"
 	"github.com/omniscale/magnacarto/render"
 )
 

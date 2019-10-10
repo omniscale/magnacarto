@@ -13,8 +13,8 @@ github.com/hsluv/hsluv-go v2.0.0+incompatible h1:M/USwFTC5ZHhZ0LPbPkpDu6AWMESfYK
 github.com/hsluv/hsluv-go v2.0.0+incompatible/go.mod h1:ibzdSDmJ9F0U68asF8lD6rnwkarCkAPqZ5keGEha93k=
 github.com/natefinch/pie v0.0.0-20170715172608-9a0d72014007 h1:Ohgj9L0EYOgXxkDp+bczlMBiulwmqYzQpvQNUdtt3oc=
 github.com/natefinch/pie v0.0.0-20170715172608-9a0d72014007/go.mod h1:wKCOWMb6iNlvKiOToY2cNuaovSXvIiv1zDi9QDR7aGQ=
-github.com/omniscale/go-mapnik v1.1.1 h1:ufNQvCFfIyazNr0NsRVzPj0kVTn493x/jpRBMektbdQ=
-github.com/omniscale/go-mapnik v1.1.1/go.mod h1:FEKK4SOs7ynF29tWDrfGJe3Wu6jFiw8BoCWBhZXUmcY=
+github.com/omniscale/go-mapnik/v2 v2.0.0 h1:BqvuB0iVFdKZFrRV8WqaM2sTvVe1QUmQbBtwavnbNEI=
+github.com/omniscale/go-mapnik/v2 v2.0.0/go.mod h1:SIhG2O5AhbSSklcaQYYYnQHGlre1yNYExg7gLIQ7+Jg=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
