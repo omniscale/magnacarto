@@ -2,7 +2,7 @@ language: go
 go:
  - 1.8
  - 1.11
- - 1.12
+ - 1.13
  - tip
 
 matrix:
@@ -10,9 +10,9 @@ matrix:
   - go: tip
 
 install:
- - if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then go get github.com/mattn/goveralls; fi
+ - if [[ $TRAVIS_GO_VERSION == 1.13* ]]; then go get github.com/mattn/goveralls; fi
 
 script:
  - make test
  # only run test-coverage for one go version
- - if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then make test-coverage; $HOME/gopath/bin/goveralls -coverprofile=magnacarto.coverprofile -service=travis-ci; fi
+ - if [[ $TRAVIS_GO_VERSION == 1.13* ]]; then make test-coverage; $HOME/gopath/bin/goveralls -coverprofile=magnacarto.coverprofile -service=travis-ci; fi
