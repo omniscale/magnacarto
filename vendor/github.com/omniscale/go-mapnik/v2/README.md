@@ -4,7 +4,7 @@ go-mapnik
 Description
 -----------
 
-Small wrapper for the Mapnik API to render beautiful maps from Go.
+Small wrapper for the Mapnik 3 API to render beautiful maps from Go.
 
 Features:
 

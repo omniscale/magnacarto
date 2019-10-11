@@ -29,7 +29,7 @@ var (
 
 var (
 	// You can overwrite defaults at compile time, eg:
-	// go build -ldflags "-X github.com/omniscale/go-mapnik.fontPath $(mapnik-config -fonts)"
+	// go build -ldflags "-X github.com/omniscale/go-mapnik/v2.fontPath $(mapnik-config -fonts)"
 	fontPath   = "/usr/local/lib/mapnik/fonts"
 	pluginPath = "/usr/local/lib/mapnik/input"
 )
@@ -85,8 +85,6 @@ func RegisterFonts(path string) error {
 		// Register fonts one-by-one. See comment in RegisterDatasources.
 		if C.mapnik_register_font(cs) == 0 {
 			e := C.GoString(C.mapnik_register_last_error())
-			fmt.Fprintln(os.Stderr)
-			fmt.Fprintln(os.Stderr, path, file, e)
 			if e != "" {
 				return errors.New("registering fonts: " + e)
 			}
@@ -161,12 +159,19 @@ func (m *Map) lastError() error {
 }
 
 // Load reads in a Mapnik map XML.
+//
+// Note: Since Mapnik 3 all layers with status="off" are not loaded and cannot
+// be activated by a custom LayerSelector. As a workaround, all layers with names
+// starting with '__OFF__' are disabled on load and the '__OFF__' prefix is removed
+// from the layer name.
 func (m *Map) Load(stylesheet string) error {
 	cs := C.CString(stylesheet)
 	defer C.free(unsafe.Pointer(cs))
 	if C.mapnik_map_load(m.m, cs) != 0 {
 		return m.lastError()
 	}
+
+	C.mapnik_apply_layer_off_hack(m.m)
 	return nil
 }
 

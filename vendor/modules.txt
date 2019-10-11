@@ -10,8 +10,8 @@ github.com/gorilla/mux
 github.com/hsluv/hsluv-go
 # github.com/natefinch/pie v0.0.0-20170715172608-9a0d72014007
 github.com/natefinch/pie
-# github.com/omniscale/go-mapnik v1.1.1
-github.com/omniscale/go-mapnik
+# github.com/omniscale/go-mapnik/v2 v2.0.0
+github.com/omniscale/go-mapnik/v2
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v1.3.0
