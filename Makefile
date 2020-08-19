@@ -18,7 +18,7 @@ VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.Version=$(BUILD_VERSION)
 MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik/v2.fontPath=$(shell mapnik-config --fonts) \
 	-X github.com/omniscale/go-mapnik/v2.pluginPath=$(shell mapnik-config --input-plugins)
 
-MAPNIK_CGO_LDFLAGS = $(shell mapnik-config --libs) -lboost_system
+MAPNIK_CGO_LDFLAGS = $(shell mapnik-config --libs)
 MAPNIK_CGO_CXXFLAGS = $(shell mapnik-config --cxxflags --includes --dep-includes | tr '\n' ' ')
 
 uname_S = $(shell sh -c 'uname -s 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
