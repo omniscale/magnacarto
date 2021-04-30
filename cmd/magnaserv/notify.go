@@ -56,6 +56,16 @@ func notifier(buildStyle buildStyleFunc, mm builder.MapMaker, mml string, mss []
 		for {
 			select {
 			case evt := <-watcher.Events:
+				// The style is generated on demand for each map request with
+				// the selected mss files. We still buile the style here with
+				// all mss files to be able to pass any syntax errors back to
+				// the client.
+				if evt.Op == fsnotify.Rename {
+					// Editors like Vim make two renames and the file is not
+					// available inbetween. Delay, to avoid file not found
+					// errors.
+					time.Sleep(100 * time.Millisecond)
+				}
 				style, err := buildStyle(mm, mml, mss)
 				if evt.Name == mml && len(mss) == 0 {
 					// update mms files to watch if mml changed and mss files were not set
