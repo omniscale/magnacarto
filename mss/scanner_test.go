@@ -20,41 +20,47 @@ func assertTokens(t *testing.T, scanner *scanner, tokens []tokVal) {
 }
 
 func TestScanner(t *testing.T) {
-	var scanner *scanner
-	scanner = newScanner(`@foo: 1 + 2`)
-	assertTokens(t, scanner, []tokVal{
-		{tokenAtKeyword, "@foo"},
-		{tokenColon, ":"},
-		{tokenS, " "},
-		{tokenNumber, "1"},
-		{tokenS, " "},
-		{tokenPlus, "+"},
-		{tokenS, " "},
-		{tokenNumber, "2"},
-	})
+	for _, tt := range []struct {
+		text   string
+		tokens []tokVal
+	}{
+		{
+			text: `@foo: 1 + 2`,
+			tokens: []tokVal{
+				{tokenAtKeyword, "@foo"},
+				{tokenColon, ":"},
+				{tokenS, " "},
+				{tokenNumber, "1"},
+				{tokenS, " "},
+				{tokenPlus, "+"},
+				{tokenS, " "},
+				{tokenNumber, "2"},
+			},
+		},
+		{
+			text: `#bar::foo[type='foo'] {}`,
+			tokens: []tokVal{
+				{tokenHash, "#bar"},
+				{tokenAttachment, "::foo"},
+				{tokenLBracket, "["},
+				{tokenIdent, "type"},
+				{tokenComp, "="},
+				{tokenString, "'foo'"},
+				{tokenRBracket, "]"},
+				{tokenS, " "},
+				{tokenLBrace, "{"},
+				{tokenRBrace, "}"},
+			},
+		},
+		{text: `//comment`, tokens: []tokVal{{tokenComment, "//comment"}}},
+		{text: `// comment`, tokens: []tokVal{{tokenComment, "// comment"}}},
+		{text: "/* comment\n comment */", tokens: []tokVal{{tokenComment, "/* comment\n comment */"}}},
+	} {
+		tt := tt
+		t.Run("", func(t *testing.T) {
+			scanner := newScanner(tt.text)
+			assertTokens(t, scanner, tt.tokens)
+		})
 
-	scanner = newScanner(`#bar::foo[type='foo'] {}`)
-	assertTokens(t, scanner, []tokVal{
-		{tokenHash, "#bar"},
-		{tokenAttachment, "::foo"},
-		{tokenLBracket, "["},
-		{tokenIdent, "type"},
-		{tokenComp, "="},
-		{tokenString, "'foo'"},
-		{tokenRBracket, "]"},
-		{tokenS, " "},
-		{tokenLBrace, "{"},
-		{tokenRBrace, "}"},
-	})
-
-	scanner = newScanner(`//comment`)
-	assertTokens(t, scanner, []tokVal{
-		{tokenComment, "//comment"},
-	})
-
-	scanner = newScanner(`/* comment */`)
-	assertTokens(t, scanner, []tokVal{
-		{tokenComment, "/* comment */"},
-	})
-
+	}
 }
