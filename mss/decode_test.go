@@ -230,6 +230,10 @@ func TestParserErrors(t *testing.T) {
 		{`[foo="bar"]{}`, ""},
 		{`[foo=null]{}`, ""},
 		{`[foo=bar]{}`, "unexpected value in filter 'bar'"},
+		{`[foo % 2 != 1]{}`, ""},
+		{`[foo % 2 =~ 1]{}`, "expected simple comparsion, found =~"},
+		{`[foo % 2.0 = 1]{}`, "expected integer for modulo, found NUMBER"},
+		{`[foo % 2 = 0.0]{}`, "expected integer for modulo comparsion, found NUMBER"},
 
 		// instances
 		{`#foo{ a/line-width: 1}`, ""},
@@ -253,6 +257,37 @@ func TestParserErrors(t *testing.T) {
 		} else {
 			assert.Contains(t, err.Error(), tt.msg)
 		}
+	}
+}
+
+func TestParserFilter(t *testing.T) {
+	tests := []struct {
+		expr   string
+		filter Filter
+	}{
+		{`#foo[bar=3] { line-width: 1;}`, Filter{Field: "bar", CompOp: EQ, Value: 3.0}},
+		{`#foo[bar >= 3] { line-width: 1;}`, Filter{Field: "bar", CompOp: GTE, Value: 3.0}},
+		{`#foo[bar % 2 = 1] { line-width: 1;}`, Filter{Field: "bar", CompOp: MODULO, Value: ModuloComparsion{Div: 2, CompOp: EQ, Value: 1}}},
+		{`#foo[bar % 8 >=1] { line-width: 1;}`, Filter{Field: "bar", CompOp: MODULO, Value: ModuloComparsion{Div: 8, CompOp: GTE, Value: 1}}},
+	}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			d, err := decodeString(tt.expr)
+			t.Log(d.mss)
+			if err != nil {
+				t.Fatal("parsing filter: ", err)
+			}
+			mss := d.MSS()
+			t.Log(mss.Layers())
+			rules := mss.LayerZoomRules("foo", AllZoom)
+			fmt.Println(rules)
+			fmt.Println(len(rules))
+			if len(rules) != 1 {
+				t.Fatalf("expected one rule: %v", rules)
+			}
+			assert.Equal(t, tt.filter, rules[0].Filters[0])
+		})
 	}
 }
 

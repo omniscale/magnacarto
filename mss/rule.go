@@ -19,6 +19,10 @@ type Selector struct {
 	Filters    []Filter
 }
 
+// Filter contains a single condition. A style is only applied if the Field
+// compares to the Value. Value can be a number or string for all comparsions
+// with one exception. Filter with modulo comparsion will have ModuloComparsion
+// as a value, to store the division the comparsion and the value.
 type Filter struct {
 	Field  string
 	CompOp CompOp
@@ -27,6 +31,18 @@ type Filter struct {
 
 func (f Filter) String() string {
 	return fmt.Sprintf("%s %s %v", f.Field, f.CompOp, f.Value)
+}
+
+// ModuloComparsion stores the divider and the actual comparsion for a modulo
+// filter.
+type ModuloComparsion struct {
+	Div    int
+	CompOp CompOp
+	Value  int
+}
+
+func (f ModuloComparsion) String() string {
+	return fmt.Sprintf("%d %s %d", f.Div, f.CompOp, f.Value)
 }
 
 type byField []Filter

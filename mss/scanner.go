@@ -93,6 +93,7 @@ const (
 	tokenMinus
 	tokenMultiply
 	tokenDivide
+	tokenModulo
 	tokenComp
 	tokenNumber
 	tokenPercentage
@@ -135,6 +136,7 @@ var tokenNames = map[tokenType]string{
 	tokenMinus:          "MINUS",
 	tokenMultiply:       "MULTIPLY",
 	tokenDivide:         "DIVIDE",
+	tokenModulo:         "MODULO",
 	tokenComp:           "COMP",
 	tokenNumber:         "NUMBER",
 	tokenPercentage:     "PERCENTAGE",
@@ -315,8 +317,10 @@ func (s *scanner) Next() *token {
 			return s.emitSimple(tokenAttachment, match)
 		}
 		return s.emitSimple(tokenColon, ":")
-	case '%', '&':
-		// More common chars.
+	case '%':
+		return s.emitSimple(tokenModulo, string(input[0]))
+	// More common chars.
+	case '&':
 		return s.emitSimple(tokenChar, string(input[0]))
 	case ',':
 		return s.emitSimple(tokenComma, string(input[0]))

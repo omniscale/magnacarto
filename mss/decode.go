@@ -400,21 +400,49 @@ func (d *Decoder) filter() {
 	}
 
 	compOp := d.comp()
-	tok = d.next()
 	var value interface{}
-	switch tok.t {
-	case tokenString:
-		value = tok.value[1 : len(tok.value)-1]
-	case tokenNumber:
-		value, _ = strconv.ParseFloat(tok.value, 64)
-	case tokenIdent:
-		if tok.value == "null" {
-			value = nil
-		} else {
+	if compOp == MODULO {
+		// Modulo comparsions expect the divider, a comparsion and a value, eg: x % 2 = 1
+		// These extra values are stored in the filter value inside a ModuloComparsion struct.
+		tok = d.next()
+		if tok.t != tokenNumber {
+			d.error(d.pos(tok), "expected %v found %v", tokenNumber, tok)
+		}
+		div, err := strconv.ParseInt(tok.value, 10, 64)
+		if err != nil {
+			d.error(d.pos(tok), "expected integer for modulo, found %v", tok)
+		}
+
+		modCompOp := d.comp()
+		if modCompOp > NEQ {
+			d.error(d.pos(tok), "expected simple comparsion, found %v", modCompOp)
+		}
+		tok = d.next()
+		if tok.t != tokenNumber {
+			d.error(d.pos(tok), "expected %v found %v", tokenNumber, tok)
+		}
+		compValue, err := strconv.ParseInt(tok.value, 10, 64)
+		if err != nil {
+			d.error(d.pos(tok), "expected integer for modulo comparsion, found %v", tok)
+		}
+		value = ModuloComparsion{Div: int(div), CompOp: modCompOp, Value: int(compValue)}
+	} else {
+		// All other comparsions expect a single value.
+		tok = d.next()
+		switch tok.t {
+		case tokenString:
+			value = tok.value[1 : len(tok.value)-1]
+		case tokenNumber:
+			value, _ = strconv.ParseFloat(tok.value, 64)
+		case tokenIdent:
+			if tok.value == "null" {
+				value = nil
+			} else {
+				d.error(d.pos(tok), "unexpected value in filter '%s'", tok.value)
+			}
+		default:
 			d.error(d.pos(tok), "unexpected value in filter '%s'", tok.value)
 		}
-	default:
-		d.error(d.pos(tok), "unexpected value in filter '%s'", tok.value)
 	}
 	d.expect(tokenRBracket)
 	d.mss.addFilter(field, compOp, value)
@@ -424,7 +452,7 @@ func (d *Decoder) filter() {
 //   = or >=
 func (d *Decoder) comp() CompOp {
 	tok := d.next()
-	if tok.t != tokenComp {
+	if tok.t != tokenComp && tok.t != tokenModulo {
 		d.error(d.pos(tok), "expected comparsion, got '%s'", tok.value)
 	}
 	compOp, err := parseCompOp(tok.value)

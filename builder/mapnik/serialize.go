@@ -771,6 +771,8 @@ func fmtFilters(filters []mss.Filter) string {
 			value = `'` + v + `'`
 		case float64:
 			value = string(*fmtFloat(v, true))
+		case mss.ModuloComparsion:
+			value = fmt.Sprintf("%d %s %d", v.Div, v.CompOp, v.Value)
 		default:
 			log.Printf("unknown type of filter value: %s", v)
 			value = ""
@@ -780,10 +782,10 @@ func fmtFilters(filters []mss.Filter) string {
 			// strip quotes from field name
 			field = field[1 : len(field)-1]
 		}
-		if f.CompOp != mss.REGEX {
-			parts = append(parts, "(["+field+"] "+f.CompOp.String()+" "+value+")")
-		} else {
+		if f.CompOp == mss.REGEX {
 			parts = append(parts, "(["+field+"].match("+value+"))")
+		} else {
+			parts = append(parts, "(["+field+"] "+f.CompOp.String()+" "+value+")")
 		}
 	}
 

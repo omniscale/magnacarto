@@ -25,3 +25,7 @@
         line-color: #f00;
     }
 }
+
+#class_4[id % 10 = 0] {
+    line-width: 2;
+}

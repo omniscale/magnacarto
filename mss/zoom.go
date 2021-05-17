@@ -29,6 +29,7 @@ const (
 	EQ
 	NEQ
 	REGEX
+	MODULO
 )
 
 func (c CompOp) String() string {
@@ -47,6 +48,8 @@ func (c CompOp) String() string {
 		return "!="
 	case REGEX:
 		return "=~"
+	case MODULO:
+		return "%"
 	default:
 		return "?"
 	}
@@ -68,6 +71,8 @@ func parseCompOp(comp string) (CompOp, error) {
 		return LT, nil
 	case "!=":
 		return NEQ, nil
+	case "%":
+		return MODULO, nil
 	default:
 		return Unknown, fmt.Errorf("unknown comparsion '%s'", comp)
 	}
