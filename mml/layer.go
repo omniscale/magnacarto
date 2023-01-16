@@ -22,4 +22,5 @@ type Layer struct {
 	PostLabelCache  bool
 	CacheFeatures   bool
 	ScaleFactor     float64
+	Properties      map[string]interface{}
 }

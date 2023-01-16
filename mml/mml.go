@@ -61,6 +61,7 @@ func newLayer(l auxLayer) (*Layer, error) {
 		GroupBy:         groupBy,
 		ClearLabelCache: clearLabelCache == "on",
 		CacheFeatures:   cacheFeatures == "on",
+		Properties:      l.Properties,
 	}, nil
 }
 
