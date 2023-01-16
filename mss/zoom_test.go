@@ -11,7 +11,7 @@ import (
 
 func checkZoomIncludes(t *testing.T, zoom ZoomRange, includes []int) {
 	for _, l := range includes {
-		assert.True(t, zoom.validFor(l), fmt.Sprintf("%d in %v", l, zoom))
+		assert.True(t, zoom.ValidFor(l), fmt.Sprintf("%d in %v", l, zoom))
 	}
 excludeCheck:
 	for l := 0; l < 30; l++ {
@@ -20,13 +20,13 @@ excludeCheck:
 				continue excludeCheck
 			}
 		}
-		assert.False(t, zoom.validFor(l))
+		assert.False(t, zoom.ValidFor(l))
 	}
 }
 
 func checkZoomExcludes(t *testing.T, zoom ZoomRange, excludes []int) {
 	for _, l := range excludes {
-		assert.False(t, zoom.validFor(l))
+		assert.False(t, zoom.ValidFor(l))
 	}
 includeCheck:
 	for l := 0; l < 30; l++ {
@@ -35,7 +35,7 @@ includeCheck:
 				continue includeCheck
 			}
 		}
-		assert.True(t, zoom.validFor(l))
+		assert.True(t, zoom.ValidFor(l))
 	}
 }
 
@@ -58,54 +58,54 @@ func TestZoomRange(t *testing.T) {
 	var z ZoomRange
 	z = ZoomRange(math.MaxInt32)
 	z = z.add(EQ, 5)
-	assert.False(t, z.validFor(4))
-	assert.True(t, z.validFor(5))
-	assert.False(t, z.validFor(6))
+	assert.False(t, z.ValidFor(4))
+	assert.True(t, z.ValidFor(5))
+	assert.False(t, z.ValidFor(6))
 	assert.Equal(t, 1, z.Levels())
 	assert.Equal(t, 5, z.First())
 	assert.Equal(t, 5, z.Last())
 
 	z = ZoomRange(math.MaxInt32)
 	z = z.add(NEQ, 5)
-	assert.True(t, z.validFor(4))
-	assert.False(t, z.validFor(5))
-	assert.True(t, z.validFor(6))
+	assert.True(t, z.ValidFor(4))
+	assert.False(t, z.ValidFor(5))
+	assert.True(t, z.ValidFor(6))
 	assert.Equal(t, 30, z.Levels())
 	assert.Equal(t, 0, z.First())
 	assert.Equal(t, 30, z.Last())
 
 	z = ZoomRange(math.MaxInt32)
 	z = z.add(LT, 5)
-	assert.True(t, z.validFor(4))
-	assert.False(t, z.validFor(5))
-	assert.False(t, z.validFor(6))
+	assert.True(t, z.ValidFor(4))
+	assert.False(t, z.ValidFor(5))
+	assert.False(t, z.ValidFor(6))
 	assert.Equal(t, 5, z.Levels())
 	assert.Equal(t, 0, z.First())
 	assert.Equal(t, 4, z.Last())
 
 	z = ZoomRange(math.MaxInt32)
 	z = z.add(LTE, 5)
-	assert.True(t, z.validFor(4))
-	assert.True(t, z.validFor(5))
-	assert.False(t, z.validFor(6))
+	assert.True(t, z.ValidFor(4))
+	assert.True(t, z.ValidFor(5))
+	assert.False(t, z.ValidFor(6))
 	assert.Equal(t, 6, z.Levels())
 	assert.Equal(t, 0, z.First())
 	assert.Equal(t, 5, z.Last())
 
 	z = ZoomRange(math.MaxInt32)
 	z = z.add(GT, 5)
-	assert.False(t, z.validFor(4))
-	assert.False(t, z.validFor(5))
-	assert.True(t, z.validFor(6))
+	assert.False(t, z.ValidFor(4))
+	assert.False(t, z.ValidFor(5))
+	assert.True(t, z.ValidFor(6))
 	assert.Equal(t, 25, z.Levels())
 	assert.Equal(t, 6, z.First())
 	assert.Equal(t, 30, z.Last())
 
 	z = ZoomRange(math.MaxInt32)
 	z = z.add(GTE, 5)
-	assert.False(t, z.validFor(4))
-	assert.True(t, z.validFor(5))
-	assert.True(t, z.validFor(6))
+	assert.False(t, z.ValidFor(4))
+	assert.True(t, z.ValidFor(5))
+	assert.True(t, z.ValidFor(6))
 	assert.Equal(t, 26, z.Levels())
 	assert.Equal(t, 5, z.First())
 	assert.Equal(t, 30, z.Last())

@@ -83,7 +83,7 @@ var InvalidZoom = ZoomRange(0)
 
 type ZoomRange int32
 
-func (z ZoomRange) validFor(level int) bool {
+func (z ZoomRange) ValidFor(level int) bool {
 	return z>>uint8(level)&1 > 0
 }
 
@@ -130,7 +130,7 @@ func (z ZoomRange) String() string {
 	}
 	zooms := []string{}
 	for i := 0; i < 31; i++ {
-		if z.validFor(i) {
+		if z.ValidFor(i) {
 			zooms = append(zooms, strconv.FormatInt(int64(i), 10))
 		}
 	}
