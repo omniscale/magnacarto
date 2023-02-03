@@ -106,7 +106,8 @@ func (b *Builder) Build() error {
 	}
 
 	for _, l := range layers {
-		rules := carto.MSS().LayerRules(l.ID, l.Classes...)
+		zoom := layerZoomRange(l)
+		rules := carto.MSS().LayerZoomRules(l.ID, zoom, l.Classes...)
 
 		if b.dumpRules != nil {
 			for _, r := range rules {
@@ -124,6 +125,21 @@ func (b *Builder) Build() error {
 		}
 	}
 	return nil
+}
+
+func layerZoomRange(l mml.Layer) mss.ZoomRange {
+	zoom := mss.InvalidZoom
+	minZoom, minOk := l.Properties["minzoom"].(int)
+	maxZoom, maxOk := l.Properties["maxzoom"].(int)
+	if minOk {
+		zoom = mss.NewZoomRange(mss.GTE, int64(minZoom))
+		if maxOk {
+			zoom = zoom & mss.NewZoomRange(mss.LTE, int64(maxZoom))
+		}
+	} else if maxOk {
+		zoom = mss.NewZoomRange(mss.LTE, int64(maxZoom))
+	}
+	return zoom
 }
 
 type MapOptionsSetter interface {
@@ -168,7 +184,8 @@ func BuildMapFromString(m Map, mml *mml.MML, style string) error {
 	}
 
 	for _, l := range mml.Layers {
-		rules := carto.MSS().LayerRules(l.ID, l.Classes...)
+		zoom := layerZoomRange(l)
+		rules := carto.MSS().LayerZoomRules(l.ID, zoom, l.Classes...)
 
 		if len(rules) > 0 {
 			m.AddLayer(l, rules)
