@@ -548,7 +548,7 @@ func main() {
 
 	r := mux.NewRouter()
 	handler := magnaserv{config: conf, builderCache: builderCache}
-	handler.mapnikMaker = mapnikBuilder.Maker2
+	handler.mapnikMaker = mapnikBuilder.Maker3
 
 	mapnikRenderer, err := render.NewMapnik()
 	if err != nil {
@@ -557,9 +557,6 @@ func main() {
 		log.Print("Mapnik plugin available")
 		for _, fontDir := range conf.Mapnik.FontDirs {
 			mapnikRenderer.RegisterFonts(fontDir)
-		}
-		if is3, _ := mapnikRenderer.Is3(); is3 {
-			handler.mapnikMaker = mapnikBuilder.Maker3
 		}
 		handler.mapnikRenderer = mapnikRenderer
 	}
