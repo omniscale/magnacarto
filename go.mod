@@ -13,7 +13,7 @@ require (
 	github.com/omniscale/go-mapnik/v2 v2.0.0
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/net v0.0.0-20190206173232-65e2d4e15006
-	golang.org/x/sys v0.0.0-20170825194620-2d6f6f883a06 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 	gopkg.in/fsnotify.v1 v1.4.7
 	gopkg.in/yaml.v2 v2.2.2
 )
