@@ -25,7 +25,12 @@ func renderReq(mapfile string, mapReq render.Request) ([]byte, error) {
 		return nil, err
 	}
 
-	m.SetSRS(fmt.Sprintf("+init=epsg:%d", mapReq.EPSGCode))
+	if useProj4 {
+		m.SetSRS(fmt.Sprintf("+init=epsg:%d", mapReq.EPSGCode))
+	} else {
+		m.SetSRS(fmt.Sprintf("epsg:%d", mapReq.EPSGCode))
+	}
+
 	m.ZoomTo(mapReq.BBOX[0], mapReq.BBOX[1], mapReq.BBOX[2], mapReq.BBOX[3])
 
 	renderOpts := mapnik.RenderOpts{}
@@ -86,7 +91,22 @@ func (api) RegisterFonts(fontDir string, _ *interface{}) error {
 	return nil
 }
 
+var useProj4 bool // useProj4 determines whether we use old +init syntax or not
+
+func checkProjVersion() {
+	m := mapnik.NewSized(1, 1)
+	defer m.Free()
+	m.SetSRS("epsg:4326") // this should fail with Proj4
+	m.ZoomTo(-1, -1, 0, 0)
+	_, err := m.Render(mapnik.RenderOpts{})
+	if err != nil {
+		useProj4 = true
+	}
+}
+
 func main() {
+	checkProjVersion()
+
 	p := pie.NewProvider()
 	if err := p.RegisterName("Mapnik", api{}); err != nil {
 		log.Fatalf("failed to register Plugin: %s", err)
