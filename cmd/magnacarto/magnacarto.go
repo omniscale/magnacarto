@@ -39,7 +39,7 @@ func main() {
 	fontDir := flag.String("font-dir", "", "fonts directory")
 	dataDir := flag.String("data-dir", "", "data directory for OGR/GDAL files, also fallback for sqlite/shape/image/font-dir")
 	dumpRules := flag.Bool("dumprules", false, "print calculated rules to stderr")
-	builderType := flag.String("builder", "mapnik2", "builder type {mapnik2,mapnik3,mapserver}")
+	builderType := flag.String("builder", "mapnik3", "builder type {mapnik3,mapserver}")
 	outFile := flag.String("out", "", "out file")
 	relPaths := flag.Bool("relpaths", false, "use relative paths in output style")
 	version := flag.Bool("version", false, "print version and exit")
@@ -110,10 +110,6 @@ func main() {
 	case "mapserver":
 		mm := mapserver.New(locator)
 		mm.SetNoMapBlock(*msNoMapBlock)
-		m = mm
-	case "mapnik2":
-		mm := mapnik.New(locator)
-		mm.SetMapnik2(true)
 		m = mm
 	case "mapnik3":
 		m = mapnik.New(locator)

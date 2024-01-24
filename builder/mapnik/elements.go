@@ -59,8 +59,6 @@ type Layer struct {
 	Name            string       `xml:"name,attr"`
 	SRS             *string      `xml:"srs,attr"`
 	Status          string       `xml:"status,attr,omitempty"`
-	MaxZoom         int          `xml:"maxzoom,attr,omitempty"`
-	MinZoom         int          `xml:"minzoom,attr,omitempty"`
 	MaxScaleDenom   int          `xml:"maximum-scale-denominator,attr,omitempty"`
 	MinScaleDenom   int          `xml:"minimum-scale-denominator,attr,omitempty"`
 	GroupBy         string       `xml:"group-by,attr,omitempty"`

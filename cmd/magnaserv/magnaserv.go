@@ -570,7 +570,7 @@ func main() {
 	}
 
 	switch *builderType {
-	case "mapnik", "mapnik2", "mapnik3":
+	case "mapnik", "mapnik3":
 		handler.defaultMaker = handler.mapnikMaker
 	case "mapserver":
 		handler.defaultMaker = mapserver.Maker
