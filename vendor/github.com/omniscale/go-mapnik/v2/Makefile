@@ -1,6 +1,6 @@
 .PHONY: test build
 
-export CGO_LDFLAGS = $(shell mapnik-config --libs) -lboost_system
+export CGO_LDFLAGS = $(shell mapnik-config --libs)
 export CGO_CXXFLAGS = $(shell mapnik-config --cxxflags --includes --dep-includes | tr '\n' ' ')
 
 MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik/v2.fontPath=$(shell mapnik-config --fonts) \
