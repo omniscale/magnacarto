@@ -26,19 +26,23 @@ type Map struct {
 	scaleFactor    float64
 	autoTypeFilter bool
 	zoomScales     []int
+	proj4          bool
 }
 
 type maker struct {
+	proj4 bool
 }
 
 func (m maker) Type() string       { return "mapnik" }
 func (m maker) FileSuffix() string { return ".xml" }
 func (m maker) New(locator config.Locator) builder.MapWriter {
 	mm := New(locator)
+	mm.SetProj4(m.proj4)
 	return mm
 }
 
 var Maker3 = maker{}
+var Maker3Proj4 = maker{proj4: true}
 
 func New(locator config.Locator) *Map {
 	return &Map{
@@ -62,6 +66,16 @@ func (m *Map) SetZoomScales(zoomScales []int) {
 	m.zoomScales = zoomScales
 }
 
+// SetProj4 sets the base SRS to Proj4 compatible +init-style if enabled.
+func (m *Map) SetProj4(enable bool) {
+	if enable {
+		m.XML.SRS = "+init=epsg:3857"
+		m.proj4 = true
+	} else {
+		m.XML.SRS = "epsg:3857"
+	}
+}
+
 func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	if l.ScaleFactor != 0.0 {
 		prevScaleFactor := m.scaleFactor
@@ -73,6 +87,10 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 
 	layer := Layer{}
 	layer.SRS = &l.SRS
+	if m.proj4 && strings.HasPrefix(strings.ToLower(*layer.SRS), "epsg:") {
+		srs := "+init=" + *layer.SRS
+		layer.SRS = &srs
+	}
 	layer.Name = l.ID
 	if !l.Active {
 		layer.Status = "off"

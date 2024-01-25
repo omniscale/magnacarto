@@ -512,7 +512,7 @@ func main() {
 
 	var listenAddr = flag.String("listen", "localhost:7070", "listen address")
 	var configFile = flag.String("config", DefaultConfigFile, "config")
-	var builderType = flag.String("builder", "mapnik", "builder type {mapnik,mapserver}")
+	var builderType = flag.String("builder", "mapnik", "builder type {mapnik,mapnik3-proj4,mapserver}")
 	var version = flag.Bool("version", false, "print version and exit")
 
 	flag.Parse()
@@ -549,6 +549,9 @@ func main() {
 	r := mux.NewRouter()
 	handler := magnaserv{config: conf, builderCache: builderCache}
 	handler.mapnikMaker = mapnikBuilder.Maker3
+	if *builderType == "mapnik3-proj4" {
+		handler.mapnikMaker = mapnikBuilder.Maker3Proj4
+	}
 
 	mapnikRenderer, err := render.NewMapnik()
 	if err != nil {
@@ -570,7 +573,7 @@ func main() {
 	}
 
 	switch *builderType {
-	case "mapnik", "mapnik3":
+	case "mapnik", "mapnik3", "mapnik3-proj4":
 		handler.defaultMaker = handler.mapnikMaker
 	case "mapserver":
 		handler.defaultMaker = mapserver.Maker
