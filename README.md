@@ -10,9 +10,6 @@ It is released as open source under the [Apache License 2.0][].
 [Apache License 2.0]: http://www.apache.org/licenses/LICENSE-2.0.html
 
 
-The development of Magnacarto is sponsored by [Omniscale](http://omniscale.com/) and development will continue as resources permit.
-Please get in touch if you need commercial support or if you need specific features.
-
 
 Features
 --------
@@ -22,7 +19,7 @@ Features
 ![Magnaserv](./docs/magnaserv.png)
 
 
-* Generate styles for Mapnik 2/3 and MapServer
+* Generate styles for Mapnik 3 and MapServer
 
 #### MapServer
 ![OSM-Bright MapServer](./docs/osm-bright-mapserver.png)
@@ -53,35 +50,18 @@ Current status
 Installation
 ------------
 
-### Binary
-
-There are binary releases available for Windows, Linux and Mac OS X (Darwin): <http://download.omniscale.de/magnacarto/rel/>
-
 ### Source
 
 #### Dependencies
 
-You need [Go][]>1.5 and [git][].
+You need [Go][]>1.12
 
 [Go]: https://golang.org
-[git]: https://git-scm.com/
 
 #### Compiling
 
-First create a `GOPATH` directory for all your Go code, if you don't have one already:
+Check out or download the repository and call:
 
-    mkdir -p go
-    cd go
-    export GOPATH=`pwd`
-
-Then you need to enable GO15VENDOREXPERIMENT, if you are using Go 1.5. You can skip this if you are using 1.6 or higher:
-
-    export GO15VENDOREXPERIMENT=1
-
-Next you can fetch the source code and build/install it:
-
-    go get -u github.com/omniscale/magnacarto
-    cd $GOPATH/src/github.com/omniscale/magnacarto
     make install
 
 
@@ -96,7 +76,7 @@ The Mapserver plugin is already included in the default `magnaserv` installation
 
 ##### Mapnik
 
-The Mapnik plugin needs to be compiled as an additional binary (`magnacarto-mapnik`). You need to have Mapnik installed with all header files. It supports Mapnik 2.2 and 3.0. Make sure `mapnik-config` is in your `PATH`. Call `make install` to build the plugin binary.
+The Mapnik plugin needs to be compiled as an additional binary (`magnacarto-mapnik`). You need to have Mapnik installed with all header files. It supports 3. Make sure `mapnik-config` is in your `PATH`. Call `make install` to build the plugin binary.
 
 Usage
 -----
@@ -134,6 +114,13 @@ You can configure the location of stylings, shapefiles or images, and database c
     magnaserv -builder mapserver -config magnacarto.tml
 
 
+### Proj4 compatibility
+
+Update: v1.3.0 (2024-01-24)
+
+Current libproj versions do not support the old "+init=epsg:3857"-style projection strings anymore. The `mapnik3` builder now emits "epsg:3857" by default. You can enable compatibility with older libproj/proj4 versions by using the `mapnik3-proj4` builder. Make sure to update the SRS of your layers (in the .mml files) to the new "epsg:3857" style. `mapnik3-proj4` will add "+init=" for these SRS.
+
+
 Documentation
 -------------
 
@@ -157,7 +144,6 @@ Support
 
 Please use GitHub for questions: <https://github.com/omniscale/magnacarto/issues>
 
-For commercial support [contact Omniscale](http://omniscale.com/contact).
 
 Development
 -----------
