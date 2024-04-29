@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/natefinch/pie"
 )
@@ -57,6 +58,15 @@ func (m *Mapnik) RegisterFonts(fontDir string) error {
 	}
 	var tmp interface{}
 	err := m.client.Call("Mapnik.RegisterFonts", fontDir, &tmp /* not used */)
+	return err
+}
+
+func (m *Mapnik) CacheLoadedMap(cacheWaitTimeout time.Duration) error {
+	if m.client == nil {
+		return errors.New("mapnik plugin not initialized")
+	}
+	var tmp interface{}
+	err := m.client.Call("Mapnik.CacheLoadedMap", cacheWaitTimeout, &tmp /* not used */)
 	return err
 }
 

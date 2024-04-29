@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/omniscale/magnacarto/mml"
@@ -21,8 +22,9 @@ type Magnacarto struct {
 }
 
 type Mapnik struct {
-	PluginDirs []string `toml:"plugin_dirs"`
-	FontDirs   []string `toml:"font_dirs"`
+	PluginDirs       []string      `toml:"plugin_dirs"`
+	FontDirs         []string      `toml:"font_dirs"`
+	CacheWaitTimeout time.Duration `toml:"cache_wait_timeout"`
 }
 
 type Datasource struct {
@@ -70,6 +72,10 @@ func Load(fileName string) (*Magnacarto, error) {
 	}
 	if !filepath.IsAbs(config.OutDir) {
 		config.OutDir = filepath.Join(config.BaseDir, config.OutDir)
+	}
+
+	if config.Mapnik.CacheWaitTimeout == 0 {
+		config.Mapnik.CacheWaitTimeout = 5 * time.Second
 	}
 
 	return &config, nil

@@ -558,6 +558,7 @@ func main() {
 		log.Print("Mapnik plugin: ", err)
 	} else {
 		log.Print("Mapnik plugin available")
+		mapnikRenderer.CacheLoadedMap(conf.Mapnik.CacheWaitTimeout)
 		for _, fontDir := range conf.Mapnik.FontDirs {
 			mapnikRenderer.RegisterFonts(fontDir)
 		}

@@ -5,32 +5,24 @@ import (
 	"image"
 	"image/draw"
 	"log"
+	"os"
+	"sync"
+	"time"
 
 	"github.com/natefinch/pie"
-
-	"path/filepath"
 
 	"github.com/omniscale/go-mapnik/v2"
 	"github.com/omniscale/magnacarto/render"
 )
 
-func renderReq(mapfile string, mapReq render.Request) ([]byte, error) {
-	style := filepath.Base(mapfile)
-	style = style[:len(style)-len(filepath.Ext(style))] // wihout suffix
-
-	m := mapnik.NewSized(mapReq.Width, mapReq.Height)
-	defer m.Free()
-	err := m.Load(mapfile)
-	if err != nil {
-		return nil, err
-	}
-
+func renderReq(m *mapnik.Map, mapReq render.Request) ([]byte, error) {
 	if useProj4 {
 		m.SetSRS(fmt.Sprintf("+init=epsg:%d", mapReq.EPSGCode))
 	} else {
 		m.SetSRS(fmt.Sprintf("epsg:%d", mapReq.EPSGCode))
 	}
 
+	m.Resize(mapReq.Width, mapReq.Height)
 	m.ZoomTo(mapReq.BBOX[0], mapReq.BBOX[1], mapReq.BBOX[2], mapReq.BBOX[3])
 
 	renderOpts := mapnik.RenderOpts{}
@@ -63,7 +55,14 @@ func renderReq(mapfile string, mapReq render.Request) ([]byte, error) {
 	return b, nil
 }
 
-type api struct {
+type API struct {
+	// cacheEnabled enables caching of a single mapfile.
+	cacheEnabled     bool
+	cacheWaitTimeout time.Duration
+	mapfile          string
+	mu               sync.Mutex
+	cache            *mapnik.Map
+	lastMTime        time.Time
 }
 
 type Args struct {
@@ -71,13 +70,98 @@ type Args struct {
 	Req     render.Request
 }
 
-func (api) Render(args *Args, response *[]byte) error {
-	tmp, err := renderReq(args.Mapfile, args.Req)
+func (a *API) Render(args *Args, response *[]byte) error {
+	if a.cacheEnabled {
+		m, err := a.getMap(args.Mapfile)
+		if err != nil {
+			return err
+		}
+
+		if m != nil {
+			tmp, err := renderReq(m, args.Req)
+			*response = tmp
+			a.mu.Unlock()
+			return err
+		}
+	}
+	// cache not enabled or cacheWaitTimeout
+
+	m, err := a.loadMap(args.Mapfile)
+	if err != nil {
+		return err
+	}
+
+	tmp, err := renderReq(m, args.Req)
+	if err != nil {
+		return err
+	}
+
 	*response = tmp
-	return err
+	return nil
 }
 
-func (api) Is3(args struct{}, response *bool) error {
+// getMap returns a cached mapnik.Map. Loads a new map if the mapfile changed
+// (filename and/or timestamp of mapfile). Returns nil if the lock for the
+// cached map could not be obtained within cacheWaitTimeout.
+// Caller needs to mu.Unlock if returned map is not nil.
+func (a *API) getMap(mapfile string) (*mapnik.Map, error) {
+	fi, err := os.Stat(mapfile)
+	if err != nil {
+		return nil, fmt.Errorf("checking time of mapfile (%s): %w", mapfile, err)
+	}
+
+	deadline := time.Now().Add(a.cacheWaitTimeout)
+	for !a.mu.TryLock() {
+		if time.Now().After(deadline) {
+			return nil, nil
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	if a.cache != nil && (mapfile != a.mapfile || fi.ModTime() != a.lastMTime) {
+		// different mapfile or mtime, release cache
+		a.cache.Free()
+		a.cache = nil
+	}
+
+	// return map from cache
+	if a.cache != nil {
+		return a.cache, nil
+	}
+
+	m, err := a.loadMap(mapfile)
+	if err != nil {
+		a.mu.Unlock()
+		return nil, err
+	}
+
+	a.cache = m
+	a.mapfile = mapfile
+	a.lastMTime = fi.ModTime()
+	return m, nil
+}
+
+func (a *API) loadMap(mapfile string) (*mapnik.Map, error) {
+	start := time.Now()
+	m := mapnik.New()
+	err := m.Load(mapfile)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Fprintf(os.Stderr, "loaded map %s in %s\n", mapfile, time.Since(start))
+	return m, nil
+}
+
+// CacheLoadedMap enables caching of a single loaded map object. Render will
+// wait for the cached map for up to cacheWaitTimeout, will load a new map
+// after timeout.
+func (a *API) CacheLoadedMap(cacheWaitTimeout time.Duration, _ *interface{}) error {
+	a.cacheEnabled = true
+	a.cacheWaitTimeout = cacheWaitTimeout
+	return nil
+}
+
+func (a *API) Is3(args struct{}, response *bool) error {
 	if mapnik.Version.Major == 3 {
 		*response = true
 	} else {
@@ -86,9 +170,8 @@ func (api) Is3(args struct{}, response *bool) error {
 	return nil
 }
 
-func (api) RegisterFonts(fontDir string, _ *interface{}) error {
-	mapnik.RegisterFonts(fontDir)
-	return nil
+func (a *API) RegisterFonts(fontDir string, _ *interface{}) error {
+	return mapnik.RegisterFonts(fontDir)
 }
 
 var useProj4 bool // useProj4 determines whether we use old +init syntax or not
@@ -106,9 +189,9 @@ func checkProjVersion() {
 
 func main() {
 	checkProjVersion()
-
+	api := API{}
 	p := pie.NewProvider()
-	if err := p.RegisterName("Mapnik", api{}); err != nil {
+	if err := p.RegisterName("Mapnik", &api); err != nil {
 		log.Fatalf("failed to register Plugin: %s", err)
 	}
 	p.Serve()
