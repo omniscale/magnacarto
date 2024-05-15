@@ -93,15 +93,16 @@ func newDatasource(params map[string]interface{}) (Datasource, error) {
 
 	if d["type"] == "postgis" {
 		return PostGIS{
-			Username:      d["user"],
-			Password:      d["password"],
-			Query:         d["table"],
-			Host:          d["host"],
-			Port:          d["port"],
-			Database:      d["dbname"],
-			GeometryField: d["geometry_field"],
-			Extent:        d["extent"],
-			SRID:          d["srid"],
+			Username:         d["user"],
+			Password:         d["password"],
+			Query:            d["table"],
+			Host:             d["host"],
+			Port:             d["port"],
+			Database:         d["dbname"],
+			GeometryField:    d["geometry_field"],
+			Extent:           d["extent"],
+			SRID:             d["srid"],
+			SimplifyGeometry: d["simplify_geometry"],
 		}, nil
 	} else if d["file"] != "" && (d["type"] == "shape" || d["type"] == "") {
 		return Shapefile{
