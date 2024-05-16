@@ -142,13 +142,11 @@ func (a *API) getMap(mapfile string) (*mapnik.Map, error) {
 }
 
 func (a *API) loadMap(mapfile string) (*mapnik.Map, error) {
-	start := time.Now()
 	m := mapnik.New()
 	err := m.Load(mapfile)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Fprintf(os.Stderr, "loaded map %s in %s\n", mapfile, time.Since(start))
 	return m, nil
 }
 
