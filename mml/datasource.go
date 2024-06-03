@@ -1,17 +1,17 @@
 package mml
 
 type PostGIS struct {
-	Id               string
-	Host             string
-	Port             string
-	Database         string
-	Username         string
-	Password         string
-	Query            string
-	SRID             string
-	GeometryField    string
-	Extent           string
-	SimplifyGeometry string
+	Id                 string
+	Host               string
+	Port               string
+	Database           string
+	Username           string
+	Password           string
+	Query              string
+	SRID               string
+	GeometryField      string
+	Extent             string
+	SimplifyGeometries string
 }
 
 type Shapefile struct {

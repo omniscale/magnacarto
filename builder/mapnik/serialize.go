@@ -164,8 +164,8 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 			{Name: "srid", Value: ds.SRID},
 			{Name: "type", Value: "postgis"},
 		}
-		if ds.SimplifyGeometry == "true" {
-			params = append(params, Parameter{Name: "simplify_geometry", Value: "true"})
+		if ds.SimplifyGeometries == "true" {
+			params = append(params, Parameter{Name: "simplify_geometries", Value: "true"})
 		}
 	case mml.Shapefile:
 		fname := m.locator.Shape(ds.Filename)
