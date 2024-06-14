@@ -108,6 +108,7 @@ func newDatasource(params map[string]interface{}) (Datasource, error) {
 		return Shapefile{
 			Filename: d["file"],
 			SRID:     d["srid"],
+			Encoding: d["encoding"],
 		}, nil
 	} else if d["type"] == "sqlite" {
 		return SQLite{

@@ -172,6 +172,7 @@ func (m *Map) newDatasource(ds mml.Datasource, rules []mss.Rule) []Parameter {
 		params = []Parameter{
 			{Name: "file", Value: fname},
 			{Name: "type", Value: "shape"},
+			{Name: "encoding", Value: ds.Encoding},
 		}
 	case mml.SQLite:
 		fname := m.locator.SQLite(ds.Filename)

@@ -18,6 +18,7 @@ type Shapefile struct {
 	Id       string
 	Filename string
 	SRID     string
+	Encoding string
 }
 
 type SQLite struct {
