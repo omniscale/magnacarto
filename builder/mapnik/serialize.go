@@ -289,7 +289,7 @@ func (m *Map) newRule(r mss.Rule) *Rule {
 	}
 
 	result.Filter = fmtFilters(r.Filters)
-	prefixes := mss.SortedPrefixes(r.Properties, []string{"line-", "polygon-", "polygon-pattern-", "text-", "shield-", "marker-", "point-", "building-", "raster-"})
+	prefixes := mss.SortedPrefixes(r.Properties, []string{"line-", "line-pattern-", "polygon-", "polygon-pattern-", "text-", "shield-", "marker-", "point-", "building-", "raster-"})
 
 	for _, p := range prefixes {
 		r.Properties.SetDefaultInstance(p.Instance)
