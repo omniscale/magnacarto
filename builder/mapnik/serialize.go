@@ -257,6 +257,9 @@ func (m *Map) newStyles(rules []mss.Rule) []Style {
 					if v, ok := r.Properties.GetString("comp-op"); ok {
 						style.CompOp = &v
 					}
+					if v, ok := r.Properties.GetString("image-filters"); ok {
+						style.ImageFilters = &v
+					}
 					if v, ok := r.Properties.GetFloat("opacity"); ok {
 						style.Opacity = &v
 					}
