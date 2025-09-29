@@ -11,8 +11,8 @@ import (
 
 	"github.com/natefinch/pie"
 
-	"github.com/omniscale/go-mapnik/v2"
 	"github.com/omniscale/magnacarto/render"
+	"github.com/omniscale/magnacarto/render/mapnik"
 )
 
 func renderReq(m *mapnik.Map, mapReq render.Request) ([]byte, error) {

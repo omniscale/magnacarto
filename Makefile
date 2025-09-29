@@ -15,11 +15,6 @@ else
 endif
 
 VERSION_LDFLAGS=-X github.com/omniscale/magnacarto.Version=$(BUILD_VERSION)
-MAPNIK_LDFLAGS=-X github.com/omniscale/go-mapnik/v2.fontPath=$(shell mapnik-config --fonts) \
-	-X github.com/omniscale/go-mapnik/v2.pluginPath=$(shell mapnik-config --input-plugins)
-
-MAPNIK_CGO_LDFLAGS = $(shell mapnik-config --libs)
-MAPNIK_CGO_CXXFLAGS = $(shell mapnik-config --cxxflags --includes --dep-includes | tr '\n' ' ')
 
 uname_S = $(shell sh -c 'uname -s 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
 uname_M = $(shell sh -c 'uname -m 2>/dev/null || echo not' | tr '[:upper:]' '[:lower:]')
@@ -36,16 +31,12 @@ magnacarto: $(DEPS)
 magnaserv: $(DEPS)
 	go build -ldflags "$(VERSION_LDFLAGS)" ./cmd/magnaserv
 
-magnacarto-mapnik: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
-magnacarto-mapnik: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 magnacarto-mapnik: $(DEPS)
-	go build -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
+	go build -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
-install: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
-install: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 install: $(DEPS)
 	go install -ldflags "$(VERSION_LDFLAGS)" ./cmd/...
-	go install -ldflags "$(VERSION_LDFLAGS) $(MAPNIK_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
+	go install -ldflags "$(VERSION_LDFLAGS)" ./render/magnacarto-mapnik || echo "WARNING: failed to build mapnik plugin"
 
 cmds: build $(CMDS)
 
@@ -68,8 +59,6 @@ test:
 	go test -i $(SHORT_TEST_PACKAGES)
 	go test -test.short -parallel 4 $(SHORT_TEST_PACKAGES)
 
-test-full: export CGO_CXXFLAGS = $(MAPNIK_CGO_CXXFLAGS)
-test-full: export CGO_LDFLAGS = $(MAPNIK_CGO_LDFLAGS)
 test-full:
 	go test -i $(FULL_TEST_PACKAGES)
 	export PATH=$(shell pwd):$$PATH; go test -parallel 4 $(FULL_TEST_PACKAGES)
