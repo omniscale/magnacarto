@@ -13,7 +13,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
-	"strings"
 	"syscall"
 
 	"github.com/omniscale/magnacarto/builder"
@@ -323,9 +322,10 @@ func compareImg(t *testing.T, dir, fileA, fileB string, fuzz float64, expected i
 		}
 	}
 
-	diff, err := strconv.ParseInt(strings.TrimSpace(string(out)), 10, 32)
+	px := regexp.MustCompile(`\((\d+)\)`).FindStringSubmatch(string(out))
+	diff, err := strconv.ParseInt(px[1], 10, 32)
 	if err != nil {
-		t.Fatal("found no diff output: ", string(out))
+		t.Fatal("found no diff output: ", px)
 	}
 	if diff > expected {
 		t.Errorf("diff for %s and %s is too large (%d>%d), see %s", filepath.Join(dir, fileA), filepath.Join(dir, fileB), diff, expected, filepath.Join(dir, fileDiff))
