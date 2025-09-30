@@ -38,7 +38,7 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) ([]str
 	q.Set("VERSION", "1.1.1")
 	q.Set("STYLES", "")
 	q.Set("LAYERS", "map")
-	q.Set("MAP", mapfile)
+	q.Set("MAP", "magnacarto")
 	q.Set("TRANSPARENT", "false")
 
 	q.Set("BBOX", fmt.Sprintf("%f,%f,%f,%f", mapReq.BBOX[0], mapReq.BBOX[1], mapReq.BBOX[2], mapReq.BBOX[3]))
@@ -53,6 +53,18 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) ([]str
 		q.Set("MAP.RESOLUTION", fmt.Sprintf("%d", int(72*mapReq.ScaleFactor)))
 	}
 
+	// Write (temporary) config, as required by Mapserver 8.
+	f, err := os.CreateTemp("", "*.conf")
+	if err != nil {
+		return nil, err
+	}
+	if _, err := f.WriteString(fmt.Sprintf("CONFIG\nMAPS\nmagnacarto \"%s\"\nEND\nEND\n", mapfile)); err != nil {
+		f.Close()
+		return nil, err
+	}
+	f.Close()
+	defer os.Remove(f.Name())
+
 	wd := filepath.Dir(mapfile)
 	buf := bytes.Buffer{}
 	stderr := io.MultiWriter(os.Stderr, &buf)
@@ -60,6 +72,7 @@ func (m *MapServer) Render(mapfile string, dst io.Writer, mapReq Request) ([]str
 	handler := cgi.Handler{
 		Path: m.bin,
 		Dir:  wd,
+		Env:  []string{"MAPSERVER_CONFIG_FILE=" + f.Name()},
 		InheritEnv: []string{
 			"GDAL_DATA",
 			"GDAL_DRIVER_PATH",
