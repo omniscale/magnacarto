@@ -8,3 +8,6 @@
 /magnacarto
 /magnaserv
 /magnacarto-mapnik
+/node_modules
+package.json
+package-lock.json
