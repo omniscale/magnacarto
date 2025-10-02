@@ -1,0 +1,11 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="labels" filter-mode="first">
+    <Rule>
+      <TextSymbolizer fill="#000000" lang="[lang]" size="8">[name]</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="labels" srs="" status="off">
+    <StyleName>labels</StyleName>
+  </Layer>
+</Map>

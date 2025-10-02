@@ -427,6 +427,7 @@ func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb.PlacementType = fmtString(p.GetString("text-placement-type"))
 	symb.Placements = fmtString(p.GetString("text-placements"))
 	symb.LabelPositionTolerance = fmtFloatProp(p, "text-label-position-tolerance", m.scaleFactor)
+	symb.Lang = fmtString(p.GetString("text-lang"))
 	symb.VerticalAlign = fmtString(p.GetString("text-vertical-alignment"))
 	symb.HorizontalAlign = fmtString(p.GetString("text-horizontal-alignment"))
 	symb.JustifyAlign = fmtString(p.GetString("text-justify-alignment"))

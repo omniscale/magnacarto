@@ -183,6 +183,7 @@ type TextParameters struct {
 	HaloTransform          *string `xml:"halo-transform,attr"`
 	HaloCompOp             *string `xml:"halo-comp-op,attr"`
 	LineSpacing            *string `xml:"line-spacing,attr"`
+	Lang                   *string `xml:"lang,attr"`
 	MinimumDistance        *string `xml:"minimum-distance,attr"`
 	MinimumPadding         *string `xml:"minimum-padding,attr"`
 	Name                   *string `xml:",chardata"`

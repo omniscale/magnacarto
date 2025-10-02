@@ -380,6 +380,7 @@ func init() {
 		"text-repeat-wrap-characater":   isBool,
 		"text-ratio":                    isNumber,
 		"text-label-position-tolerance": isNumber,
+		"text-lang":                     isString,
 		"text-max-char-angle-delta":     isNumber,
 		"text-vertical-alignment":       isVerticalAlignment,
 		"text-horizontal-alignment":     isKeyword("left", "middle", "right", "auto", "adjust"),

@@ -49,7 +49,7 @@ func buildAndCompare(t *testing.T, builderType string, name string) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, string(expectedMap), actualMap.String())
+	assert.Equal(t, strings.TrimSpace(string(expectedMap)), actualMap.String())
 }
 
 func build(t *testing.T, builderType string, mssFilename string, out io.Writer) {
