@@ -23,6 +23,10 @@ func (m *mockMap) AddLayer(layer mml.Layer, rules []mss.Rule) {
 	m.layers = append(m.layers, mockLayer{layer, rules})
 }
 
+func (m *mockMap) UnsupportedFeatures() []string {
+	return nil
+}
+
 func TestBuildEmpty(t *testing.T) {
 	m := mockMap{}
 	b := New(&m)

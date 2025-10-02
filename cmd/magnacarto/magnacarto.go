@@ -134,6 +134,10 @@ func main() {
 		log.Fatal("error building style: ", err)
 	}
 
+	if unsupported := m.UnsupportedFeatures(); unsupported != nil {
+		log.Fatalf("not all features supported by -builder %s: %v", *builderType, unsupported)
+	}
+
 	if *outFile == "" || *outFile == "-" {
 		if err := m.Write(os.Stdout); err != nil {
 			log.Fatal("error writing style to stdout: ", err)

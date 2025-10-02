@@ -48,6 +48,8 @@ type Map struct {
 	noMapBlock     bool
 	scaleFactor    float64
 	zoomScales     []int
+
+	unsupported map[string]bool
 }
 
 func New(locator config.Locator) *Map {
@@ -84,6 +86,7 @@ func New(locator config.Locator) *Map {
 		locator:     locator,
 		scaleFactor: 1.0,
 		zoomScales:  webmercZoomScales,
+		unsupported: make(map[string]bool),
 	}
 }
 
@@ -136,6 +139,14 @@ func (m *Map) addSymbols() {
 	for _, s := range m.pointSymbols {
 		m.Map.Add("", s)
 	}
+}
+
+func (m *Map) UnsupportedFeatures() []string {
+	var features []string
+	for k := range m.unsupported {
+		features = append(features, k)
+	}
+	return features
 }
 
 func (m *Map) Write(w io.Writer) error {
@@ -528,6 +539,13 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 			style.AddNonNil("MaxLength", fmtFloat(maxLength*m.scaleFactor, true))
 			style.AddDefault("Wrap", fmtString(r.Properties.GetString("text-wrap-character")), quote(" "))
 			style.Add("Align", "CENTER")
+		}
+
+		if _, ok := r.Properties.GetPropertiesList("text-placement-list"); ok {
+			m.unsupported["text-placement-list"] = true
+		}
+		if _, ok := r.Properties.GetString("text-lang"); ok {
+			m.unsupported["text-lang"] = true
 		}
 		b.Add("", style)
 		return true

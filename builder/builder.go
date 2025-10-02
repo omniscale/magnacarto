@@ -157,6 +157,7 @@ type Writer interface {
 
 type Map interface {
 	AddLayer(mml.Layer, []mss.Rule)
+	UnsupportedFeatures() []string
 }
 
 type MapWriter interface {

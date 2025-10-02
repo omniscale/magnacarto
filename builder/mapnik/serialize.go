@@ -128,6 +128,10 @@ func (m *Map) AddLayer(l mml.Layer, rules []mss.Rule) {
 	m.XML.Layers = append(m.XML.Layers, layer)
 }
 
+func (m *Map) UnsupportedFeatures() []string {
+	return nil
+}
+
 func (m *Map) Write(w io.Writer) error {
 	e := xml.NewEncoder(w)
 	e.Indent("", "  ")

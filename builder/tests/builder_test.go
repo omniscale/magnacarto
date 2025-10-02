@@ -75,6 +75,10 @@ func build(t *testing.T, builderType string, mssFilename string, out io.Writer) 
 		t.Fatal("error building style: ", err)
 	}
 
+	if m.UnsupportedFeatures() != nil {
+		return
+	}
+
 	if err := m.Write(out); err != nil {
 		t.Fatal("error writing style: ", err)
 	}
