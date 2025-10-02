@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -454,7 +455,7 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		}
 
 		if v, ok := r.Properties.GetFloat("text-orientation"); ok {
-			style.AddNonNil("Angle", fmtFloat(v, true))
+			style.AddNonNil("Angle", fmtFloat(clipAngle(v), true))
 		} else if v, ok := r.Properties.GetFieldList("text-orientation"); ok {
 			style.AddNonNil("Angle", fmtField(v, true))
 		}
@@ -657,7 +658,7 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 					log.Println(err)
 				}
 				if tr.rotate != 0.0 {
-					style.AddNonNil("Angle", fmtFloat(tr.rotate, true))
+					style.AddNonNil("Angle", fmtFloat(clipAngle(tr.rotate), true))
 				}
 				if sizeOk && tr.scale != 0.0 {
 					size *= tr.scale
@@ -721,7 +722,7 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 				log.Println(err)
 			}
 			if tr.rotate != 0.0 {
-				style.AddNonNil("Angle", fmtFloat(tr.rotate, true))
+				style.AddNonNil("Angle", fmtFloat(clipAngle(tr.rotate), true))
 			}
 			if tr.scale != 0.0 {
 				size *= tr.scale
@@ -755,6 +756,10 @@ func (m *Map) addMarkerSymbolizer(b *Block, r mss.Rule, isLine bool) (styled boo
 	}
 
 	return false
+}
+
+func clipAngle(a float64) float64 {
+	return math.Mod(a, 360.0)
 }
 
 func (m *Map) addRasterSymbolizer(b *Block, r mss.Rule) (styled bool) {
