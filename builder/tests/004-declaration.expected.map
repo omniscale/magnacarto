@@ -1,0 +1,137 @@
+LAYER
+  NAME num
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 12
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME hash
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#66ccff"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME hash2
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#6666cc"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME rgb
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#6600ff"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME rgbpercent
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#6600ff"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME rgba
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#00ff6666"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME rgbacompat
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#00ff6666"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME rgbapercent
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#00ff6666"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME list
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 9.025909592061742
+      TEXT 'foo'
+      FONT "Foo,Bar,Baz"
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END
+LAYER
+  NAME listnum
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      PATTERN
+        2
+        3
+        4
+      END
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

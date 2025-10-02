@@ -1,0 +1,15 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="class" filter-mode="first">
+    <Rule>
+      <Filter>([filter] = &#39;foo&#39;)</Filter>
+      <LineSymbolizer stroke-width="13"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <LineSymbolizer stroke-width="13"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="class" srs="" status="off">
+    <StyleName>class</StyleName>
+  </Layer>
+</Map>

@@ -1,0 +1,32 @@
+<Map srs="epsg:3857" background-color="#ffffff">
+  <Parameters></Parameters>
+  <FontSet name="fontset-1">
+    <Font face-name="DejaVu Sans Book"></Font>
+  </FontSet>
+  <Style name="roads" filter-mode="first">
+    <Rule>
+      <Filter>([type] = &#39;motorway&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="labels_roads_refs" filter-mode="first">
+    <Rule>
+      <Filter>(([reflen] &gt;= 6) and ([type] = &#39;motorway&#39;))</Filter>
+      <ShieldSymbolizer avoid-edges="true" clip="false" file="img/rail-24.svg" fill="#eeeeee" fontset-name="fontset-1" minimum-distance="250" minimum-padding="50" placement="line" size="8" spacing="250">[ref]</ShieldSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([reflen] = 5) and ([type] = &#39;motorway&#39;))</Filter>
+      <ShieldSymbolizer avoid-edges="true" clip="false" file="img/rail-24.svg" fill="#eeeeee" fontset-name="fontset-1" minimum-distance="250" minimum-padding="50" placement="line" size="8" spacing="250">[ref]</ShieldSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([type] = &#39;motorway&#39;)</Filter>
+      <ShieldSymbolizer avoid-edges="true" clip="false" file="img/rail-24.svg" fill="#eeeeee" fontset-name="fontset-1" minimum-distance="250" minimum-padding="50" placement="line" size="8" spacing="250">[ref]</ShieldSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="roads" srs="" status="off">
+    <StyleName>roads</StyleName>
+  </Layer>
+  <Layer name="labels_roads_refs" srs="" status="off">
+    <StyleName>labels_roads_refs</StyleName>
+  </Layer>
+</Map>

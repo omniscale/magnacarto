@@ -1,0 +1,28 @@
+LAYER
+  NAME roads
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    # Zoom{=15}
+    MAXSCALEDENOM 25000
+    MINSCALEDENOM 12500
+    EXPRESSION ('[type]' = 'primary')
+    STYLE
+      WIDTH 5
+      COLOR "#ff0000"
+      LINECAP ROUND
+      LINEJOIN BEVEL
+    END
+  END
+  CLASS
+    # Zoom{=15}
+    MAXSCALEDENOM 25000
+    MINSCALEDENOM 12500
+    STYLE
+      WIDTH 5
+      COLOR "#ffffff"
+      LINECAP ROUND
+      LINEJOIN BEVEL
+    END
+  END
+END

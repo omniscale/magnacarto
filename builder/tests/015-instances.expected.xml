@@ -1,0 +1,27 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="foo" filter-mode="first">
+    <Rule>
+      <Filter>([type] = &#39;bar&#39;)</Filter>
+      <PolygonSymbolizer fill="#000000"></PolygonSymbolizer>
+      <LineSymbolizer stroke="#ff0000" stroke-width="10"></LineSymbolizer>
+      <LineSymbolizer stroke="#0000ff" stroke-width="5"></LineSymbolizer>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([type] = &#39;foo&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+      <PolygonSymbolizer fill="#000000"></PolygonSymbolizer>
+      <LineSymbolizer stroke="#ff0000" stroke-width="10"></LineSymbolizer>
+      <LineSymbolizer stroke="#0000ff" stroke-width="5"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <PolygonSymbolizer fill="#000000"></PolygonSymbolizer>
+      <LineSymbolizer stroke="#ff0000" stroke-width="10"></LineSymbolizer>
+      <LineSymbolizer stroke="#0000ff" stroke-width="5"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="foo" srs="" status="off">
+    <StyleName>foo</StyleName>
+  </Layer>
+</Map>

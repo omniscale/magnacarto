@@ -1,0 +1,371 @@
+LAYER
+  NAME class
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    EXPRESSION (('[quoted]' = 'bar') AND ('[quoted2:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    EXPRESSION (('[quoted]' = 'bar') AND ('[quoted2:quoted]' = 'bar') AND ('[quoted:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[quoted]' = 'bar') AND ('[quoted2:quoted]' = 'bar') AND ('[quoted:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    EXPRESSION (('[quoted2:quoted]' = 'bar') AND ('[quoted:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[quoted2:quoted]' = 'bar') AND ('[quoted:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[quoted]' = 'bar') AND ('[quoted2:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    EXPRESSION ('[quoted2:quoted]' = 'bar')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[quoted2:quoted]' = 'bar')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    EXPRESSION (('[quoted]' = 'bar') AND ('[quoted:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[quoted]' = 'bar') AND ('[quoted:quoted]' = 'bar'))
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    EXPRESSION ('[quoted:quoted]' = 'bar')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[quoted:quoted]' = 'bar')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    EXPRESSION ('[quoted]' = 'bar')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[quoted]' = 'bar')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=2}
+    MAXSCALEDENOM 200000000
+    MINSCALEDENOM 100000000
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME class_1_2
+  MAXSCALEDENOM 100000000
+  MINSCALEDENOM 50000000
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (([foo] != 42) AND ([foo:bar] != 42))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION ([foo:bar] != 42)
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION ([foo] != 42)
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME class_3
+  MAXSCALEDENOM 100000000
+  MINSCALEDENOM 50000000
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'baz') AND ('[type]' = 'baz'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'baz') AND ('[type]' = 'bar'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'baz') AND ('[type]' = 'foo'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'bar') AND ('[type]' = 'baz'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'bar') AND ('[type]' = 'bar'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'bar') AND ('[type]' = 'foo'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'foo') AND ('[type]' = 'baz'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'foo') AND ('[type]' = 'bar'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION (('[class]' = 'foo') AND ('[type]' = 'foo'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION ('[type]' = 'baz')
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION ('[type]' = 'bar')
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=3}
+    MAXSCALEDENOM 100000000
+    MINSCALEDENOM 50000000
+    EXPRESSION ('[type]' = 'foo')
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME class_4
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ([id] % 10 = 0)
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

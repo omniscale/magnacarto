@@ -1,0 +1,149 @@
+LAYER
+  NAME lines
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION (('[cap]' = 'square') AND ('[join]' = 'miter') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP SQUARE
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'butt') AND ('[join]' = 'miter') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'round') AND ('[join]' = 'miter') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP ROUND
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'square') AND ('[join]' = 'round') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP SQUARE
+      LINEJOIN ROUND
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'butt') AND ('[join]' = 'round') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN ROUND
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'round') AND ('[join]' = 'round') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP ROUND
+      LINEJOIN ROUND
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'square') AND ('[join]' = 'bevel') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP SQUARE
+      LINEJOIN BEVEL
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'butt') AND ('[join]' = 'bevel') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN BEVEL
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'round') AND ('[join]' = 'bevel') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP ROUND
+      LINEJOIN BEVEL
+    END
+  END
+  CLASS
+    EXPRESSION (('[join]' = 'bevel') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN BEVEL
+    END
+  END
+  CLASS
+    EXPRESSION (('[join]' = 'round') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN ROUND
+    END
+  END
+  CLASS
+    EXPRESSION (('[join]' = 'miter') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'square') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP SQUARE
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'butt') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[cap]' = 'round') AND ('[type]' = 'capjoin'))
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP ROUND
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[type]' = 'capjoin')
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

@@ -1,0 +1,13 @@
+LAYER
+  NAME foo
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 12
+      COLOR "#ffff00"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

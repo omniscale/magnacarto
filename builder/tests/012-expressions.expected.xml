@@ -1,0 +1,9 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="class" filter-mode="first">
+    <Rule></Rule>
+  </Style>
+  <Layer name="class" srs="" status="off">
+    <StyleName>class</StyleName>
+  </Layer>
+</Map>

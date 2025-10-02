@@ -1,0 +1,233 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="class" filter-mode="first">
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <Filter>(([quoted] = &#39;bar&#39;) and ([quoted2:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <Filter>(([quoted] = &#39;bar&#39;) and ([quoted2:quoted] = &#39;bar&#39;) and ([quoted:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([quoted] = &#39;bar&#39;) and ([quoted2:quoted] = &#39;bar&#39;) and ([quoted:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <Filter>(([quoted2:quoted] = &#39;bar&#39;) and ([quoted:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([quoted2:quoted] = &#39;bar&#39;) and ([quoted:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([quoted] = &#39;bar&#39;) and ([quoted2:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <Filter>([quoted2:quoted] = &#39;bar&#39;)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([quoted2:quoted] = &#39;bar&#39;)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <Filter>(([quoted] = &#39;bar&#39;) and ([quoted:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([quoted] = &#39;bar&#39;) and ([quoted:quoted] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <Filter>([quoted:quoted] = &#39;bar&#39;)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([quoted:quoted] = &#39;bar&#39;)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <Filter>([quoted] = &#39;bar&#39;)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([quoted] = &#39;bar&#39;)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+      <MinScaleDenominator>100000000</MinScaleDenominator>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="class_1_2" filter-mode="first">
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([foo] != 42) and ([foo:bar] != 42))</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([foo:bar] != 42)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([foo] != 42)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="class_3" filter-mode="first">
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;baz&#39;) and ([type] = &#39;baz&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;baz&#39;) and ([type] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;baz&#39;) and ([type] = &#39;foo&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([class] = &#39;baz&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;bar&#39;) and ([type] = &#39;baz&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;bar&#39;) and ([type] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;bar&#39;) and ([type] = &#39;foo&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([class] = &#39;bar&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;foo&#39;) and ([type] = &#39;baz&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;foo&#39;) and ([type] = &#39;bar&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>(([class] = &#39;foo&#39;) and ([type] = &#39;foo&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([class] = &#39;foo&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([type] = &#39;baz&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([type] = &#39;bar&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=3}-->
+      <MaxScaleDenominator>100000000</MaxScaleDenominator>
+      <MinScaleDenominator>50000000</MinScaleDenominator>
+      <Filter>([type] = &#39;foo&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="class_4" filter-mode="first">
+    <Rule>
+      <Filter>([id] % 10 = 0)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="class" srs="" status="off">
+    <StyleName>class</StyleName>
+  </Layer>
+  <Layer name="class_1_2" srs="" status="off" maximum-scale-denominator="100000000" minimum-scale-denominator="50000000">
+    <StyleName>class_1_2</StyleName>
+  </Layer>
+  <Layer name="class_3" srs="" status="off" maximum-scale-denominator="100000000" minimum-scale-denominator="50000000">
+    <StyleName>class_3</StyleName>
+  </Layer>
+  <Layer name="class_4" srs="" status="off">
+    <StyleName>class_4</StyleName>
+  </Layer>
+</Map>

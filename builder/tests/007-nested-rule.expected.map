@@ -1,0 +1,22 @@
+LAYER
+  NAME class
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ('[filter]' = 'foo')
+    STYLE
+      WIDTH 13
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    STYLE
+      WIDTH 13
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

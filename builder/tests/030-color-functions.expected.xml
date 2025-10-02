@@ -1,0 +1,99 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="l" filter-mode="first">
+    <Rule>
+      <Filter>([func] = &#39;darken_grey&#39;)</Filter>
+      <LineSymbolizer stroke="#4d4d4d" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;lighten_grey&#39;)</Filter>
+      <LineSymbolizer stroke="#b3b3b3" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;spin_grey&#39;)</Filter>
+      <LineSymbolizer stroke="#808080" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;fadeout_grey&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(128, 128, 128, 0.80000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;fadein_grey&#39;)</Filter>
+      <LineSymbolizer stroke="#808080" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;desaturate_grey&#39;)</Filter>
+      <LineSymbolizer stroke="#808080" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;saturate_grey&#39;)</Filter>
+      <LineSymbolizer stroke="#996767" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;null_grey&#39;)</Filter>
+      <LineSymbolizer stroke="#808080" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;darken_rgba&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(49, 10, 88, 0.50000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;lighten_rgba&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(151, 68, 234, 0.50000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;spin_rgba&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(101, 20, 180, 0.50000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;fadeout_rgba&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(100, 20, 180, 0.30000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;fadein_rgba&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(100, 20, 180, 0.70000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;desaturate_rgba&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(100, 40, 160, 0.50000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;saturate_rgba&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(100, 0, 200, 0.50000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;darken&#39;)</Filter>
+      <LineSymbolizer stroke="#4d2e08" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;lighten&#39;)</Filter>
+      <LineSymbolizer stroke="#eb9b36" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;spin&#39;)</Filter>
+      <LineSymbolizer stroke="#aa6711" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;fadeout&#39;)</Filter>
+      <LineSymbolizer stroke="rgba(170, 102, 17, 0.80000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;fadein&#39;)</Filter>
+      <LineSymbolizer stroke="#aa6611" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;desaturate&#39;)</Filter>
+      <LineSymbolizer stroke="#976424" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([func] = &#39;saturate&#39;)</Filter>
+      <LineSymbolizer stroke="#bb6800" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="l" srs="" status="off">
+    <StyleName>l</StyleName>
+  </Layer>
+</Map>

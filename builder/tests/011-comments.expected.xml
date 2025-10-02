@@ -1,0 +1,19 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="class" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke-width="12"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="class2" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke-width="12"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="class" srs="" status="off">
+    <StyleName>class</StyleName>
+  </Layer>
+  <Layer name="class2" srs="" status="off">
+    <StyleName>class2</StyleName>
+  </Layer>
+</Map>

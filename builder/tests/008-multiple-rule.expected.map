@@ -1,0 +1,30 @@
+LAYER
+  NAME class1
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ([foo] = 12)
+    STYLE
+      WIDTH 99
+      MAXWIDTH 99
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME class2
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ([bar] = 11)
+    STYLE
+      WIDTH 99
+      MAXWIDTH 99
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

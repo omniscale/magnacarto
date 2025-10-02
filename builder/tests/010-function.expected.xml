@@ -1,0 +1,27 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="func" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="rgba(170, 0, 51, 0.90000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="funcnested" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="rgba(221, 0, 66, 0.80000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="funcfunc" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="rgba(168, 84, 126, 0.46824)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="func" srs="" status="off">
+    <StyleName>func</StyleName>
+  </Layer>
+  <Layer name="funcnested" srs="" status="off">
+    <StyleName>funcnested</StyleName>
+  </Layer>
+  <Layer name="funcfunc" srs="" status="off">
+    <StyleName>funcfunc</StyleName>
+  </Layer>
+</Map>

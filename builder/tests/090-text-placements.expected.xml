@@ -1,0 +1,14 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="labels" filter-mode="first">
+    <Rule>
+      <TextSymbolizer fill="#000000" placement-type="list" size="12">[name]
+        <Placement dx="9"></Placement>
+        <Placement size="6">[nm]</Placement>
+      </TextSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="labels" srs="" status="off">
+    <StyleName>labels</StyleName>
+  </Layer>
+</Map>

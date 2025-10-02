@@ -26,7 +26,7 @@ func BenchmarkTestDecode(b *testing.B) {
 }
 
 func decodeFiles(t testing.TB) {
-	testFiles, err := filepath.Glob("./tests/*.mss")
+	testFiles, err := filepath.Glob("../builder/tests/*.mss")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -544,10 +544,10 @@ func _assertRulesEq(t *testing.T, a, b []Rule) {
 
 func TestDecoderRules(t *testing.T) {
 	var rules []Rule
-	rules = loadRules(t, "tests/001-empty.mss", "ALL")
+	rules = loadRules(t, "../builder/tests/000-empty.mss", "ALL")
 	assertRulesEq(t, rules, []Rule{})
 
-	rules = loadRules(t, "tests/002-declaration.mss", "ALL")
+	rules = loadRules(t, "../builder/tests/004-declaration.mss", "ALL")
 	assertRulesEq(t, rules, []Rule{
 		Rule{Layer: "num", Zoom: AllZoom, Properties: NewProperties("line-width", float64(12)), order: 1},
 		Rule{Layer: "hash", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{199.99999999999997, 1.0, 0.7, 1.0, false}), order: 1},
@@ -561,7 +561,7 @@ func TestDecoderRules(t *testing.T) {
 		Rule{Layer: "listnum", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-dasharray", []Value{float64(2), float64(3), float64(4)}), order: 1},
 	})
 
-	rules = loadRules(t, "tests/040-nested.mss", "roads")
+	rules = loadRules(t, "../builder/tests/040-nested.mss", "roads")
 	assertRulesEq(t, rules, []Rule{
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: NewZoomRange(EQ, 17), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 0},
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"service", EQ, "yard"}, {"type", EQ, "rail"}}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}), order: 1},
@@ -570,7 +570,7 @@ func TestDecoderRules(t *testing.T) {
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(1)), order: 2},
 	})
 
-	rules = loadRules(t, "tests/021-zoom-specific.mss", "roads")
+	rules = loadRules(t, "../builder/tests/021-zoom-specific.mss", "roads")
 	assertRulesEq(t, rules, []Rule{
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: NewZoomRange(EQ, 15), Properties: NewProperties("line-width", float64(5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{{"type", EQ, "primary"}}, Zoom: NewZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
@@ -578,31 +578,57 @@ func TestDecoderRules(t *testing.T) {
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: NewZoomRange(GTE, 14), Properties: NewProperties("line-color", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-cap", "round", "line-join", "bevel")},
 		Rule{Layer: "roads", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-join", "bevel")},
 	})
+}
 
+func TestDecoderTextPlacementListRules(t *testing.T) {
+	var rules []Rule
+	rules = loadRules(t, "../builder/tests/090-text-placements.mss", "labels")
+	stripPos(rules[0].Properties.getKey(key{name: "text-placement-list"}).([]*Properties))
+	assertRulesEq(t, rules, []Rule{
+		Rule{Layer: "labels", Class: "", Attachment: "", Filters: []Filter{}, Zoom: AllZoom,
+			Properties: NewProperties(
+				"text-fill", color.Color{0.0, 0.0, 0.0, 1.0, false},
+				"text-size", float64(12),
+				"text-name", "[name]",
+				"text-placement-list", stripPos([]*Properties{NewProperties("text-dx", float64(9)), NewProperties("text-size", float64(6), "text-name", "[nm]")}),
+			),
+		},
+	})
+}
+
+func stripPos(pl []*Properties) []*Properties {
+	for _, p := range pl {
+		for k, v := range p.values {
+			v.pos = position{}
+			v.specificity = specificity{}
+			p.values[k] = v
+		}
+	}
+	return pl
 }
 
 func TestDecoderClasses(t *testing.T) {
 	var rules []Rule
-	rules = loadRules(t, "tests/014-classes.mss", "lakes", "land")
+	rules = loadRules(t, "../builder/tests/014-classes.mss", "lakes", "land")
 	assertRulesEq(t, rules, []Rule{
 		Rule{Layer: "lakes", Class: "land", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("line-width", float64(0.5), "line-color", color.Color{0.0, 1.0, 0.5, 1.0, false}, "polygon-fill", color.Color{240.0, 1.0, 0.5, 1.0, false})},
 	})
 
 	// basin class is inside water, no match
-	rules = loadRules(t, "tests/014-classes.mss", "", "basin")
+	rules = loadRules(t, "../builder/tests/014-classes.mss", "", "basin")
 	assertRulesEq(t, rules, []Rule{})
 
-	rules = loadRules(t, "tests/014-classes.mss", "", "water")
+	rules = loadRules(t, "../builder/tests/014-classes.mss", "", "water")
 	assertRulesEq(t, rules, []Rule{
 		Rule{Layer: "", Class: "water", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("polygon-fill", color.Color{120.0, 1.0, 0.5, 1.0, false}, "line-width", float64(1))},
 	})
 
 	// return .water.basin property regardless of requested class order
-	rules = loadRules(t, "tests/014-classes.mss", "", "basin", "water")
+	rules = loadRules(t, "../builder/tests/014-classes.mss", "", "basin", "water")
 	assertRulesEq(t, rules, []Rule{
 		Rule{Layer: "", Class: "basin", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("polygon-fill", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-width", float64(1), "polygon-opacity", float64(0.5))},
 	})
-	rules = loadRules(t, "tests/014-classes.mss", "", "water", "basin")
+	rules = loadRules(t, "../builder/tests/014-classes.mss", "", "water", "basin")
 	assertRulesEq(t, rules, []Rule{
 		Rule{Layer: "", Class: "water", Attachment: "", Filters: []Filter{}, Zoom: AllZoom, Properties: NewProperties("polygon-fill", color.Color{0.0, 0.0, 1.0, 1.0, false}, "line-width", float64(1), "polygon-opacity", float64(0.5))},
 	})

@@ -1,0 +1,57 @@
+LAYER
+  NAME roads
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    # Zoom{=17}
+    MAXSCALEDENOM 5000
+    MINSCALEDENOM 2500
+    EXPRESSION (('[service]' = 'yard') AND ('[type]' = 'rail'))
+    STYLE
+      WIDTH 5
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION (('[service]' = 'yard') AND ('[type]' = 'rail'))
+    STYLE
+      WIDTH 1
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=17}
+    MAXSCALEDENOM 5000
+    MINSCALEDENOM 2500
+    EXPRESSION ('[type]' = 'rail')
+    STYLE
+      WIDTH 5
+      COLOR "#ffff00"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=17}
+    MAXSCALEDENOM 5000
+    MINSCALEDENOM 2500
+    STYLE
+      WIDTH 2
+      COLOR "#ffff00"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

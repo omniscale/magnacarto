@@ -1,0 +1,35 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="roads" filter-mode="first">
+    <Rule>
+      <!--Zoom{=17}-->
+      <MaxScaleDenominator>5000</MaxScaleDenominator>
+      <MinScaleDenominator>2500</MinScaleDenominator>
+      <Filter>(([service] = &#39;yard&#39;) and ([type] = &#39;rail&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="5"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([service] = &#39;yard&#39;) and ([type] = &#39;rail&#39;))</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=17}-->
+      <MaxScaleDenominator>5000</MaxScaleDenominator>
+      <MinScaleDenominator>2500</MinScaleDenominator>
+      <Filter>([type] = &#39;rail&#39;)</Filter>
+      <LineSymbolizer stroke="#ffff00" stroke-width="5"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=17}-->
+      <MaxScaleDenominator>5000</MaxScaleDenominator>
+      <MinScaleDenominator>2500</MinScaleDenominator>
+      <LineSymbolizer stroke="#ffff00" stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="roads" srs="" status="off">
+    <StyleName>roads</StyleName>
+  </Layer>
+</Map>

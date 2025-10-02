@@ -1,0 +1,88 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <FontSet name="fontset-1">
+    <Font face-name="Foo"></Font>
+    <Font face-name="Bar"></Font>
+    <Font face-name="Baz"></Font>
+  </FontSet>
+  <Style name="num" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke-width="12"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="hash" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="#66ccff" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="hash2" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="#6666cc" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="rgb" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="#6600ff" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="rgbpercent" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="#6600ff" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="rgba" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="rgba(0, 255, 102, 0.40000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="rgbacompat" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="rgba(0, 255, 102, 0.40000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="rgbapercent" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="rgba(0, 255, 102, 0.40000)" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="list" filter-mode="first">
+    <Rule>
+      <TextSymbolizer fontset-name="fontset-1" size="12">foo</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="listnum" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke-dasharray="2, 3, 4" stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="num" srs="" status="off">
+    <StyleName>num</StyleName>
+  </Layer>
+  <Layer name="hash" srs="" status="off">
+    <StyleName>hash</StyleName>
+  </Layer>
+  <Layer name="hash2" srs="" status="off">
+    <StyleName>hash2</StyleName>
+  </Layer>
+  <Layer name="rgb" srs="" status="off">
+    <StyleName>rgb</StyleName>
+  </Layer>
+  <Layer name="rgbpercent" srs="" status="off">
+    <StyleName>rgbpercent</StyleName>
+  </Layer>
+  <Layer name="rgba" srs="" status="off">
+    <StyleName>rgba</StyleName>
+  </Layer>
+  <Layer name="rgbacompat" srs="" status="off">
+    <StyleName>rgbacompat</StyleName>
+  </Layer>
+  <Layer name="rgbapercent" srs="" status="off">
+    <StyleName>rgbapercent</StyleName>
+  </Layer>
+  <Layer name="list" srs="" status="off">
+    <StyleName>list</StyleName>
+  </Layer>
+  <Layer name="listnum" srs="" status="off">
+    <StyleName>listnum</StyleName>
+  </Layer>
+</Map>

@@ -1,0 +1,12 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="lakes" filter-mode="first">
+    <Rule>
+      <LineSymbolizer stroke="#ff0000" stroke-width="0.5"></LineSymbolizer>
+      <PolygonSymbolizer fill="#00ff00"></PolygonSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="lakes" srs="" status="off">
+    <StyleName>lakes</StyleName>
+  </Layer>
+</Map>

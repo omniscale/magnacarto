@@ -1,0 +1,55 @@
+LAYER
+  NAME country-label
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    # Zoom{=5}
+    MAXSCALEDENOM 25000000
+    MINSCALEDENOM 12500000
+    EXPRESSION ('[type]' = 'foo')
+    LABEL
+      SIZE 9.025909592061742
+      TEXT '[ABBREV]'
+      FONT "unifont"
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+  CLASS
+    # Zoom{>=4}
+    MAXSCALEDENOM 50000000
+    EXPRESSION ('[type]' = 'foo')
+    LABEL
+      SIZE 7.438257993384785
+      TEXT '[ABBREV]'
+      FONT "unifont"
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+  CLASS
+    # Zoom{=5}
+    MAXSCALEDENOM 25000000
+    MINSCALEDENOM 12500000
+    LABEL
+      SIZE 9.025909592061742
+      TEXT '\'\''
+      FONT "unifont"
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+  CLASS
+    LABEL
+      SIZE 7.438257993384785
+      TEXT '\'\''
+      FONT "unifont"
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END

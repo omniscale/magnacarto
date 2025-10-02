@@ -1,0 +1,13 @@
+LAYER
+  NAME lakes
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 0.5
+      COLOR "#ff0000"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

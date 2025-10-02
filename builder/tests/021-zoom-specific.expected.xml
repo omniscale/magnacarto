@@ -1,0 +1,31 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="roads" filter-mode="first">
+    <Rule>
+      <!--Zoom{=15}-->
+      <MaxScaleDenominator>25000</MaxScaleDenominator>
+      <MinScaleDenominator>12500</MinScaleDenominator>
+      <Filter>([type] = &#39;primary&#39;)</Filter>
+      <LineSymbolizer stroke="#ff0000" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="5"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{>=14}-->
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <Filter>([type] = &#39;primary&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <!--Zoom{=15}-->
+      <MaxScaleDenominator>25000</MaxScaleDenominator>
+      <MinScaleDenominator>12500</MinScaleDenominator>
+      <LineSymbolizer stroke="#ffffff" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="5"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{>=14}-->
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+    </Rule>
+    <Rule></Rule>
+  </Style>
+  <Layer name="roads" srs="" status="off">
+    <StyleName>roads</StyleName>
+  </Layer>
+</Map>

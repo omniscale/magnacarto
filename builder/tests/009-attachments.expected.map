@@ -1,0 +1,43 @@
+LAYER
+  NAME class-foo
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ('[type]' = 'foo')
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME class-bar
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    # Zoom{=1}
+    MAXSCALEDENOM 500000000
+    MINSCALEDENOM 200000000
+    EXPRESSION ('[type]' = 'baz')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    # Zoom{=1}
+    MAXSCALEDENOM 500000000
+    MINSCALEDENOM 200000000
+    EXPRESSION ('[type]' = 'foo')
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

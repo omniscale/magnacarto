@@ -1,0 +1,117 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="lines" filter-mode="first">
+    <Rule>
+      <Filter>(([cap] = &#39;square&#39;) and ([join] = &#39;miter&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="square" stroke-linejoin="miter" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;butt&#39;) and ([join] = &#39;miter&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;round&#39;) and ([join] = &#39;miter&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="round" stroke-linejoin="miter" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;square&#39;) and ([join] = &#39;round&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="square" stroke-linejoin="round" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;butt&#39;) and ([join] = &#39;round&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;round&#39;) and ([join] = &#39;round&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;square&#39;) and ([join] = &#39;bevel&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="square" stroke-linejoin="bevel" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;butt&#39;) and ([join] = &#39;bevel&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="butt" stroke-linejoin="bevel" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;round&#39;) and ([join] = &#39;bevel&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="round" stroke-linejoin="bevel" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([join] = &#39;bevel&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linejoin="bevel" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([join] = &#39;round&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linejoin="round" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([join] = &#39;miter&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linejoin="miter" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;square&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="square" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;butt&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="butt" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;round&#39;) and ([type] = &#39;capjoin&#39;))</Filter>
+      <LineSymbolizer stroke-linecap="round" stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>([type] = &#39;capjoin&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;square&#39;) and ([join] = &#39;bevel&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;butt&#39;) and ([join] = &#39;bevel&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;round&#39;) and ([join] = &#39;bevel&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>([join] = &#39;bevel&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;square&#39;) and ([join] = &#39;round&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;butt&#39;) and ([join] = &#39;round&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;round&#39;) and ([join] = &#39;round&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>([join] = &#39;round&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;square&#39;) and ([join] = &#39;miter&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;butt&#39;) and ([join] = &#39;miter&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>(([cap] = &#39;round&#39;) and ([join] = &#39;miter&#39;))</Filter>
+    </Rule>
+    <Rule>
+      <Filter>([join] = &#39;miter&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <Filter>([cap] = &#39;square&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <Filter>([cap] = &#39;butt&#39;)</Filter>
+    </Rule>
+    <Rule>
+      <Filter>([cap] = &#39;round&#39;)</Filter>
+    </Rule>
+  </Style>
+  <Layer name="lines" srs="" status="off">
+    <StyleName>lines</StyleName>
+  </Layer>
+</Map>

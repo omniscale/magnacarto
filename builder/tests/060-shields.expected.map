@@ -1,0 +1,73 @@
+IMAGECOLOR "#ffffff"
+LAYER
+  NAME roads
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ('[type]' = 'motorway')
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME labels_roads_refs
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION (([reflen] >= 6) AND ('[type]' = 'motorway'))
+    LABEL
+      SIZE 5.850606394707828
+      COLOR "#eeeeee"
+      TEXT '[ref]'
+      MINDISTANCE 250
+      BUFFER 125
+      PARTIALS false
+      FONT "DejaVuSansBook"
+      TYPE truetype
+      STYLE
+        SYMBOL "img-rail-24-svg"
+      END
+    END
+  END
+  CLASS
+    EXPRESSION (([reflen] = 5) AND ('[type]' = 'motorway'))
+    LABEL
+      SIZE 5.850606394707828
+      COLOR "#eeeeee"
+      TEXT '[ref]'
+      MINDISTANCE 250
+      BUFFER 125
+      PARTIALS false
+      FONT "DejaVuSansBook"
+      TYPE truetype
+      STYLE
+        SYMBOL "img-rail-24-svg"
+      END
+    END
+  END
+  CLASS
+    EXPRESSION ('[type]' = 'motorway')
+    LABEL
+      SIZE 5.850606394707828
+      COLOR "#eeeeee"
+      TEXT '[ref]'
+      MINDISTANCE 250
+      BUFFER 125
+      PARTIALS false
+      FONT "DejaVuSansBook"
+      TYPE truetype
+      STYLE
+        SYMBOL "img-rail-24-svg"
+      END
+    END
+  END
+END
+SYMBOL
+  NAME img-rail-24-svg
+  IMAGE "img/rail-24.svg"
+  TYPE svg
+END

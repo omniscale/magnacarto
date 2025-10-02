@@ -1,0 +1,29 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="class-foo" filter-mode="first">
+    <Rule>
+      <Filter>([type] = &#39;foo&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="class-bar" filter-mode="first">
+    <Rule>
+      <!--Zoom{=1}-->
+      <MaxScaleDenominator>500000000</MaxScaleDenominator>
+      <MinScaleDenominator>200000000</MinScaleDenominator>
+      <Filter>([type] = &#39;baz&#39;)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+    <Rule>
+      <!--Zoom{=1}-->
+      <MaxScaleDenominator>500000000</MaxScaleDenominator>
+      <MinScaleDenominator>200000000</MinScaleDenominator>
+      <Filter>([type] = &#39;foo&#39;)</Filter>
+      <LineSymbolizer stroke-width="1"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="class" srs="" status="off">
+    <StyleName>class-foo</StyleName>
+    <StyleName>class-bar</StyleName>
+  </Layer>
+</Map>

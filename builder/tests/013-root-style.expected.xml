@@ -1,0 +1,12 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="" filter-mode="first">
+    <Rule>
+      <!--Zoom{>=2}-->
+      <MaxScaleDenominator>200000000</MaxScaleDenominator>
+    </Rule>
+  </Style>
+  <Layer name="" srs="" status="off" maximum-scale-denominator="200000000">
+    <StyleName></StyleName>
+  </Layer>
+</Map>

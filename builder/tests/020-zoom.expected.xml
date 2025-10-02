@@ -1,0 +1,25 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="foo" filter-mode="first">
+    <Rule>
+      <!--Zoom{=11}-->
+      <MaxScaleDenominator>400000</MaxScaleDenominator>
+      <MinScaleDenominator>200000</MinScaleDenominator>
+      <LineSymbolizer stroke-width="11"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="bar" filter-mode="first">
+    <Rule>
+      <!--Zoom{11 12 13 14}-->
+      <MaxScaleDenominator>400000</MaxScaleDenominator>
+      <MinScaleDenominator>25000</MinScaleDenominator>
+      <LineSymbolizer stroke-width="12"></LineSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="foo" srs="" status="off" maximum-scale-denominator="400000" minimum-scale-denominator="200000">
+    <StyleName>foo</StyleName>
+  </Layer>
+  <Layer name="bar" srs="" status="off" maximum-scale-denominator="400000" minimum-scale-denominator="25000">
+    <StyleName>bar</StyleName>
+  </Layer>
+</Map>

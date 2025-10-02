@@ -1,0 +1,211 @@
+LAYER
+  NAME l
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ('[func]' = 'darken_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#4d4d4d"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'lighten_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#b3b3b3"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'spin_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#808080"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'fadeout_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#808080cc"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'fadein_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#808080"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'desaturate_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#808080"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'saturate_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#996767"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'null_grey')
+    STYLE
+      WIDTH 1
+      COLOR "#808080"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'darken_rgba')
+    STYLE
+      WIDTH 1
+      COLOR "#310a5880"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'lighten_rgba')
+    STYLE
+      WIDTH 1
+      COLOR "#9744ea80"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'spin_rgba')
+    STYLE
+      WIDTH 1
+      COLOR "#6514b480"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'fadeout_rgba')
+    STYLE
+      WIDTH 1
+      COLOR "#6414b44d"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'fadein_rgba')
+    STYLE
+      WIDTH 1
+      COLOR "#6414b4b3"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'desaturate_rgba')
+    STYLE
+      WIDTH 1
+      COLOR "#6428a080"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'saturate_rgba')
+    STYLE
+      WIDTH 1
+      COLOR "#6400c880"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'darken')
+    STYLE
+      WIDTH 1
+      COLOR "#4d2e08"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'lighten')
+    STYLE
+      WIDTH 1
+      COLOR "#eb9b36"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'spin')
+    STYLE
+      WIDTH 1
+      COLOR "#aa6711"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'fadeout')
+    STYLE
+      WIDTH 1
+      COLOR "#aa6611cc"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'fadein')
+    STYLE
+      WIDTH 1
+      COLOR "#aa6611"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'desaturate')
+    STYLE
+      WIDTH 1
+      COLOR "#976424"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    EXPRESSION ('[func]' = 'saturate')
+    STYLE
+      WIDTH 1
+      COLOR "#bb6800"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

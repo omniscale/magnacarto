@@ -1,0 +1,36 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="hillshade" filter-mode="first">
+    <Rule>
+      <RasterSymbolizer comp-op="grain-merge" opacity="1" scaling="lanczos"></RasterSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="slope" filter-mode="first">
+    <Rule>
+      <RasterSymbolizer comp-op="grain-extract" default-color="rgba(0, 0, 0, 0.00000)" default-mode="linear" opacity="1" scaling="lanczos">
+        <stop value="0" color="#ffffff"></stop>
+        <stop value="90" color="#000000"></stop>
+      </RasterSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="dem" filter-mode="first">
+    <Rule>
+      <RasterSymbolizer comp-op="color-dodge" default-color="rgba(0, 0, 0, 0.00000)" default-mode="linear" opacity="1" scaling="lanczos">
+        <stop value="0" color="#47443e"></stop>
+        <stop value="50" color="#77654a"></stop>
+        <stop value="100" color="#556b32"></stop>
+        <stop value="200" color="#bbbb78"></stop>
+        <stop value="255" color="#d9deaa"></stop>
+      </RasterSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="hillshade" srs="" status="off">
+    <StyleName>hillshade</StyleName>
+  </Layer>
+  <Layer name="slope" srs="" status="off">
+    <StyleName>slope</StyleName>
+  </Layer>
+  <Layer name="dem" srs="" status="off">
+    <StyleName>dem</StyleName>
+  </Layer>
+</Map>

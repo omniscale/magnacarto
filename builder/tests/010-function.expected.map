@@ -1,0 +1,39 @@
+LAYER
+  NAME func
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#aa0033e6"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME funcnested
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#dd0042cc"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
+LAYER
+  NAME funcfunc
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    STYLE
+      WIDTH 1
+      COLOR "#a8547e77"
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END
