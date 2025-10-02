@@ -160,6 +160,10 @@ The example from [Mapnik TextSymbolizer](https://github.com/mapnik/mapnik/wiki/T
             {text-fill: orange; text-dy: 8; text-name: "[nr]";};
     }
 
+### Text Language
+
+Use `text-lang: "[lang]"` to set `<TextSymbolizer lang="[lang]">`.
+
 Support
 -------
 
