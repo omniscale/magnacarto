@@ -320,6 +320,15 @@ func (p *Properties) GetStopList(property string) ([]Stop, bool) {
 	return stops, true
 }
 
+func (p *Properties) GetPropertiesList(name string) ([]*Properties, bool) {
+	v, ok := p.get(name)
+	if !ok {
+		return nil, false
+	}
+	r, ok := v.([]*Properties)
+	return r, ok
+}
+
 // combineProperties returns new properties all values from a and b. uses more specific value
 // for duplicate keys.
 func combineProperties(a, b *Properties) *Properties {

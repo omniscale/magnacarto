@@ -246,6 +246,10 @@ func TestParserErrors(t *testing.T) {
 		{`@foo: lighten(red, 10%, );`, "unexpected value RPAREN"},
 		{`@foo: lighten(red, 10%`, "expected end of function or comma, got EOF"},
 		{`@foo: lighten(red, 10% 123)`, "expected end of function or comma, got NUM"},
+
+		// invalid text-placement-list
+		{`#bar { text-placement-list: 123};`, "expected LBRACE found NUMBER"},
+		{`#bar { text-placement-list: {line-width: 1}};`, "only text- properties are allowed in text-placement-list, not line-width"},
 	}
 
 	for _, tt := range tests {
@@ -281,8 +285,6 @@ func TestParserFilter(t *testing.T) {
 			mss := d.MSS()
 			t.Log(mss.Layers())
 			rules := mss.LayerZoomRules("foo", AllZoom)
-			fmt.Println(rules)
-			fmt.Println(len(rules))
 			if len(rules) != 1 {
 				t.Fatalf("expected one rule: %v", rules)
 			}
@@ -319,7 +321,6 @@ func decodeLayerProperties(t *testing.T, mss string) *Properties {
 	assert.NoError(t, err)
 
 	r := d.MSS().LayerRules("foo")
-	fmt.Println(r)
 	return r[0].Properties
 }
 
@@ -466,6 +467,8 @@ func allRules(mss *MSS) []Rule {
 }
 
 func loadRules(t *testing.T, f string, layer string, classes ...string) []Rule {
+	t.Helper()
+
 	r, err := os.Open(f)
 	if err != nil {
 		t.Fatal(err)

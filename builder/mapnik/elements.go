@@ -160,55 +160,65 @@ type PointSymbolizer struct {
 }
 
 type TextSymbolizer struct {
-	XMLName                xml.Name `xml:"TextSymbolizer"`
-	AllowOverlap           *string  `xml:"allow-overlap,attr"`
-	AvoidEdges             *string  `xml:"avoid-edges,attr"`
-	CharacterSpacing       *string  `xml:"character-spacing,attr"`
-	Clip                   *string  `xml:"clip,attr"`
-	Dx                     *string  `xml:"dx,attr"`
-	Dy                     *string  `xml:"dy,attr"`
-	FaceName               *string  `xml:"face-name,attr"`
-	FontFeatureSettings    *string  `xml:"font-feature-settings,attr"`
-	Fill                   *string  `xml:"fill,attr"`
-	FontsetName            *string  `xml:"fontset-name,attr"`
-	HaloFill               *string  `xml:"halo-fill,attr"`
-	HaloRadius             *string  `xml:"halo-radius,attr"`
-	HaloOpacity            *string  `xml:"halo-opacity,attr"`
-	HaloRasterizer         *string  `xml:"halo-rasterizer,attr"`
-	HaloTransform          *string  `xml:"halo-transform,attr"`
-	HaloCompOp             *string  `xml:"halo-comp-op,attr"`
-	LineSpacing            *string  `xml:"line-spacing,attr"`
-	MinimumDistance        *string  `xml:"minimum-distance,attr"`
-	MinimumPadding         *string  `xml:"minimum-padding,attr"`
-	Name                   *string  `xml:",chardata"`
-	Opacity                *string  `xml:"opacity,attr"`
-	Orientation            *string  `xml:"orientation,attr"`
-	Placement              *string  `xml:"placement,attr"`
-	PlacementType          *string  `xml:"placement-type,attr"`
-	Placements             *string  `xml:"placements,attr"`
-	Size                   *string  `xml:"size,attr"`
-	Spacing                *string  `xml:"spacing,attr"`
-	TextTransform          *string  `xml:"text-transform,attr"`
-	WrapBefore             *string  `xml:"wrap-before,attr"`
-	WrapCharacter          *string  `xml:"wrap-character,attr"`
-	RepeatWrapCharacter    *string  `xml:"repeat-wrap-character,attr"`
-	WrapWidth              *string  `xml:"wrap-width,attr"`
-	Ratio                  *string  `xml:"text-ratio,attr"`
-	LabelPositionTolerance *string  `xml:"label-position-tolerance,attr"`
-	MaxCharAngleDelta      *string  `xml:"max-char-angle-delta,attr"`
-	VerticalAlign          *string  `xml:"vertical-alignment,attr"`
-	HorizontalAlign        *string  `xml:"horizontal-alignment,attr"`
-	JustifyAlign           *string  `xml:"justify-alignment,attr"`
-	Margin                 *string  `xml:"margin,attr"`
-	RepeatDistance         *string  `xml:"repeat-distance,attr"`
-	MinPathLength          *string  `xml:"minimum-path-length,attr"`
-	RotateDisplacement     *string  `xml:"rotate-displacement,attr"`
-	Upright                *string  `xml:"upright,attr"`
-	Simplify               *string  `xml:"simplify,attr"`
-	SimplifyAlgorithm      *string  `xml:"simplify-algorithm,attr"`
-	Smooth                 *string  `xml:"smooth,attr"`
-	CompOp                 *string  `xml:"comp-op,attr"`
-	LargestBboxOnly        *string  `xml:"largest-bbox-only,attr"`
+	XMLName xml.Name `xml:"TextSymbolizer"`
+	TextParameters
+	PlacementList []Placement `xml:"Placement"`
+}
+
+type TextParameters struct {
+	AllowOverlap           *string `xml:"allow-overlap,attr"`
+	AvoidEdges             *string `xml:"avoid-edges,attr"`
+	CharacterSpacing       *string `xml:"character-spacing,attr"`
+	Clip                   *string `xml:"clip,attr"`
+	Dx                     *string `xml:"dx,attr"`
+	Dy                     *string `xml:"dy,attr"`
+	FaceName               *string `xml:"face-name,attr"`
+	FontFeatureSettings    *string `xml:"font-feature-settings,attr"`
+	Fill                   *string `xml:"fill,attr"`
+	FontsetName            *string `xml:"fontset-name,attr"`
+	HaloFill               *string `xml:"halo-fill,attr"`
+	HaloRadius             *string `xml:"halo-radius,attr"`
+	HaloOpacity            *string `xml:"halo-opacity,attr"`
+	HaloRasterizer         *string `xml:"halo-rasterizer,attr"`
+	HaloTransform          *string `xml:"halo-transform,attr"`
+	HaloCompOp             *string `xml:"halo-comp-op,attr"`
+	LineSpacing            *string `xml:"line-spacing,attr"`
+	MinimumDistance        *string `xml:"minimum-distance,attr"`
+	MinimumPadding         *string `xml:"minimum-padding,attr"`
+	Name                   *string `xml:",chardata"`
+	Opacity                *string `xml:"opacity,attr"`
+	Orientation            *string `xml:"orientation,attr"`
+	Placement              *string `xml:"placement,attr"`
+	PlacementType          *string `xml:"placement-type,attr"`
+	Placements             *string `xml:"placements,attr"`
+	Size                   *string `xml:"size,attr"`
+	Spacing                *string `xml:"spacing,attr"`
+	TextTransform          *string `xml:"text-transform,attr"`
+	WrapBefore             *string `xml:"wrap-before,attr"`
+	WrapCharacter          *string `xml:"wrap-character,attr"`
+	RepeatWrapCharacter    *string `xml:"repeat-wrap-character,attr"`
+	WrapWidth              *string `xml:"wrap-width,attr"`
+	Ratio                  *string `xml:"text-ratio,attr"`
+	LabelPositionTolerance *string `xml:"label-position-tolerance,attr"`
+	MaxCharAngleDelta      *string `xml:"max-char-angle-delta,attr"`
+	VerticalAlign          *string `xml:"vertical-alignment,attr"`
+	HorizontalAlign        *string `xml:"horizontal-alignment,attr"`
+	JustifyAlign           *string `xml:"justify-alignment,attr"`
+	Margin                 *string `xml:"margin,attr"`
+	RepeatDistance         *string `xml:"repeat-distance,attr"`
+	MinPathLength          *string `xml:"minimum-path-length,attr"`
+	RotateDisplacement     *string `xml:"rotate-displacement,attr"`
+	Upright                *string `xml:"upright,attr"`
+	Simplify               *string `xml:"simplify,attr"`
+	SimplifyAlgorithm      *string `xml:"simplify-algorithm,attr"`
+	Smooth                 *string `xml:"smooth,attr"`
+	CompOp                 *string `xml:"comp-op,attr"`
+	LargestBboxOnly        *string `xml:"largest-bbox-only,attr"`
+}
+
+type Placement struct {
+	XMLName xml.Name `xml:"Placement"`
+	TextParameters
 }
 
 type MarkersSymbolizer struct {

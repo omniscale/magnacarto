@@ -370,6 +370,7 @@ func init() {
 		"text-placement":                isKeyword("line", "point", "vertex", "interior"),
 		"text-placement-type":           isKeyword("dummy", "simple", "list"),
 		"text-placements":               isString,
+		"text-placement-list":           nil, // not validated, as it's directly parsed in decode
 		"text-size":                     isNumber,
 		"text-spacing":                  isNumber,
 		"text-transform":                isKeyword("none", "uppercase", "lowercase", "capitalize", "reverse"),

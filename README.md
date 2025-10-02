@@ -139,6 +139,27 @@ Refer to the following CartoCSS projects for larger .mml and .mss examples.
 Please note that openstreetmap-carto relies on a few advanced Mapnik features that are not supported by Mapserver. Future versions of Magnacarto might work around these limitations.
 
 
+### Advanced Feature
+
+There are a few advanced features that are not supported by the original CartoCSS.
+
+### Text placement list
+
+The example from [Mapnik TextSymbolizer](https://github.com/mapnik/mapnik/wiki/TextSymbolizer#list) with `<Placement>` can be replicated like this:
+
+    #labels {
+        text-name: "[name]";
+        text-face-name: "DejaVu Sans Book";
+        text-size: 16;
+        text-placement: point;
+        text-dy: 8;
+        text-fill: blue;
+        text-placement-list:
+            {text-size: 10; text-dy: -8; text-fill: red;},
+            {text-fill: green; text-name: "[abbreviated_name]";},
+            {text-fill: orange; text-dy: 8; text-name: "[nr]";};
+    }
+
 Support
 -------
 

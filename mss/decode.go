@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"strings"
 
 	"strconv"
 
@@ -223,6 +224,12 @@ func (d *Decoder) evaluateProperties(properties *Properties, validate bool) {
 		return
 	}
 	for _, k := range properties.keys() {
+		if k.name == "text-placement-list" {
+			pl := properties.getKey(k).([]*Properties)
+			for _, p := range pl {
+				d.evaluateProperties(p, true)
+			}
+		}
 		if expr, ok := properties.getKey(k).(*expression); ok {
 			v := d.evaluateExpression(expr)
 			if validate {
@@ -287,7 +294,11 @@ func (d *Decoder) block() {
 				keyword = tok.value
 			}
 			d.expect(tokenColon)
-			d.expressionList()
+			if keyword == "text-placement-list" {
+				d.textPlacementList()
+			} else {
+				d.expressionList()
+			}
 			d.mss.setProperty(keyword, d.lastValue,
 				position{line: tok.line, column: tok.column, filename: d.filename, filenum: d.filesParsed, index: d.propertyIndex},
 			)
@@ -302,7 +313,8 @@ func (d *Decoder) block() {
 }
 
 // decode multiple selectors, eg:
-//   #foo, #bar[zoom=3]
+//
+//	#foo, #bar[zoom=3]
 func (d *Decoder) selectors(tok *token) {
 	for {
 		if tok.t == tokenHash || tok.t == tokenAttachment || tok.t == tokenClass || tok.t == tokenLBracket {
@@ -327,7 +339,8 @@ func (d *Decoder) selectors(tok *token) {
 }
 
 // decode single selector, eg:
-//   #foo::attachment[filter=foo][zoom>=12]
+//
+//	#foo::attachment[filter=foo][zoom>=12]
 func (d *Decoder) selector(tok *token) {
 	d.mss.pushSelector()
 	for {
@@ -353,7 +366,8 @@ func (d *Decoder) selector(tok *token) {
 }
 
 // decode multiple filters. eg:
-//   [filter=foo][zoom>=12]
+//
+//	[filter=foo][zoom>=12]
 func (d *Decoder) filters(tok *token) {
 	for {
 		d.filter()
@@ -368,7 +382,8 @@ func (d *Decoder) filters(tok *token) {
 }
 
 // decode single filters. eg:
-//   [filter=foo]
+//
+//	[filter=foo]
 func (d *Decoder) filter() {
 	tok := d.next()
 	if tok.t == tokenIdent && tok.value == "zoom" {
@@ -449,7 +464,8 @@ func (d *Decoder) filter() {
 }
 
 // decode comparision. eg:
-//   = or >=
+//
+//	= or >=
 func (d *Decoder) comp() CompOp {
 	tok := d.next()
 	if tok.t != tokenComp && tok.t != tokenModulo {
@@ -554,6 +570,58 @@ func (d *Decoder) negOrValue() {
 		d.expr.addOperator(typeNegation)
 	} else {
 		d.value(tok)
+	}
+}
+
+func (d *Decoder) textPlacementList() {
+	pl := []*Properties{}
+	p := &Properties{}
+	d.textPlacement(p)
+	pl = append(pl, p)
+	for {
+		tok := d.next()
+		if tok.t == tokenComma {
+			p := &Properties{}
+			d.textPlacement(p)
+			pl = append(pl, p)
+		} else {
+			d.backup()
+			break
+		}
+	}
+
+	d.propertyIndex += 1
+	d.lastValue = pl
+	d.expr = &expression{}
+}
+
+func (d *Decoder) textPlacement(p *Properties) {
+	d.expect(tokenLBrace)
+	for {
+		tok := d.next()
+		switch tok.t {
+		case tokenIdent:
+			keyword := tok.value
+			d.expect(tokenColon)
+			if keyword == "text-placement-list" {
+				d.error(d.pos(tok), "nested text-placement-list not allowed")
+				return
+			}
+			if !strings.HasPrefix(keyword, "text-") {
+				d.error(d.pos(tok), "only text- properties are allowed in text-placement-list, not %s", tok.value)
+				return
+			}
+			d.expressionList()
+			p.setPos(key{name: keyword}, d.lastValue,
+				position{line: tok.line, column: tok.column, filename: d.filename, filenum: d.filesParsed, index: d.propertyIndex},
+			)
+			d.propertyIndex += 1
+			d.expectEndOfStatement()
+		case tokenRBrace:
+			return
+		default:
+			d.error(d.pos(tok), "unexpected token %v", tok)
+		}
 	}
 }
 
