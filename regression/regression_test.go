@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/omniscale/magnacarto/builder"
@@ -123,9 +124,9 @@ func testIt(t *testing.T, c testCase) {
 	buildCarto(t, c)
 	buildMagnacarto(t, c, false)
 	buildMagnacarto(t, c, true)
-	renderMapnik(t, c, "magnacarto")
+	renderMapnik(t, c, "style-mapnik")
 	renderMapserver(t, c)
-	renderMapnik(t, c, "carto")
+	renderMapnik(t, c, "style-carto")
 	compare(t, c)
 }
 
@@ -153,7 +154,7 @@ func buildCarto(t *testing.T, c testCase) {
 	cmd := exec.Command("carto", "test.mml")
 	cmd.Dir = caseBuildDir
 
-	dst, err := os.Create(filepath.Join(caseBuildDir, "carto.xml"))
+	dst, err := os.Create(filepath.Join(caseBuildDir, "style-carto.xml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -180,7 +181,7 @@ func buildCarto(t *testing.T, c testCase) {
 	if err := cmd.Wait(); err != nil {
 		// carto outputs errors to stdout, read content of file to display err
 		dst.Close()
-		if dst, err := os.Open(filepath.Join(caseBuildDir, "carto.xml")); err == nil {
+		if dst, err := os.Open(filepath.Join(caseBuildDir, "style-carto.xml")); err == nil {
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -225,7 +226,7 @@ func renderMapnik(t *testing.T, c testCase, name string) {
 		t.Skip("mapnik not initialized")
 	}
 
-	f, err := os.Create(filepath.Join(caseBuildDir, "render-"+name+".png"))
+	f, err := os.Create(filepath.Join(caseBuildDir, "render-"+strings.TrimPrefix(name, "style-")+".png"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -250,12 +251,12 @@ func renderMapserver(t *testing.T, c testCase) {
 		t.Skip("mapserver not initialized")
 	}
 
-	f, err := os.Create(filepath.Join(caseBuildDir, "render-magnacarto-ms.png"))
+	f, err := os.Create(filepath.Join(caseBuildDir, "render-mapserver.png"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer f.Close()
-	_, err = mapserverRenderer.Render(filepath.Join(caseBuildDir, "magnacarto.map"), f, mapReq)
+	_, err = mapserverRenderer.Render(filepath.Join(caseBuildDir, "style-mapserver.map"), f, mapReq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -265,9 +266,9 @@ func renderMapserver(t *testing.T, c testCase) {
 func buildMagnacarto(t *testing.T, c testCase, mapfile bool) {
 	caseBuildDir := filepath.Join("build", c.Name)
 
-	suffix := ".xml"
+	suffix := "mapnik.xml"
 	if mapfile {
-		suffix = ".map"
+		suffix = "mapserver.map"
 	}
 
 	conf := config.Magnacarto{BaseDir: caseBuildDir}
@@ -289,7 +290,7 @@ func buildMagnacarto(t *testing.T, c testCase, mapfile bool) {
 		log.Fatal("error building map: ", err)
 	}
 
-	if err := m.WriteFiles(filepath.Join(caseBuildDir, "magnacarto"+suffix)); err != nil {
+	if err := m.WriteFiles(filepath.Join(caseBuildDir, "style-"+suffix)); err != nil {
 		log.Fatal("error writing map: ", err)
 	}
 }
@@ -298,15 +299,19 @@ func compare(t *testing.T, c testCase) {
 	dir := filepath.Join("build", c.Name)
 
 	if c.CartoCompare {
-		compareImg(t, dir, "render-carto.png", "render-magnacarto.png", c.CartoFuzz, c.CartoPxDiff)
+		compareImg(t, dir, "render-carto.png", "render-mapnik.png", c.CartoFuzz, c.CartoPxDiff)
 	}
 	if c.MapServerCompare {
-		compareImg(t, dir, "render-magnacarto.png", "render-magnacarto-ms.png", c.MapServerFuzz, c.MapServerPxDiff)
+		compareImg(t, dir, "render-mapnik.png", "render-mapserver.png", c.MapServerFuzz, c.MapServerPxDiff)
 	}
 }
 
 func compareImg(t *testing.T, dir, fileA, fileB string, fuzz float64, expected int64) {
-	fileDiff := "diff-" + fileA + "-" + fileB + ".png"
+	strip := func(f string) string {
+		return strings.TrimPrefix(strings.TrimSuffix(f, ".png"), "render-")
+	}
+
+	fileDiff := "diff-" + strip(fileA) + "-" + strip(fileB) + ".png"
 	cmd := exec.Command(
 		"compare", "-metric", "AE", "-fuzz", fmt.Sprintf("%.2f%%", fuzz), fileA, fileB, fileDiff,
 	)
