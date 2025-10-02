@@ -409,9 +409,7 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 
 func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb := TextParameters{}
-	if size, ok := p.GetFloat("text-size"); ok {
-		symb.Size = fmtFloat(size*m.scaleFactor, true)
-	}
+	symb.Size = fmtFloatProp(p, "text-size", m.scaleFactor)
 	symb.Fill = fmtColor(p.GetColor("text-fill"))
 	symb.Name = fmtField(p.GetFieldList("text-name"))
 	symb.AvoidEdges = fmtBool(p.GetBool("text-avoid-edges"))
