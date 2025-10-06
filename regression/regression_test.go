@@ -34,9 +34,11 @@ type testCase struct {
 	Lat              float64
 	Width            int
 	Height           int
+	CartoTest        bool
 	CartoCompare     bool
 	CartoFuzz        float64
 	CartoPxDiff      int64
+	MapServerTest    bool
 	MapServerCompare bool
 	MapServerFuzz    float64
 	MapServerPxDiff  int64
@@ -120,13 +122,20 @@ func testIt(t *testing.T, c testCase) {
 	if err := c.load(); err != nil {
 		t.Fatal(err)
 	}
+
+	fmt.Printf("%#v\n", c)
 	prepare(t, c)
-	buildCarto(t, c)
 	buildMagnacarto(t, c, false)
-	buildMagnacarto(t, c, true)
 	renderMapnik(t, c, "style-mapnik")
-	renderMapserver(t, c)
-	renderMapnik(t, c, "style-carto")
+
+	if c.CartoTest {
+		buildCarto(t, c)
+		renderMapnik(t, c, "style-carto")
+	}
+	if c.MapServerTest {
+		buildMagnacarto(t, c, true)
+		renderMapserver(t, c)
+	}
 	compare(t, c)
 }
 
@@ -298,10 +307,10 @@ func buildMagnacarto(t *testing.T, c testCase, mapfile bool) {
 func compare(t *testing.T, c testCase) {
 	dir := filepath.Join("build", c.Name)
 
-	if c.CartoCompare {
+	if c.CartoTest && c.CartoCompare {
 		compareImg(t, dir, "render-carto.png", "render-mapnik.png", c.CartoFuzz, c.CartoPxDiff)
 	}
-	if c.MapServerCompare {
+	if c.MapServerTest && c.MapServerCompare {
 		compareImg(t, dir, "render-mapnik.png", "render-mapserver.png", c.MapServerFuzz, c.MapServerPxDiff)
 	}
 }
