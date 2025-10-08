@@ -1,0 +1,43 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="labels_field" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="8">[name]</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="labels_fieldstring" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="8">[name]</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="labels_string" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="8">name</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="labels_stringexpr" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="8">foobar</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="labels_mixedconcat" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="8">&#34;[name] (&#34; + [elev] + &#34;)&#34;</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="labels_field" srs="" status="off">
+    <StyleName>labels_field</StyleName>
+  </Layer>
+  <Layer name="labels_fieldstring" srs="" status="off">
+    <StyleName>labels_fieldstring</StyleName>
+  </Layer>
+  <Layer name="labels_string" srs="" status="off">
+    <StyleName>labels_string</StyleName>
+  </Layer>
+  <Layer name="labels_stringexpr" srs="" status="off">
+    <StyleName>labels_stringexpr</StyleName>
+  </Layer>
+  <Layer name="labels_mixedconcat" srs="" status="off">
+    <StyleName>labels_mixedconcat</StyleName>
+  </Layer>
+</Map>

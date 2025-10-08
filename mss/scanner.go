@@ -110,6 +110,8 @@ const (
 	tokenSubstringMatch
 	tokenChar
 	tokenBOM
+	tokenFormatXml
+	tokenFormatXmlEnd
 )
 
 // tokenNames maps tokenType's to their names. Used for conversion to string.
@@ -153,6 +155,8 @@ var tokenNames = map[tokenType]string{
 	tokenSubstringMatch: "SUBSTRINGMATCH",
 	tokenChar:           "CHAR",
 	tokenBOM:            "BOM",
+	tokenFormatXml:      "FORMATXML",
+	tokenFormatXmlEnd:   "FORMATEND",
 }
 
 // Macros and productions -----------------------------------------------------
@@ -198,6 +202,8 @@ var productions = map[tokenType]string{
 	tokenComment:      `/\*[^\*]*[\*]+(?:[^/][^\*]*[\*]+)*/`,
 	tokenFunction:     `{ident}\(`,
 	tokenComp:         `>=|<=|>|<|!=|=~|=`,
+	tokenFormatXml:    `<Format`,
+	tokenFormatXmlEnd: `</Format>`,
 	//tokenIncludes:       `~=`,
 	//tokenDashMatch:      `\|=`,
 	//tokenPrefixMatch:    `\^=`,
@@ -224,6 +230,8 @@ var matchOrder = []tokenType{
 	tokenDimension,
 	tokenPercentage,
 	tokenNumber,
+	tokenFormatXml,
+	tokenFormatXmlEnd,
 	tokenComp,
 }
 

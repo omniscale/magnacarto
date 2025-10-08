@@ -457,7 +457,14 @@ func (m *Map) addTextSymbolizer(b *Block, r mss.Rule, isLine bool) (styled bool)
 		style := NewBlock("LABEL")
 		style.AddNonNil("Size", fmtFloat(textSize*FontFactor*m.scaleFactor-0.5, true))
 		style.AddNonNil("Color", fmtColor(r.Properties.GetColor("text-fill")))
-		style.AddNonNil("Text", fmtFieldString(r.Properties.GetFieldList("text-name")))
+
+		if f, ok := r.Properties.GetFieldList("text-name"); ok {
+			if hasFormat(f) {
+				m.unsupported["text-name-with-format"] = true
+				return false
+			}
+			style.AddNonNil("Text", fmtFieldString(f, true))
+		}
 
 		style.AddNonNil("Force", fmtBool(r.Properties.GetBool("text-allow-overlap")))
 
@@ -1060,6 +1067,16 @@ func (m *Map) addDatasource(block *Block, ds mml.Datasource, rules []mss.Rule) {
 	default:
 		fmt.Fprintf(os.Stderr, "datasource not supported by Mapserver: %v\n", ds)
 	}
+}
+
+func hasFormat(vals []interface{}) bool {
+	for _, v := range vals {
+		switch v.(type) {
+		case []mss.FormatParameter:
+			return true
+		}
+	}
+	return false
 }
 
 type Layer struct {

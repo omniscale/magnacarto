@@ -30,6 +30,11 @@ const (
 	typeSubtract
 	typeMultiply
 	typeDivide
+
+	typeFormatParam
+	typeFormatXml
+	typeFormatXmlClosing
+	typeFormatXmlEnd
 )
 
 func (t codeType) String() string {
@@ -72,6 +77,16 @@ func (t codeType) String() string {
 		return "S"
 	case typeUnknown:
 		return "?"
+	case typeFieldExpr:
+		return "[]"
+	case typeFormatParam:
+		return "="
+	case typeFormatXml:
+		return "<Format"
+	case typeFormatXmlClosing:
+		return ">"
+	case typeFormatXmlEnd:
+		return "</Format>"
 	default:
 		return fmt.Sprintf("%#v", t)
 	}
@@ -120,7 +135,7 @@ func evaluate(codes []code) ([]code, int, error) {
 	for i := 0; i < len(codes); i++ {
 		c := codes[i]
 		switch c.T {
-		case typeNum, typeColor, typePercent, typeString, typeKeyword, typeURL, typeBool, typeField, typeList:
+		case typeNum, typeColor, typePercent, typeString, typeKeyword, typeURL, typeBool, typeField, typeList, typeFormatParam:
 			codes[top] = c
 			top++
 			continue
@@ -129,199 +144,40 @@ func evaluate(codes []code) ([]code, int, error) {
 			a.Value = -a.Value.(float64)
 			codes[top-1] = a
 			continue
+		case typeFormatXml:
+			// evaluate <Format> parameters
+			v, parsed, err := evaluate(codes[i+1:])
+			i += parsed + 1
+			if err != nil {
+				return v, 0, err
+			}
+
+			for i, v := range v {
+				codes[top+i] = v
+			}
+			top += len(v)
+		case typeFormatXmlClosing:
+			// end evaluating <Format> parameters, used in sub-evaluate (see typeFormatXml above)
+			var values []FormatParameter
+			for i := 0; i < top; i += 2 {
+				values = append(values, FormatParameter{Key: codes[i].Value.(string), Value: codes[i+1].Value})
+			}
+			return []code{{T: typeFormatXml, Value: values}}, i, nil
+		case typeFormatXmlEnd:
+			codes[top] = code{T: typeFormatXmlEnd, Value: FormatEnd{}}
+			top++
+			continue
 		case typeFunction:
 			v, parsed, err := evaluate(codes[i+1:])
 			i += parsed + 1
 			if err != nil {
 				return v, 0, err
 			}
-			// TODO refactor parameter checking
-			if colorF, ok := colorFuncs[c.Value.(string)]; ok {
-				if len(v) != 2 {
-					return nil, 0, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
-				}
-				if v[0].T != typeColor {
-					return nil, 0, fmt.Errorf("function %s requires color as first argument, got %v", c.Value.(string), v[0])
-				}
-				if v[1].T != typeNum && v[1].T != typePercent {
-					return nil, 0, fmt.Errorf("function %s requires number/percent as second argument, got %v", c.Value.(string), v[1])
-				}
-				v = []code{{Value: colorF(v[0].Value.(color.Color), v[1].Value.(float64)/100), T: typeColor}}
-			} else if colorP, ok := colorParams[c.Value.(string)]; ok {
-				if len(v) != 1 {
-					return nil, 0, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
-				}
-				if v[0].T != typeColor {
-					return nil, 0, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
-				}
-				v = []code{{Value: colorP(v[0].Value.(color.Color)), T: typeNum}}
-			} else if c.Value.(string) == "mix" {
-				if len(v) != 3 {
-					return nil, 0, fmt.Errorf("function mix takes exactly three arguments, got %d", len(v))
-				}
-				if v[0].T != typeColor || v[1].T != typeColor {
-					return nil, 0, fmt.Errorf("function mix requires color as first and second argument, got %v and %v", v[0], v[1])
-				}
-				if v[2].T != typeNum && v[2].T != typePercent {
-					return nil, 0, fmt.Errorf("function mix requires number/percent as third argument, got %v", v[2])
-				}
-				v = []code{{Value: color.Mix(v[0].Value.(color.Color), v[1].Value.(color.Color), v[2].Value.(float64)/100), T: typeColor}}
-			} else if c.Value.(string) == "-mc-set-hue" {
-				if len(v) != 2 {
-					return nil, 0, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
-				}
-				if v[0].T != typeColor {
-					return nil, 0, fmt.Errorf("function %s requires color as first argument, got %v", c.Value.(string), v[0])
-				}
-				if v[1].T != typeColor {
-					return nil, 0, fmt.Errorf("function %s requires color as second argument, got %v", c.Value.(string), v[1])
-				}
-				v = []code{{Value: color.SetHue(v[0].Value.(color.Color), v[1].Value.(color.Color)), T: typeColor}}
-			} else if c.Value.(string) == "greyscale" || c.Value.(string) == "greyscalep" {
-				if len(v) != 1 {
-					return nil, 0, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
-				}
-				if v[0].T != typeColor {
-					return nil, 0, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
-				}
-				if c.Value.(string) == "greyscale" {
-					v = []code{{Value: color.Greyscale(v[0].Value.(color.Color)), T: typeColor}}
-				} else {
-					v = []code{{Value: color.GreyscaleP(v[0].Value.(color.Color)), T: typeColor}}
-				}
-			} else if c.Value.(string) == "rgb" || c.Value.(string) == "rgba" {
-				if c.Value.(string) == "rgb" && len(v) != 3 {
-					return nil, 0, fmt.Errorf("rgb takes exactly three arguments, got %d", len(v))
-				}
-				if c.Value.(string) == "rgba" && len(v) != 4 {
-					return nil, 0, fmt.Errorf("rgba takes exactly four arguments, got %d", len(v))
-				}
-				c := [4]float64{1, 1, 1, 1}
-				for i := range v {
-					if v[i].T == typeNum {
-						if i < 3 {
-							c[i] = v[i].Value.(float64) / 255
-						} else {
-							c[i] = v[i].Value.(float64) // alpha value is from 0.0-1.0
-							if c[i] > 1.0 {
-								c[i] /= 255 // TODO or clamp? compat with Carto?
-							}
-						}
-					} else if v[i].T == typePercent {
-						c[i] = v[i].Value.(float64) / 100
-					} else {
-						return nil, 0, fmt.Errorf("rgb/rgba takes float or percent arguments only, got %v", v[i])
-					}
-					if c[i] < 0 {
-						c[i] = 0
-					} else if c[i] > 255 {
-						c[i] = 255
-					}
-				}
-				v = []code{{Value: color.FromRgba(c[0], c[1], c[2], c[3], false), T: typeColor}}
-			} else if c.Value.(string) == "hsl" || c.Value.(string) == "hsla" {
-				if c.Value.(string) == "hsl" && len(v) != 3 {
-					return nil, 0, fmt.Errorf("hsl takes exactly three arguments, got %d", len(v))
-				}
-				if c.Value.(string) == "hsla" && len(v) != 4 {
-					return nil, 0, fmt.Errorf("hsla takes exactly four arguments, got %d", len(v))
-				}
-				c := [4]float64{1, 1, 1, 1}
-				for i := range v {
-					if v[i].T == typeNum {
-						if i == 0 {
-							c[i] = v[i].Value.(float64)
-						} else {
-							c[i] = v[i].Value.(float64) // saturation, lightness, alpha values are from 0.0-1.0
-							if c[i] > 1.0 {
-								c[i] = 1.0
-							} else if c[i] < 0 {
-								c[i] = 0
-							}
-						}
-					} else if v[i].T == typePercent {
-						if i == 0 {
-							c[i] = v[i].Value.(float64) / 360
-							if c[i] < 0 {
-								c[i] = 0
-							} else if c[i] > 100 {
-								c[i] = 1.0
-							}
-						} else {
-							c[i] = v[i].Value.(float64) / 100
-							if c[i] < 0 {
-								c[i] = 0
-							} else if c[i] > 100 {
-								c[i] = 1.0
-							}
-						}
-					} else {
-						return nil, 0, fmt.Errorf("hsl/hsla takes float or percent arguments only, got %v", v[i])
-					}
-				}
-				v = []code{{Value: color.FromHsla(c[0], c[1], c[2], c[3]), T: typeColor}}
-			} else if c.Value.(string) == "husl" || c.Value.(string) == "husla" {
-				if c.Value.(string) == "husl" && len(v) != 3 {
-					return nil, 0, fmt.Errorf("husl takes exactly three arguments, got %d", len(v))
-				}
-				if c.Value.(string) == "husla" && len(v) != 4 {
-					return nil, 0, fmt.Errorf("husla takes exactly four arguments, got %d", len(v))
-				}
-				c := [4]float64{1, 1, 1, 1}
-				for i := range v {
-					if v[i].T == typeNum {
-						if i == 0 {
-							c[i] = v[i].Value.(float64)
-						} else {
-							c[i] = v[i].Value.(float64) // saturation, lightness, alpha values are from 0.0-1.0
-							if c[i] > 1.0 {
-								c[i] = 1.0
-							} else if c[i] < 0 {
-								c[i] = 0
-							}
-						}
-					} else if v[i].T == typePercent {
-						if i == 0 {
-							c[i] = v[i].Value.(float64) / 360
-							if c[i] < 0 {
-								c[i] = 0
-							} else if c[i] > 100 {
-								c[i] = 1.0
-							}
-						} else {
-							c[i] = v[i].Value.(float64) / 100
-							if c[i] < 0 {
-								c[i] = 0
-							} else if c[i] > 100 {
-								c[i] = 1.0
-							}
-						}
-					} else {
-						return nil, 0, fmt.Errorf("husl/husla takes float or percent arguments only, got %v", v[i])
-					}
-				}
-				v = []code{{Value: color.FromHusl(c[0], c[1], c[2], c[3]), T: typeColor}}
-			} else if c.Value.(string) == "stop" {
-				if len(v) != 2 {
-					return nil, 0, fmt.Errorf("stop takes exactly two arguments, got %d", len(v))
-				}
-				if v[0].T != typeNum {
-					return nil, 0, fmt.Errorf("stop takes int as first argument only, got %v", v[i])
-				}
-				if v[1].T != typeColor {
-					return nil, 0, fmt.Errorf("stop takes color as second argument only, got %v", v[i])
-				}
-				val := int(v[0].Value.(float64))
-				c := v[1].Value.(color.Color)
-				v = []code{{
-					Value: Stop{Value: val, Color: c},
-					T:     typeStop},
-				}
-			} else if c.Value.(string) == "__echo__" {
-				// pass
-			} else {
-				return nil, 0, fmt.Errorf("unknown function %s", c.Value.(string))
+			v, err = prepareFunctionParams(c, v)
+			if err != nil {
+				return nil, 0, err
 			}
+
 			for i, v := range v {
 				codes[top+i] = v
 			}
@@ -346,13 +202,13 @@ func evaluate(codes []code) ([]code, int, error) {
 				// string concatenation
 				codes[top] = code{T: typeString, Value: a.Value.(string) + b.Value.(string)}
 			} else if c.T == typeAdd && a.T == typeString && b.T == typeField {
-				codes[top] = code{T: typeFieldExpr, Value: []Value{a.Value.(string), Field(b.Value.(string))}}
+				codes[top] = code{T: typeFieldExpr, Value: []Value{a.Value.(string), b.Value.(Field)}}
 			} else if c.T == typeAdd && a.T == typeField && b.T == typeString {
-				codes[top] = code{T: typeFieldExpr, Value: []Value{Field(a.Value.(string)), b.Value.(string)}}
+				codes[top] = code{T: typeFieldExpr, Value: []Value{a.Value.(Field), b.Value.(string)}}
 			} else if c.T == typeAdd && a.T == typeField && b.T == typeField {
-				codes[top] = code{T: typeFieldExpr, Value: []Value{Field(a.Value.(string)), Field(b.Value.(string))}}
+				codes[top] = code{T: typeFieldExpr, Value: []Value{a.Value.(Field), b.Value.(Field)}}
 			} else if c.T == typeAdd && a.T == typeFieldExpr && b.T == typeField {
-				codes[top] = code{T: typeFieldExpr, Value: append(a.Value.([]Value), Field(b.Value.(string)))}
+				codes[top] = code{T: typeFieldExpr, Value: append(a.Value.([]Value), b.Value.(Field))}
 			} else if c.T == typeAdd && a.T == typeFieldExpr && b.T == typeString {
 				codes[top] = code{T: typeFieldExpr, Value: append(a.Value.([]Value), b.Value.(string))}
 			} else if c.T == typeMultiply && a.T == typeColor && b.T == typeNum {
@@ -367,6 +223,197 @@ func evaluate(codes []code) ([]code, int, error) {
 		}
 	}
 	return codes[:top], 0, nil
+}
+
+func prepareFunctionParams(c code, v []code) ([]code, error) {
+	if colorF, ok := colorFuncs[c.Value.(string)]; ok {
+		if len(v) != 2 {
+			return nil, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
+		}
+		if v[0].T != typeColor {
+			return nil, fmt.Errorf("function %s requires color as first argument, got %v", c.Value.(string), v[0])
+		}
+		if v[1].T != typeNum && v[1].T != typePercent {
+			return nil, fmt.Errorf("function %s requires number/percent as second argument, got %v", c.Value.(string), v[1])
+		}
+		v = []code{{Value: colorF(v[0].Value.(color.Color), v[1].Value.(float64)/100), T: typeColor}}
+	} else if colorP, ok := colorParams[c.Value.(string)]; ok {
+		if len(v) != 1 {
+			return nil, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
+		}
+		if v[0].T != typeColor {
+			return nil, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
+		}
+		v = []code{{Value: colorP(v[0].Value.(color.Color)), T: typeNum}}
+	} else if c.Value.(string) == "mix" {
+		if len(v) != 3 {
+			return nil, fmt.Errorf("function mix takes exactly three arguments, got %d", len(v))
+		}
+		if v[0].T != typeColor || v[1].T != typeColor {
+			return nil, fmt.Errorf("function mix requires color as first and second argument, got %v and %v", v[0], v[1])
+		}
+		if v[2].T != typeNum && v[2].T != typePercent {
+			return nil, fmt.Errorf("function mix requires number/percent as third argument, got %v", v[2])
+		}
+		v = []code{{Value: color.Mix(v[0].Value.(color.Color), v[1].Value.(color.Color), v[2].Value.(float64)/100), T: typeColor}}
+	} else if c.Value.(string) == "-mc-set-hue" {
+		if len(v) != 2 {
+			return nil, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
+		}
+		if v[0].T != typeColor {
+			return nil, fmt.Errorf("function %s requires color as first argument, got %v", c.Value.(string), v[0])
+		}
+		if v[1].T != typeColor {
+			return nil, fmt.Errorf("function %s requires color as second argument, got %v", c.Value.(string), v[1])
+		}
+		v = []code{{Value: color.SetHue(v[0].Value.(color.Color), v[1].Value.(color.Color)), T: typeColor}}
+	} else if c.Value.(string) == "greyscale" || c.Value.(string) == "greyscalep" {
+		if len(v) != 1 {
+			return nil, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
+		}
+		if v[0].T != typeColor {
+			return nil, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
+		}
+		if c.Value.(string) == "greyscale" {
+			v = []code{{Value: color.Greyscale(v[0].Value.(color.Color)), T: typeColor}}
+		} else {
+			v = []code{{Value: color.GreyscaleP(v[0].Value.(color.Color)), T: typeColor}}
+		}
+	} else if c.Value.(string) == "rgb" || c.Value.(string) == "rgba" {
+		if c.Value.(string) == "rgb" && len(v) != 3 {
+			return nil, fmt.Errorf("rgb takes exactly three arguments, got %d", len(v))
+		}
+		if c.Value.(string) == "rgba" && len(v) != 4 {
+			return nil, fmt.Errorf("rgba takes exactly four arguments, got %d", len(v))
+		}
+		c := [4]float64{1, 1, 1, 1}
+		for i := range v {
+			if v[i].T == typeNum {
+				if i < 3 {
+					c[i] = v[i].Value.(float64) / 255
+				} else {
+					c[i] = v[i].Value.(float64) // alpha value is from 0.0-1.0
+					if c[i] > 1.0 {
+						c[i] /= 255 // TODO or clamp? compat with Carto?
+					}
+				}
+			} else if v[i].T == typePercent {
+				c[i] = v[i].Value.(float64) / 100
+			} else {
+				return nil, fmt.Errorf("rgb/rgba takes float or percent arguments only, got %v", v[i])
+			}
+			if c[i] < 0 {
+				c[i] = 0
+			} else if c[i] > 255 {
+				c[i] = 255
+			}
+		}
+		v = []code{{Value: color.FromRgba(c[0], c[1], c[2], c[3], false), T: typeColor}}
+	} else if c.Value.(string) == "hsl" || c.Value.(string) == "hsla" {
+		if c.Value.(string) == "hsl" && len(v) != 3 {
+			return nil, fmt.Errorf("hsl takes exactly three arguments, got %d", len(v))
+		}
+		if c.Value.(string) == "hsla" && len(v) != 4 {
+			return nil, fmt.Errorf("hsla takes exactly four arguments, got %d", len(v))
+		}
+		c := [4]float64{1, 1, 1, 1}
+		for i := range v {
+			if v[i].T == typeNum {
+				if i == 0 {
+					c[i] = v[i].Value.(float64)
+				} else {
+					c[i] = v[i].Value.(float64) // saturation, lightness, alpha values are from 0.0-1.0
+					if c[i] > 1.0 {
+						c[i] = 1.0
+					} else if c[i] < 0 {
+						c[i] = 0
+					}
+				}
+			} else if v[i].T == typePercent {
+				if i == 0 {
+					c[i] = v[i].Value.(float64) / 360
+					if c[i] < 0 {
+						c[i] = 0
+					} else if c[i] > 100 {
+						c[i] = 1.0
+					}
+				} else {
+					c[i] = v[i].Value.(float64) / 100
+					if c[i] < 0 {
+						c[i] = 0
+					} else if c[i] > 100 {
+						c[i] = 1.0
+					}
+				}
+			} else {
+				return nil, fmt.Errorf("hsl/hsla takes float or percent arguments only, got %v", v[i])
+			}
+		}
+		v = []code{{Value: color.FromHsla(c[0], c[1], c[2], c[3]), T: typeColor}}
+	} else if c.Value.(string) == "husl" || c.Value.(string) == "husla" {
+		if c.Value.(string) == "husl" && len(v) != 3 {
+			return nil, fmt.Errorf("husl takes exactly three arguments, got %d", len(v))
+		}
+		if c.Value.(string) == "husla" && len(v) != 4 {
+			return nil, fmt.Errorf("husla takes exactly four arguments, got %d", len(v))
+		}
+		c := [4]float64{1, 1, 1, 1}
+		for i := range v {
+			if v[i].T == typeNum {
+				if i == 0 {
+					c[i] = v[i].Value.(float64)
+				} else {
+					c[i] = v[i].Value.(float64) // saturation, lightness, alpha values are from 0.0-1.0
+					if c[i] > 1.0 {
+						c[i] = 1.0
+					} else if c[i] < 0 {
+						c[i] = 0
+					}
+				}
+			} else if v[i].T == typePercent {
+				if i == 0 {
+					c[i] = v[i].Value.(float64) / 360
+					if c[i] < 0 {
+						c[i] = 0
+					} else if c[i] > 100 {
+						c[i] = 1.0
+					}
+				} else {
+					c[i] = v[i].Value.(float64) / 100
+					if c[i] < 0 {
+						c[i] = 0
+					} else if c[i] > 100 {
+						c[i] = 1.0
+					}
+				}
+			} else {
+				return nil, fmt.Errorf("husl/husla takes float or percent arguments only, got %v", v[i])
+			}
+		}
+		v = []code{{Value: color.FromHusl(c[0], c[1], c[2], c[3]), T: typeColor}}
+	} else if c.Value.(string) == "stop" {
+		if len(v) != 2 {
+			return nil, fmt.Errorf("stop takes exactly two arguments, got %d", len(v))
+		}
+		if v[0].T != typeNum {
+			return nil, fmt.Errorf("stop takes int as first argument only, got %v", v[0])
+		}
+		if v[1].T != typeColor {
+			return nil, fmt.Errorf("stop takes color as second argument only, got %v", v[1])
+		}
+		val := int(v[0].Value.(float64))
+		c := v[1].Value.(color.Color)
+		v = []code{{
+			Value: Stop{Value: val, Color: c},
+			T:     typeStop},
+		}
+	} else if c.Value.(string) == "__echo__" {
+		// pass
+	} else {
+		return nil, fmt.Errorf("unknown function %s", c.Value.(string))
+	}
+
+	return v, nil
 }
 
 type Stop struct {
@@ -413,3 +460,10 @@ type code struct {
 	T     codeType
 	Value interface{}
 }
+
+type FormatParameter struct {
+	Key   string
+	Value interface{}
+}
+
+type FormatEnd struct{}

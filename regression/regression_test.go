@@ -123,7 +123,6 @@ func testIt(t *testing.T, c testCase) {
 		t.Fatal(err)
 	}
 
-	fmt.Printf("%#v\n", c)
 	prepare(t, c)
 	buildMagnacarto(t, c, false)
 	renderMapnik(t, c, "style-mapnik")

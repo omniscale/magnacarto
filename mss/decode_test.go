@@ -149,10 +149,14 @@ func TestParseExpression(t *testing.T) {
 		@foo: @one + " + " + @two;`,
 			"", "one + two"},
 		{`@one: "one";
+		@foo: @one + " + " + [field];`,
+			"", []Value{"one + ", Field("[field]")},
+		},
+		{`@one: "one";
 		@two: [field];
 		@foo: @one + " + " + @two;`,
-			"", "one + [field]"},
-
+			"", []Value{"one + ", Field("[field]")},
+		},
 		{`@foo: lighten(red, 10%);`, "", color.Color{0, 1, 0.6, 1, false}},
 		{`@foo: lighten(red, 10%, 20%);`, "function lighten takes exactly two arguments", nil},
 		{`@foo: lighten(122, 10%);`, "function lighten requires color as first argument", nil},
@@ -174,9 +178,30 @@ func TestParseExpression(t *testing.T) {
 		{`@foo: rgb(0, 0, 0, 0);`, "rgb takes exactly three arguments", nil},
 		{`@foo: rgba(0, 0, 0);`, "rgba takes exactly four arguments", nil},
 
+		{`@foo: [field1];`, "", Field("[field1]")},
 		{`@foo: [field1] + " " + [field2] + "!";`, "", []Value{Field("[field1]"), " ", Field("[field2]"), "!"}},
 		{`@foo: [field1] + [field2];`, "", []Value{Field("[field1]"), Field("[field2]")}},
 		{`@foo: "hello " + [field2];`, "", []Value{"hello ", Field("[field2]")}},
+
+		{`@foo: [name] <Format size= 2 + (1+2) character-spacing=0.4> "(" + [elev] + ")" </Format>;`, "",
+			[]Value{
+				Field("[name]"),
+				[]FormatParameter{FormatParameter{Key: "size", Value: float64(5)}, FormatParameter{Key: "character-spacing", Value: 0.4}},
+				[]Value{"(", Field("[elev]"), ")"},
+				FormatEnd{},
+			},
+		},
+		{`@foo: <Format size=1>[name]</Format> "\n" <Format size=10>  "(" + [elev] + ")" </Format>;`, "",
+			[]Value{
+				[]FormatParameter{FormatParameter{Key: "size", Value: float64(1)}},
+				Field("[name]"),
+				FormatEnd{},
+				`\n`,
+				[]FormatParameter{FormatParameter{Key: "size", Value: float64(10)}},
+				[]Value{"(", Field("[elev]"), ")"},
+				FormatEnd{},
+			},
+		},
 
 		{`@foo: red * 0.5;`, "", color.Color{0, 1.0, 0.25, 1, false}},
 		{`@foo: red * blue;`, "unsupported operation", nil},
@@ -185,14 +210,14 @@ func TestParseExpression(t *testing.T) {
 	for _, tt := range tests {
 		d, err := decodeString(tt.expr)
 		if tt.err == "" {
-			assert.NoError(t, err, "expr %q returnd error %q", tt.expr, err)
+			assert.NoError(t, err, "expr %q returned error %q", tt.expr, err)
 		} else if err == nil {
 			t.Errorf("expected error %q for %q", tt.err, tt.expr)
 		} else {
 			assert.Contains(t, err.Error(), tt.err)
 		}
 		if tt.value != nil {
-			assert.Equal(t, tt.value, d.vars.getKey(key{name: "foo"}))
+			assert.Equal(t, tt.value, d.vars.getKey(key{name: "foo"}), "unexpected value for `%s`", tt.expr)
 		}
 	}
 }
@@ -250,12 +275,19 @@ func TestParserErrors(t *testing.T) {
 		// invalid text-placement-list
 		{`#bar { text-placement-list: 123};`, "expected LBRACE found NUMBER"},
 		{`#bar { text-placement-list: {line-width: 1}};`, "only text- properties are allowed in text-placement-list, not line-width"},
+
+		// invalid format
+		{`@foo: [name] <Format size= 5 character -spacing=0.4> "(" + [elev] + ")" </Format>;`, "expected =, got MINUS"},
+		{`@foo: [name] <Format size= 5 character-spacing=0.4 "(" + [elev] + ")" </Format>;`, "expected parameter, got STRING"},
+		{`@foo: [name] <Format size=5 <Format size=2>> [elev] </Format>;`, "expected parameter, got FORMATXML"},
+		{`@foo: [name] <Format size=5> [elev] <Format size=2> </Format>;`, "nested <Format>"},
+		{`@foo: [name] </Format>;`, "closing </Format> outside of <Format>"},
 	}
 
 	for _, tt := range tests {
 		_, err := decodeString(tt.expr)
 		if tt.msg == "" {
-			assert.NoError(t, err, "expr %q returnd error %q", tt.expr, err)
+			assert.NoError(t, err, "expr %q returned error %q", tt.expr, err)
 		} else if err == nil {
 			t.Errorf("expected error %q for %q", tt.msg, tt.expr)
 		} else {

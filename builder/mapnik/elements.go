@@ -186,7 +186,7 @@ type TextParameters struct {
 	Lang                   *string `xml:"lang,attr"`
 	MinimumDistance        *string `xml:"minimum-distance,attr"`
 	MinimumPadding         *string `xml:"minimum-padding,attr"`
-	Name                   *string `xml:",chardata"`
+	RawName                *string `xml:",innerxml"`
 	Opacity                *string `xml:"opacity,attr"`
 	Orientation            *string `xml:"orientation,attr"`
 	Placement              *string `xml:"placement,attr"`

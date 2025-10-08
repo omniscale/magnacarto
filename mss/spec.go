@@ -1,6 +1,8 @@
 package mss
 
-import "github.com/omniscale/magnacarto/color"
+import (
+	"github.com/omniscale/magnacarto/color"
+)
 
 var attributeTypes map[string]isValid
 
@@ -56,6 +58,16 @@ func isFieldOr(other isValid) isValid {
 		}
 		return other(val)
 	}
+}
+
+func isStringOrField(val interface{}) bool {
+	if _, ok := val.(string); ok {
+		return true
+	}
+	if _, ok := val.(Field); ok {
+		return true
+	}
+	return false
 }
 
 func isColor(val interface{}) bool {
@@ -364,7 +376,7 @@ func init() {
 		"text-line-spacing":             isNumber,
 		"text-min-distance":             isNumber,
 		"text-min-padding":              isNumber,
-		"text-name":                     isString,
+		"text-name":                     isStringOrField,
 		"text-opacity":                  isNumber,
 		"text-orientation":              isFieldOr(isNumber),
 		"text-placement":                isKeyword("line", "point", "vertex", "interior"),

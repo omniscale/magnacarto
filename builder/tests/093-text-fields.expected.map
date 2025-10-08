@@ -1,0 +1,70 @@
+LAYER
+  NAME labels_field
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 5.850606394707828
+      TEXT '[name]'
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END
+LAYER
+  NAME labels_fieldstring
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 5.850606394707828
+      TEXT '[name]'
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END
+LAYER
+  NAME labels_string
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 5.850606394707828
+      TEXT 'name'
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END
+LAYER
+  NAME labels_stringexpr
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 5.850606394707828
+      TEXT 'foobar'
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END
+LAYER
+  NAME labels_mixedconcat
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 5.850606394707828
+      TEXT '[name] ([elev])'
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END

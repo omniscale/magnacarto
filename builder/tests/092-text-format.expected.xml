@@ -1,0 +1,11 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="labels_format" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="8">[name] + &#34;\n&#34; <Format size="6"> [elev] + &#34;m&#34; </Format></TextSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="labels_format" srs="" status="off">
+    <StyleName>labels_format</StyleName>
+  </Layer>
+</Map>

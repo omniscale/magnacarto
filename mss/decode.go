@@ -28,6 +28,8 @@ type Decoder struct {
 	filename      string // for warnings/errors only
 	filesParsed   int
 	propertyIndex int
+
+	inFormatXml bool
 }
 
 type warning struct {
@@ -190,7 +192,7 @@ func (d *Decoder) evaluateExpression(expr *expression) Value {
 			}
 			t := d.valueType(v)
 			if t == typeUnknown {
-				d.error(expr.pos, "unable to determine type of var %s (%v)", varname, v)
+				d.error(expr.pos, "unable to determine type of var @%s (%v)", varname, v)
 			}
 			expr.code[i] = code{Value: v, T: t}
 		}
@@ -206,6 +208,8 @@ func (d *Decoder) valueType(v interface{}) codeType {
 	switch v.(type) {
 	case string:
 		return typeString
+	case Field:
+		return typeField
 	case float64:
 		return typeNum
 	case color.Color:
@@ -503,11 +507,19 @@ func (d *Decoder) expressionList() {
 
 	d.expression()
 	for {
+		prevCode := d.expr.code[len(d.expr.code)-1].T
 		tok := d.next()
 		if tok.t == tokenComma {
 			d.expression()
 		} else if tok.t == tokenFunction && d.expr.code[len(d.expr.code)-1].T == typeFunctionEnd {
 			// non-comma separated list, only between functions, e.g. raster-colorizer-stops: stop(0, #47443e) stop(50, #77654a);
+			d.backup()
+			d.expression()
+		} else if tok.t == tokenFormatXml ||
+			tok.t == tokenFormatXmlEnd ||
+			tok.t == tokenLBracket && (prevCode == typeFormatXmlClosing || prevCode == typeFormatXmlEnd) ||
+			tok.t == tokenString && (prevCode == typeFormatXmlClosing || prevCode == typeFormatXmlEnd) {
+			// <Format>-tags are concatenated without + expressions
 			d.backup()
 			d.expression()
 		} else {
@@ -568,6 +580,19 @@ func (d *Decoder) negOrValue() {
 		tok := d.next()
 		d.value(tok)
 		d.expr.addOperator(typeNegation)
+	} else if tok.t == tokenFormatXml {
+		if d.inFormatXml {
+			d.error(d.pos(tok), "nested <Format> not allowed")
+		}
+		d.inFormatXml = true
+		d.expr.addOperator(typeFormatXml)
+		d.formatParams()
+	} else if tok.t == tokenFormatXmlEnd {
+		if !d.inFormatXml {
+			d.error(d.pos(tok), "closing </Format> outside of <Format>")
+		}
+		d.expr.addOperator(typeFormatXmlEnd)
+		d.inFormatXml = false
 	} else {
 		d.value(tok)
 	}
@@ -677,7 +702,7 @@ func (d *Decoder) value(tok *token) {
 		if tok.t != tokenIdent {
 			d.error(d.pos(tok), "expected identifier in field name, got %v", tok)
 		}
-		d.expr.addValue("["+tok.value+"]", typeField)
+		d.expr.addValue(Field("["+tok.value+"]"), typeField)
 		d.expect(tokenRBracket)
 	case tokenFunction:
 		d.expr.addValue(tok.value[:len(tok.value)-1], typeFunction) // strip lparen
@@ -702,6 +727,28 @@ func (d *Decoder) functionParams() {
 			continue
 		}
 		d.error(d.pos(tok), "expected end of function or comma, got %v", tok)
+	}
+}
+
+func (d *Decoder) formatParams() {
+	for {
+		tok := d.next()
+		if tok.t != tokenIdent {
+			d.error(d.pos(tok), "expected parameter, got %v", tok)
+		}
+		param := tok.value
+		tok = d.next()
+		if tok.t != tokenComp || tok.value != "=" {
+			d.error(d.pos(tok), "expected =, got %v", tok)
+		}
+		d.expr.addValue(param, typeFormatParam)
+		d.exprPart()
+		tok = d.next()
+		if tok.t == tokenComp && tok.value == ">" {
+			d.expr.addValue(nil, typeFormatXmlClosing)
+			break
+		}
+		d.backup()
 	}
 }
 

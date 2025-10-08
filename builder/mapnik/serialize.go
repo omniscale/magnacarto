@@ -405,8 +405,7 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 			symb.PlacementList = append(symb.PlacementList, Placement{TextParameters: m.convertTextParameters(p)})
 		}
 	}
-	if symb.Name != nil && *symb.Name != "" {
-
+	if symb.RawName != nil && *symb.RawName != "" {
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
 }
@@ -415,7 +414,7 @@ func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb := TextParameters{}
 	symb.Size = fmtFloatProp(p, "text-size", m.scaleFactor)
 	symb.Fill = fmtColor(p.GetColor("text-fill"))
-	symb.Name = fmtField(p.GetFieldList("text-name"))
+	symb.RawName = fmtFormatField(p.GetFieldList("text-name"))
 	symb.AvoidEdges = fmtBool(p.GetBool("text-avoid-edges"))
 	symb.HaloFill = fmtColor(p.GetColor("text-halo-fill"))
 	symb.HaloRadius = fmtFloatProp(p, "text-halo-radius", m.scaleFactor)
@@ -709,6 +708,89 @@ func fmtField(vals []interface{}, ok bool) *string {
 	}
 	r := strings.Join(parts, " + ")
 	return &r
+}
+
+// fmtFields concatenates fields and strings with ' + ', but XML with space only.
+// Escapes all strings so that the result can be safely used as raw XML.
+func fmtFormatField(vals []interface{}, ok bool) *string {
+	if !ok {
+		return nil
+	}
+
+	var b strings.Builder
+
+	type kind int
+	const (
+		kindNone kind = iota
+		kindExpr      // field or string
+		kindXML
+	)
+	prev := kindNone
+
+	addExpr := func(s string) {
+		if b.Len() > 0 {
+			if prev == kindExpr {
+				b.WriteString(" + ")
+			} else {
+				b.WriteByte(' ')
+			}
+		}
+		xml.EscapeText(&b, []byte(s))
+		prev = kindExpr
+	}
+
+	addXML := func(s string) {
+		if b.Len() > 0 {
+			b.WriteByte(' ')
+		}
+		b.WriteString(s)
+		prev = kindXML
+	}
+
+	var addVals func(vals []interface{})
+	addVals = func(vals []interface{}) {
+		for _, v := range vals {
+			switch t := v.(type) {
+			case mss.Field:
+				addExpr(string(t))
+			case string:
+				addExpr(`"` + t + `"`)
+			case []mss.FormatParameter:
+				// <Format k1="v1" k2="v2">
+				addXML("<Format ")
+
+				for i, p := range t {
+					val, ok := p.Value.(string)
+					if !ok {
+						val = fmt.Sprint(p.Value)
+					}
+					fmt.Fprintf(&b, `%s=%q`, p.Key, val)
+					if i+1 < len(t) {
+						b.WriteByte(' ')
+					}
+				}
+				b.WriteByte('>')
+			case mss.FormatEnd:
+				addXML("</Format>")
+			case []mss.Value:
+				for _, v := range t {
+					switch t := v.(type) {
+					case mss.Field:
+						addExpr(string(t))
+					case string:
+						addExpr(`"` + t + `"`)
+					}
+				}
+			default:
+				panic(fmt.Sprintf("unexpected field value %#v %T", v, v))
+			}
+		}
+	}
+
+	addVals(vals)
+
+	out := b.String()
+	return &out
 }
 
 func fmtPattern(v []float64, scale float64, ok bool) *string {

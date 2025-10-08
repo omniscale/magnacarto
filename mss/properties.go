@@ -289,6 +289,9 @@ func (p *Properties) GetFieldList(property string) ([]interface{}, bool) {
 	if s, ok := v.(string); ok {
 		return []interface{}{Field(s)}, true
 	}
+	if s, ok := v.(Field); ok {
+		return []interface{}{s}, true
+	}
 	l, ok := v.([]Value)
 	if !ok {
 		return nil, false
