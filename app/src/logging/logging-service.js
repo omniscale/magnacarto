@@ -71,8 +71,18 @@ angular.module('magna-app')
                 });
             }
         } else if(resp.updated_at !== undefined) {
-            type = 'success';
-            msg = ['Updated'];
+            if(resp.warnings) {
+                type = 'warning';
+                msg = ['Updated with warnings:'];
+                angular.forEach(resp.warnings, function(warning) {
+                    if (warning) {
+                        msg.push(warning);
+                    }
+                });
+            } else {
+                type = 'success';
+                msg = ['Updated'];
+            }
         } else {
             return;
         }

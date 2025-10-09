@@ -12,6 +12,7 @@ import (
 
 	"github.com/omniscale/magnacarto/config"
 	mmlparse "github.com/omniscale/magnacarto/mml"
+	"github.com/omniscale/magnacarto/mss"
 )
 
 // MapMaker creates new MapWriters.
@@ -30,6 +31,7 @@ type style struct {
 	mss        []string
 	file       string
 	lastUpdate time.Time
+	warnings   []mss.ParseWarning
 }
 
 func styleHash(mapType string, mml string, mss []string) uint32 {
@@ -144,12 +146,16 @@ type Update struct {
 }
 
 // StyleFile returns the filename of the build result. (Re)builds style if required.
-func (c *Cache) StyleFile(mm MapMaker, mml string, mss []string) (string, error) {
+func (c *Cache) StyleFile(mm MapMaker, mml string, mss []string) (string, []string, error) {
 	style, err := c.style(mm, mml, mss)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
-	return style.file, nil
+	var warnings []string
+	for _, w := range style.warnings {
+		warnings = append(warnings, w.String())
+	}
+	return style.file, warnings, nil
 }
 
 func (c *Cache) style(mm MapMaker, mml string, mss []string) (*style, error) {
@@ -219,9 +225,11 @@ func (c *Cache) build(style *style) error {
 		builder.AddMSS(mss)
 	}
 
+	style.warnings = nil
 	if err := builder.Build(); err != nil {
 		return err
 	}
+	style.warnings = builder.Warnings()
 
 	if files := l.MissingFiles(); len(files) > 0 {
 		return &FilesMissingError{files}

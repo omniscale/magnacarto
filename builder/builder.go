@@ -21,6 +21,8 @@ type Builder struct {
 	locator         config.Locator
 	dumpRules       io.Writer
 	includeInactive bool
+
+	warnings []mss.ParseWarning
 }
 
 // New returns a Builder
@@ -89,6 +91,8 @@ func (b *Builder) Build() error {
 		return err
 	}
 
+	b.warnings = carto.Warnings()
+
 	if m, ok := b.dstMap.(MapZoomScaleSetter); ok {
 		if mmlObj != nil && mmlObj.Map.ZoomScales != nil {
 			m.SetZoomScales(mmlObj.Map.ZoomScales)
@@ -125,6 +129,10 @@ func (b *Builder) Build() error {
 		}
 	}
 	return nil
+}
+
+func (b *Builder) Warnings() []mss.ParseWarning {
+	return b.warnings
 }
 
 func layerZoomRange(l mml.Layer) mss.ZoomRange {

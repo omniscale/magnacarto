@@ -24,18 +24,12 @@ type Decoder struct {
 	lastTok       *token
 	expr          *expression
 	lastValue     Value
-	warnings      []warning
+	warnings      []ParseWarning
 	filename      string // for warnings/errors only
 	filesParsed   int
 	propertyIndex int
 
 	inFormatXml bool
-}
-
-type warning struct {
-	line, col int
-	file      string
-	msg       string
 }
 
 type position struct {
@@ -44,14 +38,6 @@ type position struct {
 	filename string
 	filenum  int
 	index    int
-}
-
-func (w *warning) String() string {
-	file := w.file
-	if file == "" {
-		file = "?"
-	}
-	return fmt.Sprintf("%s in %s line: %d col: %d", w.msg, file, w.line, w.col)
 }
 
 // New will allocate a new MSS Decoder
@@ -167,6 +153,10 @@ func (d *Decoder) Evaluate() (err error) {
 		d.evaluateBlock(b)
 	}
 	return err
+}
+
+func (d *Decoder) Warnings() []ParseWarning {
+	return d.warnings
 }
 
 func (d *Decoder) evaluateBlock(b *block) {
@@ -771,6 +761,20 @@ func (p *ParseError) Error() string {
 	return fmt.Sprintf("%s in %s line: %d col: %d", p.Err, file, p.Line, p.Column)
 }
 
+type ParseWarning struct {
+	Line, Column int
+	Filename     string
+	Msg          string
+}
+
+func (w *ParseWarning) String() string {
+	file := w.Filename
+	if file == "" {
+		file = "?"
+	}
+	return fmt.Sprintf("%s in %s line: %d col: %d", w.Msg, file, w.Line, w.Column)
+}
+
 func (d *Decoder) pos(tok *token) position {
 	return position{
 		filename: d.filename,
@@ -791,11 +795,11 @@ func (d *Decoder) error(pos position, format string, args ...interface{}) {
 
 func (d *Decoder) warn(pos position, format string, args ...interface{}) {
 	d.warnings = append(d.warnings,
-		warning{
-			file: pos.filename,
-			line: pos.line,
-			col:  pos.column,
-			msg:  fmt.Sprintf(format, args...),
+		ParseWarning{
+			Filename: pos.filename,
+			Line:     pos.line,
+			Column:   pos.column,
+			Msg:      fmt.Sprintf(format, args...),
 		},
 	)
 }

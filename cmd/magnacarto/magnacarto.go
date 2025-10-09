@@ -133,6 +133,9 @@ func main() {
 	if err := b.Build(); err != nil {
 		log.Fatal("error building style: ", err)
 	}
+	for _, w := range b.Warnings() {
+		log.Println("WARN: ", w.String())
+	}
 
 	if unsupported := m.UnsupportedFeatures(); unsupported != nil {
 		log.Fatalf("not all features supported by -builder %s: %v", *builderType, unsupported)

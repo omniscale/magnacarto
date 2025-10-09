@@ -14,9 +14,10 @@ type Update struct {
 	Err        error
 	Time       time.Time
 	UpdatedMML bool
+	Warnings   []string
 }
 
-type buildStyleFunc func(mm builder.MapMaker, mml string, mss []string) (string, error)
+type buildStyleFunc func(mm builder.MapMaker, mml string, mss []string) (string, []string, error)
 
 func notifier(buildStyle buildStyleFunc, mm builder.MapMaker, mml string, mss []string, done <-chan struct{}) (updatec chan Update, errc chan error) {
 	updatec = make(chan Update, 1)
@@ -66,7 +67,7 @@ func notifier(buildStyle buildStyleFunc, mm builder.MapMaker, mml string, mss []
 					// errors.
 					time.Sleep(100 * time.Millisecond)
 				}
-				style, err := buildStyle(mm, mml, mss)
+				style, warnings, err := buildStyle(mm, mml, mss)
 				if evt.Name == mml && len(mss) == 0 {
 					// update mms files to watch if mml changed and mss files were not set
 					if err := watchMSSFromMML(watcher, mml); err != nil {
@@ -82,7 +83,7 @@ func notifier(buildStyle buildStyleFunc, mm builder.MapMaker, mml string, mss []
 					updatec <- Update{Err: err}
 				} else {
 					fi, _ := os.Stat(style)
-					updatec <- Update{Time: fi.ModTime(), UpdatedMML: evt.Name == mml}
+					updatec <- Update{Time: fi.ModTime(), UpdatedMML: evt.Name == mml, Warnings: warnings}
 				}
 			case err := <-watcher.Errors:
 				errc <- err

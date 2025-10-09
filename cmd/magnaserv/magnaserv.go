@@ -113,9 +113,10 @@ func (s *magnaserv) render(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		styleFile, err = s.builderCache.StyleFile(maker, mml, mss)
+		var warnings []string
+		styleFile, warnings, err = s.builderCache.StyleFile(maker, mml, mss)
 		if err != nil {
-			s.sendFeedback(wsID, err, nil, mml, mss)
+			s.sendFeedback(wsID, err, warnings, mml, mss)
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -444,7 +445,8 @@ func (s *magnaserv) changes(ws *websocket.Conn) {
 				msg = struct {
 					UpdatedAt  time.Time `json:"updated_at"`
 					UpdatedMML bool      `json:"updated_mml"`
-				}{update.Time, update.UpdatedMML}
+					Warnings   []string  `json:"warnings"`
+				}{update.Time, update.UpdatedMML, update.Warnings}
 			}
 			sendJSON(msg)
 
