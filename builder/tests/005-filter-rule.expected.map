@@ -369,3 +369,17 @@ LAYER
     END
   END
 END
+LAYER
+  NAME class_5
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ([building] = 't')
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+      LINECAP BUTT
+      LINEJOIN MITER
+    END
+  END
+END

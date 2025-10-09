@@ -456,6 +456,10 @@ func (d *Decoder) filter() {
 		case tokenIdent:
 			if tok.value == "null" {
 				value = nil
+			} else if tok.value == "true" {
+				value = true
+			} else if tok.value == "false" {
+				value = false
 			} else {
 				d.error(d.pos(tok), "unexpected value in filter '%s'", tok.value)
 			}

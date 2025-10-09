@@ -858,6 +858,12 @@ func fmtFilters(filters []mss.Filter) string {
 		switch v := f.Value.(type) {
 		case nil:
 			value = "null"
+		case bool:
+			if v {
+				value = "true"
+			} else {
+				value = "false"
+			}
 		case string:
 			// TODO quote " in string?!
 			value = `'` + v + `'`
@@ -866,7 +872,7 @@ func fmtFilters(filters []mss.Filter) string {
 		case mss.ModuloComparsion:
 			value = fmt.Sprintf("%d %s %d", v.Div, v.CompOp, v.Value)
 		default:
-			log.Printf("unknown type of filter value: %s", v)
+			log.Printf("unknown type of filter value: %v", v)
 			value = ""
 		}
 		field := f.Field

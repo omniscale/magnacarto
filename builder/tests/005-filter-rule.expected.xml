@@ -218,6 +218,12 @@
       <LineSymbolizer stroke-width="2"></LineSymbolizer>
     </Rule>
   </Style>
+  <Style name="class_5" filter-mode="first">
+    <Rule>
+      <Filter>([building] = true)</Filter>
+      <LineSymbolizer stroke-width="2"></LineSymbolizer>
+    </Rule>
+  </Style>
   <Layer name="class" srs="" status="off">
     <StyleName>class</StyleName>
   </Layer>
@@ -229,5 +235,8 @@
   </Layer>
   <Layer name="class_4" srs="" status="off">
     <StyleName>class_4</StyleName>
+  </Layer>
+  <Layer name="class_5" srs="" status="off">
+    <StyleName>class_5</StyleName>
   </Layer>
 </Map>

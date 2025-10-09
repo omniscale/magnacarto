@@ -29,3 +29,6 @@
 #class_4[id % 10 = 0] {
     line-width: 2;
 }
+#class_5[building = true] {
+    line-width: 2;
+}
