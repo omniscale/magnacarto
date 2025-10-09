@@ -1,8 +1,6 @@
 package builder
 
 import (
-	"io/ioutil"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -94,31 +92,5 @@ func TestBuilActiveInactiveMSS(t *testing.T) {
 	}
 	if len(m.layers[0].rules) != 1 || m.layers[0].rules[0].Layer != "foo" {
 		t.Error(m.layers[0].rules)
-	}
-}
-
-func TestBuilMapFromString(t *testing.T) {
-	m := mockMap{}
-	f, err := os.Open(filepath.Join("tests", "003-two-layers.mml"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer f.Close()
-
-	mml, err := mml.Parse(f)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	mss, err := ioutil.ReadFile(filepath.Join("tests", "003-two-layers.mss"))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if err := BuildMapFromString(&m, mml, string(mss)); err != nil {
-		t.Fatal(err)
-	}
-	if len(m.layers) != 2 {
-		t.Fatal(m.layers)
 	}
 }

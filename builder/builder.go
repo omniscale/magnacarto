@@ -164,39 +164,3 @@ type MapWriter interface {
 	Writer
 	Map
 }
-
-// BuildMapFromString parses the style from a string and adds all
-// mml.Layers to the map.
-func BuildMapFromString(m Map, mml *mml.MML, style string) error {
-	carto := mss.New()
-
-	err := carto.ParseString(style)
-	if err != nil {
-		return err
-	}
-	if err := carto.Evaluate(); err != nil {
-		return err
-	}
-
-	if m, ok := m.(MapZoomScaleSetter); ok {
-		if mml.Map.ZoomScales != nil {
-			m.SetZoomScales(mml.Map.ZoomScales)
-		}
-	}
-
-	for _, l := range mml.Layers {
-		zoom := layerZoomRange(l)
-		rules := carto.MSS().LayerZoomRules(l.ID, zoom, l.Classes...)
-
-		if len(rules) > 0 {
-			m.AddLayer(l, rules)
-		}
-	}
-
-	if m, ok := m.(MapOptionsSetter); ok {
-		if bgColor, ok := carto.MSS().Map().GetColor("background-color"); ok {
-			m.SetBackgroundColor(bgColor)
-		}
-	}
-	return nil
-}
