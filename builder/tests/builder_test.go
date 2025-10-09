@@ -25,8 +25,8 @@ func TestCompareExpected(t *testing.T) {
 	for _, f := range mssFiles {
 		name := strings.TrimSuffix(f, filepath.Ext(f))
 		t.Run(name, func(t *testing.T) {
-			buildAndCompare(t, "mapserver", name)
 			buildAndCompare(t, "mapnik", name)
+			buildAndCompare(t, "mapserver", name)
 		})
 	}
 }

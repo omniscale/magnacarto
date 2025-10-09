@@ -223,6 +223,12 @@ func init() {
 	attributeTypes = map[string]isValid{
 		"background-color": isColor,
 
+		// layer attributes
+		"opacity":              isNumber,
+		"comp-op":              isCompOp,
+		"image-filters":        isString,
+		"direct-image-filters": isString,
+
 		"building-fill":         isColor,
 		"building-fill-opacity": isNumber,
 		"building-height":       isNumber,

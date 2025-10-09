@@ -1,0 +1,11 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <Style name="labels" filter-mode="first" comp-op="screen" opacity="50" image-filters="invert(), color-blind-deuteranope()" direct-image-filters="invert()">
+    <Rule>
+      <TextSymbolizer size="8">[name]</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="labels" srs="" status="off">
+    <StyleName>labels</StyleName>
+  </Layer>
+</Map>

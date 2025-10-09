@@ -258,6 +258,12 @@ func (m *Map) newStyles(rules []mss.Rule) []Style {
 			// apply style-level properties
 			for _, rr := range rules {
 				if r.Attachment == rr.Attachment {
+					if v, ok := r.Properties.GetString("image-filters"); ok {
+						style.ImageFilters = &v
+					}
+					if v, ok := r.Properties.GetString("direct-image-filters"); ok {
+						style.DirectImageFilters = &v
+					}
 					if v, ok := r.Properties.GetString("comp-op"); ok {
 						style.CompOp = &v
 					}

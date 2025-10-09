@@ -1,0 +1,15 @@
+LAYER
+  NAME labels
+  OPACITY 5000
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 5.850606394707828
+      TEXT '[name]'
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END
