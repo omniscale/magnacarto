@@ -61,13 +61,19 @@ func isFieldOr(other isValid) isValid {
 }
 
 func isStringOrField(val interface{}) bool {
-	if _, ok := val.(string); ok {
+	switch vals := val.(type) {
+	case string, Field, []FormatParameter, FormatEnd:
 		return true
-	}
-	if _, ok := val.(Field); ok {
+	case []Value:
+		for _, v := range vals {
+			if !isStringOrField(v) {
+				return false
+			}
+		}
 		return true
+	default:
+		return false
 	}
-	return false
 }
 
 func isColor(val interface{}) bool {
