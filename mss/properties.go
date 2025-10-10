@@ -303,6 +303,26 @@ func (p *Properties) GetFieldList(property string) ([]interface{}, bool) {
 	return vals, true
 }
 
+func (p *Properties) GetFunctions(property string) ([]interface{}, bool) {
+	v, ok := p.get(property)
+	if !ok {
+		return nil, false
+	}
+	if f, ok := v.(Function); ok {
+		return []interface{}{f}, true
+	}
+
+	l, ok := v.([]Value)
+	if !ok {
+		return nil, false
+	}
+	vals := make([]interface{}, len(l))
+	for i := range l {
+		vals[i] = l[i]
+	}
+	return vals, true
+}
+
 // GetStopList returns property as a list of Stops.
 func (p *Properties) GetStopList(property string) ([]Stop, bool) {
 	v, ok := p.get(property)

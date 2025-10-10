@@ -173,7 +173,7 @@ func evaluate(codes []code) ([]code, int, error) {
 			if err != nil {
 				return v, 0, err
 			}
-			v, err = prepareFunctionParams(c, v)
+			v, err = prepareFunctionParams(c.Value.(string), v)
 			if err != nil {
 				return nil, 0, err
 			}
@@ -225,27 +225,27 @@ func evaluate(codes []code) ([]code, int, error) {
 	return codes[:top], 0, nil
 }
 
-func prepareFunctionParams(c code, v []code) ([]code, error) {
-	if colorF, ok := colorFuncs[c.Value.(string)]; ok {
+func prepareFunctionParams(funcName string, v []code) ([]code, error) {
+	if colorF, ok := colorFuncs[funcName]; ok {
 		if len(v) != 2 {
-			return nil, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
+			return nil, fmt.Errorf("function %s takes exactly two arguments, got %d", funcName, len(v))
 		}
 		if v[0].T != typeColor {
-			return nil, fmt.Errorf("function %s requires color as first argument, got %v", c.Value.(string), v[0])
+			return nil, fmt.Errorf("function %s requires color as first argument, got %v", funcName, v[0])
 		}
 		if v[1].T != typeNum && v[1].T != typePercent {
-			return nil, fmt.Errorf("function %s requires number/percent as second argument, got %v", c.Value.(string), v[1])
+			return nil, fmt.Errorf("function %s requires number/percent as second argument, got %v", funcName, v[1])
 		}
 		v = []code{{Value: colorF(v[0].Value.(color.Color), v[1].Value.(float64)/100), T: typeColor}}
-	} else if colorP, ok := colorParams[c.Value.(string)]; ok {
+	} else if colorP, ok := colorParams[funcName]; ok {
 		if len(v) != 1 {
-			return nil, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
+			return nil, fmt.Errorf("function %s takes exactly one argument, got %d", funcName, len(v))
 		}
 		if v[0].T != typeColor {
-			return nil, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
+			return nil, fmt.Errorf("function %s requires color as argument, got %v", funcName, v[0])
 		}
 		v = []code{{Value: colorP(v[0].Value.(color.Color)), T: typeNum}}
-	} else if c.Value.(string) == "mix" {
+	} else if funcName == "mix" {
 		if len(v) != 3 {
 			return nil, fmt.Errorf("function mix takes exactly three arguments, got %d", len(v))
 		}
@@ -256,34 +256,34 @@ func prepareFunctionParams(c code, v []code) ([]code, error) {
 			return nil, fmt.Errorf("function mix requires number/percent as third argument, got %v", v[2])
 		}
 		v = []code{{Value: color.Mix(v[0].Value.(color.Color), v[1].Value.(color.Color), v[2].Value.(float64)/100), T: typeColor}}
-	} else if c.Value.(string) == "-mc-set-hue" {
+	} else if funcName == "-mc-set-hue" {
 		if len(v) != 2 {
-			return nil, fmt.Errorf("function %s takes exactly two arguments, got %d", c.Value.(string), len(v))
+			return nil, fmt.Errorf("function %s takes exactly two arguments, got %d", funcName, len(v))
 		}
 		if v[0].T != typeColor {
-			return nil, fmt.Errorf("function %s requires color as first argument, got %v", c.Value.(string), v[0])
+			return nil, fmt.Errorf("function %s requires color as first argument, got %v", funcName, v[0])
 		}
 		if v[1].T != typeColor {
-			return nil, fmt.Errorf("function %s requires color as second argument, got %v", c.Value.(string), v[1])
+			return nil, fmt.Errorf("function %s requires color as second argument, got %v", funcName, v[1])
 		}
 		v = []code{{Value: color.SetHue(v[0].Value.(color.Color), v[1].Value.(color.Color)), T: typeColor}}
-	} else if c.Value.(string) == "greyscale" || c.Value.(string) == "greyscalep" {
+	} else if funcName == "greyscale" || funcName == "greyscalep" {
 		if len(v) != 1 {
-			return nil, fmt.Errorf("function %s takes exactly one argument, got %d", c.Value.(string), len(v))
+			return nil, fmt.Errorf("function %s takes exactly one argument, got %d", funcName, len(v))
 		}
 		if v[0].T != typeColor {
-			return nil, fmt.Errorf("function %s requires color as argument, got %v", c.Value.(string), v[0])
+			return nil, fmt.Errorf("function %s requires color as argument, got %v", funcName, v[0])
 		}
-		if c.Value.(string) == "greyscale" {
+		if funcName == "greyscale" {
 			v = []code{{Value: color.Greyscale(v[0].Value.(color.Color)), T: typeColor}}
 		} else {
 			v = []code{{Value: color.GreyscaleP(v[0].Value.(color.Color)), T: typeColor}}
 		}
-	} else if c.Value.(string) == "rgb" || c.Value.(string) == "rgba" {
-		if c.Value.(string) == "rgb" && len(v) != 3 {
+	} else if funcName == "rgb" || funcName == "rgba" {
+		if funcName == "rgb" && len(v) != 3 {
 			return nil, fmt.Errorf("rgb takes exactly three arguments, got %d", len(v))
 		}
-		if c.Value.(string) == "rgba" && len(v) != 4 {
+		if funcName == "rgba" && len(v) != 4 {
 			return nil, fmt.Errorf("rgba takes exactly four arguments, got %d", len(v))
 		}
 		c := [4]float64{1, 1, 1, 1}
@@ -309,11 +309,11 @@ func prepareFunctionParams(c code, v []code) ([]code, error) {
 			}
 		}
 		v = []code{{Value: color.FromRgba(c[0], c[1], c[2], c[3], false), T: typeColor}}
-	} else if c.Value.(string) == "hsl" || c.Value.(string) == "hsla" {
-		if c.Value.(string) == "hsl" && len(v) != 3 {
+	} else if funcName == "hsl" || funcName == "hsla" {
+		if funcName == "hsl" && len(v) != 3 {
 			return nil, fmt.Errorf("hsl takes exactly three arguments, got %d", len(v))
 		}
-		if c.Value.(string) == "hsla" && len(v) != 4 {
+		if funcName == "hsla" && len(v) != 4 {
 			return nil, fmt.Errorf("hsla takes exactly four arguments, got %d", len(v))
 		}
 		c := [4]float64{1, 1, 1, 1}
@@ -350,11 +350,11 @@ func prepareFunctionParams(c code, v []code) ([]code, error) {
 			}
 		}
 		v = []code{{Value: color.FromHsla(c[0], c[1], c[2], c[3]), T: typeColor}}
-	} else if c.Value.(string) == "husl" || c.Value.(string) == "husla" {
-		if c.Value.(string) == "husl" && len(v) != 3 {
+	} else if funcName == "husl" || funcName == "husla" {
+		if funcName == "husl" && len(v) != 3 {
 			return nil, fmt.Errorf("husl takes exactly three arguments, got %d", len(v))
 		}
-		if c.Value.(string) == "husla" && len(v) != 4 {
+		if funcName == "husla" && len(v) != 4 {
 			return nil, fmt.Errorf("husla takes exactly four arguments, got %d", len(v))
 		}
 		c := [4]float64{1, 1, 1, 1}
@@ -391,7 +391,7 @@ func prepareFunctionParams(c code, v []code) ([]code, error) {
 			}
 		}
 		v = []code{{Value: color.FromHusl(c[0], c[1], c[2], c[3]), T: typeColor}}
-	} else if c.Value.(string) == "stop" {
+	} else if funcName == "stop" {
 		if len(v) != 2 {
 			return nil, fmt.Errorf("stop takes exactly two arguments, got %d", len(v))
 		}
@@ -407,10 +407,20 @@ func prepareFunctionParams(c code, v []code) ([]code, error) {
 			Value: Stop{Value: val, Color: c},
 			T:     typeStop},
 		}
-	} else if c.Value.(string) == "__echo__" {
-		// pass
+	} else if funcName == "__echo__" {
+		// for debuging/testing only
+	} else if _, ok := imageFilterFuncs[funcName]; ok {
+		var params []Value
+		for _, p := range v {
+			params = append(params, p.Value)
+		}
+		v = []code{{
+			Value: Function{Name: funcName, Params: params},
+			T:     typeFunction,
+		},
+		}
 	} else {
-		return nil, fmt.Errorf("unknown function %s", c.Value.(string))
+		return nil, fmt.Errorf("unknown function %s", funcName)
 	}
 
 	return v, nil
@@ -459,6 +469,11 @@ func init() {
 type code struct {
 	T     codeType
 	Value interface{}
+}
+
+type Function struct {
+	Name   string
+	Params []Value
 }
 
 type FormatParameter struct {

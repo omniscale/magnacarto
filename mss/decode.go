@@ -710,6 +710,12 @@ func (d *Decoder) value(tok *token) {
 }
 
 func (d *Decoder) functionParams() {
+	tok := d.next()
+	if tok.t == tokenRParen {
+		d.expr.addValue(nil, typeFunctionEnd)
+		return
+	}
+	d.backup()
 	for {
 		d.exprPart()
 		tok := d.next()

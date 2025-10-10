@@ -219,6 +219,61 @@ func isJustifyAlignment(val interface{}) bool {
 	)(val)
 }
 
+func isImageFilters(val interface{}) bool {
+	if _, ok := val.(Function); ok {
+		return isImageFilter(val)
+	}
+	funcs, ok := val.([]Value)
+	if !ok {
+		return false
+	}
+	for _, f := range funcs {
+		if !isImageFilter(f) {
+			return false
+		}
+	}
+	return true
+}
+
+func isImageFilter(val interface{}) bool {
+	f, ok := val.(Function)
+	if !ok {
+		return false
+	}
+	numParams, ok := imageFilterFuncs[f.Name]
+	if !ok {
+		return false
+	}
+	if numParams == -1 {
+		// unlimited params
+		return true
+	}
+	return len(f.Params) == numParams
+}
+
+var imageFilterFuncs map[string]int
+
+func init() {
+	imageFilterFuncs = map[string]int{
+		"agg-stack-blur":          2,
+		"emboss":                  0,
+		"blur":                    0,
+		"gray":                    0,
+		"sobel":                   0,
+		"edge-detect":             0,
+		"x-gradient":              0,
+		"y-gradient":              0,
+		"invert":                  0,
+		"sharpen":                 0,
+		"color-blind-protanope":   0,
+		"color-blind-deuteranope": 0,
+		"color-blind-tritanope":   0,
+		"colorize-alpha":          -1,
+		"color-to-alpha":          1,
+		"scale-hsla":              8,
+	}
+}
+
 func init() {
 	attributeTypes = map[string]isValid{
 		"background-color": isColor,
@@ -226,8 +281,8 @@ func init() {
 		// layer attributes
 		"opacity":              isNumber,
 		"comp-op":              isCompOp,
-		"image-filters":        isString,
-		"direct-image-filters": isString,
+		"image-filters":        isImageFilters,
+		"direct-image-filters": isImageFilters,
 
 		"building-fill":         isColor,
 		"building-fill-opacity": isNumber,

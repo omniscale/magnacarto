@@ -258,12 +258,8 @@ func (m *Map) newStyles(rules []mss.Rule) []Style {
 			// apply style-level properties
 			for _, rr := range rules {
 				if r.Attachment == rr.Attachment {
-					if v, ok := r.Properties.GetString("image-filters"); ok {
-						style.ImageFilters = &v
-					}
-					if v, ok := r.Properties.GetString("direct-image-filters"); ok {
-						style.DirectImageFilters = &v
-					}
+					style.ImageFilters = fmtFunctions(r.Properties.GetFunctions("image-filters"))
+					style.DirectImageFilters = fmtFunctions(r.Properties.GetFunctions("direct-image-filters"))
 					if v, ok := r.Properties.GetString("comp-op"); ok {
 						style.CompOp = &v
 					}
@@ -797,6 +793,30 @@ func fmtFormatField(vals []interface{}, ok bool) *string {
 
 	out := b.String()
 	return &out
+}
+
+func fmtFunctions(vals []interface{}, ok bool) *string {
+	if !ok {
+		return nil
+	}
+	parts := []string{}
+	for _, v := range vals {
+		switch t := v.(type) {
+		case mss.Function:
+			function := t.Name + "("
+			var params []string
+			for _, arg := range t.Params {
+				params = append(params, fmt.Sprintf("%v", arg))
+			}
+			if params != nil {
+				function += strings.Join(params, ", ")
+			}
+			function += ")"
+			parts = append(parts, function)
+		}
+	}
+	r := strings.Join(parts, ", ")
+	return &r
 }
 
 func fmtPattern(v []float64, scale float64, ok bool) *string {
