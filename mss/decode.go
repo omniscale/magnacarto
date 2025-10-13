@@ -76,6 +76,11 @@ func (d *Decoder) next() *token {
 	}
 }
 
+func (d *Decoder) peek() *token {
+	defer d.backup()
+	return d.next()
+}
+
 func (d *Decoder) backup() {
 	if d.nextTok != nil || d.lastTok == nil {
 		d.error(d.pos(d.nextTok), "internal parser bug: double backup (%v, %v)", d.nextTok, d.lastTok)
@@ -485,19 +490,14 @@ func (d *Decoder) expect(t tokenType) {
 
 // expectEndOfStatement checks for semicolon or closing block `}`
 func (d *Decoder) expectEndOfStatement() {
-	tok := d.next()
-
-	if tok.t == tokenRBrace {
-		d.backup()
+	if d.peek().t == tokenRBrace {
 		return
 	}
-	d.backup()
 	d.expect(tokenSemicolon)
 }
 
 func (d *Decoder) expressionList() {
-	startTok := d.next()
-	d.backup()
+	startTok := d.peek()
 
 	d.expression()
 	for {
@@ -710,12 +710,11 @@ func (d *Decoder) value(tok *token) {
 }
 
 func (d *Decoder) functionParams() {
-	tok := d.next()
-	if tok.t == tokenRParen {
+	if d.peek().t == tokenRParen {
+		d.next()
 		d.expr.addValue(nil, typeFunctionEnd)
 		return
 	}
-	d.backup()
 	for {
 		d.exprPart()
 		tok := d.next()
