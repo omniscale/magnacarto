@@ -1,6 +1,9 @@
 package mss
 
 import (
+	"regexp"
+	"strings"
+
 	"github.com/omniscale/magnacarto/color"
 )
 
@@ -42,6 +45,24 @@ func isStrings(val interface{}) bool {
 		}
 	}
 	return true
+}
+
+var expressionHasField = regexp.MustCompile(`^(?:[^\[\]]|\[[^\[\]]*\])*$`)
+var expressionHasMath = regexp.MustCompile(`\d|[-*/+]`)
+
+// isExpressionString checks whether val is a string that is likely an data
+// expression with field ([name]) or math (2*2).
+// Not a proper parser, just minimal checks.
+func isExpressionString(val interface{}) bool {
+	s, ok := val.(string)
+	if !ok {
+		return false
+	}
+	if strings.Contains(s, "[") {
+		// checks whether all fields are closed ([field])
+		return expressionHasField.MatchString(s)
+	}
+	return expressionHasMath.MatchString(s)
 }
 
 func isStringOrStrings(val interface{}) bool {
@@ -493,5 +514,8 @@ func validProperty(property string, value interface{}) (bool, bool) {
 	if !ok {
 		return false, false
 	}
-	return true, checkFunc(value)
+	if checkFunc(value) {
+		return true, true
+	}
+	return true, isExpressionString(value)
 }

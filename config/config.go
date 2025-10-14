@@ -4,6 +4,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -155,12 +156,28 @@ func (l *LookupLocator) UseRelPaths(rel bool) {
 
 func (l *LookupLocator) find(basename string, dirs []string) (string, bool) {
 	// helper func: check if basename exists in dir
-	check := func(dir string) string {
-		fname := filepath.Join(dir, basename)
-		if _, err := os.Stat(fname); err == nil {
-			return fname
+	var check func(string) string
+
+	bracketsRe := regexp.MustCompile(`\[[^\[\]]*\]`)
+	if bracketsRe.MatchString(basename) {
+		// use globbing for data expressions in filenames, eg. `shield-[size].svg`
+		pattern := bracketsRe.ReplaceAllString(basename, "*")
+
+		check = func(dir string) string {
+			m, err := filepath.Glob(filepath.Join(dir, pattern))
+			if err == nil && len(m) > 0 {
+				return filepath.Join(dir, basename)
+			}
+			return ""
 		}
-		return ""
+	} else {
+		check = func(dir string) string {
+			fname := filepath.Join(dir, basename)
+			if _, err := os.Stat(fname); err == nil {
+				return fname
+			}
+			return ""
+		}
 	}
 
 	// check for file in different dirs, uses closure so that

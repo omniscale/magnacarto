@@ -1,0 +1,18 @@
+LAYER
+  NAME labels_roads_refs
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    EXPRESSION ('[type]' = 'motorway')
+    LABEL
+      STYLE
+        SYMBOL "img-rail--width--svg"
+      END
+    END
+  END
+END
+SYMBOL
+  NAME img-rail--width--svg
+  IMAGE "img/rail-[width].svg"
+  TYPE svg
+END

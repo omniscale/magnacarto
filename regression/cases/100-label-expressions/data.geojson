@@ -1,0 +1,133 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "name": "Point 1",
+        "size": 25,
+        "halo": 4,
+        "angle": 0,
+        "color": "#ff0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.214383125305176,
+          53.1513838378154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "name": "Long Text Point 2",
+        "size": 12,
+        "halo": 4,
+        "angle": 0,
+        "color": "#0000ff"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.219060897827148,
+          53.15030289319792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "name": "Point 3",
+        "size": 16,
+        "halo": 4,
+        "angle": 90,
+        "color": "rgb(70%, 50%, 20%)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.21500539779663,
+          53.14904175675179
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "name": "Point 4",
+        "size": 8,
+        "halo": 99,
+        "angle": -20,
+        "color": "#ff0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.217923641204834,
+          53.149061060139786
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "name": "Base Base Base",
+        "size": 16,
+        "halo": 4,
+        "angle": 0,
+        "overlap": true,
+        "color": "rgb(70%, 50%, 20%)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.213,
+          53.15
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6,
+        "name": "No Overlap",
+        "size": 16,
+        "halo": 4,
+        "angle": 20,
+        "color": "rgb(70%, 50%, 20%)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.213,
+          53.15
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7,
+        "name": "Overlap",
+        "size": 16,
+        "halo": 4,
+        "angle": -20,
+        "overlap": true,
+        "color": "rgb(70%, 50%, 20%)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.213,
+          53.15
+        ]
+      }
+    }
+  ]
+}

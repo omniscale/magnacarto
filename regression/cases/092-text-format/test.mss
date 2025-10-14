@@ -18,9 +18,4 @@
             text-name: <Format fill="#ff0000">[name]</Format> "\n" <Format size="10">  "(" + [elev] + ")" </Format>;
         }
     }
-
-    /* [id=1] { text-dx: 5; } */
-    /* [id=2] { text-dy: 5; } */
-    /* [id=3] { text-dx: 5; text-dy: 5; } */
-    /* [id=4] { text-dx: -5; text-dy: -5; } */
 }

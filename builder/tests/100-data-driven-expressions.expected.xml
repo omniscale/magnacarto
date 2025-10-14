@@ -1,0 +1,31 @@
+<Map srs="epsg:3857">
+  <Parameters></Parameters>
+  <FontSet name="fontset-1">
+    <Font face-name="DejaVu Sans Book"></Font>
+  </FontSet>
+  <Style name="labels_field" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="2+6">[name]</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="labels_field2" filter-mode="first">
+    <Rule>
+      <TextSymbolizer size="[size]">[name]</TextSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="labels_roads_refs" filter-mode="first">
+    <Rule>
+      <Filter>([type] = &#39;motorway&#39;)</Filter>
+      <ShieldSymbolizer file="img/rail-[width].svg" fill="[color]" fontset-name="fontset-1" placement="line" size="[size]">[ref]</ShieldSymbolizer>
+    </Rule>
+  </Style>
+  <Layer name="labels_field" srs="" status="off">
+    <StyleName>labels_field</StyleName>
+  </Layer>
+  <Layer name="labels_field2" srs="" status="off">
+    <StyleName>labels_field2</StyleName>
+  </Layer>
+  <Layer name="labels_roads_refs" srs="" status="off">
+    <StyleName>labels_roads_refs</StyleName>
+  </Layer>
+</Map>

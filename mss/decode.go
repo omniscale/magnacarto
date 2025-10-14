@@ -232,7 +232,8 @@ func (d *Decoder) evaluateProperties(properties *Properties, validate bool) {
 		if expr, ok := properties.getKey(k).(*expression); ok {
 			v := d.evaluateExpression(expr)
 			if validate {
-				if validProp, validVal := validProperty(k.name, v); !validProp {
+				validProp, validVal := validProperty(k.name, v)
+				if !validProp {
 					d.warn(properties.pos(k), "invalid property %v %v", k.name, v)
 				} else if !validVal {
 					d.warn(properties.pos(k), "invalid property value for %v %v", k.name, v)

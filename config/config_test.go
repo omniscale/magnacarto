@@ -131,13 +131,14 @@ func TestLookupLocator_AbsPaths(t *testing.T) {
 			if _, ok := l.missing[recorded]; !ok {
 				t.Errorf("missing file not recorded as %s in %s", recorded, l.missing)
 			}
-
+			clear(l.missing)
 		}
 
 		existing := func(fname, expected string) {
 			if fname != expected {
 				t.Errorf("unexpected location %s != %s", fname, expected)
 			}
+			clear(l.missing)
 		}
 
 		l.AddDataDir(filepath.Join(d.dir, "data"))
@@ -152,7 +153,7 @@ func TestLookupLocator_AbsPaths(t *testing.T) {
 		existing(l.Shape("data.geojson"), filepath.Join(d.dir, "data", "data.geojson"))
 		missing(l.Shape("file.sqlite"), filepath.Join("/tmp", "file.sqlite"), "file.sqlite")
 
-		// l.SQLITE looks in SqliteDir and DataDir
+		// l.SQLite looks in SqliteDir and DataDir
 		existing(l.SQLite("file.sqlite"), filepath.Join(d.dir, "sqlite", "file.sqlite"))
 		existing(l.SQLite("data.geojson"), filepath.Join(d.dir, "data", "data.geojson"))
 		missing(l.SQLite("file.shp"), filepath.Join("/tmp", "file.shp"), "file.shp")
@@ -168,6 +169,11 @@ func TestLookupLocator_AbsPaths(t *testing.T) {
 
 		l.AddImageDir(filepath.Join(d.dir, "img"))
 		existing(l.Image("test2.png"), filepath.Join(d.dir, "img", "test2.png"))
+
+		// handle data expressions in shield/marker/pattern files.
+		// test[field].png is converted to test*.png glob.
+		existing(l.Image("test[field].png"), filepath.Join(d.dir, "img", "test[field].png"))
+		missing(l.Image("test-[field].png"), "/tmp/test-[field].png", "test-[field].png")
 
 		// missing abs path is returned as-is
 		missing(l.Image("/abs/foo.png"), "/abs/foo.png", "/abs/foo.png")

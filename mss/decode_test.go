@@ -346,6 +346,34 @@ func TestParserWarnings(t *testing.T) {
 	}
 }
 
+func TestParserExpressionWarnings(t *testing.T) {
+	tests := []struct {
+		expr  string
+		valid bool
+	}{
+		{`2`, true},
+		{`2 * 3`, true},
+		{`2 * `, true}, // not properly checked
+		{`[foo`, false},
+		{`[foo]`, true},
+		{`2* [foo`, false},
+		{`2* [foo]`, false},
+		{`2* [foo]`, true},
+		{`2* [foo] + [bar`, false},
+		{`2* [foo] + [bar]`, true},
+	}
+
+	for _, tt := range tests {
+		d, err := decodeString(`#bar { text-size: "` + tt.expr + `"; }`)
+		assert.NoError(t, err)
+		if tt.valid && len(d.warnings) != 0 {
+			t.Errorf("parsing %q return warnings: %q", tt.expr, d.warnings[0].Msg)
+		} else if len(d.warnings) > 0 {
+			assert.Contains(t, d.warnings[0].String(), "invalid property value for text-size")
+		}
+	}
+}
+
 func decodeLayerProperties(t *testing.T, mss string) *Properties {
 	d, err := decodeString(mss)
 	assert.NoError(t, err)
