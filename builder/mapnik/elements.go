@@ -148,6 +148,14 @@ type LinePatternSymbolizer struct {
 	Offset            *string  `xml:"offset,attr"`
 	GeometryTransform *string  `xml:"geometry-transform,attr"`
 	CompOp            *string  `xml:"comp-op,attr"`
+	Alignment         *string  `xml:"alignment,attr"`
+	Dasharray         *string  `xml:"stroke-dasharray,attr"`
+	Linecap           *string  `xml:"stroke-linecap,attr"`
+	Linejoin          *string  `xml:"stroke-linejoin,attr"`
+	Miterlimit        *string  `xml:"stroke-miterlimit,attr"`
+	Transform         *string  `xml:"transform,attr"`
+	Type              *string  `xml:"line-pattern,attr"`
+	Width             *string  `xml:"stroke-width,attr"`
 }
 
 type PointSymbolizer struct {

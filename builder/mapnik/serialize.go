@@ -375,6 +375,15 @@ func (m *Map) addLinePatternSymbolizer(result *Rule, r mss.Rule) {
 		symb.GeometryTransform = fmtString(r.Properties, "line-pattern-geometry-transform")
 		symb.CompOp = fmtString(r.Properties, "line-pattern-comp-op")
 		symb.Opacity = fmtFloat(r.Properties, "line-pattern-opacity")
+		symb.Width = fmtFloatScaled(r.Properties, "line-pattern-width", m.scaleFactor)
+		if v, ok := r.Properties.GetFloatList("line-pattern-dasharray"); ok {
+			symb.Dasharray = fmtPattern(v, m.scaleFactor, true)
+		}
+		symb.Type = fmtString(r.Properties, "line-pattern-type")
+		symb.Linecap = fmtString(r.Properties, "line-pattern-type")
+		symb.Linecap = fmtString(r.Properties, "line-pattern-cap")
+		symb.Linejoin = fmtString(r.Properties, "line-pattern-join")
+		symb.Miterlimit = fmtFloatScaled(r.Properties, "line-pattern-miterlimit", m.scaleFactor)
 
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
