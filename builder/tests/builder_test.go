@@ -41,14 +41,22 @@ func buildAndCompare(t *testing.T, builderType string, name string) {
 	build(t, builderType, name+".mss", &actualMap)
 	expectedFname := name + ".expected." + suffix
 	expectedMap, err := ioutil.ReadFile(expectedFname)
+	writeActual := false
 	if os.IsNotExist(err) {
-		actualFname := name + ".actual." + suffix
-		ioutil.WriteFile(actualFname, actualMap.Bytes(), 0644)
-		t.Fatalf("missing %s, saved actual file to %s", expectedFname, actualFname)
+		writeActual = true
+		t.Logf("missing expected file %s", expectedFname)
 	} else if err != nil {
 		t.Fatal(err)
 	}
 
+	if strings.TrimSpace(string(expectedMap)) != actualMap.String() {
+		writeActual = true
+	}
+	if writeActual {
+		actualFname := name + ".actual." + suffix
+		ioutil.WriteFile(actualFname, actualMap.Bytes(), 0644)
+		t.Logf("saved actual file to %s", actualFname)
+	}
 	assert.Equal(t, strings.TrimSpace(string(expectedMap)), actualMap.String())
 }
 
