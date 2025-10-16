@@ -118,6 +118,21 @@ LAYER
   END
 END
 LAYER
+  NAME listconcat
+  STATUS OFF
+  TYPE LINE
+  CLASS
+    LABEL
+      SIZE 9.025909592061742
+      TEXT 'foo'
+      FONT "Bing,Foo,Bar,Baz,Foobaz"
+      TYPE truetype
+      ANGLE FOLLOW
+      MINFEATURESIZE AUTO
+    END
+  END
+END
+LAYER
   NAME listnum
   STATUS OFF
   TYPE LINE

@@ -447,6 +447,23 @@ func TestRecursiveDeferEval(t *testing.T) {
 	assert.Equal(t, color.MustParse("blue"), c)
 }
 
+func TestRecursiveListConcat(t *testing.T) {
+	d := New()
+	err := d.ParseString(`
+		@base: "B", "C", "D", "E";
+		@foo: "A", @base;
+		@bar: @foo, "F";
+		`)
+	assert.NoError(t, err)
+	err = d.Evaluate()
+	assert.NoError(t, err)
+	assert.Empty(t, d.warnings)
+
+	l, ok := d.vars.GetStringList("bar")
+	assert.True(t, ok)
+	assert.Equal(t, l, []string{"A", "B", "C", "D", "E", "F"})
+}
+
 func TestParseMissingVar(t *testing.T) {
 	var err error
 	_, err = decodeString(`@foo: @bar + 1;`)
@@ -618,6 +635,7 @@ func TestDecoderRules(t *testing.T) {
 		Rule{Layer: "rgbacompat", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
 		Rule{Layer: "rgbapercent", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-color", color.Color{144.0, 1.0, 0.5, 0.4, false}), order: 1},
 		Rule{Layer: "list", Zoom: AllZoom, Properties: NewProperties("text-name", "foo", "text-size", float64(12), "text-face-name", []Value{"Foo", "Bar", "Baz"}), order: 1},
+		Rule{Layer: "listconcat", Zoom: AllZoom, Properties: NewProperties("text-name", "foo", "text-size", float64(12), "text-face-name", []Value{"Bing", "Foo", "Bar", "Baz", "Foobaz"}), order: 1},
 		Rule{Layer: "listnum", Zoom: AllZoom, Properties: NewProperties("line-width", float64(1), "line-dasharray", []Value{float64(2), float64(3), float64(4)}), order: 1},
 	})
 

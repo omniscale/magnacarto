@@ -5,6 +5,13 @@
     <Font face-name="Bar"></Font>
     <Font face-name="Baz"></Font>
   </FontSet>
+  <FontSet name="fontset-2">
+    <Font face-name="Bing"></Font>
+    <Font face-name="Foo"></Font>
+    <Font face-name="Bar"></Font>
+    <Font face-name="Baz"></Font>
+    <Font face-name="Foobaz"></Font>
+  </FontSet>
   <Style name="num" filter-mode="first">
     <Rule>
       <LineSymbolizer stroke-width="12"></LineSymbolizer>
@@ -50,6 +57,11 @@
       <TextSymbolizer fontset-name="fontset-1" size="12">foo</TextSymbolizer>
     </Rule>
   </Style>
+  <Style name="listconcat" filter-mode="first">
+    <Rule>
+      <TextSymbolizer fontset-name="fontset-2" size="12">foo</TextSymbolizer>
+    </Rule>
+  </Style>
   <Style name="listnum" filter-mode="first">
     <Rule>
       <LineSymbolizer stroke-dasharray="2, 3, 4" stroke-width="1"></LineSymbolizer>
@@ -81,6 +93,9 @@
   </Layer>
   <Layer name="list" srs="" status="off">
     <StyleName>list</StyleName>
+  </Layer>
+  <Layer name="listconcat" srs="" status="off">
+    <StyleName>listconcat</StyleName>
   </Layer>
   <Layer name="listnum" srs="" status="off">
     <StyleName>listnum</StyleName>

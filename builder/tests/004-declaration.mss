@@ -7,6 +7,7 @@
 @rgbacompat: rgba(0, 255, 102, 102);
 @rgbapercent: rgba(0, 100%, 40%, 40%);
 @list: "Foo", "Bar", "Baz";
+@listconcat: "Bing", @list, "Foobaz";
 @listnum: 2, 3, 4;
 
 #num            { line-width: @num; }
@@ -18,5 +19,6 @@
 #rgbacompat     { line-color: @rgbacompat ; line-width: 1; }
 #rgbapercent    { line-color: @rgbapercent; line-width: 1; }
 #list           { text-face-name: @list; text-size: 12; text-name: "foo"; }
+#listconcat     { text-face-name: @listconcat; text-size: 12; text-name: "foo"; }
 #listnum        { line-dasharray: @listnum; line-width: 1;}
 

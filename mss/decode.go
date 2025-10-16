@@ -173,7 +173,7 @@ func (d *Decoder) evaluateBlock(b *block) {
 
 func (d *Decoder) evaluateExpression(expr *expression) Value {
 	// resolve all vars in the expression before evaluating it
-	for i := range expr.code {
+	for i := 0; i < len(expr.code); i++ {
 		if expr.code[i].T == typeVar {
 			varname := expr.code[i].Value.(string)
 			v, _ := d.vars.get(varname)
@@ -189,7 +189,19 @@ func (d *Decoder) evaluateExpression(expr *expression) Value {
 			if t == typeUnknown {
 				d.error(expr.pos, "unable to determine type of var @%s (%v)", varname, v)
 			}
-			expr.code[i] = code{Value: v, T: t}
+			if t == typeList {
+				// splice list values into code slice
+				vals := v.([]Value)
+				codes := make([]code, len(vals))
+				for j, v := range vals {
+					tt := d.valueType(v)
+					codes[j] = code{Value: v, T: tt}
+				}
+				expr.code = append(expr.code[:i], append(codes, expr.code[i+1:]...)...)
+				i += len(codes) - 1
+			} else {
+				expr.code[i] = code{Value: v, T: t}
+			}
 		}
 	}
 	v, err := expr.evaluate()
