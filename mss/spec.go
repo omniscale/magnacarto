@@ -361,7 +361,7 @@ func init() {
 		"marker-line-width":         isNumber,
 		"marker-line-opacity":       isNumber,
 		"marker-opacity":            isNumber,
-		"marker-placement":          isKeyword("point", "interior", "line", "vertex-first", "vertex-last"),
+		"marker-placement":          isKeyword("point", "interior", "line", "vertex-first", "vertex-last", "angled-point"),
 		"marker-spacing":            isNumber,
 		"marker-transform":          isString,
 		"marker-type":               isKeyword("arrow", "ellipse"),
