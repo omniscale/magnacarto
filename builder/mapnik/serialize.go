@@ -498,6 +498,7 @@ func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb.FontFeatureSettings = fmtString(p, "font-feature-settings")
 	symb.LargestBboxOnly = fmtBool(p, "text-largest-bbox-only")
 	symb.RepeatDistance = fmtFloatScaled(p, "text-repeat-distance", m.scaleFactor)
+	symb.Extend = fmtFloatScaled(p, "text-extend", m.scaleFactor)
 	return symb
 }
 

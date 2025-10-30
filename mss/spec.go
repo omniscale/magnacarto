@@ -460,6 +460,7 @@ func init() {
 		"text-clip":                     isBool,
 		"text-dx":                       isNumber,
 		"text-dy":                       isNumber,
+		"text-extend":                   isNumber,
 		"text-face-name":                isStringOrStrings,
 		"text-font-feature-settings":    isString,
 		"text-fill":                     isColor,

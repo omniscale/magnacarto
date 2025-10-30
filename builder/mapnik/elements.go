@@ -182,6 +182,7 @@ type TextParameters struct {
 	Clip                   *string `xml:"clip,attr"`
 	Dx                     *string `xml:"dx,attr"`
 	Dy                     *string `xml:"dy,attr"`
+	Extend                 *string `xml:"extend,attr"`
 	FaceName               *string `xml:"face-name,attr"`
 	FontFeatureSettings    *string `xml:"font-feature-settings,attr"`
 	Fill                   *string `xml:"fill,attr"`
