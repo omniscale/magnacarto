@@ -29,11 +29,12 @@ type Font struct {
 }
 
 type Style struct {
-	Name       string   `xml:"name,attr"`
-	FilterMode string   `xml:"filter-mode,attr"`
-	CompOp     *string  `xml:"comp-op,attr"`
-	Opacity    *float64 `xml:"opacity,attr"`
-	Rules      []Rule   `xml:"Rule"`
+	Name         string   `xml:"name,attr"`
+	FilterMode   string   `xml:"filter-mode,attr"`
+	CompOp       *string  `xml:"comp-op,attr"`
+	ImageFilters *string  `xml:"image-filters,attr"`
+	Opacity      *float64 `xml:"opacity,attr"`
+	Rules        []Rule   `xml:"Rule"`
 }
 
 type Rule struct {
