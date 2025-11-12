@@ -415,7 +415,20 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 	if !fok && !sok {
 		return
 	}
-	symb := TextSymbolizer{TextParameters: m.convertTextParameters(r.Properties)}
+	symb := TextSymbolizer{}
+
+	// properties common for TextSymbolizer and Placement
+	symb.TextParameters = m.convertTextParameters(r.Properties)
+
+	// properties unique to TextSymbolizer
+	symb.Clip = fmtBool(r.Properties, "text-clip")
+	symb.HaloRasterizer = fmtString(r.Properties, "text-halo-rasterizer")
+	symb.CompOp = fmtString(r.Properties, "text-comp-op")
+	symb.Simplify = fmtFloat(r.Properties, "text-simplify")
+	symb.SimplifyAlgorithm = fmtString(r.Properties, "text-simplify-algorithm")
+	symb.Smooth = fmtFloat(r.Properties, "text-smooth")
+	symb.Extend = fmtFloatScaled(r.Properties, "text-extend", m.scaleFactor)
+
 	if pl, ok := r.Properties.GetPropertiesList("text-placement-list"); ok {
 		placementType := "list"
 		symb.PlacementType = &placementType
@@ -423,6 +436,7 @@ func (m *Map) addTextSymbolizer(result *Rule, r mss.Rule) {
 			symb.PlacementList = append(symb.PlacementList, Placement{TextParameters: m.convertTextParameters(p)})
 		}
 	}
+
 	if symb.RawName != nil && *symb.RawName != "" {
 		result.Symbolizers = append(result.Symbolizers, &symb)
 	}
@@ -436,7 +450,6 @@ func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb.AvoidEdges = fmtBool(p, "text-avoid-edges")
 	symb.HaloFill = fmtColor(p, "text-halo-fill")
 	symb.HaloRadius = fmtFloatScaled(p, "text-halo-radius", m.scaleFactor)
-	symb.HaloRasterizer = fmtString(p, "text-halo-rasterizer")
 	symb.Opacity = fmtFloat(p, "text-opacity")
 	symb.WrapCharacter = fmtString(p, "text-wrap-character")
 	symb.WrapBefore = fmtString(p, "text-wrap-before")
@@ -452,7 +465,6 @@ func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb.VerticalAlign = fmtString(p, "text-vertical-alignment")
 	symb.HorizontalAlign = fmtString(p, "text-horizontal-alignment")
 	symb.JustifyAlign = fmtString(p, "text-justify-alignment")
-	symb.CompOp = fmtString(p, "text-comp-op")
 
 	symb.Dx = fmtFloatScaled(p, "text-dx", m.scaleFactor)
 	symb.Dy = fmtFloatScaled(p, "text-dy", m.scaleFactor)
@@ -478,7 +490,6 @@ func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb.MinimumPadding = fmtFloatScaled(p, "text-min-padding", m.scaleFactor)
 	symb.MinPathLength = fmtFloatScaled(p, "text-min-path-length", m.scaleFactor)
 
-	symb.Clip = fmtBool(p, "text-clip")
 	symb.TextTransform = fmtString(p, "text-transform")
 
 	if faceNames, ok := p.GetStringList("text-face-name"); ok {
@@ -490,15 +501,11 @@ func (m *Map) convertTextParameters(p *mss.Properties) TextParameters {
 	symb.HaloCompOp = fmtString(p, "text-halo-comp-op")
 	symb.RepeatWrapCharacter = fmtBool(p, "text-repeat-wrap-characater")
 	symb.Margin = fmtFloatScaled(p, "text-margin", m.scaleFactor)
-	symb.Simplify = fmtFloat(p, "text-simplify")
-	symb.SimplifyAlgorithm = fmtString(p, "text-simplify-algorithm")
-	symb.Smooth = fmtFloat(p, "text-smooth")
 	symb.RotateDisplacement = fmtBool(p, "text-rotate-displacement")
 	symb.Upright = fmtString(p, "text-upgright")
 	symb.FontFeatureSettings = fmtString(p, "font-feature-settings")
 	symb.LargestBboxOnly = fmtBool(p, "text-largest-bbox-only")
 	symb.RepeatDistance = fmtFloatScaled(p, "text-repeat-distance", m.scaleFactor)
-	symb.Extend = fmtFloatScaled(p, "text-extend", m.scaleFactor)
 	return symb
 }
 
