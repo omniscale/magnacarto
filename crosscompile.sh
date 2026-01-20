@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # cross-compile magnacarto for various os/cpus and zip/tar.gz the output
 # requires Go 1.5, set GO15 environment var to use a different Go installation
 
@@ -20,9 +20,10 @@ function build() {
     cd $build_name
     env GOOS=$os GOARCH=$arch go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnacarto
     env GOOS=$os GOARCH=$arch go build -ldflags "$VERSION_LDFLAGS" github.com/omniscale/magnacarto/cmd/magnaserv
-    # use git archive to only include checked-in files
-    (cd ../../../ && git archive --format tar HEAD app README.md LICENSE) | tar -x -
-    (cd ../../../docs && git archive --format tar HEAD examples/) | tar -x -
+    cp -r ../../../app/ app/
+    cp ../../../README.md .
+    cp ../../../LICENSE .
+    cp -r ../../../docs/ examples/
     cd ..
     if [ $os = windows ]; then
         rm -f $build_name.zip

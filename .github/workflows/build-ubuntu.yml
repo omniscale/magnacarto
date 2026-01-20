@@ -1,0 +1,50 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.18
+
+    - name: Build
+      run: bash ./crosscompile.sh
+
+    - name: Set the values
+      run: |
+        BUILD_DATE=$(date +%Y%m%d)
+        BUILD_REF=$(git rev-parse --short HEAD)
+        echo "BUILD_VERSION=dev-$BUILD_DATE-$BUILD_REF" >> $GITHUB_ENV
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: magnacarto-${{ env.BUILD_VERSION }}-windows-386
+        path: dist/${{ env.BUILD_VERSION }}/magnacarto-${{ env.BUILD_VERSION }}-windows-386.zip
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: magnacarto-${{ env.BUILD_VERSION }}-windows-amd64
+        path: dist/${{ env.BUILD_VERSION }}/magnacarto-${{ env.BUILD_VERSION }}-windows-amd64.zip
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: magnacarto-${{ env.BUILD_VERSION }}-linux-386
+        path: dist/${{ env.BUILD_VERSION }}/magnacarto-${{ env.BUILD_VERSION }}-linux-386.tar.gz
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: magnacarto-${{ env.BUILD_VERSION }}-linux-amd64
+        path: dist/${{ env.BUILD_VERSION }}/magnacarto-${{ env.BUILD_VERSION }}-linux-amd64.tar.gz
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: magnacarto-${{ env.BUILD_VERSION }}-darwin-amd64
+        path: dist/${{ env.BUILD_VERSION }}/magnacarto-${{ env.BUILD_VERSION }}-darwin-amd64.tar.gz
