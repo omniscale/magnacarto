@@ -13,7 +13,7 @@ require (
 	github.com/natefinch/pie v0.0.0-20170715172608-9a0d72014007
 	github.com/omniscale/go-mapnik/v2 v2.0.1
 	github.com/stretchr/testify v1.3.0
-	golang.org/x/net v0.20.0
+	golang.org/x/net v0.23.0
 	gopkg.in/fsnotify.v1 v1.4.7
 	gopkg.in/yaml.v2 v2.4.0
 )
